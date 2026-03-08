@@ -1,4 +1,5 @@
-import { Heart, HeartOff, Play, Lock, Share2 } from "lucide-react";
+import { useState } from "react";
+import { Heart, HeartOff, Play, Lock, Share2, Eye, EyeOff } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { BreathingTechnique, getCycleDuration } from "@/lib/techniques";
 import { UserProgression, getLevelName, getLevelProgress, isUnlocked, getUnlockRemaining } from "@/lib/progression";
@@ -7,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { shareTechnique } from "@/lib/shareApp";
+import BreathingPreview from "@/components/BreathingPreview";
 
 interface TechniqueCardProps {
   technique: BreathingTechnique;
