@@ -17,7 +17,7 @@ import { CreateChallengeDialog } from "@/components/FriendChallenge";
 
 export default function Home() {
   const navigate = useNavigate();
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const [favorites, setFavorites] = useState(getFavorites);
   const [showChallengeDialog, setShowChallengeDialog] = useState(false);
   const [installDismissed, setInstallDismissed] = useState(isDismissed);
