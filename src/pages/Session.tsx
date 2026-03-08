@@ -505,6 +505,7 @@ export default function Session() {
     hrBpmSamplesRef.current = [];
     hrCoherenceSamplesRef.current = [];
     setBreathFeedback(null);
+    lastEncouragementRef.current = 0;
     setState("running");
     // Start soundscape
     if (soundscapeType !== "off") {
