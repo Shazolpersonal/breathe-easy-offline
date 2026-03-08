@@ -380,7 +380,7 @@ export default function Session() {
     });
     setTotalElapsed((te) => {
       const newT = te + 1;
-      if (newT >= durationMin * 60) stop();
+      if (newT >= durationMinRef.current * 60) stop();
       return newT;
     });
   }, [currentPhases, voiceOn, settings, durationMin, stop, technique, currentRound, t, language]);
