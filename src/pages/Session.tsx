@@ -810,6 +810,43 @@ export default function Session() {
           {calmResult && <CalmScoreDisplay result={calmResult} label={t("session.calmScore")} t={t} />}
           {earnedXP && <XPEarnedDisplay breakdown={earnedXP.breakdown} leveledUp={earnedXP.leveledUp} newTitle={earnedXP.newTitle} t={t} />}
 
+          {/* Auto-difficulty suggestion */}
+          {(() => {
+            const suggested = shouldSuggestIncrease(technique.id);
+            if (!suggested) return null;
+            return (
+              <div className="rounded-xl border border-primary/30 bg-primary/5 p-3 w-full max-w-xs animate-fade-in">
+                <div className="flex items-center gap-2 mb-2">
+                  <ArrowUp className="h-4 w-4 text-primary" />
+                  <span className="text-sm font-semibold text-foreground">{t("adaptive.readyToLevelUp")}</span>
+                </div>
+                <p className="text-xs text-muted-foreground mb-2">
+                  {t("adaptive.suggestIncrease", { minutes: suggested })}
+                </p>
+                <div className="flex gap-2">
+                  <Button
+                    size="sm"
+                    className="flex-1 gap-1"
+                    onClick={() => {
+                      update({ defaultDurationMinutes: suggested });
+                      dismissSuggestion(technique.id, suggested);
+                      toast(t("adaptive.durationUpdated", { minutes: suggested }));
+                    }}
+                  >
+                    {t("adaptive.acceptIncrease", { minutes: suggested })}
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    onClick={() => dismissSuggestion(technique.id, suggested)}
+                  >
+                    {t("weekly.dismiss")}
+                  </Button>
+                </div>
+              </div>
+            );
+          })()}
+
           {/* Breath accuracy in done screen */}
           {avgBreathAccuracy !== null && (
             <div className="rounded-xl border border-border bg-card p-3 space-y-1">
