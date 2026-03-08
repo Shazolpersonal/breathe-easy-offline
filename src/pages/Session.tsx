@@ -501,7 +501,7 @@ export default function Session() {
     phaseStartRef.current = Date.now();
     // Restore soundscape volume on resume
     soundscapeEngineRef.current.setVolume(settings.soundscapeVolume ?? 0.5);
-    if (voiceOn) speak(getPhaseLabel(currentPhase), settings.voiceSpeed, language);
+    if (voiceOn && settings.cuePhaseNames) speak(getPhaseLabel(currentPhase), { rate: settings.voiceSpeed, pitch: settings.voicePitch, volume: settings.voiceVolume, voiceName: language === "bn" ? settings.voiceNameBn : settings.voiceNameEn, lang: language });
   };
 
   const handleMoodAfter = (mood: number) => {
