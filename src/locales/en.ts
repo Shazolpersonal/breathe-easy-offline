@@ -465,4 +465,32 @@ export const en: Record<string, string> = {
   "insight.moreSessionsUp": "{{count}} more sessions than last week — great momentum!",
   "insight.fewerSessions": "{{count}} fewer sessions than last week. Let's get back on track!",
   "insight.durationUp": "You averaged {{current}} min/session, up from {{previous}} min last week.",
+
+  // Friend Challenge
+  "challenge.friend.title": "Challenge a Friend",
+  "challenge.friend.subtitle": "Create a breathing challenge and share it",
+  "challenge.friend.createTitle": "Create Challenge",
+  "challenge.friend.createDesc": "Set a goal and share the link with a friend",
+  "challenge.friend.yourName": "Your Name",
+  "challenge.friend.namePlaceholder": "Enter your name",
+  "challenge.friend.technique": "Technique",
+  "challenge.friend.targetMin": "Target (min)",
+  "challenge.friend.targetCycles": "Target (cycles)",
+  "challenge.friend.generate": "Generate Link",
+  "challenge.friend.copy": "Copy",
+  "challenge.friend.share": "Share",
+  "challenge.friend.copied": "Challenge link copied!",
+  "challenge.friend.shareTitle": "Breathing Challenge",
+  "challenge.friend.shareText": "{{name}} challenged you to a breathing session!",
+  "challenge.friend.incomingTitle": "You've Been Challenged!",
+  "challenge.friend.incomingDesc": "{{name}} has challenged you to a breathing session",
+  "challenge.friend.acceptButton": "Accept Challenge",
+  "challenge.friend.accepted": "Challenge accepted!",
+  "challenge.friend.acceptedMessage": "Challenge accepted! Start your session now.",
+  "challenge.friend.active": "Friend Challenges",
+  "challenge.friend.from": "from {{name}}",
+
+  // CSV Export
+  "settings.exportCSV": "Export CSV",
+  "settings.csvExported": "Sessions exported as CSV!",
 };

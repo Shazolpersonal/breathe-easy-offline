@@ -7,7 +7,8 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { exportData, importData } from "@/lib/storage";
-import { Download, Upload, Circle, Waves, BarChart3, Flower2, Plus, Trash2, Bell, BellOff, Accessibility, Mic, Heart, Music } from "lucide-react";
+import { exportSessionsCSV } from "@/lib/csvExport";
+import { Download, Upload, Circle, Waves, BarChart3, Flower2, Plus, Trash2, Bell, BellOff, Accessibility, Mic, Heart, Music, FileSpreadsheet } from "lucide-react";
 import { SoundscapeType } from "@/lib/soundscapes";
 import SoundscapePicker from "@/components/SoundscapePicker";
 import { cn } from "@/lib/utils";
@@ -367,6 +368,17 @@ export default function Settings() {
             </Button>
             <input ref={fileRef} type="file" accept=".json" className="hidden" onChange={handleImport} />
           </div>
+          <Button
+            variant="outline"
+            size="sm"
+            className="w-full gap-1"
+            onClick={() => {
+              exportSessionsCSV();
+              toast({ title: t("settings.csvExported") });
+            }}
+          >
+            <FileSpreadsheet className="h-4 w-4" /> {t("settings.exportCSV")}
+          </Button>
         </section>
 
         {/* Install */}

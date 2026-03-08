@@ -1,25 +1,31 @@
 import { useNavigate } from "react-router-dom";
-import { Wind, Flame, Zap, TrendingUp, CheckCircle2, Circle } from "lucide-react";
+import { Wind, Flame, Zap, TrendingUp, CheckCircle2, Circle, Swords, Quote } from "lucide-react";
 import SmartSuggestion from "@/components/SmartSuggestion";
 import TechniqueCard from "@/components/TechniqueCard";
 import { PRESET_TECHNIQUES } from "@/lib/techniques";
 import { getCustomTechniques, getFavorites, toggleFavorite, getCurrentStreak, getTodayMinutes } from "@/lib/storage";
 import { getDailyChallenges } from "@/lib/challenges";
 import { getXPState } from "@/lib/xp";
+import { getDailyQuote } from "@/lib/quotes";
+import { getActiveChallenges, getChallengeProgress } from "@/lib/friendChallenge";
 import { Progress } from "@/components/ui/progress";
 import { useState, useMemo } from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { CreateChallengeDialog } from "@/components/FriendChallenge";
 
 export default function Home() {
   const navigate = useNavigate();
   const { t } = useLanguage();
   const [favorites, setFavorites] = useState(getFavorites);
+  const [showChallengeDialog, setShowChallengeDialog] = useState(false);
   const streak = getCurrentStreak();
   const todayMin = getTodayMinutes();
   const allTechniques = [...PRESET_TECHNIQUES, ...getCustomTechniques()];
   const favTechniques = allTechniques.filter((t) => favorites.includes(t.id));
   const xpState = getXPState();
   const dailyChallenges = useMemo(() => getDailyChallenges(), []);
+  const dailyQuote = useMemo(() => getDailyQuote(), []);
+  const activeFriendChallenges = useMemo(() => getActiveChallenges(), []);
 
   const hour = new Date().getHours();
   const greeting =
@@ -40,6 +46,17 @@ export default function Home() {
             <h1 className="text-2xl font-bold text-foreground">{t("home.appName")}</h1>
           </div>
           <p className="mt-1 text-sm text-muted-foreground">{greeting} {t("home.subtitle")}</p>
+        </div>
+
+        {/* Daily Quote */}
+        <div className="mb-6 rounded-2xl border border-border bg-card p-4">
+          <div className="flex items-start gap-3">
+            <Quote className="mt-0.5 h-4 w-4 shrink-0 text-primary/60" />
+            <div>
+              <p className="text-sm italic text-foreground/80 leading-relaxed">"{dailyQuote.text}"</p>
+              <p className="mt-1.5 text-xs text-muted-foreground">— {dailyQuote.author}</p>
+            </div>
+          </div>
         </div>
 
         {/* Stats Row */}
@@ -100,6 +117,58 @@ export default function Home() {
           </div>
         </div>
 
+        {/* Friend Challenges */}
+        {activeFriendChallenges.length > 0 && (
+          <div className="mb-6 rounded-2xl border border-border bg-card p-4">
+            <h2 className="mb-3 text-sm font-semibold uppercase tracking-wider text-muted-foreground">
+              {t("challenge.friend.active")}
+            </h2>
+            <div className="space-y-2.5">
+              {activeFriendChallenges.map((fc) => {
+                const progress = getChallengeProgress(fc);
+                return (
+                  <div key={fc.id} className="flex items-center gap-3">
+                    {progress.isComplete ? (
+                      <CheckCircle2 className="h-5 w-5 shrink-0 text-primary" />
+                    ) : (
+                      <Swords className="h-5 w-5 shrink-0 text-muted-foreground/60" />
+                    )}
+                    <div className="flex-1 min-w-0">
+                      <span className={`text-sm ${progress.isComplete ? "text-primary font-medium line-through" : "text-foreground"}`}>
+                        {fc.techniqueName}
+                      </span>
+                      <span className="text-xs text-muted-foreground ml-1">
+                        {t("challenge.friend.from", { name: fc.challengerName })}
+                      </span>
+                    </div>
+                    <span className="text-xs tabular-nums text-muted-foreground">
+                      {fc.targetMinutes > 0 && `${progress.minutesDone}/${fc.targetMinutes}m`}
+                      {fc.targetMinutes > 0 && fc.targetCycles > 0 && " · "}
+                      {fc.targetCycles > 0 && `${progress.cyclesDone}/${fc.targetCycles}c`}
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
+        {/* Challenge a Friend Button */}
+        <div className="mb-6">
+          <button
+            onClick={() => setShowChallengeDialog(true)}
+            className="flex w-full items-center gap-3 rounded-2xl border border-border bg-card p-4 transition-colors hover:bg-secondary/50"
+          >
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10">
+              <Swords className="h-5 w-5 text-primary" />
+            </div>
+            <div className="text-left">
+              <p className="text-sm font-medium text-foreground">{t("challenge.friend.title")}</p>
+              <p className="text-xs text-muted-foreground">{t("challenge.friend.subtitle")}</p>
+            </div>
+          </button>
+        </div>
+
         {/* Smart Suggestion */}
         <div className="mb-6">
           <SmartSuggestion />
@@ -136,6 +205,8 @@ export default function Home() {
         </button>
         <p className="mt-2 text-center text-xs text-muted-foreground">{t("home.tapToBreathe")}</p>
       </div>
+
+      <CreateChallengeDialog open={showChallengeDialog} onOpenChange={setShowChallengeDialog} />
     </div>
   );
 }
