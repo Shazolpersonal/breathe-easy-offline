@@ -130,6 +130,41 @@ export default function Settings() {
               </button>
             ))}
           </div>
+          <div className="mt-3">
+            <h3 className="mb-2 text-xs font-medium text-muted-foreground">{t("settings.themeMode")}</h3>
+            <div className="flex gap-2">
+              {(["manual", "auto", "auto-warm"] as ThemeMode[]).map((mode) => (
+                <button
+                  key={mode}
+                  onClick={() => setThemeMode(mode)}
+                  className={cn(
+                    "flex-1 rounded-xl py-2 text-xs font-medium transition-colors",
+                    themeMode === mode ? "bg-primary/20 ring-2 ring-primary text-primary" : "bg-secondary text-muted-foreground hover:bg-secondary/80"
+                  )}
+                >
+                  {t(`settings.themeMode.${mode === "auto-warm" ? "autoWarm" : mode}`)}
+                </button>
+              ))}
+            </div>
+            <p className="mt-1 text-[10px] text-muted-foreground">{t("settings.themeMode.desc")}</p>
+          </div>
+        </section>
+
+        {/* Ambient Soundscape */}
+        <section className="rounded-2xl border border-border bg-card p-4 space-y-4">
+          <div className="flex items-center gap-2">
+            <Music className="h-4 w-4 text-muted-foreground" />
+            <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">{t("settings.soundscape")}</h2>
+          </div>
+          <SoundscapePicker
+            value={(settings.soundscapeType || "off") as SoundscapeType}
+            onChange={(type) => update({ soundscapeType: type })}
+          />
+          <div>
+            <Label className="mb-2 block">{t("soundscape.volume")}</Label>
+            <Slider min={0} max={1} step={0.05} value={[settings.soundscapeVolume ?? 0.5]} onValueChange={([v]) => update({ soundscapeVolume: v })} />
+          </div>
+          <p className="text-[10px] text-muted-foreground">{t("settings.soundscapeDesc")}</p>
         </section>
 
         {/* Accessibility */}
