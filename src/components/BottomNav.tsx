@@ -15,6 +15,7 @@ const MAIN_ITEMS = [
 const MORE_ITEMS = [
   { path: "/playlists", labelKey: "nav.playlists" },
   { path: "/programs", labelKey: "nav.programs" },
+  { path: "/guide", labelKey: "nav.guide" },
   { path: "/settings", labelKey: "nav.settings" },
 ];
 

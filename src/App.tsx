@@ -74,6 +74,7 @@ function AppInner() {
         <Route path="/settings" element={<Settings />} />
         <Route path="/playlists" element={<Playlists />} />
         <Route path="/programs" element={<Programs />} />
+        <Route path="/guide" element={<Guide />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
       <MiniPlayer />
