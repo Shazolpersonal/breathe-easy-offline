@@ -6,9 +6,11 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "@/contexts/ThemeContext";
 import { SettingsProvider } from "@/contexts/SettingsContext";
 import { LanguageProvider } from "@/contexts/LanguageContext";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useSettings } from "@/contexts/SettingsContext";
 import { startReminderChecker } from "@/lib/reminders";
+import { parseChallengeFromURL, FriendChallengeParams } from "@/lib/friendChallenge";
+import { AcceptChallengeDialog } from "@/components/FriendChallenge";
 import BottomNav from "@/components/BottomNav";
 import Home from "@/pages/Home";
 import Session from "@/pages/Session";
@@ -23,9 +25,19 @@ const queryClient = new QueryClient();
 
 function AppInner() {
   const { settings } = useSettings();
+  const [incomingChallenge, setIncomingChallenge] = useState<FriendChallengeParams | null>(null);
+  const [showAcceptDialog, setShowAcceptDialog] = useState(false);
 
   useEffect(() => {
     startReminderChecker();
+  }, []);
+
+  useEffect(() => {
+    const challenge = parseChallengeFromURL();
+    if (challenge) {
+      setIncomingChallenge(challenge);
+      setShowAcceptDialog(true);
+    }
   }, []);
 
   useEffect(() => {
@@ -52,6 +64,11 @@ function AppInner() {
         </Routes>
         <BottomNav />
       </BrowserRouter>
+      <AcceptChallengeDialog
+        open={showAcceptDialog}
+        onOpenChange={setShowAcceptDialog}
+        challenge={incomingChallenge}
+      />
     </>
   );
 }
