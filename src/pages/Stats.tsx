@@ -225,6 +225,8 @@ export default function Stats() {
             )}
 
             <MoodHeatmapCalendar />
+            </>
+            )}
           </>
         )}
 
