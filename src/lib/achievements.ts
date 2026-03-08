@@ -1,4 +1,4 @@
-import { getSessions, getCustomTechniques, getCurrentStreak, SessionRecord } from "./storage";
+import { getSessions, getCustomTechniques, SessionRecord } from "./storage";
 import { getAllProgressionsPublic } from "./progression";
 
 export interface Badge {
