@@ -46,6 +46,19 @@ export default function Home() {
   const installPlatform = useMemo(() => getInstallPlatform(), []);
   const allCompleteToastShown = useRef(false);
   const lastSession = useMemo(() => getLastSessionConfig(), []);
+  const streakFreeze = useMemo(() => getStreakFreezeInfo(), []);
+  const [backupDismissed, setBackupDismissed] = useState(() => sessionStorage.getItem("breathe_backup_nudge_dismissed") === "1");
+
+  // Backup nudge logic
+  const backupNudge = useMemo(() => {
+    if (backupDismissed) return null;
+    const summary = getDataSummary();
+    if (summary.sessions < 5) return null;
+    const lastBackup = getLastBackupDate();
+    const daysSince = lastBackup ? Math.floor((Date.now() - new Date(lastBackup).getTime()) / 86400000) : null;
+    if (daysSince === null || daysSince >= 7) return { daysSince, sessions: summary.sessions };
+    return null;
+  }, [backupDismissed]);
 
   // Save challenge progress & show all-complete celebration
   useEffect(() => {
