@@ -18,7 +18,7 @@ import { toast } from "sonner";
 
 export default function Home() {
   const navigate = useNavigate();
-  const { t, language } = useLanguage();
+  const { t, language, setLanguage } = useLanguage();
   const [favorites, setFavorites] = useState(getFavorites);
   const [showChallengeDialog, setShowChallengeDialog] = useState(false);
   const [installDismissed, setInstallDismissed] = useState(isDismissed);
@@ -76,9 +76,25 @@ export default function Home() {
       <div className="mx-auto max-w-md">
         {/* Header */}
         <div className="mb-6">
-          <div className="flex items-center gap-3 mb-1">
-            <img src="/logo.png" alt="Muhurto Breath logo" className="h-10 w-10" />
-            <h1 className="text-2xl font-bold text-foreground">{t("home.appName")}</h1>
+          <div className="flex items-center justify-between mb-1">
+            <div className="flex items-center gap-3">
+              <img src="/logo.png" alt="Muhurto Breath logo" className="h-10 w-10" />
+              <h1 className="text-2xl font-bold text-foreground">{t("home.appName")}</h1>
+            </div>
+            <div className="flex items-center rounded-full border border-border bg-card p-0.5 text-xs font-medium">
+              <button
+                onClick={() => setLanguage("en")}
+                className={`rounded-full px-2.5 py-1 transition-colors ${language === "en" ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground"}`}
+              >
+                EN
+              </button>
+              <button
+                onClick={() => setLanguage("bn")}
+                className={`rounded-full px-2.5 py-1 transition-colors ${language === "bn" ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground"}`}
+              >
+                বাং
+              </button>
+            </div>
           </div>
           <p className="mt-1 text-sm text-muted-foreground">{greeting} {t("home.subtitle")}</p>
         </div>
