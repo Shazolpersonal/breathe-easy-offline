@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
-import { Pause, Play, Square, Volume2, VolumeX, TrendingUp, Sparkles, Circle, Waves, BarChart3, Flower2, Share2, SkipForward, Mic, MicOff, Heart, Maximize2, Minimize2, ArrowUp, Wind, Clock, Lightbulb } from "lucide-react";
+import { Pause, Play, Square, Volume2, VolumeX, TrendingUp, Sparkles, Circle, Waves, BarChart3, Flower2, Share2, SkipForward, Mic, MicOff, Heart, Maximize2, Minimize2, ArrowUp } from "lucide-react";
 import BreathingVisualizer, { VisualizationType } from "@/components/BreathingVisualizer";
 import ParticleBackground from "@/components/ParticleBackground";
 import ScreenColorBreathing from "@/components/ScreenColorBreathing";
@@ -8,7 +8,7 @@ import MoodPicker from "@/components/MoodPicker";
 import BreathingFeedback from "@/components/BreathingFeedback";
 import HeartRateMonitorOverlay from "@/components/HeartRateMonitor";
 import { PRESET_TECHNIQUES, getTechniqueById, BreathingPhase, getPyramidPhasesForRound } from "@/lib/techniques";
-import { getCustomTechniques, addSession, getSessions, saveLastSessionConfig, getLastJournalForTechnique, getTotalSessionCount, exportDataCompact, getSettings } from "@/lib/storage";
+import { getCustomTechniques, addSession, getSessions, saveLastSessionConfig } from "@/lib/storage";
 import { useSettings } from "@/contexts/SettingsContext";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useSessionContext } from "@/contexts/SessionContext";
@@ -37,7 +37,6 @@ import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { requestWakeLock, releaseWakeLock } from "@/lib/wakeLock";
 import { shouldSuggestIncrease, dismissSuggestion } from "@/lib/adaptive";
-import { getPostSessionRecommendation, PostSessionRecommendation } from "@/lib/suggestions";
 
 type SessionState = "idle" | "running" | "paused" | "done" | "playlist-transition";
 
@@ -350,20 +349,6 @@ export default function Session() {
           description: t(`badge.${badge.id}.description`),
         });
       });
-
-      // Auto-backup every 10 sessions
-      const appSettings = getSettings();
-      if (appSettings.autoBackupEnabled) {
-        const totalCount = getTotalSessionCount();
-        if (totalCount > 0 && totalCount % 10 === 0) {
-          try {
-            const compact = exportDataCompact();
-            navigator.clipboard.writeText(compact).then(() => {
-              toast(t("autoBackup.copied", { count: totalCount }));
-            }).catch(() => {});
-          } catch {}
-        }
-      }
     }
 
     if (programId && programDay) {
@@ -766,26 +751,6 @@ export default function Session() {
   const moodImprovement = moodBefore !== null && moodAfter !== null ? moodAfter - moodBefore : null;
   const activePhase = state === "idle" ? "idle" as const : currentPhase.type;
 
-  // Estimated finish time
-  const estimatedEndTime = useMemo(() => {
-    const end = new Date(Date.now() + durationMin * 60000);
-    return end.toLocaleTimeString(language === "bn" ? "bn" : "en", { hour: "numeric", minute: "2-digit" });
-  }, [durationMin, language]);
-
-  // Breathing rate (breaths per minute)
-  const breathingRate = completedCycles > 0 && totalElapsed > 30
-    ? Math.round((completedCycles / (totalElapsed / 60)) * 10) / 10
-    : null;
-
-  // Previous journal for this technique
-  const previousJournal = useMemo(() => getLastJournalForTechnique(technique.id), [technique.id]);
-
-  // Post-session recommendation
-  const postRecommendation = useMemo(
-    () => moodSaved ? getPostSessionRecommendation(moodAfter, technique.id) : null,
-    [moodSaved, moodAfter, technique.id]
-  );
-
   // Done screen extra data
   const avgBreathAccuracy = breathAccuracySamplesRef.current.length > 0
     ? Math.round(breathAccuracySamplesRef.current.reduce((a, b) => a + b, 0) / breathAccuracySamplesRef.current.length)
@@ -920,25 +885,6 @@ export default function Session() {
             )}
           </div>
 
-          {/* Breathing Rate */}
-          {breathingRate !== null && (
-            <div className="rounded-xl border border-border bg-card p-3 space-y-1">
-              <div className="flex items-center justify-center gap-2">
-                <Wind className="h-4 w-4 text-primary" />
-                <span className="text-sm font-medium text-foreground">{t("session.breathingRate")}</span>
-              </div>
-              <div className="text-2xl font-bold text-primary">{breathingRate} <span className="text-sm font-normal text-muted-foreground">{t("session.breathsPerMin")}</span></div>
-            </div>
-          )}
-
-          {/* Previous Journal Inspiration */}
-          {previousJournal && (
-            <div className="w-full max-w-xs rounded-lg border border-border/50 bg-secondary/30 px-3 py-2">
-              <p className="text-[10px] font-medium text-muted-foreground mb-0.5">{t("session.previousJournal")}</p>
-              <p className="text-xs text-muted-foreground/70 italic line-clamp-2">"{previousJournal}"</p>
-            </div>
-          )}
-
           <div className="w-full max-w-xs">
             <Textarea
               placeholder={t("session.journal.placeholder")}
@@ -948,29 +894,6 @@ export default function Session() {
               rows={3}
             />
           </div>
-
-          {/* Post-session technique recommendation */}
-          {postRecommendation && (
-            <div className="rounded-xl border border-primary/20 bg-primary/5 p-3 w-full max-w-xs">
-              <div className="flex items-center gap-2 mb-1.5">
-                <Lightbulb className="h-4 w-4 text-primary" />
-                <span className="text-sm font-medium text-foreground">{t("recommendation.title")}</span>
-              </div>
-              <p className="text-xs text-muted-foreground mb-2">{t(postRecommendation.reasonKey)}</p>
-              <Button
-                size="sm"
-                variant="outline"
-                className="w-full gap-1"
-                onClick={() => {
-                  saveJournal();
-                  navigate(`/session?technique=${postRecommendation.techniqueId}`);
-                  window.location.reload();
-                }}
-              >
-                <Play className="h-3.5 w-3.5" /> {t("recommendation.try", { name: t(`technique.${postRecommendation.techniqueId}.name`) || postRecommendation.techniqueName })}
-              </Button>
-            </div>
-          )}
 
           <div className="flex flex-col items-center gap-2 w-full max-w-xs">
             <div className="flex gap-2 w-full">
@@ -1126,12 +1049,6 @@ export default function Session() {
                 className="w-10 h-7 rounded-full text-center text-xs font-medium bg-secondary text-secondary-foreground border-0 focus:ring-1 focus:ring-primary"
                 aria-label={t("session.customDuration")}
               />
-            </div>
-
-            {/* Estimated finish time */}
-            <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-              <Clock className="h-3.5 w-3.5" />
-              <span>{t("session.endsAt", { time: estimatedEndTime })}</span>
             </div>
 
             <div className="flex gap-1.5">

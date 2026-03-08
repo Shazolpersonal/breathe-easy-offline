@@ -921,41 +921,4 @@ export const bn: Record<string, string> = {
   "adaptive.suggestIncrease": "আপনার প্রশান্তি স্কোর ধারাবাহিকভাবে উচ্চ! পরের বার {{minutes}} মিনিট চেষ্টা করুন।",
   "adaptive.acceptIncrease": "{{minutes}} মিনিট সেট করুন",
   "adaptive.durationUpdated": "ডিফল্ট সময়কাল {{minutes}} মিনিটে আপডেট হয়েছে!",
-
-  // Estimated End Time
-  "session.endsAt": "{{time}}-এ শেষ হবে",
-
-  // Breathing Rate
-  "session.breathingRate": "শ্বাস-প্রশ্বাসের হার",
-  "session.breathsPerMin": "শ্বাস/মিনিট",
-
-  // Previous Journal
-  "session.previousJournal": "গতবার আপনি লিখেছিলেন:",
-
-  // Technique Recommendation
-  "recommendation.title": "পরবর্তী চেষ্টা করুন",
-  "recommendation.try": "শুরু করুন {{name}}",
-  "recommendation.stillStressed": "এখনও চাপে আছেন? এই কৌশলটি গভীর শিথিলতার জন্য তৈরি।",
-  "recommendation.neutral": "ভারসাম্য অনুভব করছেন — মনোযোগ ও শক্তি বাড়াতে এই কৌশল চেষ্টা করুন।",
-  "recommendation.feelingGood": "দারুণ মেজাজ! এই নরম কৌশল আপনার শান্ত অবস্থা বজায় রাখতে সাহায্য করে।",
-
-  // Streak Freeze
-  "home.freezeReady": "১টি ফ্রিজ প্রস্তুত",
-  "home.freezeUsed": "ফ্রিজ ব্যবহৃত",
-
-  // Backup Nudge
-  "backup.nudgeTitle": "আপনার ডেটা ব্যাকআপ করুন",
-  "backup.nudgeDesc": "শেষ ব্যাকআপ {{days}} দিন আগে ছিল। {{sessions}}টি সেশন ঝুঁকিতে আছে।",
-  "backup.nudgeNever": "আপনি কখনও ব্যাকআপ করেননি। {{sessions}}টি সেশন হারিয়ে যেতে পারে।",
-  "backup.copyNow": "এখনই ব্যাকআপ কপি করুন",
-
-  // Auto-Backup
-  "autoBackup.copied": "অটো-ব্যাকআপ: {{count}}টি সেশন ক্লিপবোর্ডে সংরক্ষিত! 📋",
-  "settings.autoBackup": "অটো-ব্যাকআপ",
-  "settings.autoBackupDesc": "প্রতি ১০টি সেশনে ক্লিপবোর্ডে ব্যাকআপ কপি করুন",
-
-  // Share Backup
-  "settings.shareBackup": "ব্যাকআপ শেয়ার",
-  "settings.shareBackupTitle": "মুহূর্ত ব্রেথ ব্যাকআপ",
-  "settings.backupShared": "ব্যাকআপ শেয়ার হয়েছে!",
 };

@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { exportData, importData, getLastBackupDate, getDataSummary, exportDataCompact, importDataFromCompact } from "@/lib/storage";
 import { exportSessionsCSV } from "@/lib/csvExport";
-import { Download, Upload, Circle, Waves, BarChart3, Flower2, Plus, Trash2, Bell, BellOff, Accessibility, Mic, Heart, Music, FileSpreadsheet, AlertTriangle, Database, Volume2, Info, Share2, HeartHandshake, Clipboard, ClipboardPaste, Target, Send } from "lucide-react";
+import { Download, Upload, Circle, Waves, BarChart3, Flower2, Plus, Trash2, Bell, BellOff, Accessibility, Mic, Heart, Music, FileSpreadsheet, AlertTriangle, Database, Volume2, Info, Share2, HeartHandshake, Clipboard, ClipboardPaste, Target } from "lucide-react";
 import { SoundscapeType, getSoundscapeEngine } from "@/lib/soundscapes";
 import SoundscapePicker from "@/components/SoundscapePicker";
 import { cn } from "@/lib/utils";
@@ -416,13 +416,6 @@ export default function Settings() {
             <Slider min={1} max={60} step={1} value={[settings.dailyGoalMinutes]} onValueChange={([v]) => update({ dailyGoalMinutes: v })} />
             <p className="text-[10px] text-muted-foreground mt-1">{t("settings.dailyGoalDesc")}</p>
           </div>
-          <div className="flex items-center justify-between">
-            <div>
-              <Label>{t("settings.autoBackup")}</Label>
-              <p className="text-xs text-muted-foreground">{t("settings.autoBackupDesc")}</p>
-            </div>
-            <Switch checked={settings.autoBackupEnabled} onCheckedChange={(v) => update({ autoBackupEnabled: v })} />
-          </div>
         </section>
 
         {/* Visualization */}
@@ -627,31 +620,6 @@ export default function Settings() {
               <ClipboardPaste className="h-4 w-4" /> {t("settings.pasteRestore")}
             </Button>
           </div>
-
-          {/* Share Backup via Web Share API */}
-          {typeof navigator.share === "function" && (
-            <Button
-              variant="outline"
-              size="sm"
-              className="w-full gap-1"
-              onClick={async () => {
-                try {
-                  const compact = exportDataCompact();
-                  await navigator.share({
-                    title: t("settings.shareBackupTitle"),
-                    text: compact,
-                  });
-                  toast({ title: t("settings.backupShared") });
-                } catch (e: any) {
-                  if (e?.name !== "AbortError") {
-                    toast({ title: t("settings.clipboardError"), variant: "destructive" });
-                  }
-                }
-              }}
-            >
-              <Send className="h-4 w-4" /> {t("settings.shareBackup")}
-            </Button>
-          )}
         </section>
 
         {/* Install */}

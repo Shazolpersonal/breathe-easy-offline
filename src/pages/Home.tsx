@@ -1,10 +1,10 @@
 import { useNavigate } from "react-router-dom";
-import { Wind, Flame, Zap, TrendingUp, CheckCircle2, Circle, Swords, Quote, Download, X, Trophy, Share2, Heart, Play, Shield, ShieldCheck, Clipboard, AlertTriangle } from "lucide-react";
+import { Wind, Flame, Zap, TrendingUp, CheckCircle2, Circle, Swords, Quote, Download, X, Trophy, Share2, Heart, Play } from "lucide-react";
 import SmartSuggestion from "@/components/SmartSuggestion";
 import TechniqueCard from "@/components/TechniqueCard";
 import WeeklySummary from "@/components/WeeklySummary";
 import { PRESET_TECHNIQUES, getTechniqueById } from "@/lib/techniques";
-import { getCustomTechniques, getFavorites, toggleFavorite, getCurrentStreak, getTodayMinutes, getLastSessionConfig, getStreakFreezeInfo, getLastBackupDate, getDataSummary, exportDataCompact } from "@/lib/storage";
+import { getCustomTechniques, getFavorites, toggleFavorite, getCurrentStreak, getTodayMinutes, getLastSessionConfig } from "@/lib/storage";
 import { useSettings } from "@/contexts/SettingsContext";
 import { getDailyChallenges, getChallengeStreak, saveTodayChallengeProgress, areAllChallengesComplete } from "@/lib/challenges";
 import { getXPState, getWeeklyXP, addXP } from "@/lib/xp";
@@ -46,19 +46,6 @@ export default function Home() {
   const installPlatform = useMemo(() => getInstallPlatform(), []);
   const allCompleteToastShown = useRef(false);
   const lastSession = useMemo(() => getLastSessionConfig(), []);
-  const streakFreeze = useMemo(() => getStreakFreezeInfo(), []);
-  const [backupDismissed, setBackupDismissed] = useState(() => sessionStorage.getItem("breathe_backup_nudge_dismissed") === "1");
-
-  // Backup nudge logic
-  const backupNudge = useMemo(() => {
-    if (backupDismissed) return null;
-    const summary = getDataSummary();
-    if (summary.sessions < 5) return null;
-    const lastBackup = getLastBackupDate();
-    const daysSince = lastBackup ? Math.floor((Date.now() - new Date(lastBackup).getTime()) / 86400000) : null;
-    if (daysSince === null || daysSince >= 7) return { daysSince, sessions: summary.sessions };
-    return null;
-  }, [backupDismissed]);
 
   // Save challenge progress & show all-complete celebration
   useEffect(() => {
@@ -200,18 +187,6 @@ export default function Home() {
             <Flame className="mb-1 h-5 w-5 text-primary" />
             <span className="text-lg font-bold text-foreground">{streak}</span>
             <span className="text-[11px] text-muted-foreground">{t("home.dayStreak")}</span>
-            {/* Streak freeze indicator */}
-            <div className="flex items-center gap-0.5 mt-0.5">
-              {streakFreeze.usedThisWeek ? (
-                <span className="flex items-center gap-0.5 text-[9px] text-muted-foreground">
-                  <Shield className="h-2.5 w-2.5" /> {t("home.freezeUsed")}
-                </span>
-              ) : streakFreeze.available ? (
-                <span className="flex items-center gap-0.5 text-[9px] text-primary/70">
-                  <ShieldCheck className="h-2.5 w-2.5" /> {t("home.freezeReady")}
-                </span>
-              ) : null}
-            </div>
           </div>
           <div className="flex flex-col items-center rounded-2xl border border-border bg-card p-3">
             {/* Daily Goal Progress Ring */}
@@ -238,51 +213,6 @@ export default function Home() {
             <span className="text-[11px] text-muted-foreground">{t(`xp.${xpState.title}`)}</span>
           </div>
         </div>
-
-        {/* Backup Nudge */}
-        {backupNudge && (
-          <div className="mb-6 rounded-2xl border border-destructive/30 bg-destructive/5 p-4">
-            <div className="flex items-start gap-3">
-              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-destructive/15">
-                <AlertTriangle className="h-5 w-5 text-destructive" />
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium text-foreground">{t("backup.nudgeTitle")}</p>
-                <p className="text-xs text-muted-foreground">
-                  {backupNudge.daysSince !== null
-                    ? t("backup.nudgeDesc", { days: backupNudge.daysSince, sessions: backupNudge.sessions })
-                    : t("backup.nudgeNever", { sessions: backupNudge.sessions })}
-                </p>
-                <Button
-                  size="sm"
-                  className="mt-2 gap-1"
-                  onClick={async () => {
-                    try {
-                      const compact = exportDataCompact();
-                      await navigator.clipboard.writeText(compact);
-                      toast.success(t("settings.clipboardCopied"));
-                      setBackupDismissed(true);
-                      sessionStorage.setItem("breathe_backup_nudge_dismissed", "1");
-                    } catch {
-                      toast.error(t("settings.clipboardError"));
-                    }
-                  }}
-                >
-                  <Clipboard className="h-3.5 w-3.5" /> {t("backup.copyNow")}
-                </Button>
-              </div>
-              <button
-                onClick={() => {
-                  setBackupDismissed(true);
-                  sessionStorage.setItem("breathe_backup_nudge_dismissed", "1");
-                }}
-                className="shrink-0 rounded-full p-1 text-muted-foreground hover:text-foreground"
-              >
-                <X className="h-4 w-4" />
-              </button>
-            </div>
-          </div>
-        )}
 
         {/* XP Progress */}
         <div className="mb-6 rounded-2xl border border-border bg-card p-3">
