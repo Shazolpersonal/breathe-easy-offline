@@ -11,7 +11,6 @@ import {
   generateChallengeLink,
   saveFriendChallenge,
   FriendChallengeParams,
-  parseChallengeFromURL,
   clearChallengeHash,
 } from "@/lib/friendChallenge";
 import { useLanguage } from "@/contexts/LanguageContext";

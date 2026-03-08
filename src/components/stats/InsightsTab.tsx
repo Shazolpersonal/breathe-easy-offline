@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { getWeeklyInsights } from "@/lib/insights";
+import { getWeeklyInsights, Insight } from "@/lib/insights";
 import { Lightbulb, TrendingUp, Flame, Clock, Award, BarChart3, Zap } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 
@@ -16,14 +16,6 @@ const INSIGHT_ICONS: Record<string, typeof Lightbulb> = {
   "insight.goodStart": Lightbulb,
   "insight.streakGoing": Flame,
 };
-
-function getInsightKey(raw: string): string {
-  return raw.split("|")[0];
-}
-
-function getInsightParams(raw: string): string[] {
-  return raw.split("|").slice(1);
-}
 
 export default function InsightsTab() {
   const { t } = useLanguage();
@@ -42,41 +34,9 @@ export default function InsightsTab() {
   return (
     <div className="space-y-3">
       <p className="text-xs text-muted-foreground mb-2">{t("stats.insights.subtitle")}</p>
-      {insights.map((raw, i) => {
-        const key = getInsightKey(raw);
-        const params = getInsightParams(raw);
-        const Icon = INSIGHT_ICONS[key] || Lightbulb;
-
-        // Build translated text with params
-        let text: string;
-        switch (key) {
-          case "insight.bestTime":
-            text = t("insight.bestTime", { time: params[0] });
-            break;
-          case "insight.techniqueCompare":
-            text = t("insight.techniqueCompare", { best: params[0], pct: params[1], second: params[2] });
-            break;
-          case "insight.bestTechnique":
-            text = t("insight.bestTechnique", { name: params[0] });
-            break;
-          case "insight.nearRecord":
-            text = t("insight.nearRecord", { days: params[0] });
-            break;
-          case "insight.moreSessionsUp":
-            text = t("insight.moreSessionsUp", { count: params[0] });
-            break;
-          case "insight.fewerSessions":
-            text = t("insight.fewerSessions", { count: params[0] });
-            break;
-          case "insight.durationUp":
-            text = t("insight.durationUp", { current: params[0], previous: params[1] });
-            break;
-          case "insight.streakGoing":
-            text = t("insight.streakGoing", { days: params[0] });
-            break;
-          default:
-            text = t(key);
-        }
+      {insights.map((insight: Insight, i: number) => {
+        const Icon = INSIGHT_ICONS[insight.key] || Lightbulb;
+        const text = t(insight.key, insight.params);
 
         return (
           <div

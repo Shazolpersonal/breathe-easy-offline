@@ -1,3 +1,4 @@
+import ErrorBoundary from "@/components/ErrorBoundary";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -86,21 +87,23 @@ function AppInner() {
 }
 
 const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <ThemeProvider>
-      <LanguageProvider>
-        <SettingsProvider>
-          <TooltipProvider>
-            <BrowserRouter>
-              <SessionProvider>
-                <AppInner />
-              </SessionProvider>
-            </BrowserRouter>
-          </TooltipProvider>
-        </SettingsProvider>
-      </LanguageProvider>
-    </ThemeProvider>
-  </QueryClientProvider>
+  <ErrorBoundary>
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider>
+        <LanguageProvider>
+          <SettingsProvider>
+            <TooltipProvider>
+              <BrowserRouter>
+                <SessionProvider>
+                  <AppInner />
+                </SessionProvider>
+              </BrowserRouter>
+            </TooltipProvider>
+          </SettingsProvider>
+        </LanguageProvider>
+      </ThemeProvider>
+    </QueryClientProvider>
+  </ErrorBoundary>
 );
 
 export default App;

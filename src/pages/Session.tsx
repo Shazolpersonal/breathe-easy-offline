@@ -267,6 +267,7 @@ export default function Session() {
         durationSeconds: totalElapsed,
         completedCycles,
         moodBefore: moodBefore ?? undefined,
+        moodAfter: undefined, // Will be updated when user picks mood after
         calmScore: calm.score,
         breathAccuracy: avgBreathAccuracy,
         avgHeartRate: avgHR,
@@ -433,6 +434,13 @@ export default function Session() {
       moodAfter: mood,
       date: new Date().toISOString(),
     });
+    // Also update the session record with moodAfter
+    const allSessions = getSessions();
+    const idx = allSessions.findIndex(s => s.id === sessionIdRef.current);
+    if (idx >= 0) {
+      allSessions[idx].moodAfter = mood;
+      localStorage.setItem("breathe_sessions", JSON.stringify(allSessions));
+    }
     setMoodSaved(true);
   };
 
@@ -512,9 +520,16 @@ export default function Session() {
   });
 
   // ─── Mini-Player Sync ───
-  // On mount, restore from mini session if exists
+  // On mount, restore from mini session if running
   useEffect(() => {
     if (miniSession?.isActive) {
+      // Restore elapsed time from mini-player into session state
+      setTotalElapsed(miniSession.elapsed);
+      if (miniSession.isPaused) {
+        setState("paused");
+      } else {
+        setState("running");
+      }
       stopMiniSession();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
