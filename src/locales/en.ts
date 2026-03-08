@@ -320,6 +320,23 @@ export const en: Record<string, string> = {
   "xp.Calm Master": "Calm Master",
   "xp.Zen Sage": "Zen Sage",
   "xp.Enlightened": "Enlightened",
+  "xp.Breath Sage": "Breath Sage",
+  "xp.Inner Peace": "Inner Peace",
+  "xp.Transcendent": "Transcendent",
+  "xp.Eternal Calm": "Eternal Calm",
+  "xp.Ascended": "Ascended",
+
+  // XP Breakdown
+  "xp.base": "Base",
+  "xp.duration": "Duration",
+  "xp.difficulty": "Difficulty",
+  "xp.calmBonus": "Calm Score",
+  "xp.moodBonus": "Mood Boost",
+  "xp.streakBonus": "Streak",
+  "xp.firstOfDay": "First Today",
+  "xp.challengeBonus": "Challenges",
+  "xp.total": "Total",
+  "xp.weeklyXP": "{{xp}} XP this week",
 
   // Progression levels
   "level.Beginner": "Beginner",

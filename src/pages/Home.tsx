@@ -5,7 +5,7 @@ import TechniqueCard from "@/components/TechniqueCard";
 import { PRESET_TECHNIQUES } from "@/lib/techniques";
 import { getCustomTechniques, getFavorites, toggleFavorite, getCurrentStreak, getTodayMinutes } from "@/lib/storage";
 import { getDailyChallenges } from "@/lib/challenges";
-import { getXPState } from "@/lib/xp";
+import { getXPState, getWeeklyXP } from "@/lib/xp";
 import { getDailyQuote } from "@/lib/quotes";
 import { getActiveChallenges, getChallengeProgress } from "@/lib/friendChallenge";
 import { canInstall, promptInstall, isDismissed, dismissInstallBanner, isRunningAsPWA, canShowManualInstallHint, getInstallPlatform } from "@/lib/installPrompt";
@@ -26,6 +26,7 @@ export default function Home() {
   const allTechniques = useMemo(() => [...PRESET_TECHNIQUES, ...getCustomTechniques()], []);
   const favTechniques = useMemo(() => allTechniques.filter((tech) => favorites.includes(tech.id)), [allTechniques, favorites]);
   const xpState = useMemo(() => getXPState(), []);
+  const weeklyXP = useMemo(() => getWeeklyXP(), []);
   const dailyChallenges = useMemo(() => getDailyChallenges(), []);
   const dailyQuote = useMemo(() => getDailyQuote(language), [language]);
   const activeFriendChallenges = useMemo(() => getActiveChallenges(), []);
@@ -145,9 +146,16 @@ export default function Home() {
         <div className="mb-6 rounded-2xl border border-border bg-card p-3">
           <div className="flex items-center justify-between mb-1.5">
             <span className="text-xs font-medium text-muted-foreground">{xpState.totalXP} XP</span>
-            {xpState.xpToNext > 0 && (
-              <span className="text-xs text-muted-foreground">{t("home.xpToNext", { xp: xpState.xpToNext })}</span>
-            )}
+            <div className="flex items-center gap-2">
+              {weeklyXP > 0 && (
+                <span className="text-xs text-primary font-medium">
+                  {t("xp.weeklyXP", { xp: weeklyXP })}
+                </span>
+              )}
+              {xpState.xpToNext > 0 && (
+                <span className="text-xs text-muted-foreground">{t("home.xpToNext", { xp: xpState.xpToNext })}</span>
+              )}
+            </div>
           </div>
           <Progress value={xpState.progressToNext} className="h-2" />
         </div>

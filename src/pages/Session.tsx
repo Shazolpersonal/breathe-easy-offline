@@ -19,7 +19,7 @@ import { saveMoodRecord, getMoodEmoji } from "@/lib/mood";
 import { getProgression, getScaledPhases, updateProgression, getLevelName, getLevelProgress } from "@/lib/progression";
 import { calculateCalmScore, PhaseTimestamp, CalmScoreResult } from "@/lib/coherence";
 import { getNewlyUnlocked } from "@/lib/achievements";
-import { calculateSessionXP, addXP, getXPState } from "@/lib/xp";
+import { calculateSessionXP, addXP, getXPState, XPBreakdown } from "@/lib/xp";
 import { getCompletedChallengeCount } from "@/lib/challenges";
 import { getPlaylists } from "@/lib/playlists";
 import { completeDay } from "@/lib/programs";
@@ -68,11 +68,37 @@ function LevelUpBanner({ level, techniqueName, label }: { level: number; techniq
   );
 }
 
-function XPEarnedDisplay({ xp, leveledUp, newTitle }: { xp: number; leveledUp: boolean; newTitle?: string }) {
+function XPEarnedDisplay({ breakdown, leveledUp, newTitle, t }: { breakdown: XPBreakdown; leveledUp: boolean; newTitle?: string; t: (key: string, vars?: Record<string, unknown>) => string }) {
+  const lines: { label: string; value: number }[] = [
+    { label: t("xp.base"), value: breakdown.base },
+    { label: t("xp.duration"), value: breakdown.duration },
+  ];
+  if (breakdown.difficulty > 0) lines.push({ label: t("xp.difficulty"), value: breakdown.difficulty });
+  if (breakdown.calmBonus > 0) lines.push({ label: t("xp.calmBonus"), value: breakdown.calmBonus });
+  if (breakdown.moodBonus > 0) lines.push({ label: t("xp.moodBonus"), value: breakdown.moodBonus });
+  if (breakdown.streakBonus > 0) lines.push({ label: t("xp.streakBonus"), value: breakdown.streakBonus });
+  if (breakdown.firstOfDay > 0) lines.push({ label: t("xp.firstOfDay"), value: breakdown.firstOfDay });
+  if (breakdown.challengeBonus > 0) lines.push({ label: t("xp.challengeBonus"), value: breakdown.challengeBonus });
+
   return (
-    <div className="flex flex-col items-center gap-1 rounded-xl bg-accent/50 px-4 py-3">
-      <Sparkles className="h-5 w-5 text-primary" />
-      <span className="text-lg font-bold text-primary">+{xp} XP</span>
+    <div className="flex flex-col items-center gap-2 rounded-xl bg-accent/50 px-5 py-3 w-full max-w-[220px]">
+      <div className="flex items-center gap-1.5">
+        <Sparkles className="h-5 w-5 text-primary" />
+        <span className="text-lg font-bold text-primary">+{breakdown.total} XP</span>
+      </div>
+      <div className="w-full space-y-0.5">
+        {lines.map((l) => (
+          <div key={l.label} className="flex justify-between text-xs">
+            <span className="text-muted-foreground">{l.label}</span>
+            <span className="tabular-nums text-foreground">+{l.value}</span>
+          </div>
+        ))}
+        <div className="border-t border-border my-1" />
+        <div className="flex justify-between text-xs font-semibold">
+          <span className="text-foreground">{t("xp.total")}</span>
+          <span className="tabular-nums text-primary">+{breakdown.total}</span>
+        </div>
+      </div>
       {leveledUp && newTitle && <span className="text-xs font-medium text-primary">🎉 {newTitle}</span>}
     </div>
   );
@@ -133,7 +159,7 @@ export default function Session() {
   const sessionIdRef = useRef(crypto.randomUUID());
 
   const [levelUpInfo, setLevelUpInfo] = useState<{ level: number } | null>(null);
-  const [earnedXP, setEarnedXP] = useState<{ xp: number; leveledUp: boolean; newTitle?: string } | null>(null);
+  const [earnedXP, setEarnedXP] = useState<{ breakdown: XPBreakdown; leveledUp: boolean; newTitle?: string } | null>(null);
   const [journalNote, setJournalNote] = useState("");
 
   const phaseStartRef = useRef(Date.now());
@@ -301,11 +327,11 @@ export default function Session() {
       });
 
       const challengesCompleted = getCompletedChallengeCount();
-      const xp = calculateSessionXP(elapsed, technique, calm.score, challengesCompleted);
-      const xpResult = addXP(xp);
+      const breakdown = calculateSessionXP(elapsed, technique, calm.score, challengesCompleted, undefined, moodBefore ?? undefined, undefined);
+      const xpResult = addXP(breakdown.total, techniqueName);
       const xpState = getXPState();
       setEarnedXP({
-        xp,
+        breakdown,
         leveledUp: xpResult.newLevel > xpResult.previousLevel,
         newTitle: xpResult.newLevel > xpResult.previousLevel ? t(`xp.${xpState.title}`) : undefined,
       });
@@ -735,7 +761,7 @@ export default function Session() {
 
           {levelUpInfo && <LevelUpBanner level={levelUpInfo.level} techniqueName={techniqueName} label={t("session.levelUp")} />}
           {calmResult && <CalmScoreDisplay result={calmResult} label={t("session.calmScore")} t={t} />}
-          {earnedXP && <XPEarnedDisplay xp={earnedXP.xp} leveledUp={earnedXP.leveledUp} newTitle={earnedXP.newTitle} />}
+          {earnedXP && <XPEarnedDisplay breakdown={earnedXP.breakdown} leveledUp={earnedXP.leveledUp} newTitle={earnedXP.newTitle} t={t} />}
 
           {/* Breath accuracy in done screen */}
           {avgBreathAccuracy !== null && (
