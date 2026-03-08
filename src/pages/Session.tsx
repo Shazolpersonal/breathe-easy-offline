@@ -35,7 +35,7 @@ import { toast } from "sonner";
 
 type SessionState = "idle" | "running" | "paused" | "done" | "playlist-transition";
 
-function CalmScoreDisplay({ result, label }: { result: CalmScoreResult; label: string }) {
+function CalmScoreDisplay({ result, label, t }: { result: CalmScoreResult; label: string; t: (key: string) => string }) {
   return (
     <div className="flex flex-col items-center gap-1">
       <div className="relative flex h-20 w-20 items-center justify-center">
@@ -45,7 +45,7 @@ function CalmScoreDisplay({ result, label }: { result: CalmScoreResult; label: s
         </svg>
         <span className="absolute text-lg font-bold text-foreground">{result.score}</span>
       </div>
-      <span className={`text-sm font-medium text-${result.color}`}>{result.label}</span>
+      <span className={`text-sm font-medium text-${result.color}`}>{t(result.labelKey)}</span>
       <span className="text-xs text-muted-foreground">{label}</span>
     </div>
   );
@@ -159,6 +159,8 @@ export default function Session() {
   }, [params]);
 
   const intervalRef = useRef<ReturnType<typeof setInterval>>();
+  const durationMinRef = useRef(durationMin);
+  durationMinRef.current = durationMin;
   const currentPhase: BreathingPhase = currentPhases[phaseIndex];
 
   const getPhaseLabel = (phase: BreathingPhase) => t(`phase.${phase.type}`);
@@ -380,10 +382,10 @@ export default function Session() {
     });
     setTotalElapsed((te) => {
       const newT = te + 1;
-      if (newT >= durationMin * 60) stop();
+      if (newT >= durationMinRef.current * 60) stop();
       return newT;
     });
-  }, [currentPhases, voiceOn, settings, durationMin, stop, technique, currentRound, t, language]);
+  }, [currentPhases, voiceOn, settings, stop, technique, currentRound, t, language]);
 
   const start = () => {
     sessionIdRef.current = crypto.randomUUID();
@@ -522,13 +524,25 @@ export default function Session() {
   // ─── Mini-Player Sync ───
   // On mount, restore from mini session if running
   useEffect(() => {
-    if (miniSession?.isActive) {
-      // Restore elapsed time from mini-player into session state
+    if (miniSession?.isActive && miniSession.techniqueId === techniqueId) {
       setTotalElapsed(miniSession.elapsed);
+      setPhaseIndex(miniSession.phaseIndex);
+      setSecondsLeft(miniSession.secondsLeft);
+      setCompletedCycles(miniSession.completedCycles);
+      setCurrentRound(miniSession.currentRound);
+      setDurationMin(miniSession.durationMin);
+      setMoodBefore(miniSession.moodBefore);
+      setVoiceOn(miniSession.voiceOn);
+      setSoundscapeType(miniSession.soundscapeType as SoundscapeType);
+      phaseStartRef.current = Date.now();
       if (miniSession.isPaused) {
         setState("paused");
       } else {
         setState("running");
+        // Restart soundscape if it was playing
+        if (miniSession.soundscapeType !== "off") {
+          soundscapeEngineRef.current.start(miniSession.soundscapeType as SoundscapeType, settings.soundscapeVolume ?? 0.5);
+        }
       }
       stopMiniSession();
     }
@@ -542,13 +556,28 @@ export default function Session() {
     };
   }, []);
 
-  // We use a ref to track current state for the unmount effect
+  // We use refs to track current state for the unmount effect
   const stateRef = useRef(state);
   stateRef.current = state;
   const elapsedRef = useRef(totalElapsed);
   elapsedRef.current = totalElapsed;
   const phaseRef = useRef(currentPhase);
   phaseRef.current = currentPhase;
+  const phaseIndexRef = useRef(phaseIndex);
+  phaseIndexRef.current = phaseIndex;
+  const secondsLeftRef = useRef(secondsLeft);
+  secondsLeftRef.current = secondsLeft;
+  const completedCyclesRef = useRef(completedCycles);
+  completedCyclesRef.current = completedCycles;
+  const currentRoundRef = useRef(currentRound);
+  currentRoundRef.current = currentRound;
+  // durationMinRef already declared above
+  const moodBeforeRef = useRef(moodBefore);
+  moodBeforeRef.current = moodBefore;
+  const voiceOnRef = useRef(voiceOn);
+  voiceOnRef.current = voiceOn;
+  const soundscapeTypeRef = useRef(soundscapeType);
+  soundscapeTypeRef.current = soundscapeType;
 
   useEffect(() => {
     return () => {
@@ -560,12 +589,20 @@ export default function Session() {
           techniqueName: technique.name,
           currentPhase: phaseRef.current.type,
           elapsed: elapsedRef.current,
-          totalDuration: durationMin,
+          totalDuration: durationMinRef.current,
+          phaseIndex: phaseIndexRef.current,
+          secondsLeft: secondsLeftRef.current,
+          completedCycles: completedCyclesRef.current,
+          currentRound: currentRoundRef.current,
+          durationMin: durationMinRef.current,
+          moodBefore: moodBeforeRef.current,
+          voiceOn: voiceOnRef.current,
+          soundscapeType: soundscapeTypeRef.current,
         });
       }
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [technique.id, technique.name, durationMin]);
+  }, [technique.id, technique.name]);
 
   const elapsedDisplay = `${Math.floor(totalElapsed / 60)}:${String(totalElapsed % 60).padStart(2, "0")}`;
   const targetDisplay = `${durationMin}:00`;
@@ -628,7 +665,7 @@ export default function Session() {
           </div>
 
           {levelUpInfo && <LevelUpBanner level={levelUpInfo.level} techniqueName={techniqueName} label={t("session.levelUp")} />}
-          {calmResult && <CalmScoreDisplay result={calmResult} label={t("session.calmScore")} />}
+          {calmResult && <CalmScoreDisplay result={calmResult} label={t("session.calmScore")} t={t} />}
           {earnedXP && <XPEarnedDisplay xp={earnedXP.xp} leveledUp={earnedXP.leveledUp} newTitle={earnedXP.newTitle} />}
 
           {/* Breath accuracy in done screen */}

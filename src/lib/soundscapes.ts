@@ -7,6 +7,7 @@ export class SoundscapeEngine {
   private animFrameId: number | null = null;
   private currentType: SoundscapeType = "off";
   private targetVolume = 0.5;
+  private timeoutIds: ReturnType<typeof setTimeout>[] = [];
 
   start(type: SoundscapeType, volume = 0.5) {
     this.stop();
@@ -28,23 +29,40 @@ export class SoundscapeEngine {
   }
 
   stop() {
+    // Clear all scheduled timeouts immediately
+    this.timeoutIds.forEach(id => clearTimeout(id));
+    this.timeoutIds = [];
+
     if (this.animFrameId) {
       cancelAnimationFrame(this.animFrameId);
       this.animFrameId = null;
     }
+
+    // Set type to off immediately to prevent any lingering callbacks
+    this.currentType = "off";
+
     if (this.masterGain && this.ctx) {
       try {
         this.masterGain.gain.linearRampToValueAtTime(0, this.ctx.currentTime + 0.5);
       } catch { /* ignore */ }
     }
-    setTimeout(() => {
-      this.nodes.forEach(n => { try { (n as any).stop?.(); (n as any).disconnect?.(); } catch {} });
+
+    const cleanupId = setTimeout(() => {
+      this.nodes.forEach(n => {
+        try {
+          if (n instanceof AudioBufferSourceNode || n instanceof OscillatorNode) {
+            n.stop();
+          }
+          n.disconnect();
+        } catch {}
+      });
       this.nodes = [];
       try { this.ctx?.close(); } catch {}
       this.ctx = null;
       this.masterGain = null;
     }, 600);
-    this.currentType = "off";
+    // Don't track cleanup timeout — it's a one-shot
+    void cleanupId;
   }
 
   setVolume(v: number) {
@@ -58,7 +76,6 @@ export class SoundscapeEngine {
     if (!this.ctx || !this.masterGain) return;
     const base = this.targetVolume;
     const t = this.ctx.currentTime;
-    // Subtle volume modulation based on breathing phase
     if (this.currentType === "ocean") {
       const mod = phase === "exhale" ? 1.15 : phase === "inhale" ? 0.85 : 1;
       this.masterGain.gain.linearRampToValueAtTime(base * mod, t + 0.5);
@@ -72,6 +89,12 @@ export class SoundscapeEngine {
   }
 
   getType() { return this.currentType; }
+
+  private scheduleTimeout(fn: () => void, delay: number) {
+    const id = setTimeout(fn, delay);
+    this.timeoutIds.push(id);
+    return id;
+  }
 
   private createNoiseBuffer(type: "white" | "brown" | "pink"): AudioBufferSourceNode {
     const ctx = this.ctx!;
@@ -89,7 +112,6 @@ export class SoundscapeEngine {
         last = data[i];
       }
     } else {
-      // Pink noise (Voss-McCartney approximation)
       let b0 = 0, b1 = 0, b2 = 0, b3 = 0, b4 = 0, b5 = 0, b6 = 0;
       for (let i = 0; i < bufferSize; i++) {
         const w = Math.random() * 2 - 1;
@@ -115,7 +137,6 @@ export class SoundscapeEngine {
     const ctx = this.ctx!;
     const gain = this.masterGain!;
 
-    // Main rain: white noise through bandpass
     const noise = this.createNoiseBuffer("white");
     const bp = ctx.createBiquadFilter();
     bp.type = "bandpass";
@@ -130,7 +151,6 @@ export class SoundscapeEngine {
     noise.connect(bp).connect(rainGain).connect(gain);
     noise.start();
 
-    // Drip effect: periodic random clicks
     const scheduleDrops = () => {
       if (!this.ctx || this.currentType !== "rain") return;
       const now = ctx.currentTime;
@@ -147,7 +167,7 @@ export class SoundscapeEngine {
         osc.start(now + delay);
         osc.stop(now + delay + 0.1);
       }
-      setTimeout(scheduleDrops, 2000);
+      this.scheduleTimeout(scheduleDrops, 2000);
     };
     scheduleDrops();
   }
@@ -156,17 +176,15 @@ export class SoundscapeEngine {
     const ctx = this.ctx!;
     const gain = this.masterGain!;
 
-    // Brown noise for deep ocean
     const noise = this.createNoiseBuffer("brown");
     const lp = ctx.createBiquadFilter();
     lp.type = "lowpass";
     lp.frequency.value = 800;
     this.nodes.push(lp);
 
-    // LFO for wave effect
     const lfo = ctx.createOscillator();
     lfo.type = "sine";
-    lfo.frequency.value = 0.14; // ~7 second wave cycle
+    lfo.frequency.value = 0.14;
     const lfoGain = ctx.createGain();
     lfoGain.gain.value = 0.3;
     this.nodes.push(lfo, lfoGain);
@@ -180,7 +198,6 @@ export class SoundscapeEngine {
     noise.start();
     lfo.start();
 
-    // High-frequency wash for foam
     const foam = this.createNoiseBuffer("white");
     const foamBP = ctx.createBiquadFilter();
     foamBP.type = "highpass";
@@ -219,23 +236,21 @@ export class SoundscapeEngine {
     noise.connect(lp).connect(windGain).connect(gain);
     noise.start();
 
-    // Slow random modulation of filter cutoff
     const modulateCutoff = () => {
       if (!this.ctx || this.currentType !== "wind") return;
       const target = 300 + Math.random() * 800;
       lp.frequency.linearRampToValueAtTime(target, ctx.currentTime + 3 + Math.random() * 4);
-      setTimeout(modulateCutoff, 3000 + Math.random() * 4000);
+      this.scheduleTimeout(modulateCutoff, 3000 + Math.random() * 4000);
     };
     modulateCutoff();
 
-    // Gusts: brief louder bursts
     const scheduleGust = () => {
       if (!this.ctx || this.currentType !== "wind") return;
       const now = ctx.currentTime;
       const delay = 4 + Math.random() * 8;
       windGain.gain.linearRampToValueAtTime(0.9 + Math.random() * 0.3, now + delay);
       windGain.gain.linearRampToValueAtTime(0.7, now + delay + 2 + Math.random() * 2);
-      setTimeout(scheduleGust, (delay + 4) * 1000);
+      this.scheduleTimeout(scheduleGust, (delay + 4) * 1000);
     };
     scheduleGust();
   }

@@ -90,7 +90,7 @@ export function startReminderChecker() {
       firedToday.add(key);
       sendNotification("Muhurto Breath 🌬️", r.message);
     });
-  }, 30000); // check every 30s
+  }, 15000); // check every 15s to avoid missing minutes in throttled tabs
 }
 
 export function stopReminderChecker() {

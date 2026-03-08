@@ -21,11 +21,11 @@ export default function Home() {
   const [favorites, setFavorites] = useState(getFavorites);
   const [showChallengeDialog, setShowChallengeDialog] = useState(false);
   const [installDismissed, setInstallDismissed] = useState(isDismissed);
-  const streak = getCurrentStreak();
-  const todayMin = getTodayMinutes();
-  const allTechniques = [...PRESET_TECHNIQUES, ...getCustomTechniques()];
-  const favTechniques = allTechniques.filter((t) => favorites.includes(t.id));
-  const xpState = getXPState();
+  const streak = useMemo(() => getCurrentStreak(), []);
+  const todayMin = useMemo(() => getTodayMinutes(), []);
+  const allTechniques = useMemo(() => [...PRESET_TECHNIQUES, ...getCustomTechniques()], []);
+  const favTechniques = useMemo(() => allTechniques.filter((tech) => favorites.includes(tech.id)), [allTechniques, favorites]);
+  const xpState = useMemo(() => getXPState(), []);
   const dailyChallenges = useMemo(() => getDailyChallenges(), []);
   const dailyQuote = useMemo(() => getDailyQuote(), []);
   const activeFriendChallenges = useMemo(() => getActiveChallenges(), []);

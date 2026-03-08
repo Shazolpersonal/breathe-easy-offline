@@ -14,7 +14,8 @@ type Tab = "stats" | "insights" | "badges" | "journal" | "reports";
 export default function Stats() {
   const { t, language } = useLanguage();
   const [tab, setTab] = useState<Tab>("stats");
-  const sessions = getSessions();
+  const sessions = useMemo(() => getSessions(), []);
+  const sessionsKey = sessions.length;
   const streak = getCurrentStreak();
   const longestStreak = getLongestStreak();
   const totalMinutes = Math.round(sessions.reduce((s, r) => s + r.durationSeconds, 0) / 60);
@@ -110,7 +111,7 @@ export default function Stats() {
     return { sessions: monthSessions.length, totalMin, topTechnique, avgCalm, streak: mStreak };
   }, [sessions, reportMonth, reportYear]);
 
-  const { unlocked, locked } = useMemo(() => checkAllBadges(), [sessions]);
+  const { unlocked, locked } = useMemo(() => checkAllBadges(sessions), [sessionsKey]);
 
   const monthLabel = new Date(reportYear, reportMonth).toLocaleDateString(locale, { month: "long", year: "numeric" });
 
@@ -322,29 +323,26 @@ export default function Stats() {
               </div>
             ) : (
               <div className="rounded-2xl border border-border bg-card p-5 space-y-4">
-                <p className="text-sm leading-relaxed text-foreground" dangerouslySetInnerHTML={{
-                  __html: t("stats.report.summary", { minutes: reportData.totalMin, sessions: reportData.sessions, month: monthLabel })
-                    .replace(String(reportData.totalMin), `<strong>${reportData.totalMin}</strong>`)
-                    .replace(String(reportData.sessions), `<strong>${reportData.sessions}</strong>`)
-                }} />
+                <p className="text-sm leading-relaxed text-foreground">
+                  {t("stats.report.summary", { minutes: reportData.totalMin, sessions: reportData.sessions, month: monthLabel })
+                    .split(String(reportData.totalMin))
+                    .flatMap((part, i, arr) => i < arr.length - 1 ? [part, <strong key={`min-${i}`}>{reportData.totalMin}</strong>] : [part])
+                  }
+                </p>
                 {reportData.topTechnique && (
-                  <p className="text-sm leading-relaxed text-foreground" dangerouslySetInnerHTML={{
-                    __html: t("stats.report.topTechnique", { name: reportData.topTechnique.name, count: reportData.topTechnique.count })
-                      .replace(reportData.topTechnique.name, `<strong>${reportData.topTechnique.name}</strong>`)
-                      .replace(String(reportData.topTechnique.count), `<strong>${reportData.topTechnique.count}</strong>`)
-                  }} />
+                  <p className="text-sm leading-relaxed text-foreground">
+                    {t("stats.report.topTechnique", { name: reportData.topTechnique.name, count: reportData.topTechnique.count })}
+                  </p>
                 )}
                 {reportData.streak > 0 && (
-                  <p className="text-sm leading-relaxed text-foreground" dangerouslySetInnerHTML={{
-                    __html: t("stats.report.streak", { days: reportData.streak })
-                      .replace(String(reportData.streak), `<strong>${reportData.streak}</strong>`)
-                  }} />
+                  <p className="text-sm leading-relaxed text-foreground">
+                    {t("stats.report.streak", { days: reportData.streak })}
+                  </p>
                 )}
                 {reportData.avgCalm !== null && (
-                  <p className="text-sm leading-relaxed text-foreground" dangerouslySetInnerHTML={{
-                    __html: t("stats.report.avgCalm", { score: reportData.avgCalm })
-                      .replace(String(reportData.avgCalm), `<strong>${reportData.avgCalm}</strong>`)
-                  }} />
+                  <p className="text-sm leading-relaxed text-foreground">
+                    {t("stats.report.avgCalm", { score: reportData.avgCalm })}
+                  </p>
                 )}
 
                 <div className="grid grid-cols-2 gap-3 pt-2">

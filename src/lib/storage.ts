@@ -97,13 +97,29 @@ export function getCurrentStreak(): number {
   if (sessions.length === 0) return 0;
 
   const dates = [...new Set(sessions.map((s) => s.date.split("T")[0]))].sort().reverse();
-  let streak = 0;
   const today = new Date();
+  const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
+  
+  let streak = 0;
+  // Allow starting from today or yesterday (user hasn't done today's session yet)
+  let startOffset = 0;
+  if (dates[0] === todayStr) {
+    startOffset = 0;
+  } else {
+    const yesterday = new Date(today);
+    yesterday.setDate(yesterday.getDate() - 1);
+    const yesterdayStr = `${yesterday.getFullYear()}-${String(yesterday.getMonth() + 1).padStart(2, "0")}-${String(yesterday.getDate()).padStart(2, "0")}`;
+    if (dates[0] === yesterdayStr) {
+      startOffset = 1;
+    } else {
+      return 0;
+    }
+  }
 
   for (let i = 0; i < dates.length; i++) {
     const expected = new Date(today);
-    expected.setDate(expected.getDate() - i);
-    const expectedStr = expected.toISOString().split("T")[0];
+    expected.setDate(expected.getDate() - i - startOffset);
+    const expectedStr = `${expected.getFullYear()}-${String(expected.getMonth() + 1).padStart(2, "0")}-${String(expected.getDate()).padStart(2, "0")}`;
     if (dates[i] === expectedStr) {
       streak++;
     } else {
@@ -187,8 +203,25 @@ export function exportData(): string {
 
 export function importData(json: string) {
   const data = JSON.parse(json);
-  if (data.sessions) setJSON(KEYS.sessions, data.sessions);
-  if (data.settings) setJSON(KEYS.settings, data.settings);
-  if (data.customTechniques) setJSON(KEYS.customTechniques, data.customTechniques);
-  if (data.favorites) setJSON(KEYS.favorites, data.favorites);
+  // Validate sessions array
+  if (data.sessions) {
+    if (!Array.isArray(data.sessions)) throw new Error("Invalid sessions data");
+    for (const s of data.sessions) {
+      if (typeof s.id !== "string" || typeof s.techniqueId !== "string" || typeof s.date !== "string" || typeof s.durationSeconds !== "number") {
+        throw new Error("Invalid session record found");
+      }
+    }
+    setJSON(KEYS.sessions, data.sessions);
+  }
+  if (data.settings && typeof data.settings === "object") {
+    setJSON(KEYS.settings, data.settings);
+  }
+  if (data.customTechniques) {
+    if (!Array.isArray(data.customTechniques)) throw new Error("Invalid custom techniques data");
+    setJSON(KEYS.customTechniques, data.customTechniques);
+  }
+  if (data.favorites) {
+    if (!Array.isArray(data.favorites)) throw new Error("Invalid favorites data");
+    setJSON(KEYS.favorites, data.favorites);
+  }
 }
