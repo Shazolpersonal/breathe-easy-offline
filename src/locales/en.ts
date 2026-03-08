@@ -382,4 +382,40 @@ export const en: Record<string, string> = {
   "day.thu": "Thu",
   "day.fri": "Fri",
   "day.sat": "Sat",
+
+  // Adaptive Intelligence
+  "adaptive.smartSession": "Smart Session",
+  "adaptive.startSmart": "Start Smart",
+  "adaptive.moodBased": "Based on your mood history, this technique works best for you.",
+  "adaptive.timeBased": "Your best technique for the {{bucket}}.",
+  "adaptive.overall": "Your most effective technique based on past sessions.",
+
+  // Breath Detection
+  "settings.intelligence": "Intelligence & Sensors",
+  "settings.breathDetection": "Breathing Detection",
+  "settings.breathDetectionDesc": "Use microphone to detect breathing rhythm. All data stays on-device.",
+  "settings.heartRate": "Heart Rate Monitor",
+  "settings.heartRateDesc": "Use camera to estimate heart rate via fingertip. All data stays on-device.",
+  "breath.micError": "Could not access microphone. Please check permissions.",
+  "breath.micOn": "Mic listening",
+  "breath.micOff": "Enable mic",
+  "breath.rhythmAccuracy": "Rhythm Accuracy",
+  "breath.goodSync": "Good sync",
+  "breath.slightlyOff": "Slightly off",
+  "breath.outOfSync": "Out of sync",
+
+  // Heart Rate
+  "heart.monitor": "Heart Rate",
+  "heart.warmingUp": "Warming up...",
+  "heart.placeFingerTip": "Place your fingertip over the rear camera",
+  "heart.instructions": "Cover the camera lens completely with your fingertip. Keep still for best results.",
+  "heart.signalQuality": "Signal Quality",
+  "heart.coherence": "Breathing Coherence",
+  "heart.highCoherence": "Heart rate synced with breathing",
+  "heart.moderateCoherence": "Partial sync with breathing",
+  "heart.lowCoherence": "Building coherence...",
+  "heart.cameraError": "Could not access camera. Please check permissions.",
+  "heart.retry": "Retry",
+  "heart.avgBPM": "Average Heart Rate",
+  "common.close": "Close",
 };
