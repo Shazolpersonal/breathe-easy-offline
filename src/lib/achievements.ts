@@ -38,7 +38,24 @@ export const BADGES: Badge[] = [
     name: "Week Warrior",
     emoji: "🔥",
     description: "Reach a 7-day streak",
-    check: () => getCurrentStreak() >= 7,
+    check: (s) => {
+      const sessions = s ?? getSessions();
+      const dates = [...new Set(sessions.map(r => r.date.split("T")[0]))].sort();
+      let streak = dates.length > 0 ? 1 : 0;
+      let cur = 1;
+      for (let i = 1; i < dates.length; i++) {
+        const diff = (new Date(dates[i]).getTime() - new Date(dates[i - 1]).getTime()) / 86400000;
+        if (diff === 1) { cur++; streak = Math.max(streak, cur); } else if (diff > 1) cur = 1;
+      }
+      // Also check if streak extends to today
+      if (dates.length > 0) {
+        const lastDate = new Date(dates[dates.length - 1]);
+        const today = new Date(); today.setHours(0,0,0,0); lastDate.setHours(0,0,0,0);
+        const diffToday = (today.getTime() - lastDate.getTime()) / 86400000;
+        if (diffToday > 1) streak = 0; // streak broken
+      }
+      return streak >= 7;
+    },
   },
   {
     id: "night-owl",
