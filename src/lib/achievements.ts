@@ -1,4 +1,4 @@
-import { getSessions, getCustomTechniques, getCurrentStreak } from "./storage";
+import { getSessions, getCustomTechniques, getCurrentStreak, SessionRecord } from "./storage";
 import { getAllProgressionsPublic } from "./progression";
 
 export interface Badge {
@@ -6,7 +6,7 @@ export interface Badge {
   name: string;
   emoji: string;
   description: string;
-  check: () => boolean;
+  check: (sessions?: SessionRecord[]) => boolean;
 }
 
 const SEEN_KEY = "breathe_badges_seen";
@@ -31,7 +31,7 @@ export const BADGES: Badge[] = [
     name: "First Breath",
     emoji: "🌱",
     description: "Complete your first session",
-    check: () => getSessions().length >= 1,
+    check: (s) => (s ?? getSessions()).length >= 1,
   },
   {
     id: "week-warrior",
@@ -45,28 +45,28 @@ export const BADGES: Badge[] = [
     name: "Night Owl",
     emoji: "🦉",
     description: "Complete a session after 11 PM",
-    check: () => getSessions().some((s) => new Date(s.date).getHours() >= 23),
+    check: (s) => (s ?? getSessions()).some((r) => new Date(r.date).getHours() >= 23),
   },
   {
     id: "early-bird",
     name: "Early Bird",
     emoji: "🐦",
     description: "Complete a session before 7 AM",
-    check: () => getSessions().some((s) => new Date(s.date).getHours() < 7),
+    check: (s) => (s ?? getSessions()).some((r) => new Date(r.date).getHours() < 7),
   },
   {
     id: "century",
     name: "Century",
     emoji: "💯",
     description: "Accumulate 100 total minutes",
-    check: () => getSessions().reduce((s, r) => s + r.durationSeconds, 0) >= 6000,
+    check: (s) => (s ?? getSessions()).reduce((sum, r) => sum + r.durationSeconds, 0) >= 6000,
   },
   {
     id: "marathon",
     name: "Marathon",
     emoji: "🏃",
     description: "Single session ≥ 10 minutes",
-    check: () => getSessions().some((s) => s.durationSeconds >= 600),
+    check: (s) => (s ?? getSessions()).some((r) => r.durationSeconds >= 600),
   },
   {
     id: "creator",
@@ -87,14 +87,14 @@ export const BADGES: Badge[] = [
     name: "Calm Mind",
     emoji: "🧠",
     description: "Achieve a calm score ≥ 90",
-    check: () => getSessions().some((s) => (s.calmScore ?? 0) >= 90),
+    check: (s) => (s ?? getSessions()).some((r) => (r.calmScore ?? 0) >= 90),
   },
   {
     id: "explorer",
     name: "Explorer",
     emoji: "🧭",
     description: "Try 3 different techniques",
-    check: () => new Set(getSessions().map((s) => s.techniqueId)).size >= 3,
+    check: (s) => new Set((s ?? getSessions()).map((r) => r.techniqueId)).size >= 3,
   },
   {
     id: "consistent",
@@ -108,33 +108,33 @@ export const BADGES: Badge[] = [
     name: "Deep Diver",
     emoji: "🌊",
     description: "Complete 50 total sessions",
-    check: () => getSessions().length >= 50,
+    check: (s) => (s ?? getSessions()).length >= 50,
   },
   {
     id: "mood-lifter",
     name: "Mood Lifter",
     emoji: "🌈",
     description: "Improve mood by +3 in one session",
-    check: () => getSessions().some((s) => s.moodBefore != null && s.moodAfter != null && (s.moodAfter - s.moodBefore) >= 3),
+    check: (s) => (s ?? getSessions()).some((r) => r.moodBefore != null && r.moodAfter != null && (r.moodAfter - r.moodBefore) >= 3),
   },
   {
     id: "dedicated",
     name: "Dedicated",
     emoji: "⭐",
     description: "Accumulate 500 total minutes",
-    check: () => getSessions().reduce((s, r) => s + r.durationSeconds, 0) >= 30000,
+    check: (s) => (s ?? getSessions()).reduce((sum, r) => sum + r.durationSeconds, 0) >= 30000,
   },
   {
     id: "perfect-week",
     name: "Perfect Week",
     emoji: "🏆",
     description: "7 consecutive days with ≥ 5 min each",
-    check: () => {
-      const sessions = getSessions();
+    check: (s) => {
+      const sessions = s ?? getSessions();
       const dayMinutes: Record<string, number> = {};
-      sessions.forEach((s) => {
-        const day = s.date.split("T")[0];
-        dayMinutes[day] = (dayMinutes[day] || 0) + s.durationSeconds / 60;
+      sessions.forEach((r) => {
+        const day = r.date.split("T")[0];
+        dayMinutes[day] = (dayMinutes[day] || 0) + r.durationSeconds / 60;
       });
       const days = Object.entries(dayMinutes)
         .filter(([, m]) => m >= 5)
@@ -156,11 +156,12 @@ export const BADGES: Badge[] = [
   },
 ];
 
-export function checkAllBadges(): { unlocked: Badge[]; locked: Badge[] } {
+export function checkAllBadges(sessions?: SessionRecord[]): { unlocked: Badge[]; locked: Badge[] } {
+  const s = sessions ?? getSessions();
   const unlocked: Badge[] = [];
   const locked: Badge[] = [];
   for (const badge of BADGES) {
-    if (badge.check()) unlocked.push(badge);
+    if (badge.check(s)) unlocked.push(badge);
     else locked.push(badge);
   }
   return { unlocked, locked };

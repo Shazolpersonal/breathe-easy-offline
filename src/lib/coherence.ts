@@ -6,15 +6,15 @@ export interface PhaseTimestamp {
 
 export interface CalmScoreResult {
   score: number; // 0-100
-  label: string;
+  labelKey: string; // locale key
   color: string; // hsl css variable name
 }
 
-function getLabel(score: number): { label: string; color: string } {
-  if (score >= 90) return { label: "Deep Calm", color: "primary" };
-  if (score >= 70) return { label: "Strong Coherence", color: "primary" };
-  if (score >= 40) return { label: "Good Rhythm", color: "accent" };
-  return { label: "Building Focus", color: "muted-foreground" };
+function getLabel(score: number): { labelKey: string; color: string } {
+  if (score >= 90) return { labelKey: "calm.deepCalm", color: "primary" };
+  if (score >= 70) return { labelKey: "calm.strongCoherence", color: "primary" };
+  if (score >= 40) return { labelKey: "calm.goodRhythm", color: "accent" };
+  return { labelKey: "calm.buildingFocus", color: "muted-foreground" };
 }
 
 export function calculateCalmScore(timestamps: PhaseTimestamp[]): CalmScoreResult {

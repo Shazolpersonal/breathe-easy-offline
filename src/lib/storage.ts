@@ -203,8 +203,25 @@ export function exportData(): string {
 
 export function importData(json: string) {
   const data = JSON.parse(json);
-  if (data.sessions) setJSON(KEYS.sessions, data.sessions);
-  if (data.settings) setJSON(KEYS.settings, data.settings);
-  if (data.customTechniques) setJSON(KEYS.customTechniques, data.customTechniques);
-  if (data.favorites) setJSON(KEYS.favorites, data.favorites);
+  // Validate sessions array
+  if (data.sessions) {
+    if (!Array.isArray(data.sessions)) throw new Error("Invalid sessions data");
+    for (const s of data.sessions) {
+      if (typeof s.id !== "string" || typeof s.techniqueId !== "string" || typeof s.date !== "string" || typeof s.durationSeconds !== "number") {
+        throw new Error("Invalid session record found");
+      }
+    }
+    setJSON(KEYS.sessions, data.sessions);
+  }
+  if (data.settings && typeof data.settings === "object") {
+    setJSON(KEYS.settings, data.settings);
+  }
+  if (data.customTechniques) {
+    if (!Array.isArray(data.customTechniques)) throw new Error("Invalid custom techniques data");
+    setJSON(KEYS.customTechniques, data.customTechniques);
+  }
+  if (data.favorites) {
+    if (!Array.isArray(data.favorites)) throw new Error("Invalid favorites data");
+    setJSON(KEYS.favorites, data.favorites);
+  }
 }

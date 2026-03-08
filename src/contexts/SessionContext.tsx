@@ -8,6 +8,15 @@ export interface MiniSessionState {
   currentPhase: string;
   elapsed: number;
   totalDuration: number;
+  // Extended state for full restore
+  phaseIndex: number;
+  secondsLeft: number;
+  completedCycles: number;
+  currentRound: number;
+  durationMin: number;
+  moodBefore: number | null;
+  voiceOn: boolean;
+  soundscapeType: string;
 }
 
 interface SessionContextType {
