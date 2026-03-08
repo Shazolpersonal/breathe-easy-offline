@@ -17,6 +17,10 @@ const UNLOCK_THRESHOLDS: Record<string, number> = {
   advanced: 25,
 };
 
+export function getAllProgressionsPublic(): UserProgression[] {
+  return getAllProgressions();
+}
+
 function getAllProgressions(): UserProgression[] {
   try {
     const raw = localStorage.getItem(PROGRESSION_KEY);

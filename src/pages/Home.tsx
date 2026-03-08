@@ -1,10 +1,12 @@
 import { useNavigate } from "react-router-dom";
-import { Wind, Flame, Zap, TrendingUp } from "lucide-react";
+import { Wind, Flame, Zap, TrendingUp, CheckCircle2, Circle } from "lucide-react";
 import SmartSuggestion from "@/components/SmartSuggestion";
 import TechniqueCard from "@/components/TechniqueCard";
 import { PRESET_TECHNIQUES } from "@/lib/techniques";
-import { getCustomTechniques, getFavorites, toggleFavorite, getCurrentStreak, getTodayMinutes, getSessions } from "@/lib/storage";
-import { getTotalSessionCount } from "@/lib/progression";
+import { getCustomTechniques, getFavorites, toggleFavorite, getCurrentStreak, getTodayMinutes } from "@/lib/storage";
+import { getDailyChallenges } from "@/lib/challenges";
+import { getXPState } from "@/lib/xp";
+import { Progress } from "@/components/ui/progress";
 import { useState, useMemo } from "react";
 
 export default function Home() {
@@ -14,6 +16,8 @@ export default function Home() {
   const todayMin = getTodayMinutes();
   const allTechniques = [...PRESET_TECHNIQUES, ...getCustomTechniques()];
   const favTechniques = allTechniques.filter((t) => favorites.includes(t.id));
+  const xpState = getXPState();
+  const dailyChallenges = useMemo(() => getDailyChallenges(), []);
 
   const hour = new Date().getHours();
   const greeting =
@@ -49,9 +53,48 @@ export default function Home() {
             <span className="text-[11px] text-muted-foreground">Min Today</span>
           </div>
           <div className="flex flex-col items-center rounded-2xl border border-border bg-card p-3">
-            <TrendingUp className="mb-1 h-5 w-5 text-primary" />
-            <span className="text-lg font-bold text-foreground">{getTotalSessionCount()}</span>
-            <span className="text-[11px] text-muted-foreground">Sessions</span>
+            <Zap className="mb-1 h-5 w-5 text-primary" />
+            <span className="text-lg font-bold text-foreground">Lv.{xpState.level}</span>
+            <span className="text-[11px] text-muted-foreground">{xpState.title}</span>
+          </div>
+        </div>
+
+        {/* XP Progress */}
+        <div className="mb-6 rounded-2xl border border-border bg-card p-3">
+          <div className="flex items-center justify-between mb-1.5">
+            <span className="text-xs font-medium text-muted-foreground">{xpState.totalXP} XP</span>
+            {xpState.xpToNext > 0 && (
+              <span className="text-xs text-muted-foreground">{xpState.xpToNext} XP to next level</span>
+            )}
+          </div>
+          <Progress value={xpState.progressToNext} className="h-2" />
+        </div>
+
+        {/* Daily Challenges */}
+        <div className="mb-6 rounded-2xl border border-border bg-card p-4">
+          <h2 className="mb-3 text-sm font-semibold uppercase tracking-wider text-muted-foreground">Daily Challenges</h2>
+          <div className="space-y-2.5">
+            {dailyChallenges.map((c) => {
+              const progress = c.getProgress();
+              const done = progress >= c.target;
+              return (
+                <div key={c.id} className="flex items-center gap-3">
+                  {done ? (
+                    <CheckCircle2 className="h-5 w-5 shrink-0 text-primary" />
+                  ) : (
+                    <Circle className="h-5 w-5 shrink-0 text-muted-foreground/40" />
+                  )}
+                  <div className="flex-1 min-w-0">
+                    <span className={`text-sm ${done ? "text-primary font-medium line-through" : "text-foreground"}`}>
+                      {c.emoji} {c.title}
+                    </span>
+                  </div>
+                  <span className="text-xs tabular-nums text-muted-foreground">
+                    {Math.min(progress, c.target)}/{c.target}
+                  </span>
+                </div>
+              );
+            })}
           </div>
         </div>
 

@@ -1,9 +1,14 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, LineChart, Line } from "recharts";
 import { getSessions, getCurrentStreak, getLongestStreak } from "@/lib/storage";
 import { Flame, Clock, Target, Trophy, Brain } from "lucide-react";
+import { checkAllBadges } from "@/lib/achievements";
+import { cn } from "@/lib/utils";
+
+type Tab = "stats" | "badges";
 
 export default function Stats() {
+  const [tab, setTab] = useState<Tab>("stats");
   const sessions = getSessions();
   const streak = getCurrentStreak();
   const longestStreak = getLongestStreak();
@@ -55,87 +60,148 @@ export default function Stats() {
     return days;
   }, [sessions]);
 
+  const { unlocked, locked } = useMemo(() => checkAllBadges(), [sessions]);
+
   return (
     <div className="min-h-screen px-4 pb-24 pt-12">
       <div className="mx-auto max-w-md">
-        <h1 className="mb-6 text-2xl font-bold text-foreground">Statistics</h1>
+        <h1 className="mb-4 text-2xl font-bold text-foreground">Statistics</h1>
 
-        {/* Stat Cards */}
-        <div className="mb-6 grid grid-cols-2 gap-3">
-          {[
-            { icon: Flame, value: streak, label: "Current Streak", suffix: "days" },
-            { icon: Trophy, value: longestStreak, label: "Longest Streak", suffix: "days" },
-            { icon: Clock, value: totalMinutes, label: "Total Time", suffix: "min" },
-            { icon: Target, value: sessions.length, label: "Sessions", suffix: "" },
-            ...(avgCalmScore !== null
-              ? [{ icon: Brain, value: avgCalmScore, label: "Avg Calm Score", suffix: "%" }]
-              : []),
-          ].map(({ icon: Icon, value, label, suffix }) => (
-            <div key={label} className="flex flex-col items-center rounded-2xl border border-border bg-card p-4">
-              <Icon className="mb-1 h-5 w-5 text-primary" />
-              <span className="text-xl font-bold text-foreground">
-                {value}{suffix && <span className="ml-1 text-xs font-normal text-muted-foreground">{suffix}</span>}
-              </span>
-              <span className="text-xs text-muted-foreground">{label}</span>
-            </div>
+        {/* Tab Switcher */}
+        <div className="mb-6 flex gap-1 rounded-xl bg-secondary p-1">
+          {(["stats", "badges"] as Tab[]).map((t) => (
+            <button
+              key={t}
+              onClick={() => setTab(t)}
+              className={cn(
+                "flex-1 rounded-lg py-2 text-sm font-medium transition-colors",
+                tab === t ? "bg-card text-foreground shadow-sm" : "text-muted-foreground"
+              )}
+            >
+              {t === "stats" ? "Overview" : `Badges (${unlocked.length}/${unlocked.length + locked.length})`}
+            </button>
           ))}
         </div>
 
-        {/* Weekly Chart */}
-        <div className="mb-6 rounded-2xl border border-border bg-card p-4">
-          <h2 className="mb-3 text-sm font-semibold text-muted-foreground">This Week</h2>
-          <ResponsiveContainer width="100%" height={160}>
-            <BarChart data={weeklyData}>
-              <XAxis dataKey="day" tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }} axisLine={false} tickLine={false} />
-              <YAxis hide />
-              <Tooltip
-                contentStyle={{ background: "hsl(var(--card))", border: "1px solid hsl(var(--border))", borderRadius: 12, fontSize: 12 }}
-                labelStyle={{ color: "hsl(var(--foreground))" }}
-              />
-              <Bar dataKey="minutes" fill="hsl(var(--primary))" radius={[6, 6, 0, 0]} />
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
+        {tab === "stats" ? (
+          <>
+            {/* Stat Cards */}
+            <div className="mb-6 grid grid-cols-2 gap-3">
+              {[
+                { icon: Flame, value: streak, label: "Current Streak", suffix: "days" },
+                { icon: Trophy, value: longestStreak, label: "Longest Streak", suffix: "days" },
+                { icon: Clock, value: totalMinutes, label: "Total Time", suffix: "min" },
+                { icon: Target, value: sessions.length, label: "Sessions", suffix: "" },
+                ...(avgCalmScore !== null
+                  ? [{ icon: Brain, value: avgCalmScore, label: "Avg Calm Score", suffix: "%" }]
+                  : []),
+              ].map(({ icon: Icon, value, label, suffix }) => (
+                <div key={label} className="flex flex-col items-center rounded-2xl border border-border bg-card p-4">
+                  <Icon className="mb-1 h-5 w-5 text-primary" />
+                  <span className="text-xl font-bold text-foreground">
+                    {value}{suffix && <span className="ml-1 text-xs font-normal text-muted-foreground">{suffix}</span>}
+                  </span>
+                  <span className="text-xs text-muted-foreground">{label}</span>
+                </div>
+              ))}
+            </div>
 
-        {/* Calm Score Trend */}
-        {calmTrendData.length >= 2 && (
-          <div className="mb-6 rounded-2xl border border-border bg-card p-4">
-            <h2 className="mb-3 text-sm font-semibold text-muted-foreground">Calm Score Trend</h2>
-            <ResponsiveContainer width="100%" height={120}>
-              <LineChart data={calmTrendData}>
-                <XAxis dataKey="session" tick={{ fontSize: 10, fill: "hsl(var(--muted-foreground))" }} axisLine={false} tickLine={false} />
-                <YAxis domain={[0, 100]} hide />
-                <Tooltip
-                  contentStyle={{ background: "hsl(var(--card))", border: "1px solid hsl(var(--border))", borderRadius: 12, fontSize: 12 }}
-                />
-                <Line type="monotone" dataKey="score" stroke="hsl(var(--primary))" strokeWidth={2} dot={{ r: 3, fill: "hsl(var(--primary))" }} />
-              </LineChart>
-            </ResponsiveContainer>
+            {/* Weekly Chart */}
+            <div className="mb-6 rounded-2xl border border-border bg-card p-4">
+              <h2 className="mb-3 text-sm font-semibold text-muted-foreground">This Week</h2>
+              <ResponsiveContainer width="100%" height={160}>
+                <BarChart data={weeklyData}>
+                  <XAxis dataKey="day" tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }} axisLine={false} tickLine={false} />
+                  <YAxis hide />
+                  <Tooltip
+                    contentStyle={{ background: "hsl(var(--card))", border: "1px solid hsl(var(--border))", borderRadius: 12, fontSize: 12 }}
+                    labelStyle={{ color: "hsl(var(--foreground))" }}
+                  />
+                  <Bar dataKey="minutes" fill="hsl(var(--primary))" radius={[6, 6, 0, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+
+            {/* Calm Score Trend */}
+            {calmTrendData.length >= 2 && (
+              <div className="mb-6 rounded-2xl border border-border bg-card p-4">
+                <h2 className="mb-3 text-sm font-semibold text-muted-foreground">Calm Score Trend</h2>
+                <ResponsiveContainer width="100%" height={120}>
+                  <LineChart data={calmTrendData}>
+                    <XAxis dataKey="session" tick={{ fontSize: 10, fill: "hsl(var(--muted-foreground))" }} axisLine={false} tickLine={false} />
+                    <YAxis domain={[0, 100]} hide />
+                    <Tooltip
+                      contentStyle={{ background: "hsl(var(--card))", border: "1px solid hsl(var(--border))", borderRadius: 12, fontSize: 12 }}
+                    />
+                    <Line type="monotone" dataKey="score" stroke="hsl(var(--primary))" strokeWidth={2} dot={{ r: 3, fill: "hsl(var(--primary))" }} />
+                  </LineChart>
+                </ResponsiveContainer>
+              </div>
+            )}
+
+            {/* 30-day heatmap */}
+            <div className="rounded-2xl border border-border bg-card p-4">
+              <h2 className="mb-3 text-sm font-semibold text-muted-foreground">Last 30 Days</h2>
+              <div className="flex flex-wrap gap-1.5">
+                {heatmapData.map(({ date, count }) => (
+                  <div
+                    key={date}
+                    title={`${date}: ${count} sessions`}
+                    className="h-5 w-5 rounded-sm transition-colors"
+                    style={{
+                      background: count === 0
+                        ? "hsl(var(--muted))"
+                        : count <= 1
+                          ? "hsl(var(--primary) / 0.4)"
+                          : count <= 3
+                            ? "hsl(var(--primary) / 0.7)"
+                            : "hsl(var(--primary))",
+                    }}
+                  />
+                ))}
+              </div>
+            </div>
+          </>
+        ) : (
+          /* Badges Tab */
+          <div className="space-y-6">
+            {/* Unlocked */}
+            {unlocked.length > 0 && (
+              <div>
+                <h2 className="mb-3 text-sm font-semibold uppercase tracking-wider text-muted-foreground">
+                  Unlocked ({unlocked.length})
+                </h2>
+                <div className="grid grid-cols-3 gap-3">
+                  {unlocked.map((b) => (
+                    <div key={b.id} className="flex flex-col items-center gap-1.5 rounded-2xl border border-primary/20 bg-primary/5 p-3">
+                      <span className="text-3xl">{b.emoji}</span>
+                      <span className="text-xs font-semibold text-foreground text-center leading-tight">{b.name}</span>
+                      <span className="text-[10px] text-muted-foreground text-center leading-tight">{b.description}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Locked */}
+            {locked.length > 0 && (
+              <div>
+                <h2 className="mb-3 text-sm font-semibold uppercase tracking-wider text-muted-foreground">
+                  Locked ({locked.length})
+                </h2>
+                <div className="grid grid-cols-3 gap-3">
+                  {locked.map((b) => (
+                    <div key={b.id} className="flex flex-col items-center gap-1.5 rounded-2xl border border-border bg-card p-3 opacity-50 grayscale">
+                      <span className="text-3xl">{b.emoji}</span>
+                      <span className="text-xs font-semibold text-foreground text-center leading-tight">{b.name}</span>
+                      <span className="text-[10px] text-muted-foreground text-center leading-tight">{b.description}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         )}
-
-        {/* 30-day heatmap */}
-        <div className="rounded-2xl border border-border bg-card p-4">
-          <h2 className="mb-3 text-sm font-semibold text-muted-foreground">Last 30 Days</h2>
-          <div className="flex flex-wrap gap-1.5">
-            {heatmapData.map(({ date, count }) => (
-              <div
-                key={date}
-                title={`${date}: ${count} sessions`}
-                className="h-5 w-5 rounded-sm transition-colors"
-                style={{
-                  background: count === 0
-                    ? "hsl(var(--muted))"
-                    : count <= 1
-                      ? "hsl(var(--primary) / 0.4)"
-                      : count <= 3
-                        ? "hsl(var(--primary) / 0.7)"
-                        : "hsl(var(--primary))",
-                }}
-              />
-            ))}
-          </div>
-        </div>
       </div>
     </div>
   );
