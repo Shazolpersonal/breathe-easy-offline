@@ -849,23 +849,27 @@ export default function Session() {
             />
           </div>
 
-          <div className="flex gap-3 justify-center flex-wrap">
-            <Button variant="outline" size="sm" className="gap-1" onClick={handleShare}>
-              <Share2 className="h-4 w-4" /> {t("session.share")}
-            </Button>
-            <Button variant="outline" size="sm" className="gap-1" onClick={() => shareApp(language)}>
-              <Share2 className="h-4 w-4" /> {t("share.inviteSession")}
-            </Button>
-            <Button variant="secondary" onClick={() => {
-              saveJournal();
-              sessionIdRef.current = crypto.randomUUID();
-              setState("idle"); setMoodBefore(null); setMoodAfter(null); setMoodSaved(false); setLevelUpInfo(null); setEarnedXP(null); setCalmResult(null); setJournalNote("");
-            }}>{t("session.again")}</Button>
-            <Button onClick={() => {
-              saveJournal();
-              if (programId) navigate("/programs");
-              else navigate("/");
-            }}>{t("session.done.button")}</Button>
+          <div className="flex flex-col items-center gap-2 w-full max-w-xs">
+            <div className="flex gap-2 w-full">
+              <Button variant="outline" size="sm" className="gap-1 flex-1" onClick={handleShare}>
+                <Share2 className="h-4 w-4" /> {t("session.share")}
+              </Button>
+              <Button variant="outline" size="sm" className="gap-1 flex-1" onClick={() => shareApp(language)}>
+                <Share2 className="h-4 w-4" /> {t("share.inviteSession")}
+              </Button>
+            </div>
+            <div className="flex gap-2 w-full">
+              <Button variant="secondary" className="flex-1" onClick={() => {
+                saveJournal();
+                sessionIdRef.current = crypto.randomUUID();
+                setState("idle"); setMoodBefore(null); setMoodAfter(null); setMoodSaved(false); setLevelUpInfo(null); setEarnedXP(null); setCalmResult(null); setJournalNote("");
+              }}>{t("session.again")}</Button>
+              <Button className="flex-1" onClick={() => {
+                saveJournal();
+                if (programId) navigate("/programs");
+                else navigate("/");
+              }}>{t("session.done.button")}</Button>
+            </div>
           </div>
         </div>
       </div>
