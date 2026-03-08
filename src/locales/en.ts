@@ -531,6 +531,11 @@ export const en: Record<string, string> = {
   "install.title": "Install Muhurto Breath",
   "install.desc": "Install for offline use, faster loading, and home screen shortcuts.",
   "install.button": "Install",
+  "install.manual.title": "Get the Free App",
+  "install.manual.ios": "Tap the Share button, then 'Add to Home Screen'",
+  "install.manual.android": "Tap the browser menu (⋮), then 'Add to Home Screen'",
+  "install.manual.desktop": "Use your browser menu to install this app",
+  "install.manual.free": "Free · Offline · No app store needed",
 
   // Keyboard Shortcuts
   "shortcut.title": "Keyboard Shortcuts",

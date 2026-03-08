@@ -65,8 +65,8 @@ export default function Home() {
           <p className="mt-1 text-sm text-muted-foreground">{greeting} {t("home.subtitle")}</p>
         </div>
 
-        {/* PWA Install Banner */}
-        {showInstall && (
+        {/* PWA Native Install Banner (Chrome/Edge) */}
+        {showNativeInstall && (
           <div className="mb-6 rounded-2xl border border-primary/30 bg-primary/5 p-4">
             <div className="flex items-start gap-3">
               <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary/15">
@@ -78,6 +78,31 @@ export default function Home() {
                 <Button size="sm" className="mt-2 gap-1" onClick={handleInstall}>
                   <Download className="h-3.5 w-3.5" /> {t("install.button")}
                 </Button>
+              </div>
+              <button onClick={handleDismissInstall} className="shrink-0 rounded-full p-1 text-muted-foreground hover:text-foreground">
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* PWA Manual Install Hint (Safari/iOS/Firefox) */}
+        {showManualInstall && (
+          <div className="mb-6 rounded-2xl border border-primary/30 bg-primary/5 p-4">
+            <div className="flex items-start gap-3">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary/15">
+                <Download className="h-5 w-5 text-primary" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-medium text-foreground">{t("install.manual.title")}</p>
+                <p className="text-xs text-muted-foreground">
+                  {installPlatform === "ios"
+                    ? t("install.manual.ios")
+                    : installPlatform === "android"
+                    ? t("install.manual.android")
+                    : t("install.manual.desktop")}
+                </p>
+                <p className="mt-1 text-[11px] text-primary/70">{t("install.manual.free")}</p>
               </div>
               <button onClick={handleDismissInstall} className="shrink-0 rounded-full p-1 text-muted-foreground hover:text-foreground">
                 <X className="h-4 w-4" />
