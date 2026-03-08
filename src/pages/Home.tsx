@@ -8,7 +8,7 @@ import { getDailyChallenges } from "@/lib/challenges";
 import { getXPState } from "@/lib/xp";
 import { getDailyQuote } from "@/lib/quotes";
 import { getActiveChallenges, getChallengeProgress } from "@/lib/friendChallenge";
-import { canInstall, promptInstall, isDismissed, dismissInstallBanner } from "@/lib/installPrompt";
+import { canInstall, promptInstall, isDismissed, dismissInstallBanner, isRunningAsPWA, canShowManualInstallHint, getInstallPlatform } from "@/lib/installPrompt";
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
 import { useState, useMemo } from "react";
