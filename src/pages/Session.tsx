@@ -752,6 +752,26 @@ export default function Session() {
   const moodImprovement = moodBefore !== null && moodAfter !== null ? moodAfter - moodBefore : null;
   const activePhase = state === "idle" ? "idle" as const : currentPhase.type;
 
+  // Estimated finish time
+  const estimatedEndTime = useMemo(() => {
+    const end = new Date(Date.now() + durationMin * 60000);
+    return end.toLocaleTimeString(language === "bn" ? "bn" : "en", { hour: "numeric", minute: "2-digit" });
+  }, [durationMin, language]);
+
+  // Breathing rate (breaths per minute)
+  const breathingRate = completedCycles > 0 && totalElapsed > 30
+    ? Math.round((completedCycles / (totalElapsed / 60)) * 10) / 10
+    : null;
+
+  // Previous journal for this technique
+  const previousJournal = useMemo(() => getLastJournalForTechnique(technique.id), [technique.id]);
+
+  // Post-session recommendation
+  const postRecommendation = useMemo(
+    () => moodSaved ? getPostSessionRecommendation(moodAfter, technique.id) : null,
+    [moodSaved, moodAfter, technique.id]
+  );
+
   // Done screen extra data
   const avgBreathAccuracy = breathAccuracySamplesRef.current.length > 0
     ? Math.round(breathAccuracySamplesRef.current.reduce((a, b) => a + b, 0) / breathAccuracySamplesRef.current.length)
