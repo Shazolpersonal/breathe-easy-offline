@@ -38,31 +38,32 @@ export class SoundscapeEngine {
       this.animFrameId = null;
     }
 
-    // Set type to off immediately to prevent any lingering callbacks
     this.currentType = "off";
 
-    if (this.masterGain && this.ctx) {
-      try {
-        this.masterGain.gain.linearRampToValueAtTime(0, this.ctx.currentTime + 0.5);
-      } catch { /* ignore */ }
+    // Capture old references before clearing
+    const oldNodes = this.nodes;
+    const oldCtx = this.ctx;
+    const oldGain = this.masterGain;
+
+    // Clear instance references immediately so start() gets fresh state
+    this.nodes = [];
+    this.ctx = null;
+    this.masterGain = null;
+
+    // Fade out and clean up old resources
+    if (oldGain && oldCtx) {
+      try { oldGain.gain.linearRampToValueAtTime(0, oldCtx.currentTime + 0.5); } catch { /* ignore */ }
     }
 
-    const cleanupId = setTimeout(() => {
-      this.nodes.forEach(n => {
+    setTimeout(() => {
+      oldNodes.forEach(n => {
         try {
-          if (n instanceof AudioBufferSourceNode || n instanceof OscillatorNode) {
-            n.stop();
-          }
+          if (n instanceof AudioBufferSourceNode || n instanceof OscillatorNode) n.stop();
           n.disconnect();
         } catch {}
       });
-      this.nodes = [];
-      try { this.ctx?.close(); } catch {}
-      this.ctx = null;
-      this.masterGain = null;
+      try { oldCtx?.close(); } catch {}
     }, 600);
-    // Don't track cleanup timeout — it's a one-shot
-    void cleanupId;
   }
 
   setVolume(v: number) {
