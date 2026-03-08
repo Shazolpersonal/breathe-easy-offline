@@ -512,6 +512,10 @@ export default function Session() {
     setBreathFeedback(null);
     lastEncouragementRef.current = 0;
     setState("running");
+    // Save last session config for Quick Resume
+    saveLastSessionConfig({ techniqueId: technique.id, techniqueName, durationMinutes: durationMin });
+    // Request wake lock
+    requestWakeLock();
     // Start soundscape
     if (soundscapeType !== "off") {
       soundscapeEngineRef.current.start(soundscapeType, settings.soundscapeVolume ?? 0.5);
