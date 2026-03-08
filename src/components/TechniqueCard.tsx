@@ -1,4 +1,4 @@
-import { Heart, HeartOff, Play, Lock } from "lucide-react";
+import { Heart, HeartOff, Play, Lock, Share2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { BreathingTechnique, getCycleDuration } from "@/lib/techniques";
 import { UserProgression, getLevelName, getLevelProgress, isUnlocked, getUnlockRemaining } from "@/lib/progression";
