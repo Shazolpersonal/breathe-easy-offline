@@ -1,9 +1,11 @@
 import { useNavigate } from "react-router-dom";
-import { Wind, Flame, Zap, TrendingUp, CheckCircle2, Circle, Swords, Quote, Download, X, Trophy, Share2, Heart } from "lucide-react";
+import { Wind, Flame, Zap, TrendingUp, CheckCircle2, Circle, Swords, Quote, Download, X, Trophy, Share2, Heart, Play } from "lucide-react";
 import SmartSuggestion from "@/components/SmartSuggestion";
 import TechniqueCard from "@/components/TechniqueCard";
-import { PRESET_TECHNIQUES } from "@/lib/techniques";
-import { getCustomTechniques, getFavorites, toggleFavorite, getCurrentStreak, getTodayMinutes } from "@/lib/storage";
+import WeeklySummary from "@/components/WeeklySummary";
+import { PRESET_TECHNIQUES, getTechniqueById } from "@/lib/techniques";
+import { getCustomTechniques, getFavorites, toggleFavorite, getCurrentStreak, getTodayMinutes, getLastSessionConfig } from "@/lib/storage";
+import { useSettings } from "@/contexts/SettingsContext";
 import { getDailyChallenges, getChallengeStreak, saveTodayChallengeProgress, areAllChallengesComplete } from "@/lib/challenges";
 import { getXPState, getWeeklyXP, addXP } from "@/lib/xp";
 import { getDailyQuote } from "@/lib/quotes";
