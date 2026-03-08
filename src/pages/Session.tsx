@@ -187,6 +187,7 @@ export default function Session() {
 
   // ─── Zen Mode State ───
   const [zenMode, setZenMode] = useState(false);
+  const lastEncouragementRef = useRef(0); // elapsed seconds when last encouragement was spoken
 
   useEffect(() => {
     const moodParam = params.get("mood");
