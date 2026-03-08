@@ -5,8 +5,11 @@ import { Flame, Clock, Target, Trophy, Brain, BookOpen, ChevronLeft, ChevronRigh
 import { checkAllBadges } from "@/lib/achievements";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/contexts/LanguageContext";
+import ConsistencyCard from "@/components/stats/ConsistencyCard";
+import MoodHeatmapCalendar from "@/components/stats/MoodHeatmapCalendar";
+import InsightsTab from "@/components/stats/InsightsTab";
 
-type Tab = "stats" | "badges" | "journal" | "reports";
+type Tab = "stats" | "insights" | "badges" | "journal" | "reports";
 
 export default function Stats() {
   const { t, language } = useLanguage();
@@ -68,19 +71,6 @@ export default function Stats() {
     return scored.map((s, i) => ({ session: i + 1, score: s.calmScore! }));
   }, [sessions]);
 
-  const heatmapData = useMemo(() => {
-    const days: { date: string; count: number }[] = [];
-    const today = new Date();
-    for (let i = 29; i >= 0; i--) {
-      const d = new Date(today);
-      d.setDate(d.getDate() - i);
-      const key = d.toISOString().split("T")[0];
-      const count = sessions.filter((s) => s.date.startsWith(key)).length;
-      days.push({ date: key, count });
-    }
-    return days;
-  }, [sessions]);
-
   const timeOfDayData = useMemo(() => {
     const buckets: Record<string, number> = { night: 0, morning: 0, midday: 0, afternoon: 0, evening: 0 };
     sessions.forEach((s) => {
@@ -135,6 +125,7 @@ export default function Stats() {
 
   const tabLabels: Record<Tab, string> = {
     stats: t("stats.overview"),
+    insights: t("stats.insights"),
     badges: t("stats.badges"),
     journal: t("stats.journal"),
     reports: t("stats.reports"),
@@ -146,7 +137,7 @@ export default function Stats() {
         <h1 className="mb-4 text-2xl font-bold text-foreground">{t("stats.title")}</h1>
 
         <div className="mb-6 flex gap-1 rounded-xl bg-secondary p-1">
-          {(["stats", "badges", "journal", "reports"] as Tab[]).map((tabKey) => (
+          {(["stats", "insights", "badges", "journal", "reports"] as Tab[]).map((tabKey) => (
             <button
               key={tabKey}
               onClick={() => setTab(tabKey)}
@@ -162,6 +153,8 @@ export default function Stats() {
 
         {tab === "stats" && (
           <>
+            <ConsistencyCard />
+
             <div className="mb-6 grid grid-cols-2 gap-3">
               {[
                 { icon: Flame, value: streak, label: t("stats.currentStreak"), suffix: t("stats.days") },
@@ -220,29 +213,11 @@ export default function Stats() {
               </div>
             )}
 
-            <div className="rounded-2xl border border-border bg-card p-4">
-              <h2 className="mb-3 text-sm font-semibold text-muted-foreground">{t("stats.last30")}</h2>
-              <div className="flex flex-wrap gap-1.5">
-                {heatmapData.map(({ date, count }) => (
-                  <div
-                    key={date}
-                    title={`${date}: ${count} ${t("common.sessions")}`}
-                    className="h-5 w-5 rounded-sm transition-colors"
-                    style={{
-                      background: count === 0
-                        ? "hsl(var(--muted))"
-                        : count <= 1
-                          ? "hsl(var(--primary) / 0.4)"
-                          : count <= 3
-                            ? "hsl(var(--primary) / 0.7)"
-                            : "hsl(var(--primary))",
-                    }}
-                  />
-                ))}
-              </div>
-            </div>
+            <MoodHeatmapCalendar />
           </>
         )}
+
+        {tab === "insights" && <InsightsTab />}
 
         {tab === "badges" && (
           <div className="space-y-6">
