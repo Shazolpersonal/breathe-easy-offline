@@ -600,7 +600,25 @@ export default function Settings() {
             <Share2 className="h-4 w-4" /> {t("share.inviteButton")}
           </Button>
         </section>
+
+        {/* Support Us / Donate */}
+        <section className="rounded-2xl border border-primary/20 bg-primary/5 p-4">
+          <div className="flex items-center gap-3">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary/15">
+              <HeartHandshake className="h-5 w-5 text-primary" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <h2 className="text-sm font-semibold text-foreground">{t("donate.supportUs")}</h2>
+              <p className="text-xs text-muted-foreground">{t("donate.supportSubtitle")}</p>
+            </div>
+          </div>
+          <Button className="mt-3 w-full gap-2" onClick={() => setShowDonateDialog(true)}>
+            <Heart className="h-4 w-4" /> {t("donate.button")}
+          </Button>
+        </section>
       </div>
+
+      <DonateDialog open={showDonateDialog} onOpenChange={setShowDonateDialog} />
     </div>
   );
 }
