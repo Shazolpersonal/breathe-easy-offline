@@ -87,6 +87,20 @@ function AppInner() {
   );
 }
 
+function AppShell() {
+  const [onboarded, setOnboarded] = useState(() => localStorage.getItem("breathe_onboarding_done") === "1");
+
+  const handleOnboardingComplete = useCallback(() => {
+    setOnboarded(true);
+  }, []);
+
+  if (!onboarded) {
+    return <Onboarding onComplete={handleOnboardingComplete} />;
+  }
+
+  return <AppInner />;
+}
+
 const App = () => (
   <ErrorBoundary>
     <QueryClientProvider client={queryClient}>
@@ -96,7 +110,7 @@ const App = () => (
             <TooltipProvider>
               <BrowserRouter>
                 <SessionProvider>
-                  <AppInner />
+                  <AppShell />
                 </SessionProvider>
               </BrowserRouter>
             </TooltipProvider>
