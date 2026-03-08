@@ -1,11 +1,11 @@
 import { useNavigate } from "react-router-dom";
-import { Wind, Flame, Zap, TrendingUp, CheckCircle2, Circle, Swords, Quote, Download, X } from "lucide-react";
+import { Wind, Flame, Zap, TrendingUp, CheckCircle2, Circle, Swords, Quote, Download, X, Trophy } from "lucide-react";
 import SmartSuggestion from "@/components/SmartSuggestion";
 import TechniqueCard from "@/components/TechniqueCard";
 import { PRESET_TECHNIQUES } from "@/lib/techniques";
 import { getCustomTechniques, getFavorites, toggleFavorite, getCurrentStreak, getTodayMinutes } from "@/lib/storage";
-import { getDailyChallenges } from "@/lib/challenges";
-import { getXPState, getWeeklyXP } from "@/lib/xp";
+import { getDailyChallenges, getChallengeStreak, saveTodayChallengeProgress, areAllChallengesComplete } from "@/lib/challenges";
+import { getXPState, getWeeklyXP, addXP } from "@/lib/xp";
 import { getDailyQuote } from "@/lib/quotes";
 import { getActiveChallenges, getChallengeProgress } from "@/lib/friendChallenge";
 import { canInstall, promptInstall, isDismissed, dismissInstallBanner, isRunningAsPWA, canShowManualInstallHint, getInstallPlatform } from "@/lib/installPrompt";
