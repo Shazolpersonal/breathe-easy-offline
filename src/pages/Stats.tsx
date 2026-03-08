@@ -154,19 +154,29 @@ export default function Stats() {
 
         {tab === "stats" && (
           <>
+            {sessions.length === 0 ? (
+              <div className="flex flex-col items-center gap-4 py-16 text-center">
+                <div className="rounded-full bg-primary/10 p-4">
+                  <Target className="h-10 w-10 text-primary" />
+                </div>
+                <h2 className="text-lg font-semibold text-foreground">{t("stats.emptyTitle")}</h2>
+                <p className="max-w-xs text-sm text-muted-foreground">{t("stats.emptyDesc")}</p>
+              </div>
+            ) : (
+            <>
             <ConsistencyCard />
 
             <div className="mb-6 grid grid-cols-2 gap-3">
               {[
-                { icon: Flame, value: streak, label: t("stats.currentStreak"), suffix: t("stats.days") },
-                { icon: Trophy, value: longestStreak, label: t("stats.longestStreak"), suffix: t("stats.days") },
-                { icon: Clock, value: totalMinutes, label: t("stats.totalTime"), suffix: t("stats.min") },
-                { icon: Target, value: sessions.length, label: t("stats.sessions"), suffix: "" },
+                { icon: Flame, value: streak, label: t("stats.currentStreak"), suffix: t("stats.days"), span: false },
+                { icon: Trophy, value: longestStreak, label: t("stats.longestStreak"), suffix: t("stats.days"), span: false },
+                { icon: Clock, value: totalMinutes, label: t("stats.totalTime"), suffix: t("stats.min"), span: false },
+                { icon: Target, value: sessions.length, label: t("stats.sessions"), suffix: "", span: false },
                 ...(avgCalmScore !== null
-                  ? [{ icon: Brain, value: avgCalmScore, label: t("stats.avgCalm"), suffix: "%" }]
+                  ? [{ icon: Brain, value: avgCalmScore, label: t("stats.avgCalm"), suffix: "%", span: true }]
                   : []),
-              ].map(({ icon: Icon, value, label, suffix }) => (
-                <div key={label} className="flex flex-col items-center rounded-2xl border border-border bg-card p-4">
+              ].map(({ icon: Icon, value, label, suffix, span }) => (
+                <div key={label} className={`flex flex-col items-center rounded-2xl border border-border bg-card p-4 ${span ? "col-span-2" : ""}`}>
                   <Icon className="mb-1 h-5 w-5 text-primary" />
                   <span className="text-xl font-bold text-foreground">
                     {value}{suffix && <span className="ml-1 text-xs font-normal text-muted-foreground">{suffix}</span>}
