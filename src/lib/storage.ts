@@ -49,6 +49,8 @@ const DEFAULT_SETTINGS: AppSettings = {
   highContrast: false,
   largeText: false,
   reducedMotion: false,
+  breathDetectionEnabled: false,
+  heartRateEnabled: false,
 };
 
 function getJSON<T>(key: string, fallback: T): T {

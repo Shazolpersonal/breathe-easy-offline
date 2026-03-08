@@ -159,6 +159,28 @@ export default function Settings() {
           </div>
         </section>
 
+        {/* Intelligence & Sensors */}
+        <section className="rounded-2xl border border-border bg-card p-4 space-y-4">
+          <div className="flex items-center gap-2">
+            <Mic className="h-4 w-4 text-muted-foreground" />
+            <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">{t("settings.intelligence")}</h2>
+          </div>
+          <div className="flex items-center justify-between">
+            <div>
+              <Label>{t("settings.breathDetection")}</Label>
+              <p className="text-xs text-muted-foreground">{t("settings.breathDetectionDesc")}</p>
+            </div>
+            <Switch checked={settings.breathDetectionEnabled} onCheckedChange={(v) => update({ breathDetectionEnabled: v })} />
+          </div>
+          <div className="flex items-center justify-between">
+            <div>
+              <Label>{t("settings.heartRate")}</Label>
+              <p className="text-xs text-muted-foreground">{t("settings.heartRateDesc")}</p>
+            </div>
+            <Switch checked={settings.heartRateEnabled} onCheckedChange={(v) => update({ heartRateEnabled: v })} />
+          </div>
+        </section>
+
         {/* Voice */}
         <section className="rounded-2xl border border-border bg-card p-4 space-y-4">
           <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">{t("settings.voice")}</h2>
