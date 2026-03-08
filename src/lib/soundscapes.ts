@@ -91,7 +91,12 @@ export class SoundscapeEngine {
   getType() { return this.currentType; }
 
   private scheduleTimeout(fn: () => void, delay: number) {
-    const id = setTimeout(fn, delay);
+    const id = setTimeout(() => {
+      // Remove this ID from tracking after it fires
+      const idx = this.timeoutIds.indexOf(id);
+      if (idx >= 0) this.timeoutIds.splice(idx, 1);
+      fn();
+    }, delay);
     this.timeoutIds.push(id);
     return id;
   }

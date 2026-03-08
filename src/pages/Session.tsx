@@ -873,11 +873,36 @@ export default function Session() {
             </div>
 
             {/* Soundscape picker */}
-            <SoundscapePicker
-              value={soundscapeType}
-              onChange={(type) => setSoundscapeType(type)}
-              compact
-            />
+            <div className="flex items-center gap-2">
+              <SoundscapePicker
+                value={soundscapeType}
+                onChange={(type) => {
+                  setSoundscapeType(type);
+                  // Actually switch the audio engine
+                  soundscapeEngineRef.current.stop();
+                  if (type !== "off" && state === "running") {
+                    soundscapeEngineRef.current.start(type, settings.soundscapeVolume ?? 0.5);
+                  }
+                }}
+                compact
+              />
+              {soundscapeType !== "off" && state !== "idle" && (
+                <div className="flex items-center gap-1.5 min-w-[80px]">
+                  <Volume2 className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
+                  <Slider
+                    min={0}
+                    max={1}
+                    step={0.05}
+                    value={[settings.soundscapeVolume ?? 0.5]}
+                    onValueChange={([v]) => {
+                      update({ soundscapeVolume: v });
+                      soundscapeEngineRef.current.setVolume(v);
+                    }}
+                    className="w-16"
+                  />
+                </div>
+              )}
+            </div>
           </>
         )}
 

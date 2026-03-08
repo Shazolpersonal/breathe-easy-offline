@@ -159,7 +159,16 @@ export default function Settings() {
           </div>
           <SoundscapePicker
             value={(settings.soundscapeType || "off") as SoundscapeType}
-            onChange={(type) => update({ soundscapeType: type })}
+            onChange={(type) => {
+              update({ soundscapeType: type });
+              // Play a brief preview
+              const engine = getSoundscapeEngine();
+              engine.stop();
+              if (type !== "off") {
+                engine.start(type, settings.soundscapeVolume ?? 0.5);
+                setTimeout(() => engine.stop(), 4000);
+              }
+            }}
           />
           <div>
             <Label className="mb-2 block">{t("soundscape.volume")}</Label>
