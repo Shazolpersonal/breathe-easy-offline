@@ -16,8 +16,8 @@ export default function Stats() {
   const [tab, setTab] = useState<Tab>("stats");
   const sessions = useMemo(() => getSessions(), []);
   const sessionsKey = sessions.length;
-  const streak = getCurrentStreak();
-  const longestStreak = getLongestStreak();
+  const streak = useMemo(() => getCurrentStreak(), [sessionsKey]);
+  const longestStreak = useMemo(() => getLongestStreak(), [sessionsKey]);
   const totalMinutes = Math.round(sessions.reduce((s, r) => s + r.durationSeconds, 0) / 60);
 
   const now = new Date();
