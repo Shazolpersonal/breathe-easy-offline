@@ -270,6 +270,7 @@ export default function Session() {
   const finishSession = useCallback(() => {
     clearTimeout(intervalRef.current);
     stopSpeaking();
+    releaseWakeLock();
 
     // Stop soundscape
     soundscapeEngineRef.current.stop();
