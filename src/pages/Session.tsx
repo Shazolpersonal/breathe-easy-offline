@@ -571,8 +571,7 @@ export default function Session() {
   completedCyclesRef.current = completedCycles;
   const currentRoundRef = useRef(currentRound);
   currentRoundRef.current = currentRound;
-  const durationMinRef = useRef(durationMin);
-  durationMinRef.current = durationMin;
+  // durationMinRef already declared above
   const moodBeforeRef = useRef(moodBefore);
   moodBeforeRef.current = moodBefore;
   const voiceOnRef = useRef(voiceOn);
