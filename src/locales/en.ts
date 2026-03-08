@@ -151,6 +151,7 @@ export const en: Record<string, string> = {
   "stats.totalTime": "Total Time",
   "stats.sessions": "Sessions",
   "stats.avgCalm": "Avg Calm Score",
+  "stats.day": "day",
   "stats.days": "days",
   "stats.min": "min",
   "stats.thisWeek": "This Week",
