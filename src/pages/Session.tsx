@@ -501,10 +501,7 @@ export default function Session() {
     return () => document.removeEventListener("fullscreenchange", handler);
   }, []);
 
-  // Cleanup soundscape on unmount
-  useEffect(() => {
-    return () => { soundscapeEngineRef.current.stop(); };
-  }, []);
+  // Soundscape cleanup is handled in the mini-mode unmount handler below
 
   // Add/remove zen-mode class on body for BottomNav hiding
   useEffect(() => {
