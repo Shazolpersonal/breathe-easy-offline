@@ -682,7 +682,7 @@ export default function Session() {
             {playlist && <p className="text-xs text-primary mt-1">{t("session.done.playlistComplete")}</p>}
             {programId && programDay && <p className="text-xs text-primary mt-1">{t("session.done.dayComplete", { day: programDay })}</p>}
             <span className="inline-block mt-1 rounded-full bg-primary/15 px-2.5 py-0.5 text-xs font-medium text-primary">
-              Lv.{progression.level} {t(`level.${getLevelName(progression.level)}`)}
+              {t("common.levelShort", { level: levelUpInfo ? levelUpInfo.level : progression.level })} {t(`level.${getLevelName(levelUpInfo ? levelUpInfo.level : progression.level)}`)}
             </span>
           </div>
 
