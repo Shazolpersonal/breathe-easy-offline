@@ -325,6 +325,22 @@ export function deleteSession(id: string) {
   setJSON(KEYS.sessions, sessions);
 }
 
+// Get last journal entry for a specific technique
+export function getLastJournalForTechnique(techniqueId: string): string | null {
+  const sessions = getSessions();
+  for (let i = sessions.length - 1; i >= 0; i--) {
+    if (sessions[i].techniqueId === techniqueId && sessions[i].journal) {
+      return sessions[i].journal!;
+    }
+  }
+  return null;
+}
+
+// Get total session count (for auto-backup trigger)
+export function getTotalSessionCount(): number {
+  return getSessions().length;
+}
+
 // Last session config for Quick Resume
 const LAST_SESSION_KEY = "breathe_last_session_config";
 
