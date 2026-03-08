@@ -11,6 +11,9 @@ export interface SessionRecord {
   moodAfter?: number;
   calmScore?: number;
   journal?: string;
+  breathAccuracy?: number;
+  avgHeartRate?: number;
+  heartCoherence?: number;
 }
 
 export interface AppSettings {
