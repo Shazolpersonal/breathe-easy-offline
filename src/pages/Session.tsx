@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
-import { Pause, Play, Square, Volume2, VolumeX, TrendingUp } from "lucide-react";
+import { Pause, Play, Square, Volume2, VolumeX, TrendingUp, Sparkles } from "lucide-react";
 import BreathingCircle from "@/components/BreathingCircle";
 import MoodPicker from "@/components/MoodPicker";
 import { PRESET_TECHNIQUES, getTechniqueById, getCycleDuration, BreathingPhase } from "@/lib/techniques";
@@ -11,9 +11,13 @@ import { vibratePhaseChange, vibrateDone } from "@/lib/haptics";
 import { saveMoodRecord, getMoodEmoji } from "@/lib/mood";
 import { getProgression, getScaledPhases, updateProgression, getLevelName, getLevelProgress, getNextLevelThreshold } from "@/lib/progression";
 import { calculateCalmScore, PhaseTimestamp, CalmScoreResult } from "@/lib/coherence";
+import { getNewlyUnlocked, Badge } from "@/lib/achievements";
+import { calculateSessionXP, addXP, getXPState } from "@/lib/xp";
+import { getCompletedChallengeCount } from "@/lib/challenges";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { cn } from "@/lib/utils";
+import { toast } from "sonner";
 
 type SessionState = "idle" | "running" | "paused" | "done";
 
@@ -51,6 +55,18 @@ function LevelUpBanner({ level, techniqueName }: { level: number; techniqueName:
   );
 }
 
+function XPEarnedDisplay({ xp, leveledUp, newTitle }: { xp: number; leveledUp: boolean; newTitle?: string }) {
+  return (
+    <div className="flex flex-col items-center gap-1 rounded-xl bg-accent/50 px-4 py-3">
+      <Sparkles className="h-5 w-5 text-primary" />
+      <span className="text-lg font-bold text-primary">+{xp} XP</span>
+      {leveledUp && newTitle && (
+        <span className="text-xs font-medium text-primary">🎉 New title: {newTitle}</span>
+      )}
+    </div>
+  );
+}
+
 export default function Session() {
   const [params] = useSearchParams();
   const navigate = useNavigate();
@@ -70,16 +86,14 @@ export default function Session() {
   const [voiceOn, setVoiceOn] = useState(settings.voiceEnabled);
   const [durationMin, setDurationMin] = useState(settings.defaultDurationMinutes);
 
-  // Mood state
   const [moodBefore, setMoodBefore] = useState<number | null>(null);
   const [moodAfter, setMoodAfter] = useState<number | null>(null);
   const [moodSaved, setMoodSaved] = useState(false);
   const sessionIdRef = useRef(crypto.randomUUID());
 
-  // Level-up state
   const [levelUpInfo, setLevelUpInfo] = useState<{ level: number } | null>(null);
+  const [earnedXP, setEarnedXP] = useState<{ xp: number; leveledUp: boolean; newTitle?: string } | null>(null);
 
-  // Calm score tracking
   const phaseStartRef = useRef(Date.now());
   const phaseTimestampsRef = useRef<PhaseTimestamp[]>([]);
   const [calmResult, setCalmResult] = useState<CalmScoreResult | null>(null);
@@ -97,7 +111,6 @@ export default function Session() {
     clearInterval(intervalRef.current);
     stopSpeaking();
 
-    // Record final phase timestamp
     const now = Date.now();
     const actualDuration = (now - phaseStartRef.current) / 1000;
     phaseTimestampsRef.current.push({
@@ -109,7 +122,6 @@ export default function Session() {
     const calm = calculateCalmScore(phaseTimestampsRef.current);
     setCalmResult(calm);
 
-    // Update progression
     const result = updateProgression(technique.id, completedCycles);
     if (result.leveledUp) setLevelUpInfo({ level: result.newLevel });
 
@@ -124,7 +136,27 @@ export default function Session() {
         moodBefore: moodBefore ?? undefined,
         calmScore: calm.score,
       });
+
+      // XP calculation
+      const challengesCompleted = getCompletedChallengeCount();
+      const xp = calculateSessionXP(totalElapsed, technique, calm.score, challengesCompleted);
+      const xpResult = addXP(xp);
+      const xpState = getXPState();
+      setEarnedXP({
+        xp,
+        leveledUp: xpResult.newLevel > xpResult.previousLevel,
+        newTitle: xpResult.newLevel > xpResult.previousLevel ? xpState.title : undefined,
+      });
+
+      // Check for new achievement badges
+      const newBadges = getNewlyUnlocked();
+      newBadges.forEach((badge) => {
+        toast(`${badge.emoji} ${badge.name} unlocked!`, {
+          description: badge.description,
+        });
+      });
     }
+
     setState("done");
     vibrateDone();
   }, [totalElapsed, completedCycles, technique, moodBefore, phaseIndex, scaledPhases]);
@@ -132,7 +164,6 @@ export default function Session() {
   const tick = useCallback(() => {
     setSecondsLeft((prev) => {
       if (prev <= 1) {
-        // Record phase timestamp
         const now = Date.now();
         const actualDuration = (now - phaseStartRef.current) / 1000;
 
@@ -174,6 +205,7 @@ export default function Session() {
     setMoodAfter(null);
     setMoodSaved(false);
     setLevelUpInfo(null);
+    setEarnedXP(null);
     setCalmResult(null);
     phaseTimestampsRef.current = [];
     phaseStartRef.current = Date.now();
@@ -233,13 +265,10 @@ export default function Session() {
             </span>
           </div>
 
-          {/* Level Up */}
           {levelUpInfo && <LevelUpBanner level={levelUpInfo.level} techniqueName={technique.name} />}
-
-          {/* Calm Score */}
           {calmResult && <CalmScoreDisplay result={calmResult} />}
+          {earnedXP && <XPEarnedDisplay xp={earnedXP.xp} leveledUp={earnedXP.leveledUp} newTitle={earnedXP.newTitle} />}
 
-          {/* Post-session mood */}
           <div>
             {!moodSaved ? (
               <MoodPicker selected={moodAfter} onSelect={handleMoodAfter} label="How do you feel now?" />
@@ -260,7 +289,7 @@ export default function Session() {
           </div>
 
           <div className="flex gap-3 justify-center">
-            <Button variant="secondary" onClick={() => { setState("idle"); setMoodBefore(null); setMoodAfter(null); setMoodSaved(false); setLevelUpInfo(null); setCalmResult(null); }}>Again</Button>
+            <Button variant="secondary" onClick={() => { setState("idle"); setMoodBefore(null); setMoodAfter(null); setMoodSaved(false); setLevelUpInfo(null); setEarnedXP(null); setCalmResult(null); }}>Again</Button>
             <Button onClick={() => navigate("/")}>Done</Button>
           </div>
         </div>
