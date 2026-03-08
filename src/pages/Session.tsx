@@ -161,9 +161,19 @@ export default function Session() {
     if (moodParam) setMoodBefore(Number(moodParam));
   }, [params]);
 
-  const intervalRef = useRef<ReturnType<typeof setInterval>>();
+  const intervalRef = useRef<ReturnType<typeof setTimeout>>();
   const durationMinRef = useRef(durationMin);
   durationMinRef.current = durationMin;
+  const settingsRef = useRef(settings);
+  settingsRef.current = settings;
+  const currentPhasesRef = useRef(currentPhases);
+  currentPhasesRef.current = currentPhases;
+  const techniqueRef = useRef(technique);
+  techniqueRef.current = technique;
+  const tRef = useRef(t);
+  tRef.current = t;
+  const languageRef = useRef(language);
+  languageRef.current = language;
   const currentPhase: BreathingPhase = currentPhases[phaseIndex];
 
   const getPhaseLabel = (phase: BreathingPhase) => t(`phase.${phase.type}`);
@@ -220,7 +230,7 @@ export default function Session() {
   }, [journalNote]);
 
   const finishSession = useCallback(() => {
-    clearInterval(intervalRef.current);
+    clearTimeout(intervalRef.current);
     stopSpeaking();
 
     // Stop soundscape
@@ -356,46 +366,47 @@ export default function Session() {
   };
 
   const tick = useCallback(() => {
+    const phases = currentPhasesRef.current;
+    const techObj = techniqueRef.current;
+    const voice = voiceOnRef.current;
+    const setts = settingsRef.current;
+    const round = currentRoundRef.current;
+    const lang = languageRef.current;
+    const tFn = tRef.current;
+
     setSecondsLeft((prev) => {
       if (prev <= 1) {
         const now = Date.now();
         const actualDuration = (now - phaseStartRef.current) / 1000;
 
         setPhaseIndex((pi) => {
-          phaseTimestampsRef.current.push({ phaseIndex: pi, expectedDuration: currentPhases[pi].duration, actualDuration });
-          const next = (pi + 1) % currentPhases.length;
+          phaseTimestampsRef.current.push({ phaseIndex: pi, expectedDuration: phases[pi].duration, actualDuration });
+          const next = (pi + 1) % phases.length;
           if (next === 0) {
             setCompletedCycles((c) => c + 1);
-            if (technique.pyramid) setCurrentRound(r => r + 1);
+            if (techObj.pyramid) setCurrentRound(r => r + 1);
           }
 
-          const nextRoundPhases = technique.pyramid && next === 0
-            ? getPyramidPhasesForRound(technique, currentRound + 1)
-            : currentPhases;
+          const nextRoundPhases = techObj.pyramid && next === 0
+            ? getPyramidPhasesForRound(techObj, round + 1)
+            : phases;
           const nextPhase = nextRoundPhases[next];
           setSecondsLeft(nextPhase.duration);
           phaseStartRef.current = Date.now();
 
-          // Notify breath detector of phase change
           breathDetectorRef.current?.notifyPhaseChange(next);
-
-          // Sync soundscape to phase
           soundscapeEngineRef.current.syncToPhase(nextPhase.type);
 
-          if (settings.vibrationEnabled) vibratePhaseChange();
-          if (voiceOn) speak(t(`phase.${nextPhase.type}`), settings.voiceSpeed, language);
+          if (setts.vibrationEnabled) vibratePhaseChange();
+          if (voice) speak(tFn(`phase.${nextPhase.type}`), setts.voiceSpeed, lang);
           return next;
         });
         return prev;
       }
       return prev - 1;
     });
-    setTotalElapsed((te) => {
-      const newT = te + 1;
-      if (newT >= durationMinRef.current * 60) stop();
-      return newT;
-    });
-  }, [currentPhases, voiceOn, settings, stop, technique, currentRound, t, language]);
+    setTotalElapsed((te) => te + 1);
+  }, []);
 
   const start = () => {
     sessionIdRef.current = crypto.randomUUID();
@@ -426,7 +437,7 @@ export default function Session() {
   };
 
   const pause = () => {
-    clearInterval(intervalRef.current);
+    clearTimeout(intervalRef.current);
     setState("paused");
     stopSpeaking();
     // Mute soundscape on pause
@@ -490,10 +501,7 @@ export default function Session() {
     return () => document.removeEventListener("fullscreenchange", handler);
   }, []);
 
-  // Cleanup soundscape on unmount
-  useEffect(() => {
-    return () => { soundscapeEngineRef.current.stop(); };
-  }, []);
+  // Soundscape cleanup is handled in the mini-mode unmount handler below
 
   // Add/remove zen-mode class on body for BottomNav hiding
   useEffect(() => {
@@ -503,10 +511,24 @@ export default function Session() {
 
   useEffect(() => {
     if (state === "running") {
-      intervalRef.current = setInterval(tick, 1000);
+      let expected = Date.now() + 1000;
+      const run = () => {
+        tick();
+        const drift = Date.now() - expected;
+        expected += 1000;
+        intervalRef.current = setTimeout(run, Math.max(0, 1000 - drift));
+      };
+      intervalRef.current = setTimeout(run, 1000);
     }
-    return () => clearInterval(intervalRef.current);
+    return () => clearTimeout(intervalRef.current);
   }, [state, tick]);
+
+  // Auto-stop when duration reached (moved out of setState callback)
+  useEffect(() => {
+    if (state === "running" && totalElapsed >= durationMin * 60) {
+      stop();
+    }
+  }, [totalElapsed, state, durationMin, stop]);
 
   // ─── Keyboard Shortcuts ───
   useKeyboardShortcuts({
@@ -604,6 +626,7 @@ export default function Session() {
   useEffect(() => {
     return () => {
       if (stateRef.current === "running" || stateRef.current === "paused") {
+        // Entering mini mode — keep soundscape alive for restore
         startMiniMode({
           isActive: true,
           isPaused: stateRef.current === "paused",
@@ -621,6 +644,9 @@ export default function Session() {
           voiceOn: voiceOnRef.current,
           soundscapeType: soundscapeTypeRef.current,
         });
+      } else {
+        // Not entering mini mode — clean up soundscape
+        soundscapeEngineRef.current.stop();
       }
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -820,6 +846,7 @@ export default function Session() {
         )}
 
         <BreathingVisualizer
+          key={`${phaseIndex}-${completedCycles}`}
           phase={activePhase}
           phaseDuration={currentPhase.duration}
           label={state === "idle" ? t("session.ready") : getPhaseLabel(currentPhase)}
@@ -928,8 +955,10 @@ export default function Session() {
                   step={0.05}
                   value={[settings.soundscapeVolume ?? 0.5]}
                   onValueChange={([v]) => {
-                    update({ soundscapeVolume: v });
                     soundscapeEngineRef.current.setVolume(v);
+                  }}
+                  onValueCommit={([v]) => {
+                    update({ soundscapeVolume: v });
                   }}
                   className="w-16"
                 />

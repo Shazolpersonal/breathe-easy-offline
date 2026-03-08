@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 
 interface Props {
   phase: "inhale" | "hold" | "exhale" | "hold-after-exhale" | "idle";
@@ -8,8 +8,9 @@ interface Props {
 }
 
 export default function MandalaVisualization({ phase, phaseDuration, label, secondsLeft }: Props) {
-  const [rotation, setRotation] = useState(0);
+  const svgRef = useRef<SVGSVGElement>(null);
   const animRef = useRef(0);
+  const rotationRef = useRef(0);
   const phaseRef = useRef(phase);
   phaseRef.current = phase;
 
@@ -26,7 +27,10 @@ export default function MandalaVisualization({ phase, phaseDuration, label, seco
       const dt = (now - last) / 1000;
       last = now;
       const speed = phaseRef.current === "inhale" ? 15 : phaseRef.current === "exhale" ? -10 : 5;
-      setRotation((r) => r + speed * dt);
+      rotationRef.current += speed * dt;
+      if (svgRef.current) {
+        svgRef.current.style.transform = `rotate(${rotationRef.current}deg)`;
+      }
       animRef.current = requestAnimationFrame(tick);
     };
     animRef.current = requestAnimationFrame(tick);
@@ -68,17 +72,23 @@ export default function MandalaVisualization({ phase, phaseDuration, label, seco
 
   return (
     <div className="relative flex items-center justify-center" style={{ width: 260, height: 260 }}>
-      <svg
-        width="260" height="260" viewBox="0 0 260 260"
+      {/* Outer wrapper handles scale with CSS transition */}
+      <div
         style={{
-          transform: `rotate(${rotation}deg) scale(${scale})`,
+          transform: `scale(${scale})`,
           transition: `transform ${phaseDuration}s ease-in-out`,
         }}
       >
-        {petalElements}
-        {innerPetals}
-        <circle cx="130" cy="130" r="8" fill="hsl(var(--breathe-glow))" opacity="0.6" />
-      </svg>
+        {/* Inner SVG handles rotation via rAF (no CSS transition) */}
+        <svg
+          ref={svgRef}
+          width="260" height="260" viewBox="0 0 260 260"
+        >
+          {petalElements}
+          {innerPetals}
+          <circle cx="130" cy="130" r="8" fill="hsl(var(--breathe-glow))" opacity="0.6" />
+        </svg>
+      </div>
       <div className="absolute flex flex-col items-center gap-1 text-center">
         <span className="text-lg font-semibold text-foreground drop-shadow-md">{label}</span>
         {phase !== "idle" && (

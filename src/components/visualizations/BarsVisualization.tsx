@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 
 interface Props {
   phase: "inhale" | "hold" | "exhale" | "hold-after-exhale" | "idle";
@@ -11,20 +11,39 @@ const BAR_COUNT = 7;
 
 export default function BarsVisualization({ phase, phaseDuration, label, secondsLeft }: Props) {
   const [heights, setHeights] = useState<number[]>(Array(BAR_COUNT).fill(20));
+  const holdIntervalRef = useRef<ReturnType<typeof setInterval>>();
+  const isHold = phase === "hold" || phase === "hold-after-exhale";
 
   useEffect(() => {
+    clearInterval(holdIntervalRef.current);
+
     const target =
       phase === "inhale" ? 90
       : phase === "exhale" ? 15
       : phase === "idle" ? 20
-      : heights[0]; // hold — stay
+      : phase === "hold" ? 90
+      : 15; // hold-after-exhale
 
     const newHeights = Array.from({ length: BAR_COUNT }, (_, i) => {
       const offset = Math.sin((i / BAR_COUNT) * Math.PI) * 20;
       return Math.max(10, target + offset);
     });
     setHeights(newHeights);
-  }, [phase]);
+
+    // Add subtle oscillation during hold phases
+    if (isHold) {
+      holdIntervalRef.current = setInterval(() => {
+        const t = Date.now() / 1000;
+        setHeights(Array.from({ length: BAR_COUNT }, (_, i) => {
+          const offset = Math.sin((i / BAR_COUNT) * Math.PI) * 20;
+          const osc = Math.sin(t * 1.5 + i * 0.7) * 5;
+          return Math.max(10, target + offset + osc);
+        }));
+      }, 400);
+    }
+
+    return () => clearInterval(holdIntervalRef.current);
+  }, [phase, isHold]);
 
   return (
     <div className="relative flex items-center justify-center" style={{ width: 260, height: 260 }}>
@@ -37,7 +56,7 @@ export default function BarsVisualization({ phase, phaseDuration, label, seconds
               height: `${h}%`,
               background: `linear-gradient(to top, hsl(var(--breathe-glow)), hsl(var(--breathe-glow-secondary)))`,
               opacity: 0.7 + (i % 2) * 0.15,
-              transition: `height ${phaseDuration}s ease-in-out`,
+              transition: `height ${isHold ? 0.4 : phaseDuration}s ease-in-out`,
             }}
           />
         ))}
