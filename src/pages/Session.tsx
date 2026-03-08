@@ -82,7 +82,7 @@ function XPEarnedDisplay({ breakdown, leveledUp, newTitle, t }: { breakdown: XPB
   if (breakdown.challengeBonus > 0) lines.push({ label: t("xp.challengeBonus"), value: breakdown.challengeBonus });
 
   return (
-    <div className="flex flex-col items-center gap-2 rounded-xl bg-accent/50 px-5 py-3 w-full max-w-[220px]">
+    <div className="flex flex-col items-center gap-2 rounded-xl bg-card border border-border px-5 py-3 w-full max-w-xs">
       <div className="flex items-center gap-1.5">
         <Sparkles className="h-5 w-5 text-primary" />
         <span className="text-lg font-bold text-primary">+{breakdown.total} XP</span>
@@ -783,8 +783,8 @@ export default function Session() {
 
   if (state === "done") {
     return (
-      <div className="flex min-h-screen flex-col items-center justify-center px-4 pb-24">
-        <div className="text-center space-y-5">
+      <div className="flex min-h-screen flex-col items-center justify-center px-4 py-8 pb-24 overflow-y-auto">
+        <div className="text-center space-y-5 w-full flex flex-col items-center">
           <div className="text-5xl">🙏</div>
           <div>
             <h2 className="text-2xl font-bold text-foreground">{t("session.done.title")}</h2>
@@ -844,28 +844,32 @@ export default function Session() {
               placeholder={t("session.journal.placeholder")}
               value={journalNote}
               onChange={(e) => setJournalNote(e.target.value)}
-              className="min-h-[60px] resize-none bg-secondary/50 border-border text-sm"
+              className="min-h-[60px] resize-none bg-card border-border text-sm"
               rows={3}
             />
           </div>
 
-          <div className="flex gap-3 justify-center flex-wrap">
-            <Button variant="outline" size="sm" className="gap-1" onClick={handleShare}>
-              <Share2 className="h-4 w-4" /> {t("session.share")}
-            </Button>
-            <Button variant="outline" size="sm" className="gap-1" onClick={() => shareApp(language)}>
-              <Share2 className="h-4 w-4" /> {t("share.inviteSession")}
-            </Button>
-            <Button variant="secondary" onClick={() => {
-              saveJournal();
-              sessionIdRef.current = crypto.randomUUID();
-              setState("idle"); setMoodBefore(null); setMoodAfter(null); setMoodSaved(false); setLevelUpInfo(null); setEarnedXP(null); setCalmResult(null); setJournalNote("");
-            }}>{t("session.again")}</Button>
-            <Button onClick={() => {
-              saveJournal();
-              if (programId) navigate("/programs");
-              else navigate("/");
-            }}>{t("session.done.button")}</Button>
+          <div className="flex flex-col items-center gap-2 w-full max-w-xs">
+            <div className="flex gap-2 w-full">
+              <Button variant="outline" size="sm" className="gap-1 flex-1" onClick={handleShare}>
+                <Share2 className="h-4 w-4" /> {t("session.share")}
+              </Button>
+              <Button variant="outline" size="sm" className="gap-1 flex-1" onClick={() => shareApp(language)}>
+                <Share2 className="h-4 w-4" /> {t("share.inviteSession")}
+              </Button>
+            </div>
+            <div className="flex gap-2 w-full">
+              <Button variant="secondary" className="flex-1" onClick={() => {
+                saveJournal();
+                sessionIdRef.current = crypto.randomUUID();
+                setState("idle"); setMoodBefore(null); setMoodAfter(null); setMoodSaved(false); setLevelUpInfo(null); setEarnedXP(null); setCalmResult(null); setJournalNote("");
+              }}>{t("session.again")}</Button>
+              <Button className="flex-1" onClick={() => {
+                saveJournal();
+                if (programId) navigate("/programs");
+                else navigate("/");
+              }}>{t("session.done.button")}</Button>
+            </div>
           </div>
         </div>
       </div>
