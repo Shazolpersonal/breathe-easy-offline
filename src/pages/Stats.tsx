@@ -269,7 +269,7 @@ export default function Stats() {
         <h1 className="mb-4 text-2xl font-bold text-foreground">{t("stats.title")}</h1>
 
         <div className="mb-6 flex gap-1 rounded-xl bg-secondary p-1">
-          {(["stats", "insights", "badges", "journal", "reports"] as Tab[]).map((tabKey) => (
+          {(["stats", "history", "insights", "badges", "journal", "reports"] as Tab[]).map((tabKey) => (
             <button
               key={tabKey}
               onClick={() => setTab(tabKey)}
