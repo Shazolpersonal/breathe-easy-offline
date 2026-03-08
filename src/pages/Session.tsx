@@ -82,7 +82,7 @@ function XPEarnedDisplay({ breakdown, leveledUp, newTitle, t }: { breakdown: XPB
   if (breakdown.challengeBonus > 0) lines.push({ label: t("xp.challengeBonus"), value: breakdown.challengeBonus });
 
   return (
-    <div className="flex flex-col items-center gap-2 rounded-xl bg-accent/50 px-5 py-3 w-full max-w-[220px]">
+    <div className="flex flex-col items-center gap-2 rounded-xl bg-card border border-border px-5 py-3 w-full max-w-xs">
       <div className="flex items-center gap-1.5">
         <Sparkles className="h-5 w-5 text-primary" />
         <span className="text-lg font-bold text-primary">+{breakdown.total} XP</span>
