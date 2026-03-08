@@ -29,31 +29,34 @@ export default function DonateDialog({ open, onOpenChange }: DonateDialogProps) 
   const [thanks, setThanks] = useState(false);
 
   const amount = selected ?? (parseFloat(custom) || 0);
+  const [donating, setDonating] = useState(false);
 
-  const handleDonate = () => {
+  const handleDonate = async () => {
     if (amount <= 0) {
       toast.error(t("donate.invalidAmount"));
       return;
     }
 
-    if (!isDonateAvailable()) {
-      toast.error(t("donate.unavailable"));
-      return;
-    }
+    setDonating(true);
+    try {
+      const success = await openDonationAsync({
+        amount,
+        currency,
+        language,
+        onSuccess: () => {
+          setThanks(true);
+          toast.success(t("donate.thanks"));
+        },
+        onClose: () => {},
+      });
 
-    const success = openDonation({
-      amount,
-      currency,
-      language,
-      onSuccess: () => {
-        setThanks(true);
-        toast.success(t("donate.thanks"));
-      },
-      onClose: () => {},
-    });
-
-    if (!success) {
+      if (!success) {
+        toast.error(t("donate.unavailable"));
+      }
+    } catch {
       toast.error(t("donate.unavailable"));
+    } finally {
+      setDonating(false);
     }
   };
 
