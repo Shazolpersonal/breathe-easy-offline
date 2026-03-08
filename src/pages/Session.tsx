@@ -35,6 +35,8 @@ import { Progress } from "@/components/ui/progress";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
+import { requestWakeLock, releaseWakeLock } from "@/lib/wakeLock";
+import { shouldSuggestIncrease, dismissSuggestion } from "@/lib/adaptive";
 
 type SessionState = "idle" | "running" | "paused" | "done" | "playlist-transition";
 
