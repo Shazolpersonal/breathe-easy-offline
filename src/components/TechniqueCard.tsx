@@ -117,13 +117,22 @@ export default function TechniqueCard({ technique, isFavorite, onToggleFavorite,
             {isFavorite ? <Heart className="h-5 w-5 fill-primary text-primary" /> : <HeartOff className="h-5 w-5" />}
           </button>
           {unlocked && (
-            <button
-              onClick={() => shareTechnique(techniqueName, techniqueDesc, language)}
-              className="p-1 text-muted-foreground hover:text-primary transition-colors"
-              title={t("share.technique")}
-            >
-              <Share2 className="h-4 w-4" />
-            </button>
+            <>
+              <button
+                onClick={() => setPreviewActive(!previewActive)}
+                className={cn("p-1 transition-colors", previewActive ? "text-primary" : "text-muted-foreground hover:text-primary")}
+                title={t("techniques.preview")}
+              >
+                {previewActive ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+              </button>
+              <button
+                onClick={() => shareTechnique(techniqueName, techniqueDesc, language)}
+                className="p-1 text-muted-foreground hover:text-primary transition-colors"
+                title={t("share.technique")}
+              >
+                <Share2 className="h-4 w-4" />
+              </button>
+            </>
           )}
         </div>
       </div>
