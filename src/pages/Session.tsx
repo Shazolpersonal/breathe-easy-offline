@@ -8,7 +8,7 @@ import MoodPicker from "@/components/MoodPicker";
 import BreathingFeedback from "@/components/BreathingFeedback";
 import HeartRateMonitorOverlay from "@/components/HeartRateMonitor";
 import { PRESET_TECHNIQUES, getTechniqueById, BreathingPhase, getPyramidPhasesForRound } from "@/lib/techniques";
-import { getCustomTechniques, addSession, getSessions, saveLastSessionConfig } from "@/lib/storage";
+import { getCustomTechniques, addSession, getSessions, saveLastSessionConfig, getLastJournalForTechnique, getTotalSessionCount, exportDataCompact, getSettings } from "@/lib/storage";
 import { useSettings } from "@/contexts/SettingsContext";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useSessionContext } from "@/contexts/SessionContext";
