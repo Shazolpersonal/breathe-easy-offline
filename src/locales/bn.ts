@@ -418,4 +418,25 @@ export const bn: Record<string, string> = {
   "heart.retry": "আবার চেষ্টা",
   "heart.avgBPM": "গড় হৃদস্পন্দন",
   "common.close": "বন্ধ",
+
+  // Soundscapes
+  "soundscape.title": "পরিবেশের শব্দ",
+  "soundscape.off": "বন্ধ",
+  "soundscape.rain": "বৃষ্টি",
+  "soundscape.ocean": "সমুদ্র",
+  "soundscape.wind": "বাতাস",
+  "soundscape.volume": "সাউন্ডস্কেপ ভলিউম",
+  "settings.soundscape": "পরিবেশের সাউন্ডস্কেপ",
+  "settings.soundscapeDesc": "সেশনের সময় প্রক্রিয়াগত পরিবেশের শব্দ",
+
+  // Theme Mode
+  "settings.themeMode": "থিম মোড",
+  "settings.themeMode.manual": "ম্যানুয়াল",
+  "settings.themeMode.auto": "অটো",
+  "settings.themeMode.autoWarm": "অটো + রাতের উষ্ণতা",
+  "settings.themeMode.desc": "অটো সিস্টেমের ডার্ক/লাইট পছন্দের সাথে মেলে",
+
+  // Zen Mode
+  "session.zenMode": "জেন মোড",
+  "session.exitZen": "জেন থেকে বের হন",
 };

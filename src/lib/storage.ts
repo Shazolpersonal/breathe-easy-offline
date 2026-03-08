@@ -24,6 +24,9 @@ export interface AppSettings {
   soundEnabled: boolean;
   theme: string;
   visualizationType: "circle" | "wave" | "bars" | "mandala";
+  soundscapeType: "off" | "rain" | "ocean" | "wind";
+  soundscapeVolume: number;
+  themeMode: "manual" | "auto" | "auto-warm";
   highContrast: boolean;
   largeText: boolean;
   reducedMotion: boolean;
@@ -46,6 +49,9 @@ const DEFAULT_SETTINGS: AppSettings = {
   soundEnabled: true,
   theme: "ocean",
   visualizationType: "circle",
+  soundscapeType: "off",
+  soundscapeVolume: 0.5,
+  themeMode: "manual",
   highContrast: false,
   largeText: false,
   reducedMotion: false,
