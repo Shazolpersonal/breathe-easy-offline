@@ -21,12 +21,27 @@ export function generateChallengeLink(params: FriendChallengeParams): string {
   return `${window.location.origin}${window.location.pathname}#challenge=${encoded}`;
 }
 
+function isValidChallenge(obj: unknown): obj is FriendChallengeParams {
+  if (!obj || typeof obj !== 'object') return false;
+  const c = obj as Record<string, unknown>;
+  return (
+    typeof c.techniqueId === 'string' && c.techniqueId.length > 0 && c.techniqueId.length <= 50 &&
+    typeof c.techniqueName === 'string' && c.techniqueName.length > 0 && c.techniqueName.length <= 100 &&
+    typeof c.challengerName === 'string' && c.challengerName.length > 0 && c.challengerName.length <= 80 &&
+    typeof c.targetMinutes === 'number' && Number.isFinite(c.targetMinutes) && c.targetMinutes >= 0 && c.targetMinutes <= 120 &&
+    typeof c.targetCycles === 'number' && Number.isFinite(c.targetCycles) && c.targetCycles >= 0 && c.targetCycles <= 500 &&
+    typeof c.date === 'string' && c.date.length <= 20
+  );
+}
+
 export function parseChallengeFromURL(): FriendChallengeParams | null {
   const hash = window.location.hash;
   if (!hash.startsWith("#challenge=")) return null;
   try {
     const encoded = hash.slice("#challenge=".length);
-    return JSON.parse(atob(encoded)) as FriendChallengeParams;
+    const parsed = JSON.parse(atob(encoded));
+    if (!isValidChallenge(parsed)) return null;
+    return parsed;
   } catch {
     return null;
   }

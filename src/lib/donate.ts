@@ -1,8 +1,27 @@
 /**
  * 2Checkout (Verifone) InLine Checkout — donation helper.
- * Uses the TwoCoInlineCart global loaded from their CDN script.
+ * Uses the TwoCoInlineCart global loaded on-demand from their CDN script.
  * Merchant code is a PUBLIC identifier — safe in frontend code.
  */
+
+let scriptLoaded = false;
+let scriptLoading: Promise<void> | null = null;
+
+function loadCheckoutScript(): Promise<void> {
+  if (scriptLoaded && window.TwoCoInlineCart) return Promise.resolve();
+  if (scriptLoading) return scriptLoading;
+
+  scriptLoading = new Promise<void>((resolve, reject) => {
+    const script = document.createElement('script');
+    script.src = 'https://secure.2checkout.com/checkout/client/twoCoInlineCart.js';
+    script.async = true;
+    script.onload = () => { scriptLoaded = true; resolve(); };
+    script.onerror = () => { scriptLoading = null; reject(new Error('Failed to load payment script')); };
+    document.head.appendChild(script);
+  });
+
+  return scriptLoading;
+}
 
 declare global {
   interface Window {
@@ -44,7 +63,13 @@ export interface DonateOptions {
   onClose?: () => void;
 }
 
-export function openDonation(opts: DonateOptions): boolean {
+export async function openDonationAsync(opts: DonateOptions): Promise<boolean> {
+  try {
+    await loadCheckoutScript();
+  } catch {
+    console.warn("Failed to load 2Checkout script");
+    return false;
+  }
   const cart = window.TwoCoInlineCart;
   if (!cart) {
     console.warn("2Checkout InLine Checkout script not loaded");
@@ -79,6 +104,15 @@ export function openDonation(opts: DonateOptions): boolean {
   return true;
 }
 
+export function openDonation(opts: DonateOptions): boolean {
+  openDonationAsync(opts);
+  return true;
+}
+
 export function isDonateAvailable(): boolean {
-  return !!window.TwoCoInlineCart;
+  return true; // Script is lazy-loaded on demand
+}
+
+export function preloadDonateScript(): void {
+  loadCheckoutScript().catch(() => {});
 }

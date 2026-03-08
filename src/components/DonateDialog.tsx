@@ -1,10 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Heart } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { openDonation, isDonateAvailable } from "@/lib/donate";
+import { openDonationAsync, preloadDonateScript } from "@/lib/donate";
 import { toast } from "sonner";
 
 interface DonateDialogProps {
@@ -14,6 +14,11 @@ interface DonateDialogProps {
 
 export default function DonateDialog({ open, onOpenChange }: DonateDialogProps) {
   const { t, language } = useLanguage();
+
+  // Preload the 2Checkout script when dialog opens
+  useEffect(() => {
+    if (open) preloadDonateScript();
+  }, [open]);
   const isBn = language === "bn";
   const currency = isBn ? "BDT" as const : "USD" as const;
   const symbol = isBn ? "৳" : "$";
@@ -24,31 +29,34 @@ export default function DonateDialog({ open, onOpenChange }: DonateDialogProps) 
   const [thanks, setThanks] = useState(false);
 
   const amount = selected ?? (parseFloat(custom) || 0);
+  const [donating, setDonating] = useState(false);
 
-  const handleDonate = () => {
+  const handleDonate = async () => {
     if (amount <= 0) {
       toast.error(t("donate.invalidAmount"));
       return;
     }
 
-    if (!isDonateAvailable()) {
-      toast.error(t("donate.unavailable"));
-      return;
-    }
+    setDonating(true);
+    try {
+      const success = await openDonationAsync({
+        amount,
+        currency,
+        language,
+        onSuccess: () => {
+          setThanks(true);
+          toast.success(t("donate.thanks"));
+        },
+        onClose: () => {},
+      });
 
-    const success = openDonation({
-      amount,
-      currency,
-      language,
-      onSuccess: () => {
-        setThanks(true);
-        toast.success(t("donate.thanks"));
-      },
-      onClose: () => {},
-    });
-
-    if (!success) {
+      if (!success) {
+        toast.error(t("donate.unavailable"));
+      }
+    } catch {
       toast.error(t("donate.unavailable"));
+    } finally {
+      setDonating(false);
     }
   };
 
@@ -126,7 +134,7 @@ export default function DonateDialog({ open, onOpenChange }: DonateDialogProps) 
           {/* Donate button */}
           <Button
             className="w-full gap-2"
-            disabled={amount <= 0}
+            disabled={amount <= 0 || donating}
             onClick={handleDonate}
           >
             <Heart className="h-4 w-4" />

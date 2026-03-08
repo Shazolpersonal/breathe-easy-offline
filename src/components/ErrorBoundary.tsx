@@ -16,6 +16,7 @@ export default class ErrorBoundary extends Component<Props, State> {
   }
 
   static getDerivedStateFromError(error: Error): State {
+    console.error('[ErrorBoundary]', error);
     return { hasError: true, error };
   }
 
@@ -38,7 +39,7 @@ export default class ErrorBoundary extends Component<Props, State> {
             <div className="text-4xl">😔</div>
             <h1 className="text-xl font-bold text-foreground">Something went wrong</h1>
             <p className="text-sm text-muted-foreground">
-              {this.state.error?.message || "An unexpected error occurred."}
+              An unexpected error occurred. Please try again or reset app data.
             </p>
             <div className="flex gap-3 justify-center">
               <button
