@@ -10,6 +10,7 @@ export interface SessionRecord {
   moodBefore?: number;
   moodAfter?: number;
   calmScore?: number;
+  journal?: string;
 }
 
 export interface AppSettings {
