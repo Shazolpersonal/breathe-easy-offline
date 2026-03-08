@@ -844,7 +844,7 @@ export default function Session() {
               placeholder={t("session.journal.placeholder")}
               value={journalNote}
               onChange={(e) => setJournalNote(e.target.value)}
-              className="min-h-[60px] resize-none bg-secondary/50 border-border text-sm"
+              className="min-h-[60px] resize-none bg-card border-border text-sm"
               rows={3}
             />
           </div>
