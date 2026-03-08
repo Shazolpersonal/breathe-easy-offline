@@ -669,4 +669,18 @@ export const en: Record<string, string> = {
   "share.inviteButton": "Share App Link",
   "share.inviteSession": "Invite a Friend",
   "share.copied": "Link copied!",
+
+  // Donate
+  "donate.title": "Support Muhurto",
+  "donate.subtitle": "Help us reach millions with free breathing tools. Every donation fuels our mission.",
+  "donate.button": "Donate",
+  "donate.custom": "Custom amount",
+  "donate.thanks": "Thank you for your generous support! You're helping millions breathe better.",
+  "donate.thanksTitle": "Thank You! 💚",
+  "donate.secure": "Payments are processed securely by 2Checkout (Verifone). We never see your card details.",
+  "donate.invalidAmount": "Please choose or enter an amount",
+  "donate.unavailable": "Payment system is loading. Please try again in a moment.",
+  "donate.supportUs": "Support Us",
+  "donate.supportSubtitle": "Help us keep Muhurto free for everyone",
+  "donate.sessionSupport": "Support Us ❤️",
 };

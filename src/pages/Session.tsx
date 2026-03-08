@@ -25,6 +25,7 @@ import { getPlaylists } from "@/lib/playlists";
 import { completeDay } from "@/lib/programs";
 import { shareOrDownloadCard } from "@/lib/shareCard";
 import { shareApp } from "@/lib/shareApp";
+import DonateDialog from "@/components/DonateDialog";
 import { BreathDetector, RhythmUpdate } from "@/lib/breathDetector";
 import { getSoundscapeEngine, SoundscapeType } from "@/lib/soundscapes";
 import SoundscapePicker from "@/components/SoundscapePicker";
@@ -188,6 +189,7 @@ export default function Session() {
 
   // ─── Zen Mode State ───
   const [zenMode, setZenMode] = useState(false);
+  const [showDonateDialog, setShowDonateDialog] = useState(false);
   const lastEncouragementRef = useRef(0); // elapsed seconds when last encouragement was spoken
 
   useEffect(() => {
@@ -870,8 +872,17 @@ export default function Session() {
                 else navigate("/");
               }}>{t("session.done.button")}</Button>
             </div>
+
+            <button
+              onClick={() => setShowDonateDialog(true)}
+              className="text-xs text-muted-foreground hover:text-primary transition-colors"
+            >
+              {t("donate.sessionSupport")}
+            </button>
           </div>
         </div>
+
+        <DonateDialog open={showDonateDialog} onOpenChange={setShowDonateDialog} />
       </div>
     );
   }

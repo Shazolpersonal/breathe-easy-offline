@@ -669,4 +669,18 @@ export const bn: Record<string, string> = {
   "share.inviteButton": "অ্যাপ লিংক শেয়ার",
   "share.inviteSession": "বন্ধুকে আমন্ত্রণ",
   "share.copied": "লিংক কপি হয়েছে!",
+
+  // Donate
+  "donate.title": "মুহূর্ত সমর্থন করুন",
+  "donate.subtitle": "বিনামূল্যে শ্বাস-প্রশ্বাসের সরঞ্জাম লক্ষ লক্ষ মানুষের কাছে পৌঁছাতে সাহায্য করুন। প্রতিটি দান আমাদের মিশনকে এগিয়ে নেয়।",
+  "donate.button": "দান করুন",
+  "donate.custom": "কাস্টম পরিমাণ",
+  "donate.thanks": "আপনার উদার সহায়তার জন্য ধন্যবাদ! আপনি লক্ষ লক্ষ মানুষকে ভালো শ্বাস নিতে সাহায্য করছেন।",
+  "donate.thanksTitle": "ধন্যবাদ! 💚",
+  "donate.secure": "পেমেন্ট 2Checkout (Verifone) দ্বারা নিরাপদে প্রক্রিয়া করা হয়। আমরা কখনো আপনার কার্ডের তথ্য দেখি না।",
+  "donate.invalidAmount": "দয়া করে একটি পরিমাণ নির্বাচন করুন বা লিখুন",
+  "donate.unavailable": "পেমেন্ট সিস্টেম লোড হচ্ছে। কিছুক্ষণ পর আবার চেষ্টা করুন।",
+  "donate.supportUs": "আমাদের সমর্থন করুন",
+  "donate.supportSubtitle": "মুহূর্তকে সবার জন্য বিনামূল্যে রাখতে সাহায্য করুন",
+  "donate.sessionSupport": "সমর্থন করুন ❤️",
 };

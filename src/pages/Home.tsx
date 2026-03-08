@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { Wind, Flame, Zap, TrendingUp, CheckCircle2, Circle, Swords, Quote, Download, X, Trophy, Share2 } from "lucide-react";
+import { Wind, Flame, Zap, TrendingUp, CheckCircle2, Circle, Swords, Quote, Download, X, Trophy, Share2, Heart } from "lucide-react";
 import SmartSuggestion from "@/components/SmartSuggestion";
 import TechniqueCard from "@/components/TechniqueCard";
 import { PRESET_TECHNIQUES } from "@/lib/techniques";
@@ -16,12 +16,14 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { CreateChallengeDialog } from "@/components/FriendChallenge";
 import { toast } from "sonner";
 import { shareQuote } from "@/lib/shareApp";
+import DonateDialog from "@/components/DonateDialog";
 
 export default function Home() {
   const navigate = useNavigate();
   const { t, language, setLanguage } = useLanguage();
   const [favorites, setFavorites] = useState(getFavorites);
   const [showChallengeDialog, setShowChallengeDialog] = useState(false);
+  const [showDonateDialog, setShowDonateDialog] = useState(false);
   const [installDismissed, setInstallDismissed] = useState(isDismissed);
   const streak = useMemo(() => getCurrentStreak(), []);
   const todayMin = useMemo(() => getTodayMinutes(), []);
@@ -82,6 +84,14 @@ export default function Home() {
               <img src="/logo.png" alt="Muhurto Breath logo" className="h-10 w-10" />
               <h1 className="text-2xl font-bold text-foreground">{t("home.appName")}</h1>
             </div>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => setShowDonateDialog(true)}
+                className="flex h-8 w-8 items-center justify-center rounded-full border border-border bg-card text-muted-foreground transition-colors hover:text-primary hover:bg-primary/10"
+                title={t("donate.supportUs")}
+              >
+                <Heart className="h-4 w-4" />
+              </button>
             <div className="flex items-center rounded-full border border-border bg-card p-0.5 text-xs font-medium">
               <button
                 onClick={() => setLanguage("en")}
@@ -95,6 +105,7 @@ export default function Home() {
               >
                 বাং
               </button>
+            </div>
             </div>
           </div>
           <p className="mt-1 text-sm text-muted-foreground">{greeting} {t("home.subtitle")}</p>
@@ -331,6 +342,7 @@ export default function Home() {
       </div>
 
       <CreateChallengeDialog open={showChallengeDialog} onOpenChange={setShowChallengeDialog} />
+      <DonateDialog open={showDonateDialog} onOpenChange={setShowDonateDialog} />
     </div>
   );
 }
