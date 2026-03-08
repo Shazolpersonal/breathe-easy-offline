@@ -23,12 +23,15 @@ import DonateDialog from "@/components/DonateDialog";
 export default function Home() {
   const navigate = useNavigate();
   const { t, language, setLanguage } = useLanguage();
+  const { settings } = useSettings();
   const [favorites, setFavorites] = useState(getFavorites);
   const [showChallengeDialog, setShowChallengeDialog] = useState(false);
   const [showDonateDialog, setShowDonateDialog] = useState(false);
   const [installDismissed, setInstallDismissed] = useState(isDismissed);
   const streak = useMemo(() => getCurrentStreak(), []);
   const todayMin = useMemo(() => getTodayMinutes(), []);
+  const dailyGoal = settings.dailyGoalMinutes;
+  const goalProgress = Math.min(100, Math.round((todayMin / dailyGoal) * 100));
   const allTechniques = useMemo(() => [...PRESET_TECHNIQUES, ...getCustomTechniques()], []);
   const favTechniques = useMemo(() => allTechniques.filter((tech) => favorites.includes(tech.id)), [allTechniques, favorites]);
   const xpState = useMemo(() => getXPState(), []);
@@ -42,6 +45,7 @@ export default function Home() {
   const showManualInstall = !isPWA && canShowManualInstallHint() && !installDismissed;
   const installPlatform = useMemo(() => getInstallPlatform(), []);
   const allCompleteToastShown = useRef(false);
+  const lastSession = useMemo(() => getLastSessionConfig(), []);
 
   // Save challenge progress & show all-complete celebration
   useEffect(() => {
