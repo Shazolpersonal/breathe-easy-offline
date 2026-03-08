@@ -26,6 +26,18 @@ export default function Settings() {
   const fileRef = useRef<HTMLInputElement>(null);
   const [reminders, setReminders] = useState(getReminders);
   const [notifPermission, setNotifPermission] = useState(getNotificationPermission);
+  const [voices, setVoices] = useState(() => getAvailableVoices());
+  const [bnAvailable, setBnAvailable] = useState(() => hasBengaliVoice());
+
+  // Re-fetch voices when they load asynchronously
+  useEffect(() => {
+    const handler = () => {
+      setVoices(getAvailableVoices());
+      setBnAvailable(hasBengaliVoice());
+    };
+    window.speechSynthesis?.addEventListener("voiceschanged", handler);
+    return () => window.speechSynthesis?.removeEventListener("voiceschanged", handler);
+  }, []);
 
   const DAYS_KEYS = ["day.sun", "day.mon", "day.tue", "day.wed", "day.thu", "day.fri", "day.sat"];
 
