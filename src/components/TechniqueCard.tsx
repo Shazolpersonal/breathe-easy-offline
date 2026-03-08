@@ -136,6 +136,12 @@ export default function TechniqueCard({ technique, isFavorite, onToggleFavorite,
           )}
         </div>
       </div>
+      {/* Breathing Preview */}
+      {previewActive && unlocked && (
+        <div className="mt-2 flex items-center justify-center rounded-xl bg-secondary/50 py-2 px-3">
+          <BreathingPreview technique={technique} active={previewActive} />
+        </div>
+      )}
       {unlocked ? (
         <button
           onClick={() => navigate(`/session?technique=${technique.id}`)}
