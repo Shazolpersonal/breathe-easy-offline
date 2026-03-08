@@ -267,6 +267,7 @@ export default function Session() {
         durationSeconds: totalElapsed,
         completedCycles,
         moodBefore: moodBefore ?? undefined,
+        moodAfter: undefined, // Will be updated when user picks mood after
         calmScore: calm.score,
         breathAccuracy: avgBreathAccuracy,
         avgHeartRate: avgHR,
