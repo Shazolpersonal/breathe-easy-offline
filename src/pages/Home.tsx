@@ -49,9 +49,9 @@ export default function Home() {
             <span className="text-[11px] text-muted-foreground">Min Today</span>
           </div>
           <div className="flex flex-col items-center rounded-2xl border border-border bg-card p-3">
-            <Zap className="mb-1 h-5 w-5 text-primary" />
-            <span className="text-lg font-bold text-foreground">{favTechniques.length}</span>
-            <span className="text-[11px] text-muted-foreground">Favorites</span>
+            <TrendingUp className="mb-1 h-5 w-5 text-primary" />
+            <span className="text-lg font-bold text-foreground">{getTotalSessionCount()}</span>
+            <span className="text-[11px] text-muted-foreground">Sessions</span>
           </div>
         </div>
 
