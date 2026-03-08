@@ -91,16 +91,18 @@ export default function Session() {
 
   const currentPlaylistStep = playlist?.steps[playlistStepIdx];
   const techniqueId = currentPlaylistStep?.techniqueId || params.get("technique") || "box-breathing";
-  const technique = getTechniqueById(techniqueId, getCustomTechniques()) || PRESET_TECHNIQUES[0];
+  const customTechniques = useMemo(() => getCustomTechniques(), [techniqueId]);
+  const technique = getTechniqueById(techniqueId, customTechniques) || PRESET_TECHNIQUES[0];
 
-  const techniqueName = (() => {
+  const techniqueName = useMemo(() => {
     const key = `technique.${technique.id}.name`;
     const translated = t(key);
     return translated !== key ? translated : technique.name;
-  })();
+  }, [technique.id, technique.name, t]);
 
-  const progression = getProgression(techniqueId);
-  const basePhases = getScaledPhases(technique, progression.level);
+  const [progressionState, setProgressionState] = useState(() => getProgression(techniqueId));
+  const progression = progressionState;
+  const basePhases = useMemo(() => getScaledPhases(technique, progression.level), [technique, progression.level]);
 
   const [state, setState] = useState<SessionState>("idle");
   const [phaseIndex, setPhaseIndex] = useState(0);
