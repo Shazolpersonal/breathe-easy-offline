@@ -89,8 +89,11 @@ export default function MoodHeatmapCalendar() {
           <div key={`empty-${i}`} className="h-9 w-full" />
         ))}
         {calendarData.cells.map((cell) => {
-          const isToday =
-            cell.dateKey === new Date().toISOString().split("T")[0];
+          const todayLocal = (() => {
+            const d = new Date();
+            return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+          })();
+          const isToday = cell.dateKey === todayLocal;
           return (
             <button
               key={cell.day}

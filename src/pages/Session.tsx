@@ -520,9 +520,16 @@ export default function Session() {
   });
 
   // ─── Mini-Player Sync ───
-  // On mount, restore from mini session if exists
+  // On mount, restore from mini session if running
   useEffect(() => {
     if (miniSession?.isActive) {
+      // Restore elapsed time from mini-player into session state
+      setTotalElapsed(miniSession.elapsed);
+      if (miniSession.isPaused) {
+        setState("paused");
+      } else {
+        setState("running");
+      }
       stopMiniSession();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
