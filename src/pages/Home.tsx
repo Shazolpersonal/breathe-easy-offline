@@ -23,6 +23,7 @@ export default function Home() {
   const { t, language, setLanguage } = useLanguage();
   const [favorites, setFavorites] = useState(getFavorites);
   const [showChallengeDialog, setShowChallengeDialog] = useState(false);
+  const [showDonateDialog, setShowDonateDialog] = useState(false);
   const [installDismissed, setInstallDismissed] = useState(isDismissed);
   const streak = useMemo(() => getCurrentStreak(), []);
   const todayMin = useMemo(() => getTodayMinutes(), []);
