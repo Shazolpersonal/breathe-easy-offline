@@ -783,8 +783,8 @@ export default function Session() {
 
   if (state === "done") {
     return (
-      <div className="flex min-h-screen flex-col items-center justify-center px-4 pb-24">
-        <div className="text-center space-y-5">
+      <div className="flex min-h-screen flex-col items-center justify-center px-4 py-8 pb-24 overflow-y-auto">
+        <div className="text-center space-y-5 w-full flex flex-col items-center">
           <div className="text-5xl">🙏</div>
           <div>
             <h2 className="text-2xl font-bold text-foreground">{t("session.done.title")}</h2>
