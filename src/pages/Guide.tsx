@@ -3,6 +3,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 function SectionIcon({ icon: Icon, label }: { icon: React.ElementType; label: string }) {
   return (
@@ -14,12 +15,13 @@ function SectionIcon({ icon: Icon, label }: { icon: React.ElementType; label: st
 }
 
 function TechniqueTable() {
+  const { t } = useLanguage();
   const techniques = [
-    { name: "Box Breathing", pattern: "4s → 4s → 4s → 4s", difficulty: "Beginner", best: "Stress, focus" },
-    { name: "4-7-8 Relaxation", pattern: "4s → 7s → 8s", difficulty: "Beginner", best: "Sleep, anxiety" },
-    { name: "Calm Breath", pattern: "4s → 6s", difficulty: "Beginner", best: "Quick calm" },
-    { name: "Equal Breathing", pattern: "5s → 5s", difficulty: "Beginner", best: "Balance, presence" },
-    { name: "Wim Hof Method", pattern: "2s → 2s (×3 rounds)", difficulty: "Advanced", best: "Energy, immunity" },
+    { nameKey: "guide.tech.box", patternKey: "guide.tech.box.pattern", diffKey: "guide.tech.box.diff", bestKey: "guide.tech.box.best" },
+    { nameKey: "guide.tech.478", patternKey: "guide.tech.478.pattern", diffKey: "guide.tech.478.diff", bestKey: "guide.tech.478.best" },
+    { nameKey: "guide.tech.calm", patternKey: "guide.tech.calm.pattern", diffKey: "guide.tech.calm.diff", bestKey: "guide.tech.calm.best" },
+    { nameKey: "guide.tech.equal", patternKey: "guide.tech.equal.pattern", diffKey: "guide.tech.equal.diff", bestKey: "guide.tech.equal.best" },
+    { nameKey: "guide.tech.wim", patternKey: "guide.tech.wim.pattern", diffKey: "guide.tech.wim.diff", bestKey: "guide.tech.wim.best" },
   ];
 
   return (
@@ -27,25 +29,29 @@ function TechniqueTable() {
       <table className="w-full text-sm">
         <thead>
           <tr className="border-b border-border text-left">
-            <th className="pb-2 pr-4 font-semibold text-foreground">Technique</th>
-            <th className="pb-2 pr-4 font-semibold text-foreground">Pattern</th>
-            <th className="pb-2 pr-4 font-semibold text-foreground">Level</th>
-            <th className="pb-2 font-semibold text-foreground">Best For</th>
+            <th className="pb-2 pr-4 font-semibold text-foreground">{t("guide.table.technique")}</th>
+            <th className="pb-2 pr-4 font-semibold text-foreground">{t("guide.table.pattern")}</th>
+            <th className="pb-2 pr-4 font-semibold text-foreground">{t("guide.table.level")}</th>
+            <th className="pb-2 font-semibold text-foreground">{t("guide.table.bestFor")}</th>
           </tr>
         </thead>
         <tbody className="divide-y divide-border">
-          {techniques.map((t) => (
-            <tr key={t.name}>
-              <td className="py-2 pr-4 font-medium text-foreground">{t.name}</td>
-              <td className="py-2 pr-4 font-mono text-xs text-muted-foreground">{t.pattern}</td>
-              <td className="py-2 pr-4">
-                <Badge variant={t.difficulty === "Advanced" ? "destructive" : "secondary"} className="text-xs">
-                  {t.difficulty}
-                </Badge>
-              </td>
-              <td className="py-2 text-muted-foreground">{t.best}</td>
-            </tr>
-          ))}
+          {techniques.map((tech) => {
+            const diff = t(tech.diffKey);
+            const isAdvanced = diff === "Advanced" || diff === "উন্নত";
+            return (
+              <tr key={tech.nameKey}>
+                <td className="py-2 pr-4 font-medium text-foreground">{t(tech.nameKey)}</td>
+                <td className="py-2 pr-4 font-mono text-xs text-muted-foreground">{t(tech.patternKey)}</td>
+                <td className="py-2 pr-4">
+                  <Badge variant={isAdvanced ? "destructive" : "secondary"} className="text-xs">
+                    {diff}
+                  </Badge>
+                </td>
+                <td className="py-2 text-muted-foreground">{t(tech.bestKey)}</td>
+              </tr>
+            );
+          })}
         </tbody>
       </table>
     </div>
@@ -53,32 +59,27 @@ function TechniqueTable() {
 }
 
 function BadgeTable() {
-  const badges = [
-    { emoji: "🌱", name: "First Breath", criteria: "Complete your first session" },
-    { emoji: "🔥", name: "Week Warrior", criteria: "7-day streak" },
-    { emoji: "🦉", name: "Night Owl", criteria: "Session after 11 PM" },
-    { emoji: "🐦", name: "Early Bird", criteria: "Session before 7 AM" },
-    { emoji: "💯", name: "Century", criteria: "100 total minutes" },
-    { emoji: "🏃", name: "Marathon", criteria: "Single session ≥ 10 min" },
-    { emoji: "🎨", name: "Creator", criteria: "Create a custom technique" },
-    { emoji: "🧘", name: "Zen Master", criteria: "Level 5 on any technique" },
-    { emoji: "🧠", name: "Calm Mind", criteria: "Calm score ≥ 90" },
-    { emoji: "🧭", name: "Explorer", criteria: "Try 3 different techniques" },
-    { emoji: "📅", name: "Consistent", criteria: "30-day streak" },
-    { emoji: "🌊", name: "Deep Diver", criteria: "50 total sessions" },
-    { emoji: "🌈", name: "Mood Lifter", criteria: "Mood improves +3 in one session" },
-    { emoji: "⭐", name: "Dedicated", criteria: "500 total minutes" },
-    { emoji: "🏆", name: "Perfect Week", criteria: "7 consecutive days with ≥ 5 min each" },
+  const { t } = useLanguage();
+  const badgeIds = [
+    "first-breath", "week-warrior", "night-owl", "early-bird", "century",
+    "marathon", "creator", "zen-master", "calm-mind", "explorer",
+    "consistent", "deep-diver", "mood-lifter", "dedicated", "perfect-week",
   ];
+  const emojis: Record<string, string> = {
+    "first-breath": "🌱", "week-warrior": "🔥", "night-owl": "🦉", "early-bird": "🐦",
+    "century": "💯", "marathon": "🏃", "creator": "🎨", "zen-master": "🧘",
+    "calm-mind": "🧠", "explorer": "🧭", "consistent": "📅", "deep-diver": "🌊",
+    "mood-lifter": "🌈", "dedicated": "⭐", "perfect-week": "🏆",
+  };
 
   return (
     <div className="grid gap-2">
-      {badges.map((b) => (
-        <div key={b.name} className="flex items-center gap-3 rounded-lg border border-border px-3 py-2">
-          <span className="text-lg">{b.emoji}</span>
+      {badgeIds.map((id) => (
+        <div key={id} className="flex items-center gap-3 rounded-lg border border-border px-3 py-2">
+          <span className="text-lg">{emojis[id]}</span>
           <div className="flex-1 min-w-0">
-            <span className="font-medium text-foreground text-sm">{b.name}</span>
-            <span className="text-muted-foreground text-xs ml-2">— {b.criteria}</span>
+            <span className="font-medium text-foreground text-sm">{t(`badge.${id}.name`)}</span>
+            <span className="text-muted-foreground text-xs ml-2">— {t(`badge.${id}.description`)}</span>
           </div>
         </div>
       ))}
@@ -87,22 +88,23 @@ function BadgeTable() {
 }
 
 function XPLevelTable() {
+  const { t } = useLanguage();
   const levels = [
-    { level: 1, xp: 0, title: "Beginner Breather" },
-    { level: 2, xp: 50, title: "Mindful Starter" },
-    { level: 3, xp: 150, title: "Breath Apprentice" },
-    { level: 4, xp: 350, title: "Calm Practitioner" },
-    { level: 5, xp: 600, title: "Focus Adept" },
-    { level: 6, xp: 1000, title: "Serenity Seeker" },
-    { level: 7, xp: 1500, title: "Breath Master" },
-    { level: 8, xp: 2200, title: "Calm Master" },
-    { level: 9, xp: 3000, title: "Zen Sage" },
-    { level: 10, xp: 4000, title: "Enlightened" },
-    { level: 11, xp: 5000, title: "Breath Sage" },
-    { level: 12, xp: 6500, title: "Inner Peace" },
-    { level: 13, xp: 8500, title: "Transcendent" },
-    { level: 14, xp: 11000, title: "Eternal Calm" },
-    { level: 15, xp: 14000, title: "Ascended" },
+    { level: 1, xp: 0, titleKey: "xp.Beginner Breather" },
+    { level: 2, xp: 50, titleKey: "xp.Mindful Starter" },
+    { level: 3, xp: 150, titleKey: "xp.Breath Apprentice" },
+    { level: 4, xp: 350, titleKey: "xp.Calm Practitioner" },
+    { level: 5, xp: 600, titleKey: "xp.Focus Adept" },
+    { level: 6, xp: 1000, titleKey: "xp.Serenity Seeker" },
+    { level: 7, xp: 1500, titleKey: "xp.Breath Master" },
+    { level: 8, xp: 2200, titleKey: "xp.Calm Master" },
+    { level: 9, xp: 3000, titleKey: "xp.Zen Sage" },
+    { level: 10, xp: 4000, titleKey: "xp.Enlightened" },
+    { level: 11, xp: 5000, titleKey: "xp.Breath Sage" },
+    { level: 12, xp: 6500, titleKey: "xp.Inner Peace" },
+    { level: 13, xp: 8500, titleKey: "xp.Transcendent" },
+    { level: 14, xp: 11000, titleKey: "xp.Eternal Calm" },
+    { level: 15, xp: 14000, titleKey: "xp.Ascended" },
   ];
 
   return (
@@ -110,9 +112,9 @@ function XPLevelTable() {
       <table className="w-full text-sm">
         <thead>
           <tr className="border-b border-border text-left">
-            <th className="pb-2 pr-4 font-semibold text-foreground">Level</th>
-            <th className="pb-2 pr-4 font-semibold text-foreground">XP Required</th>
-            <th className="pb-2 font-semibold text-foreground">Title</th>
+            <th className="pb-2 pr-4 font-semibold text-foreground">{t("guide.xp.levelCol")}</th>
+            <th className="pb-2 pr-4 font-semibold text-foreground">{t("guide.xp.xpCol")}</th>
+            <th className="pb-2 font-semibold text-foreground">{t("guide.xp.titleCol")}</th>
           </tr>
         </thead>
         <tbody className="divide-y divide-border">
@@ -120,7 +122,7 @@ function XPLevelTable() {
             <tr key={l.level}>
               <td className="py-1.5 pr-4 font-mono text-muted-foreground">{l.level}</td>
               <td className="py-1.5 pr-4 font-mono text-muted-foreground">{l.xp.toLocaleString()}</td>
-              <td className="py-1.5 font-medium text-foreground">{l.title}</td>
+              <td className="py-1.5 font-medium text-foreground">{t(l.titleKey)}</td>
             </tr>
           ))}
         </tbody>
@@ -139,17 +141,17 @@ function InfoBlock({ title, children }: { title: string; children: React.ReactNo
 }
 
 export default function Guide() {
+  const { t } = useLanguage();
+
   return (
     <div className="min-h-screen bg-background pb-24">
       {/* Header */}
       <div className="px-4 pt-8 pb-4 max-w-2xl mx-auto">
         <div className="flex items-center gap-3 mb-1">
           <BookOpen className="h-7 w-7 text-primary" />
-          <h1 className="text-2xl font-bold text-foreground tracking-tight">Guide</h1>
+          <h1 className="text-2xl font-bold text-foreground tracking-tight">{t("guide.title")}</h1>
         </div>
-        <p className="text-muted-foreground text-sm">
-          Everything you need to know about Muhurto Breath — your mindful breathing companion.
-        </p>
+        <p className="text-muted-foreground text-sm">{t("guide.subtitle")}</p>
       </div>
 
       <Separator className="max-w-2xl mx-auto" />
@@ -160,34 +162,26 @@ export default function Guide() {
           {/* 1. Getting Started */}
           <AccordionItem value="getting-started" className="border-border rounded-lg border px-4">
             <AccordionTrigger className="hover:no-underline">
-              <SectionIcon icon={Zap} label="Getting Started" />
+              <SectionIcon icon={Zap} label={t("guide.gettingStarted")} />
             </AccordionTrigger>
             <AccordionContent>
               <div className="space-y-4">
                 <div>
-                  <h4 className="font-semibold text-foreground mb-1">What is Muhurto Breath?</h4>
-                  <p className="text-sm text-muted-foreground">
-                    Muhurto Breath is a free, privacy-first breathing exercise app. It guides you through science-backed
-                    breathing techniques with visual, audio, and haptic cues. All your data stays on your device — no
-                    account needed.
-                  </p>
+                  <h4 className="font-semibold text-foreground mb-1">{t("guide.whatIs")}</h4>
+                  <p className="text-sm text-muted-foreground">{t("guide.whatIsDesc")}</p>
                 </div>
                 <div>
-                  <h4 className="font-semibold text-foreground mb-1">Your First Session</h4>
+                  <h4 className="font-semibold text-foreground mb-1">{t("guide.firstSession")}</h4>
                   <ol className="text-sm text-muted-foreground space-y-1.5 list-decimal list-inside">
-                    <li>Tap <Badge variant="secondary" className="text-xs mx-1">Breathe</Badge> in the bottom nav</li>
-                    <li>Choose a technique (start with <strong>Box Breathing</strong> or <strong>Calm Breath</strong>)</li>
-                    <li>Set your duration and tap <Badge variant="secondary" className="text-xs mx-1">Start</Badge></li>
-                    <li>Follow the breathing circle — inhale, hold, exhale</li>
-                    <li>When done, rate your mood and optionally journal how you feel</li>
+                    <li>{t("guide.firstStep1")}</li>
+                    <li>{t("guide.firstStep2")}</li>
+                    <li>{t("guide.firstStep3")}</li>
+                    <li>{t("guide.firstStep4")}</li>
+                    <li>{t("guide.firstStep5")}</li>
                   </ol>
                 </div>
-                <InfoBlock title="Install as App (PWA)">
-                  <p>
-                    For the best experience, install Muhurto Breath on your device. On your phone, open the app in Chrome
-                    or Safari, tap the Share/Menu button, and select <strong>"Add to Home Screen"</strong>. The app works
-                    fully offline once installed.
-                  </p>
+                <InfoBlock title={t("guide.installPWA")}>
+                  <p>{t("guide.installPWADesc")}</p>
                 </InfoBlock>
               </div>
             </AccordionContent>
@@ -196,31 +190,26 @@ export default function Guide() {
           {/* 2. Breathing Techniques */}
           <AccordionItem value="techniques" className="border-border rounded-lg border px-4">
             <AccordionTrigger className="hover:no-underline">
-              <SectionIcon icon={Wind} label="Breathing Techniques" />
+              <SectionIcon icon={Wind} label={t("guide.techniques")} />
             </AccordionTrigger>
             <AccordionContent>
               <div className="space-y-4">
-                <p className="text-sm text-muted-foreground">
-                  Muhurto Breath includes 5 scientifically-backed preset techniques. Each has a unique rhythm designed for
-                  specific outcomes.
-                </p>
+                <p className="text-sm text-muted-foreground">{t("guide.techniquesIntro")}</p>
                 <TechniqueTable />
                 <Separator />
                 <div>
-                  <h4 className="font-semibold text-foreground mb-1">Understanding Phases</h4>
-                  <p className="text-sm text-muted-foreground">
-                    Each technique is a cycle of <strong>phases</strong>: Inhale, Hold, Exhale, and sometimes
-                    Hold-After-Exhale. The duration of each phase is measured in seconds. One complete pass through all
-                    phases = one <strong>cycle</strong>.
-                  </p>
+                  <h4 className="font-semibold text-foreground mb-1">{t("guide.phases")}</h4>
+                  <p className="text-sm text-muted-foreground">{t("guide.phasesDesc")}</p>
                 </div>
                 <div>
-                  <h4 className="font-semibold text-foreground mb-1">Difficulty Levels & Unlocking</h4>
+                  <h4 className="font-semibold text-foreground mb-1">{t("guide.difficultyTitle")}</h4>
                   <p className="text-sm text-muted-foreground">
-                    Techniques are tagged as <Badge variant="secondary" className="text-xs">Beginner</Badge>,{" "}
-                    <Badge variant="secondary" className="text-xs">Intermediate</Badge>, or{" "}
-                    <Badge variant="destructive" className="text-xs">Advanced</Badge>. Intermediate techniques unlock
-                    after 10 total sessions, and advanced after 25 sessions.
+                    {t("guide.difficultyDesc1")}{" "}
+                    <Badge variant="secondary" className="text-xs">{t("guide.diffBeginner")}</Badge>,{" "}
+                    <Badge variant="secondary" className="text-xs">{t("guide.diffIntermediate")}</Badge>,{" "}
+                    {t("guide.diffOr")}{" "}
+                    <Badge variant="destructive" className="text-xs">{t("guide.diffAdvanced")}</Badge>.{" "}
+                    {t("guide.difficultyDesc2")}
                   </p>
                 </div>
               </div>
@@ -230,51 +219,37 @@ export default function Guide() {
           {/* 3. Sessions */}
           <AccordionItem value="sessions" className="border-border rounded-lg border px-4">
             <AccordionTrigger className="hover:no-underline">
-              <SectionIcon icon={Heart} label="Sessions & Features" />
+              <SectionIcon icon={Heart} label={t("guide.sessions")} />
             </AccordionTrigger>
             <AccordionContent>
               <div className="space-y-4">
                 <div>
-                  <h4 className="font-semibold text-foreground mb-1">Session Flow</h4>
-                  <p className="text-sm text-muted-foreground">
-                    Select a technique → set duration → Start → follow the visual breathing guide → session completes →
-                    see your calm score, XP earned, and mood change.
-                  </p>
+                  <h4 className="font-semibold text-foreground mb-1">{t("guide.sessionFlow")}</h4>
+                  <p className="text-sm text-muted-foreground">{t("guide.sessionFlowDesc")}</p>
                 </div>
                 <div className="grid gap-3 sm:grid-cols-2">
-                  <InfoBlock title="🧘 Zen Mode">
-                    <p>Press <kbd className="rounded border border-border bg-muted px-1.5 py-0.5 text-xs font-mono">F</kbd> or
-                    tap the Zen button to hide all UI and focus purely on the breathing visualization. Press{" "}
-                    <kbd className="rounded border border-border bg-muted px-1.5 py-0.5 text-xs font-mono">Esc</kbd> to exit.</p>
+                  <InfoBlock title={`🧘 ${t("guide.zenMode")}`}>
+                    <p>{t("guide.zenModeDesc")}</p>
                   </InfoBlock>
-                  <InfoBlock title="🗣️ Voice Guidance">
-                    <p>Enable spoken cues in Settings. The voice announces phase names, countdowns, milestones, and
-                    encouragement. Speed, pitch, and volume are customizable.</p>
+                  <InfoBlock title={`🗣️ ${t("guide.voiceGuidance")}`}>
+                    <p>{t("guide.voiceGuidanceDesc")}</p>
                   </InfoBlock>
-                  <InfoBlock title="🎵 Ambient Soundscapes">
-                    <p>Choose from procedurally-generated Rain, Ocean, or Wind sounds during sessions. Volume is
-                    adjustable independently from voice.</p>
+                  <InfoBlock title={`🎵 ${t("guide.ambientSounds")}`}>
+                    <p>{t("guide.ambientSoundsDesc")}</p>
                   </InfoBlock>
-                  <InfoBlock title="🎤 Breathing Detection">
-                    <p>Enable microphone-based breathing detection to measure your rhythm accuracy. All processing happens
-                    on-device — no audio is ever recorded or sent anywhere.</p>
+                  <InfoBlock title={`🎤 ${t("guide.breathDetection")}`}>
+                    <p>{t("guide.breathDetectionDesc")}</p>
                   </InfoBlock>
-                  <InfoBlock title="❤️ Heart Rate Monitor">
-                    <p>Place your fingertip over the rear camera to estimate your heart rate. The app measures breathing
-                    coherence — how well your heart rate syncs with your breathing rhythm.</p>
+                  <InfoBlock title={`❤️ ${t("guide.heartRate")}`}>
+                    <p>{t("guide.heartRateDesc")}</p>
                   </InfoBlock>
-                  <InfoBlock title="📊 Calm Score">
-                    <p>After each session, you receive a calm score (0-100%) based on your breathing consistency,
-                    duration, and rhythm accuracy. Higher scores indicate deeper relaxation.</p>
+                  <InfoBlock title={`📊 ${t("guide.calmScore")}`}>
+                    <p>{t("guide.calmScoreDesc")}</p>
                   </InfoBlock>
                 </div>
                 <div>
-                  <h4 className="font-semibold text-foreground mb-1">Visualizations</h4>
-                  <p className="text-sm text-muted-foreground">
-                    Choose between 4 breathing visualizations in Settings: <strong>Circle</strong> (default),{" "}
-                    <strong>Wave</strong>, <strong>Bars</strong>, and <strong>Mandala</strong>. Each provides a unique
-                    visual rhythm to follow.
-                  </p>
+                  <h4 className="font-semibold text-foreground mb-1">{t("guide.visualizations")}</h4>
+                  <p className="text-sm text-muted-foreground">{t("guide.visualizationsDesc")}</p>
                 </div>
               </div>
             </AccordionContent>
@@ -283,22 +258,19 @@ export default function Guide() {
           {/* 4. Custom Techniques */}
           <AccordionItem value="custom" className="border-border rounded-lg border px-4">
             <AccordionTrigger className="hover:no-underline">
-              <SectionIcon icon={Palette} label="Custom Techniques" />
+              <SectionIcon icon={Palette} label={t("guide.customTech")} />
             </AccordionTrigger>
             <AccordionContent>
               <div className="space-y-3">
-                <p className="text-sm text-muted-foreground">
-                  Create your own breathing patterns from the <strong>Library</strong> tab → <strong>Custom</strong> section.
-                </p>
+                <p className="text-sm text-muted-foreground">{t("guide.customTechIntro")}</p>
                 <ol className="text-sm text-muted-foreground space-y-1.5 list-decimal list-inside">
-                  <li>Name your technique and optionally add a description and benefits</li>
-                  <li>Set durations for Inhale, Hold, Exhale, and Hold-After-Exhale (1-30 seconds each)</li>
-                  <li>Optionally enable <strong>Pyramid Mode</strong> — durations scale up then back down each cycle</li>
-                  <li>Tap <Badge variant="secondary" className="text-xs mx-1">Create Technique</Badge></li>
+                  <li>{t("guide.customStep1")}</li>
+                  <li>{t("guide.customStep2")}</li>
+                  <li>{t("guide.customStep3")}</li>
+                  <li>{t("guide.customStep4")}</li>
                 </ol>
-                <InfoBlock title="🔺 Pyramid Mode">
-                  <p>In pyramid mode, phase durations gradually increase from a start multiplier to a peak multiplier
-                  over a set number of steps, then decrease back. This creates a progressive challenge within each session.</p>
+                <InfoBlock title={`🔺 ${t("guide.pyramidMode")}`}>
+                  <p>{t("guide.pyramidModeDesc")}</p>
                 </InfoBlock>
               </div>
             </AccordionContent>
@@ -307,24 +279,18 @@ export default function Guide() {
           {/* 5. Playlists */}
           <AccordionItem value="playlists" className="border-border rounded-lg border px-4">
             <AccordionTrigger className="hover:no-underline">
-              <SectionIcon icon={ListMusic} label="Playlists" />
+              <SectionIcon icon={ListMusic} label={t("guide.playlists")} />
             </AccordionTrigger>
             <AccordionContent>
               <div className="space-y-3">
-                <p className="text-sm text-muted-foreground">
-                  Chain multiple techniques into a single continuous session. Each step in a playlist has its own technique
-                  and duration.
-                </p>
+                <p className="text-sm text-muted-foreground">{t("guide.playlistsIntro")}</p>
                 <ol className="text-sm text-muted-foreground space-y-1.5 list-decimal list-inside">
-                  <li>Go to <strong>More → Playlists</strong></li>
-                  <li>Tap <Badge variant="secondary" className="text-xs mx-1">New</Badge></li>
-                  <li>Name your playlist and add steps (technique + duration for each)</li>
-                  <li>Start the playlist — the app transitions seamlessly between techniques</li>
+                  <li>{t("guide.playlistStep1")}</li>
+                  <li>{t("guide.playlistStep2")}</li>
+                  <li>{t("guide.playlistStep3")}</li>
+                  <li>{t("guide.playlistStep4")}</li>
                 </ol>
-                <p className="text-sm text-muted-foreground">
-                  Example: Start with 3 min of Calm Breath to warm up, then 5 min of Box Breathing for focus, then 2 min
-                  of 4-7-8 to wind down.
-                </p>
+                <p className="text-sm text-muted-foreground">{t("guide.playlistExample")}</p>
               </div>
             </AccordionContent>
           </AccordionItem>
@@ -332,31 +298,23 @@ export default function Guide() {
           {/* 6. Guided Programs */}
           <AccordionItem value="programs" className="border-border rounded-lg border px-4">
             <AccordionTrigger className="hover:no-underline">
-              <SectionIcon icon={GraduationCap} label="Guided Programs" />
+              <SectionIcon icon={GraduationCap} label={t("guide.programs")} />
             </AccordionTrigger>
             <AccordionContent>
               <div className="space-y-4">
-                <p className="text-sm text-muted-foreground">
-                  Structured multi-day programs that guide you through progressive breathing practices with daily tips.
-                </p>
+                <p className="text-sm text-muted-foreground">{t("guide.programsIntro")}</p>
                 <div className="space-y-3">
-                  <InfoBlock title="🧘 7-Day Stress Relief">
-                    <p>Progressive relaxation techniques starting with simple patterns and building to the 4-7-8.
-                    Designed to build a lasting stress-relief habit in one week.</p>
+                  <InfoBlock title={`🧘 ${t("guide.programStress")}`}>
+                    <p>{t("guide.programStressDesc")}</p>
                   </InfoBlock>
-                  <InfoBlock title="😴 Sleep Better in 14 Days">
-                    <p>Evening breathing routines designed for bedtime. Starts with gentle patterns and builds to
-                    longer, more calming sessions over two weeks.</p>
+                  <InfoBlock title={`😴 ${t("guide.programSleep")}`}>
+                    <p>{t("guide.programSleepDesc")}</p>
                   </InfoBlock>
-                  <InfoBlock title="🎯 Focus Training (10 Days)">
-                    <p>Energizing breath patterns to sharpen concentration. Includes precision counting exercises and
-                    power breathing for mental clarity.</p>
+                  <InfoBlock title={`🎯 ${t("guide.programFocus")}`}>
+                    <p>{t("guide.programFocusDesc")}</p>
                   </InfoBlock>
                 </div>
-                <p className="text-sm text-muted-foreground">
-                  Enroll in a program from <strong>More → Programs</strong>. Complete one day at a time — each day includes
-                  a specific technique, duration, and a motivational tip.
-                </p>
+                <p className="text-sm text-muted-foreground">{t("guide.programsEnroll")}</p>
               </div>
             </AccordionContent>
           </AccordionItem>
@@ -364,91 +322,67 @@ export default function Guide() {
           {/* 7. Progress & Stats */}
           <AccordionItem value="progress" className="border-border rounded-lg border px-4">
             <AccordionTrigger className="hover:no-underline">
-              <SectionIcon icon={Trophy} label="Progress & Stats" />
+              <SectionIcon icon={Trophy} label={t("guide.progress")} />
             </AccordionTrigger>
             <AccordionContent>
               <div className="space-y-4">
-                {/* XP System */}
                 <div>
-                  <h4 className="font-semibold text-foreground mb-2">XP System</h4>
-                  <p className="text-sm text-muted-foreground mb-3">
-                    Earn XP after every session. XP is calculated from multiple factors:
-                  </p>
+                  <h4 className="font-semibold text-foreground mb-2">{t("guide.xpSystem")}</h4>
+                  <p className="text-sm text-muted-foreground mb-3">{t("guide.xpSystemDesc")}</p>
                   <div className="grid grid-cols-2 gap-2 text-sm">
                     {[
-                      { label: "Base", value: "10 XP" },
-                      { label: "Duration", value: "+1/min (max 15)" },
-                      { label: "Difficulty", value: "×1.5 intermediate, ×2 advanced" },
-                      { label: "Calm Score", value: "score ÷ 10" },
-                      { label: "Mood Boost", value: "+3 to +8" },
-                      { label: "Streak Bonus", value: "+2/day (max 20)" },
-                      { label: "First Today", value: "+5" },
-                      { label: "Challenges", value: "+15 each" },
+                      { labelKey: "guide.xp.base", valueKey: "guide.xp.baseVal" },
+                      { labelKey: "guide.xp.duration", valueKey: "guide.xp.durationVal" },
+                      { labelKey: "guide.xp.difficulty", valueKey: "guide.xp.difficultyVal" },
+                      { labelKey: "guide.xp.calmScore", valueKey: "guide.xp.calmScoreVal" },
+                      { labelKey: "guide.xp.moodBoost", valueKey: "guide.xp.moodBoostVal" },
+                      { labelKey: "guide.xp.streakBonus", valueKey: "guide.xp.streakBonusVal" },
+                      { labelKey: "guide.xp.firstToday", valueKey: "guide.xp.firstTodayVal" },
+                      { labelKey: "guide.xp.challenges", valueKey: "guide.xp.challengesVal" },
                     ].map((item) => (
-                      <div key={item.label} className="rounded-lg border border-border px-3 py-2">
-                        <span className="font-medium text-foreground">{item.label}</span>
-                        <span className="text-muted-foreground ml-1.5 text-xs">{item.value}</span>
+                      <div key={item.labelKey} className="rounded-lg border border-border px-3 py-2">
+                        <span className="font-medium text-foreground">{t(item.labelKey)}</span>
+                        <span className="text-muted-foreground ml-1.5 text-xs">{t(item.valueKey)}</span>
                       </div>
                     ))}
                   </div>
-                  <p className="text-xs text-muted-foreground mt-2">
-                    Daily XP cap: <strong>150 XP</strong>. This encourages consistent daily practice over marathon sessions.
-                  </p>
+                  <p className="text-xs text-muted-foreground mt-2">{t("guide.xpCap")}</p>
                 </div>
 
                 <Separator />
 
-                {/* Level Table */}
                 <div>
-                  <h4 className="font-semibold text-foreground mb-2">Levels & Titles</h4>
+                  <h4 className="font-semibold text-foreground mb-2">{t("guide.levelsTitle")}</h4>
                   <XPLevelTable />
                 </div>
 
                 <Separator />
 
-                {/* Streaks & Mood */}
                 <div>
-                  <h4 className="font-semibold text-foreground mb-1">Streaks</h4>
-                  <p className="text-sm text-muted-foreground">
-                    Complete at least one session per day to build your streak. Your current and longest streaks are
-                    displayed on the Stats page. Streaks reset if you miss a day.
-                  </p>
+                  <h4 className="font-semibold text-foreground mb-1">{t("guide.streaks")}</h4>
+                  <p className="text-sm text-muted-foreground">{t("guide.streaksDesc")}</p>
                 </div>
                 <div>
-                  <h4 className="font-semibold text-foreground mb-1">Mood Tracking</h4>
-                  <p className="text-sm text-muted-foreground">
-                    Before and after each session, rate your mood from 1 (Stressed) to 5 (Calm). The app tracks your
-                    mood trends over time and calculates mood improvement per session.
-                  </p>
+                  <h4 className="font-semibold text-foreground mb-1">{t("guide.moodTracking")}</h4>
+                  <p className="text-sm text-muted-foreground">{t("guide.moodTrackingDesc")}</p>
                 </div>
                 <div>
-                  <h4 className="font-semibold text-foreground mb-1">Daily Challenges</h4>
-                  <p className="text-sm text-muted-foreground">
-                    Three daily challenges appear on the Home screen (Easy, Medium, Hard). Complete all three for a
-                    +25 XP bonus. Challenges refresh daily and include goals like "Breathe for 5 minutes", "Calm score
-                    &gt; 70", or "Try a never-used technique".
-                  </p>
+                  <h4 className="font-semibold text-foreground mb-1">{t("guide.dailyChallenges")}</h4>
+                  <p className="text-sm text-muted-foreground">{t("guide.dailyChallengesDesc")}</p>
                 </div>
                 <div>
-                  <h4 className="font-semibold text-foreground mb-1">Weekly Consistency</h4>
-                  <p className="text-sm text-muted-foreground">
-                    The Stats page shows a weekly consistency score based on regularity, session completion, and streak
-                    maintenance.
-                  </p>
+                  <h4 className="font-semibold text-foreground mb-1">{t("guide.weeklyConsistency")}</h4>
+                  <p className="text-sm text-muted-foreground">{t("guide.weeklyConsistencyDesc")}</p>
                 </div>
                 <div>
-                  <h4 className="font-semibold text-foreground mb-1">Personalized Insights</h4>
-                  <p className="text-sm text-muted-foreground">
-                    After a few sessions, the Insights tab provides personalized observations: your best time of day,
-                    most effective technique, streak progress, and week-over-week comparisons.
-                  </p>
+                  <h4 className="font-semibold text-foreground mb-1">{t("guide.insights")}</h4>
+                  <p className="text-sm text-muted-foreground">{t("guide.insightsDesc")}</p>
                 </div>
 
                 <Separator />
 
-                {/* Badges */}
                 <div>
-                  <h4 className="font-semibold text-foreground mb-2">All 15 Badges</h4>
+                  <h4 className="font-semibold text-foreground mb-2">{t("guide.allBadges")}</h4>
                   <BadgeTable />
                 </div>
               </div>
@@ -458,22 +392,22 @@ export default function Guide() {
           {/* 8. Keyboard Shortcuts */}
           <AccordionItem value="shortcuts" className="border-border rounded-lg border px-4">
             <AccordionTrigger className="hover:no-underline">
-              <SectionIcon icon={Keyboard} label="Keyboard Shortcuts" />
+              <SectionIcon icon={Keyboard} label={t("guide.shortcuts")} />
             </AccordionTrigger>
             <AccordionContent>
               <div className="space-y-4">
                 <div>
-                  <h4 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-2">Global</h4>
+                  <h4 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-2">{t("guide.shortcutsGlobal")}</h4>
                   <div className="divide-y divide-border">
                     {[
-                      { key: "1", action: "Go to Home" },
-                      { key: "2", action: "Go to Breathe" },
-                      { key: "3", action: "Go to Library" },
-                      { key: "4", action: "Go to Stats" },
-                      { key: "?", action: "Show shortcuts help" },
+                      { key: "1", actionKey: "guide.sc.home" },
+                      { key: "2", actionKey: "guide.sc.breathe" },
+                      { key: "3", actionKey: "guide.sc.library" },
+                      { key: "4", actionKey: "guide.sc.stats" },
+                      { key: "?", actionKey: "guide.sc.help" },
                     ].map((s) => (
                       <div key={s.key} className="flex items-center justify-between py-2">
-                        <span className="text-sm text-foreground">{s.action}</span>
+                        <span className="text-sm text-foreground">{t(s.actionKey)}</span>
                         <kbd className="rounded-md border border-border bg-muted px-2 py-0.5 text-xs font-mono text-muted-foreground">
                           {s.key}
                         </kbd>
@@ -482,17 +416,17 @@ export default function Guide() {
                   </div>
                 </div>
                 <div>
-                  <h4 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-2">During Session</h4>
+                  <h4 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-2">{t("guide.shortcutsSession")}</h4>
                   <div className="divide-y divide-border">
                     {[
-                      { key: "Space", action: "Start / Pause / Resume" },
-                      { key: "Esc", action: "Stop session / Exit Zen Mode" },
-                      { key: "F", action: "Toggle Zen Mode" },
-                      { key: "M", action: "Toggle voice guidance" },
-                      { key: "S", action: "Toggle ambient soundscape" },
+                      { key: "Space", actionKey: "guide.sc.playPause" },
+                      { key: "Esc", actionKey: "guide.sc.stop" },
+                      { key: "F", actionKey: "guide.sc.zen" },
+                      { key: "M", actionKey: "guide.sc.voice" },
+                      { key: "S", actionKey: "guide.sc.sound" },
                     ].map((s) => (
                       <div key={s.key} className="flex items-center justify-between py-2">
-                        <span className="text-sm text-foreground">{s.action}</span>
+                        <span className="text-sm text-foreground">{t(s.actionKey)}</span>
                         <kbd className="rounded-md border border-border bg-muted px-2 py-0.5 text-xs font-mono text-muted-foreground">
                           {s.key}
                         </kbd>
@@ -507,31 +441,25 @@ export default function Guide() {
           {/* 9. Data & Privacy */}
           <AccordionItem value="privacy" className="border-border rounded-lg border px-4">
             <AccordionTrigger className="hover:no-underline">
-              <SectionIcon icon={Shield} label="Data & Privacy" />
+              <SectionIcon icon={Shield} label={t("guide.privacy")} />
             </AccordionTrigger>
             <AccordionContent>
               <div className="space-y-3">
                 <div className="grid gap-3 sm:grid-cols-2">
-                  <InfoBlock title="🔒 100% Local Storage">
-                    <p>All your sessions, moods, settings, and progress are stored in your browser's local storage.
-                    Nothing is ever sent to a server.</p>
+                  <InfoBlock title={`🔒 ${t("guide.localStorage")}`}>
+                    <p>{t("guide.localStorageDesc")}</p>
                   </InfoBlock>
-                  <InfoBlock title="📤 Export & Import">
-                    <p>Back up your data anytime from <strong>Settings → Data → Export</strong>. This downloads a JSON
-                    file with all your data. To restore, use Import.</p>
+                  <InfoBlock title={`📤 ${t("guide.exportImport")}`}>
+                    <p>{t("guide.exportImportDesc")}</p>
                   </InfoBlock>
-                  <InfoBlock title="📊 CSV Export">
-                    <p>Export your session history as a CSV file for analysis in spreadsheets or other tools.</p>
+                  <InfoBlock title={`📊 ${t("guide.csvExport")}`}>
+                    <p>{t("guide.csvExportDesc")}</p>
                   </InfoBlock>
-                  <InfoBlock title="📶 Works Offline">
-                    <p>Muhurto Breath is a Progressive Web App. Once loaded (or installed), it works completely offline
-                    with no internet connection required.</p>
+                  <InfoBlock title={`📶 ${t("guide.offline")}`}>
+                    <p>{t("guide.offlineDesc")}</p>
                   </InfoBlock>
                 </div>
-                <p className="text-sm text-muted-foreground">
-                  <strong>No account required.</strong> No tracking. No analytics. No ads. Your breathing practice is
-                  entirely private.
-                </p>
+                <p className="text-sm text-muted-foreground">{t("guide.privacyFooter")}</p>
               </div>
             </AccordionContent>
           </AccordionItem>
@@ -539,28 +467,24 @@ export default function Guide() {
           {/* 10. Accessibility */}
           <AccordionItem value="accessibility" className="border-border rounded-lg border px-4">
             <AccordionTrigger className="hover:no-underline">
-              <SectionIcon icon={Accessibility} label="Accessibility" />
+              <SectionIcon icon={Accessibility} label={t("guide.accessibility")} />
             </AccordionTrigger>
             <AccordionContent>
               <div className="space-y-3">
-                <p className="text-sm text-muted-foreground">
-                  Muhurto Breath is designed to be accessible to everyone. Find these options in <strong>Settings → Accessibility</strong>:
-                </p>
+                <p className="text-sm text-muted-foreground">{t("guide.accessibilityIntro")}</p>
                 <div className="space-y-2">
                   {[
-                    { label: "High Contrast", desc: "Increases text and border contrast for better visibility" },
-                    { label: "Large Text", desc: "Increases the base font size for improved readability" },
-                    { label: "Reduced Motion", desc: "Disables all animations and transitions for users sensitive to motion" },
+                    { labelKey: "guide.a11y.highContrast", descKey: "guide.a11y.highContrastDesc" },
+                    { labelKey: "guide.a11y.largeText", descKey: "guide.a11y.largeTextDesc" },
+                    { labelKey: "guide.a11y.reducedMotion", descKey: "guide.a11y.reducedMotionDesc" },
                   ].map((a) => (
-                    <div key={a.label} className="flex items-start gap-2">
-                      <Badge variant="outline" className="text-xs shrink-0 mt-0.5">{a.label}</Badge>
-                      <span className="text-sm text-muted-foreground">{a.desc}</span>
+                    <div key={a.labelKey} className="flex items-start gap-2">
+                      <Badge variant="outline" className="text-xs shrink-0 mt-0.5">{t(a.labelKey)}</Badge>
+                      <span className="text-sm text-muted-foreground">{t(a.descKey)}</span>
                     </div>
                   ))}
                 </div>
-                <p className="text-sm text-muted-foreground">
-                  The app also supports multiple languages (English & Bengali) and full keyboard navigation.
-                </p>
+                <p className="text-sm text-muted-foreground">{t("guide.accessibilityFooter")}</p>
               </div>
             </AccordionContent>
           </AccordionItem>
@@ -568,47 +492,14 @@ export default function Guide() {
           {/* 11. FAQ */}
           <AccordionItem value="faq" className="border-border rounded-lg border px-4">
             <AccordionTrigger className="hover:no-underline">
-              <SectionIcon icon={HelpCircle} label="Frequently Asked Questions" />
+              <SectionIcon icon={HelpCircle} label={t("guide.faq")} />
             </AccordionTrigger>
             <AccordionContent>
               <div className="space-y-4">
-                {[
-                  {
-                    q: "Is Muhurto Breath free?",
-                    a: "Yes, completely free. No subscriptions, no hidden fees, no ads. We accept optional donations to support development.",
-                  },
-                  {
-                    q: "Does it work offline?",
-                    a: "Yes. Once you've loaded the app (or installed it as a PWA), it works fully offline. All data is stored locally on your device.",
-                  },
-                  {
-                    q: "How is the Calm Score calculated?",
-                    a: "The calm score is based on your breathing consistency (how closely you follow the rhythm), session duration, and if breathing detection is enabled, your rhythm accuracy via microphone analysis.",
-                  },
-                  {
-                    q: "Will I lose my data if I clear my browser?",
-                    a: "Yes — since all data is stored in local storage, clearing browser data will erase your progress. Use Settings → Export regularly to back up your data.",
-                  },
-                  {
-                    q: "Can I challenge a friend?",
-                    a: "Yes! From the Home page, tap 'Challenge a Friend' to create a breathing challenge with a specific technique and target. Share the generated link — when your friend opens it, they'll see your challenge and can accept it.",
-                  },
-                  {
-                    q: "What's the daily XP cap?",
-                    a: "You can earn up to 150 XP per day. This is designed to encourage consistent daily practice rather than long single sessions.",
-                  },
-                  {
-                    q: "How do reminders work?",
-                    a: "Set breathing reminders in Settings. Note: reminders only fire while the app/tab is open. For reliable reminders, install the PWA and keep it accessible.",
-                  },
-                  {
-                    q: "Is my microphone/camera data sent anywhere?",
-                    a: "Absolutely not. Breathing detection (microphone) and heart rate monitoring (camera) are processed entirely on your device. No audio or video data is ever recorded, stored, or transmitted.",
-                  },
-                ].map((faq) => (
-                  <div key={faq.q}>
-                    <h4 className="font-semibold text-foreground text-sm mb-1">{faq.q}</h4>
-                    <p className="text-sm text-muted-foreground">{faq.a}</p>
+                {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
+                  <div key={i}>
+                    <h4 className="font-semibold text-foreground text-sm mb-1">{t(`guide.faq${i}.q`)}</h4>
+                    <p className="text-sm text-muted-foreground">{t(`guide.faq${i}.a`)}</p>
                   </div>
                 ))}
               </div>
@@ -619,8 +510,8 @@ export default function Guide() {
 
         {/* Footer */}
         <div className="mt-8 text-center text-xs text-muted-foreground pb-4">
-          <p>Muhurto Breath — Take a moment to breathe. 🌬️</p>
-          <p className="mt-1">Made with ❤️ for mindful breathing.</p>
+          <p>{t("guide.footer1")}</p>
+          <p className="mt-1">{t("guide.footer2")}</p>
         </div>
       </div>
     </div>
