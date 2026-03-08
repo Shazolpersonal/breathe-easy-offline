@@ -11,9 +11,10 @@ import { getActiveChallenges, getChallengeProgress } from "@/lib/friendChallenge
 import { canInstall, promptInstall, isDismissed, dismissInstallBanner, isRunningAsPWA, canShowManualInstallHint, getInstallPlatform } from "@/lib/installPrompt";
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect, useRef } from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { CreateChallengeDialog } from "@/components/FriendChallenge";
+import { toast } from "sonner";
 
 export default function Home() {
   const navigate = useNavigate();
