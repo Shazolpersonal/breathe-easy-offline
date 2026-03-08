@@ -116,6 +116,47 @@ export function getTodayMinutes(): number {
   return Math.round(getTodaySessions().reduce((sum, s) => sum + s.durationSeconds, 0) / 60);
 }
 
+// Streak Freeze system
+const STREAK_FREEZE_KEY = "breathe_streak_freeze";
+
+interface StreakFreezeState {
+  lastFreezeWeek: string; // ISO week identifier e.g. "2026-W10"
+  freezeAvailable: boolean;
+  freezeUsedThisWeek: boolean;
+}
+
+function getISOWeek(d: Date): string {
+  const date = new Date(d);
+  date.setHours(0, 0, 0, 0);
+  date.setDate(date.getDate() + 3 - ((date.getDay() + 6) % 7));
+  const week1 = new Date(date.getFullYear(), 0, 4);
+  const weekNum = 1 + Math.round(((date.getTime() - week1.getTime()) / 86400000 - 3 + ((week1.getDay() + 6) % 7)) / 7);
+  return `${date.getFullYear()}-W${String(weekNum).padStart(2, "0")}`;
+}
+
+function getStreakFreezeState(): StreakFreezeState {
+  const raw = getJSON<StreakFreezeState>(STREAK_FREEZE_KEY, {
+    lastFreezeWeek: "",
+    freezeAvailable: true,
+    freezeUsedThisWeek: false,
+  });
+  // Auto-refresh freeze each week
+  const currentWeek = getISOWeek(new Date());
+  if (raw.lastFreezeWeek !== currentWeek) {
+    return { lastFreezeWeek: currentWeek, freezeAvailable: true, freezeUsedThisWeek: false };
+  }
+  return raw;
+}
+
+function saveStreakFreezeState(state: StreakFreezeState) {
+  setJSON(STREAK_FREEZE_KEY, state);
+}
+
+export function getStreakFreezeInfo(): { available: boolean; usedThisWeek: boolean } {
+  const state = getStreakFreezeState();
+  return { available: state.freezeAvailable, usedThisWeek: state.freezeUsedThisWeek };
+}
+
 export function getCurrentStreak(): number {
   const sessions = getSessions();
   if (sessions.length === 0) return 0;
@@ -125,8 +166,10 @@ export function getCurrentStreak(): number {
   const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
   
   let streak = 0;
-  // Allow starting from today or yesterday (user hasn't done today's session yet)
   let startOffset = 0;
+  let freezeUsed = false;
+  const freezeState = getStreakFreezeState();
+
   if (dates[0] === todayStr) {
     startOffset = 0;
   } else {
@@ -136,7 +179,16 @@ export function getCurrentStreak(): number {
     if (dates[0] === yesterdayStr) {
       startOffset = 1;
     } else {
-      return 0;
+      // Check if streak freeze can save us (2-day gap)
+      const twoDaysAgo = new Date(today);
+      twoDaysAgo.setDate(twoDaysAgo.getDate() - 2);
+      const twoDaysAgoStr = `${twoDaysAgo.getFullYear()}-${String(twoDaysAgo.getMonth() + 1).padStart(2, "0")}-${String(twoDaysAgo.getDate()).padStart(2, "0")}`;
+      if (dates[0] === twoDaysAgoStr && freezeState.freezeAvailable) {
+        startOffset = 2;
+        freezeUsed = true;
+      } else {
+        return 0;
+      }
     }
   }
 
@@ -150,6 +202,16 @@ export function getCurrentStreak(): number {
       break;
     }
   }
+
+  // Consume freeze if used
+  if (freezeUsed && streak > 0) {
+    saveStreakFreezeState({
+      ...freezeState,
+      freezeAvailable: false,
+      freezeUsedThisWeek: true,
+    });
+  }
+
   return streak;
 }
 
