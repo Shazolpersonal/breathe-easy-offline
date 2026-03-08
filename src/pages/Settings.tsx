@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { exportData, importData, getLastBackupDate, getDataSummary } from "@/lib/storage";
 import { exportSessionsCSV } from "@/lib/csvExport";
-import { Download, Upload, Circle, Waves, BarChart3, Flower2, Plus, Trash2, Bell, BellOff, Accessibility, Mic, Heart, Music, FileSpreadsheet } from "lucide-react";
+import { Download, Upload, Circle, Waves, BarChart3, Flower2, Plus, Trash2, Bell, BellOff, Accessibility, Mic, Heart, Music, FileSpreadsheet, AlertTriangle, Database } from "lucide-react";
 import { SoundscapeType, getSoundscapeEngine } from "@/lib/soundscapes";
 import SoundscapePicker from "@/components/SoundscapePicker";
 import { cn } from "@/lib/utils";
