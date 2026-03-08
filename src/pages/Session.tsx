@@ -920,6 +920,25 @@ export default function Session() {
             )}
           </div>
 
+          {/* Breathing Rate */}
+          {breathingRate !== null && (
+            <div className="rounded-xl border border-border bg-card p-3 space-y-1">
+              <div className="flex items-center justify-center gap-2">
+                <Wind className="h-4 w-4 text-primary" />
+                <span className="text-sm font-medium text-foreground">{t("session.breathingRate")}</span>
+              </div>
+              <div className="text-2xl font-bold text-primary">{breathingRate} <span className="text-sm font-normal text-muted-foreground">{t("session.breathsPerMin")}</span></div>
+            </div>
+          )}
+
+          {/* Previous Journal Inspiration */}
+          {previousJournal && (
+            <div className="w-full max-w-xs rounded-lg border border-border/50 bg-secondary/30 px-3 py-2">
+              <p className="text-[10px] font-medium text-muted-foreground mb-0.5">{t("session.previousJournal")}</p>
+              <p className="text-xs text-muted-foreground/70 italic line-clamp-2">"{previousJournal}"</p>
+            </div>
+          )}
+
           <div className="w-full max-w-xs">
             <Textarea
               placeholder={t("session.journal.placeholder")}
@@ -929,6 +948,29 @@ export default function Session() {
               rows={3}
             />
           </div>
+
+          {/* Post-session technique recommendation */}
+          {postRecommendation && (
+            <div className="rounded-xl border border-primary/20 bg-primary/5 p-3 w-full max-w-xs">
+              <div className="flex items-center gap-2 mb-1.5">
+                <Lightbulb className="h-4 w-4 text-primary" />
+                <span className="text-sm font-medium text-foreground">{t("recommendation.title")}</span>
+              </div>
+              <p className="text-xs text-muted-foreground mb-2">{t(postRecommendation.reasonKey)}</p>
+              <Button
+                size="sm"
+                variant="outline"
+                className="w-full gap-1"
+                onClick={() => {
+                  saveJournal();
+                  navigate(`/session?technique=${postRecommendation.techniqueId}`);
+                  window.location.reload();
+                }}
+              >
+                <Play className="h-3.5 w-3.5" /> {t("recommendation.try", { name: t(`technique.${postRecommendation.techniqueId}.name`) || postRecommendation.techniqueName })}
+              </Button>
+            </div>
+          )}
 
           <div className="flex flex-col items-center gap-2 w-full max-w-xs">
             <div className="flex gap-2 w-full">
