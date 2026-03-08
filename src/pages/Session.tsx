@@ -215,6 +215,15 @@ export default function Session() {
     clearInterval(intervalRef.current);
     stopSpeaking();
 
+    // Stop soundscape
+    soundscapeEngineRef.current.stop();
+
+    // Exit zen mode
+    if (document.fullscreenElement) {
+      document.exitFullscreen().catch(() => {});
+    }
+    setZenMode(false);
+
     // Stop breath detector
     breathDetectorRef.current?.stop();
     breathDetectorRef.current = null;
