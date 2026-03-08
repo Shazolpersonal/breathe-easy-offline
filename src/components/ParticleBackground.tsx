@@ -23,6 +23,8 @@ function getComputedHSL(varName: string): string {
 }
 
 export default function ParticleBackground({ phase }: ParticleBackgroundProps) {
+  // Track theme changes to re-read colors
+  const themeAttr = typeof document !== "undefined" ? document.documentElement.getAttribute("data-theme") : null;
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const particlesRef = useRef<Particle[]>([]);
   const animRef = useRef<number>(0);
