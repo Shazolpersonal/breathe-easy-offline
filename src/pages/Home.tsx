@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { Wind, Flame, Zap, TrendingUp, CheckCircle2, Circle, Swords, Quote, Download, X, Trophy, Share2, Heart, Play } from "lucide-react";
+import { Wind, Flame, Zap, TrendingUp, CheckCircle2, Circle, Swords, Quote, Download, X, Trophy, Share2, Heart, Play, Shield, ShieldCheck, Clipboard, AlertTriangle } from "lucide-react";
 import SmartSuggestion from "@/components/SmartSuggestion";
 import TechniqueCard from "@/components/TechniqueCard";
 import WeeklySummary from "@/components/WeeklySummary";
