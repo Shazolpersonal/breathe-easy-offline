@@ -664,7 +664,7 @@ export default function Session() {
           </div>
 
           {levelUpInfo && <LevelUpBanner level={levelUpInfo.level} techniqueName={techniqueName} label={t("session.levelUp")} />}
-          {calmResult && <CalmScoreDisplay result={calmResult} label={t("session.calmScore")} />}
+          {calmResult && <CalmScoreDisplay result={calmResult} label={t("session.calmScore")} t={t} />}
           {earnedXP && <XPEarnedDisplay xp={earnedXP.xp} leveledUp={earnedXP.leveledUp} newTitle={earnedXP.newTitle} />}
 
           {/* Breath accuracy in done screen */}
