@@ -87,21 +87,23 @@ function AppInner() {
 }
 
 const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <ThemeProvider>
-      <LanguageProvider>
-        <SettingsProvider>
-          <TooltipProvider>
-            <BrowserRouter>
-              <SessionProvider>
-                <AppInner />
-              </SessionProvider>
-            </BrowserRouter>
-          </TooltipProvider>
-        </SettingsProvider>
-      </LanguageProvider>
-    </ThemeProvider>
-  </QueryClientProvider>
+  <ErrorBoundary>
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider>
+        <LanguageProvider>
+          <SettingsProvider>
+            <TooltipProvider>
+              <BrowserRouter>
+                <SessionProvider>
+                  <AppInner />
+                </SessionProvider>
+              </BrowserRouter>
+            </TooltipProvider>
+          </SettingsProvider>
+        </LanguageProvider>
+      </ThemeProvider>
+    </QueryClientProvider>
+  </ErrorBoundary>
 );
 
 export default App;
