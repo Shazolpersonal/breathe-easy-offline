@@ -324,10 +324,31 @@ export default function Home() {
           </button>
         </div>
 
+        {/* Weekly Summary */}
+        <WeeklySummary />
+
         {/* Smart Suggestion */}
         <div className="mb-6">
           <SmartSuggestion />
         </div>
+
+        {/* Quick Resume */}
+        {lastSession && (
+          <div className="mb-6">
+            <button
+              onClick={() => navigate(`/session?technique=${lastSession.techniqueId}&duration=${lastSession.durationMinutes}`)}
+              className="flex w-full items-center gap-3 rounded-2xl border border-primary/20 bg-primary/5 p-4 transition-colors hover:bg-primary/10"
+            >
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/15">
+                <Play className="h-5 w-5 text-primary" />
+              </div>
+              <div className="text-left flex-1">
+                <p className="text-sm font-medium text-foreground">{t("home.quickResume")}</p>
+                <p className="text-xs text-muted-foreground">{lastSession.techniqueName} · {lastSession.durationMinutes} {t("common.min")}</p>
+              </div>
+            </button>
+          </div>
+        )}
 
         {/* Quick Start */}
         {favTechniques.length > 0 && (
