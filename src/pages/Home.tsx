@@ -179,11 +179,20 @@ export default function Home() {
 
         {/* Daily Challenges */}
         <div className="mb-6 rounded-2xl border border-border bg-card p-4">
-          <h2 className="mb-3 text-sm font-semibold uppercase tracking-wider text-muted-foreground">{t("home.dailyChallenges")}</h2>
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">{t("home.dailyChallenges")}</h2>
+            {challengeStreak >= 2 && (
+              <span className="flex items-center gap-1 text-xs font-medium text-primary">
+                <Trophy className="h-3.5 w-3.5" />
+                {t("challenge.streak", { days: challengeStreak })}
+              </span>
+            )}
+          </div>
           <div className="space-y-2.5">
             {dailyChallenges.map((c) => {
               const progress = c.getProgress();
               const done = progress >= c.target;
+              const tierColor = c.tier === "hard" ? "text-destructive" : c.tier === "medium" ? "text-primary" : "text-muted-foreground";
               return (
                 <div key={c.id} className="flex items-center gap-3">
                   {done ? (
@@ -194,6 +203,9 @@ export default function Home() {
                   <div className="flex-1 min-w-0">
                     <span className={`text-sm ${done ? "text-primary font-medium line-through" : "text-foreground"}`}>
                       {c.emoji} {t(`challenge.${c.title}`)}
+                    </span>
+                    <span className={`ml-1.5 text-[10px] uppercase font-medium ${tierColor}`}>
+                      {t(`challenge.tier.${c.tier}`)}
                     </span>
                   </div>
                   <span className="text-xs tabular-nums text-muted-foreground">
