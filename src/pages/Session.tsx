@@ -517,10 +517,18 @@ export default function Session() {
       setVoiceOn((v) => { if (v) stopSpeaking(); return !v; });
     },
     onS: () => {
-      if (soundscapeType !== "off") {
-        soundscapeEngineRef.current.stop();
-        setSoundscapeType("off");
-      }
+      setSoundscapeType((prev) => {
+        if (prev !== "off") {
+          soundscapeEngineRef.current.stop();
+          return "off";
+        }
+        // Restore to the settings default
+        const restored = (settings.soundscapeType as SoundscapeType) || "rain";
+        if (restored !== "off" && state === "running") {
+          soundscapeEngineRef.current.start(restored, settings.soundscapeVolume ?? 0.5);
+        }
+        return restored;
+      });
     },
     onNavigate: (path) => navigate(path),
   });
