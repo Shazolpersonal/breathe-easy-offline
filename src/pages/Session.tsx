@@ -27,6 +27,7 @@ import { shareOrDownloadCard } from "@/lib/shareCard";
 import { BreathDetector, RhythmUpdate } from "@/lib/breathDetector";
 import { getSoundscapeEngine, SoundscapeType } from "@/lib/soundscapes";
 import SoundscapePicker from "@/components/SoundscapePicker";
+import { Slider } from "@/components/ui/slider";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Textarea } from "@/components/ui/textarea";
@@ -419,11 +420,15 @@ export default function Session() {
     clearInterval(intervalRef.current);
     setState("paused");
     stopSpeaking();
+    // Mute soundscape on pause
+    soundscapeEngineRef.current.setVolume(0);
   };
 
   const resume = () => {
     setState("running");
     phaseStartRef.current = Date.now();
+    // Restore soundscape volume on resume
+    soundscapeEngineRef.current.setVolume(settings.soundscapeVolume ?? 0.5);
     if (voiceOn) speak(getPhaseLabel(currentPhase), settings.voiceSpeed, language);
   };
 
@@ -513,10 +518,18 @@ export default function Session() {
       setVoiceOn((v) => { if (v) stopSpeaking(); return !v; });
     },
     onS: () => {
-      if (soundscapeType !== "off") {
-        soundscapeEngineRef.current.stop();
-        setSoundscapeType("off");
-      }
+      setSoundscapeType((prev) => {
+        if (prev !== "off") {
+          soundscapeEngineRef.current.stop();
+          return "off";
+        }
+        // Restore to the settings default
+        const restored = (settings.soundscapeType as SoundscapeType) || "rain";
+        if (restored !== "off" && (state === "running" || state === "paused")) {
+          soundscapeEngineRef.current.start(restored, settings.soundscapeVolume ?? 0.5);
+        }
+        return restored;
+      });
     },
     onNavigate: (path) => navigate(path),
   });
@@ -860,13 +873,46 @@ export default function Session() {
               ))}
             </div>
 
-            {/* Soundscape picker */}
+            {/* Soundscape picker (idle only - no volume slider needed) */}
             <SoundscapePicker
               value={soundscapeType}
               onChange={(type) => setSoundscapeType(type)}
               compact
             />
           </>
+        )}
+
+        {/* Soundscape controls during active session */}
+        {(state === "running" || state === "paused") && !zenMode && (
+          <div className="flex items-center gap-2">
+            <SoundscapePicker
+              value={soundscapeType}
+              onChange={(type) => {
+                setSoundscapeType(type);
+                soundscapeEngineRef.current.stop();
+                if (type !== "off") {
+                  soundscapeEngineRef.current.start(type, settings.soundscapeVolume ?? 0.5);
+                }
+              }}
+              compact
+            />
+            {soundscapeType !== "off" && (
+              <div className="flex items-center gap-1.5 min-w-[80px]">
+                <Volume2 className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
+                <Slider
+                  min={0}
+                  max={1}
+                  step={0.05}
+                  value={[settings.soundscapeVolume ?? 0.5]}
+                  onValueChange={([v]) => {
+                    update({ soundscapeVolume: v });
+                    soundscapeEngineRef.current.setVolume(v);
+                  }}
+                  className="w-16"
+                />
+              </div>
+            )}
+          </div>
         )}
 
         {!zenMode && (

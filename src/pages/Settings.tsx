@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/input";
 import { exportData, importData } from "@/lib/storage";
 import { exportSessionsCSV } from "@/lib/csvExport";
 import { Download, Upload, Circle, Waves, BarChart3, Flower2, Plus, Trash2, Bell, BellOff, Accessibility, Mic, Heart, Music, FileSpreadsheet } from "lucide-react";
-import { SoundscapeType } from "@/lib/soundscapes";
+import { SoundscapeType, getSoundscapeEngine } from "@/lib/soundscapes";
 import SoundscapePicker from "@/components/SoundscapePicker";
 import { cn } from "@/lib/utils";
 import { toast } from "@/hooks/use-toast";
@@ -159,7 +159,16 @@ export default function Settings() {
           </div>
           <SoundscapePicker
             value={(settings.soundscapeType || "off") as SoundscapeType}
-            onChange={(type) => update({ soundscapeType: type })}
+            onChange={(type) => {
+              update({ soundscapeType: type });
+              // Play a brief preview
+              const engine = getSoundscapeEngine();
+              engine.stop();
+              if (type !== "off") {
+                engine.start(type, settings.soundscapeVolume ?? 0.5);
+                setTimeout(() => engine.stop(), 4000);
+              }
+            }}
           />
           <div>
             <Label className="mb-2 block">{t("soundscape.volume")}</Label>
