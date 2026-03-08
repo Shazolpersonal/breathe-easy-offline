@@ -102,6 +102,7 @@ export default function Session() {
 
   const [levelUpInfo, setLevelUpInfo] = useState<{ level: number } | null>(null);
   const [earnedXP, setEarnedXP] = useState<{ xp: number; leveledUp: boolean; newTitle?: string } | null>(null);
+  const [journalNote, setJournalNote] = useState("");
 
   const phaseStartRef = useRef(Date.now());
   const phaseTimestampsRef = useRef<PhaseTimestamp[]>([]);
