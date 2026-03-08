@@ -17,7 +17,7 @@ import { VisualizationType } from "@/components/BreathingVisualizer";
 import { getReminders, addReminder, updateReminder, deleteReminder, requestNotificationPermission, getNotificationPermission, Reminder } from "@/lib/reminders";
 
 export default function Settings() {
-  const { theme, setTheme } = useTheme();
+  const { theme, setTheme, themeMode, setThemeMode } = useTheme();
   const { settings, update } = useSettings();
   const { t, language, setLanguage } = useLanguage();
   const fileRef = useRef<HTMLInputElement>(null);
