@@ -368,6 +368,17 @@ export default function Settings() {
             </Button>
             <input ref={fileRef} type="file" accept=".json" className="hidden" onChange={handleImport} />
           </div>
+          <Button
+            variant="outline"
+            size="sm"
+            className="w-full gap-1"
+            onClick={() => {
+              exportSessionsCSV();
+              toast({ title: t("settings.csvExported") });
+            }}
+          >
+            <FileSpreadsheet className="h-4 w-4" /> {t("settings.exportCSV")}
+          </Button>
         </section>
 
         {/* Install */}
