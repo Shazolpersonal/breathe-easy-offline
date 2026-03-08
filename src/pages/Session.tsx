@@ -13,7 +13,7 @@ import { useSettings } from "@/contexts/SettingsContext";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useSessionContext } from "@/contexts/SessionContext";
 import { useKeyboardShortcuts } from "@/hooks/useKeyboardShortcuts";
-import { speak, stopSpeaking } from "@/lib/voice";
+import { speak, stopSpeaking, speakSessionStart, speakSessionEnd, speakCycleMilestone, speakCountdown, speakEncouragement, type SpeakOptions } from "@/lib/voice";
 import { vibratePhaseChange, vibrateDone } from "@/lib/haptics";
 import { saveMoodRecord, getMoodEmoji } from "@/lib/mood";
 import { getProgression, getScaledPhases, updateProgression, getLevelName, getLevelProgress } from "@/lib/progression";
