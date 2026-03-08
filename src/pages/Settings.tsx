@@ -20,7 +20,7 @@ export default function Settings() {
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = "breathe-data.json";
+    a.download = "muhurto-breath-data.json";
     a.click();
     URL.revokeObjectURL(url);
     toast({ title: "Data exported!" });

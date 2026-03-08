@@ -19,9 +19,9 @@ export default defineConfig(({ mode }) => ({
       registerType: "autoUpdate",
       includeAssets: ["favicon.ico"],
       manifest: {
-        name: "Breathe — Breathing Exercises",
-        short_name: "Breathe",
-        description: "Offline breathing exercise app with voice guidance, themes, and smart suggestions.",
+        name: "Muhurto Breath — Breathing Exercises",
+        short_name: "Muhurto Breath",
+        description: "Muhurto Breath — offline breathing exercise app with voice guidance, themes, and smart suggestions.",
         theme_color: "#0c1929",
         background_color: "#0c1929",
         display: "standalone",
