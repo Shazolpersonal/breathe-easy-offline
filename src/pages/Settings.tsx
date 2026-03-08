@@ -1,4 +1,4 @@
-import { useTheme, THEMES, ThemeId } from "@/contexts/ThemeContext";
+import { useTheme, THEMES, ThemeId, ThemeMode } from "@/contexts/ThemeContext";
 import { useSettings } from "@/contexts/SettingsContext";
 import { useLanguage, Language } from "@/contexts/LanguageContext";
 import { Switch } from "@/components/ui/switch";
@@ -7,7 +7,9 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { exportData, importData } from "@/lib/storage";
-import { Download, Upload, Circle, Waves, BarChart3, Flower2, Plus, Trash2, Bell, BellOff, Accessibility, Mic, Heart } from "lucide-react";
+import { Download, Upload, Circle, Waves, BarChart3, Flower2, Plus, Trash2, Bell, BellOff, Accessibility, Mic, Heart, Music } from "lucide-react";
+import { SoundscapeType } from "@/lib/soundscapes";
+import SoundscapePicker from "@/components/SoundscapePicker";
 import { cn } from "@/lib/utils";
 import { toast } from "@/hooks/use-toast";
 import { useRef, useState } from "react";

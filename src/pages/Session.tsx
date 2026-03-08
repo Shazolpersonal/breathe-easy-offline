@@ -625,9 +625,20 @@ export default function Session() {
         currentPhase={currentPhase.type}
       />
 
+      {/* Zen mode exit button */}
+      {zenMode && (
+        <button
+          onClick={toggleZenMode}
+          className="fixed top-4 right-4 z-50 rounded-full bg-card/50 p-2 text-muted-foreground backdrop-blur-sm hover:text-foreground transition-opacity opacity-30 hover:opacity-100"
+          aria-label={t("session.exitZen")}
+        >
+          <Minimize2 className="h-5 w-5" />
+        </button>
+      )}
+
       <div className="relative z-10 flex flex-col items-center gap-6">
         {/* Playlist progress bar */}
-        {playlist && state !== "idle" && (
+        {!zenMode && playlist && state !== "idle" && (
           <div className="w-full max-w-xs">
             <div className="flex items-center justify-between mb-1">
               <span className="text-xs text-muted-foreground">{t("session.step", { current: playlistStepIdx + 1, total: playlist.steps.length })}</span>
@@ -641,20 +652,22 @@ export default function Session() {
           </div>
         )}
 
-        <div className="text-center">
-          <h2 className="text-lg font-semibold text-foreground">{techniqueName}</h2>
-          <span className="text-xs text-muted-foreground">
-            Lv.{progression.level} {t(`level.${getLevelName(progression.level)}`)}
-          </span>
-          {technique.pyramid && state !== "idle" && (
-            <p className="text-xs text-primary mt-0.5">{t("session.round", { round: currentRound + 1 })}</p>
-          )}
-          {progression.level < 5 && (
-            <div className="mx-auto mt-1 w-32">
-              <Progress value={getLevelProgress(progression)} className="h-1.5" />
-            </div>
-          )}
-        </div>
+        {!zenMode && (
+          <div className="text-center">
+            <h2 className="text-lg font-semibold text-foreground">{techniqueName}</h2>
+            <span className="text-xs text-muted-foreground">
+              Lv.{progression.level} {t(`level.${getLevelName(progression.level)}`)}
+            </span>
+            {technique.pyramid && state !== "idle" && (
+              <p className="text-xs text-primary mt-0.5">{t("session.round", { round: currentRound + 1 })}</p>
+            )}
+            {progression.level < 5 && (
+              <div className="mx-auto mt-1 w-32">
+                <Progress value={getLevelProgress(progression)} className="h-1.5" />
+              </div>
+            )}
+          </div>
+        )}
 
         {state === "idle" && (
           <MoodPicker selected={moodBefore} onSelect={setMoodBefore} label={t("mood.howFeeling")} compact />
@@ -667,6 +680,11 @@ export default function Session() {
           secondsLeft={state === "idle" ? 0 : secondsLeft}
         />
 
+        {/* Phase label in zen mode */}
+        {zenMode && state !== "idle" && (
+          <p className="text-lg font-medium text-foreground/80">{getPhaseLabel(currentPhase)}</p>
+        )}
+
         {/* Breathing feedback overlay */}
         {micActive && breathFeedback && state === "running" && (
           <BreathingFeedback
@@ -676,10 +694,12 @@ export default function Session() {
           />
         )}
 
-        <div className="text-center" aria-live="polite" aria-atomic="true">
-          <span className="text-sm tabular-nums text-muted-foreground">{elapsedDisplay} / {targetDisplay}</span>
-          {state !== "idle" && <p className="text-xs text-muted-foreground">{t("session.cycles", { count: completedCycles })}</p>}
-        </div>
+        {!zenMode && (
+          <div className="text-center" aria-live="polite" aria-atomic="true">
+            <span className="text-sm tabular-nums text-muted-foreground">{elapsedDisplay} / {targetDisplay}</span>
+            {state !== "idle" && <p className="text-xs text-muted-foreground">{t("session.cycles", { count: completedCycles })}</p>}
+          </div>
+        )}
 
         {state === "idle" && (
           <>
@@ -716,63 +736,83 @@ export default function Session() {
                 </button>
               ))}
             </div>
+
+            {/* Soundscape picker */}
+            <SoundscapePicker
+              value={soundscapeType}
+              onChange={(type) => setSoundscapeType(type)}
+              compact
+            />
           </>
         )}
 
-        <div className="flex items-center gap-4">
-          {state === "idle" ? (
-            <Button size="lg" onClick={start} className="gap-2 rounded-full px-8">
-              <Play className="h-5 w-5" /> {t("session.start")}
-            </Button>
-          ) : state === "running" ? (
-            <>
-              <Button size="icon" variant="secondary" onClick={pause} className="h-12 w-12 rounded-full" aria-label={t("session.pause")}>
-                <Pause className="h-5 w-5" />
+        {!zenMode && (
+          <div className="flex items-center gap-4">
+            {state === "idle" ? (
+              <Button size="lg" onClick={start} className="gap-2 rounded-full px-8">
+                <Play className="h-5 w-5" /> {t("session.start")}
               </Button>
-              <Button size="icon" variant="destructive" onClick={stop} className="h-12 w-12 rounded-full" aria-label={t("session.stop")}>
-                <Square className="h-5 w-5" />
-              </Button>
-            </>
-          ) : (
-            <>
-              <Button size="icon" variant="secondary" onClick={resume} className="h-12 w-12 rounded-full" aria-label={t("session.resume")}>
-                <Play className="h-5 w-5" />
-              </Button>
-              <Button size="icon" variant="destructive" onClick={stop} className="h-12 w-12 rounded-full" aria-label={t("session.stop")}>
-                <Square className="h-5 w-5" />
-              </Button>
-            </>
-          )}
-
-          <button
-            onClick={() => { setVoiceOn(!voiceOn); if (voiceOn) stopSpeaking(); }}
-            className="rounded-full p-2 text-muted-foreground hover:text-foreground"
-            aria-label={voiceOn ? t("settings.voiceEnable") : t("settings.voiceEnable")}
-          >
-            {voiceOn ? <Volume2 className="h-5 w-5" /> : <VolumeX className="h-5 w-5" />}
-          </button>
-
-          {/* Mic toggle */}
-          <button
-            onClick={toggleMic}
-            className={cn(
-              "rounded-full p-2 transition-colors",
-              micActive ? "text-primary bg-primary/15" : "text-muted-foreground hover:text-foreground"
+            ) : state === "running" ? (
+              <>
+                <Button size="icon" variant="secondary" onClick={pause} className="h-12 w-12 rounded-full" aria-label={t("session.pause")}>
+                  <Pause className="h-5 w-5" />
+                </Button>
+                <Button size="icon" variant="destructive" onClick={stop} className="h-12 w-12 rounded-full" aria-label={t("session.stop")}>
+                  <Square className="h-5 w-5" />
+                </Button>
+              </>
+            ) : (
+              <>
+                <Button size="icon" variant="secondary" onClick={resume} className="h-12 w-12 rounded-full" aria-label={t("session.resume")}>
+                  <Play className="h-5 w-5" />
+                </Button>
+                <Button size="icon" variant="destructive" onClick={stop} className="h-12 w-12 rounded-full" aria-label={t("session.stop")}>
+                  <Square className="h-5 w-5" />
+                </Button>
+              </>
             )}
-            aria-label={micActive ? t("breath.micOn") : t("breath.micOff")}
-          >
-            {micActive ? <Mic className="h-5 w-5" /> : <MicOff className="h-5 w-5" />}
-          </button>
 
-          {/* Heart rate toggle */}
-          <button
-            onClick={() => setHrOpen(true)}
-            className="rounded-full p-2 text-muted-foreground hover:text-foreground"
-            aria-label={t("heart.monitor")}
-          >
-            <Heart className="h-5 w-5" />
-          </button>
-        </div>
+            <button
+              onClick={() => { setVoiceOn(!voiceOn); if (voiceOn) stopSpeaking(); }}
+              className="rounded-full p-2 text-muted-foreground hover:text-foreground"
+              aria-label={voiceOn ? t("settings.voiceEnable") : t("settings.voiceEnable")}
+            >
+              {voiceOn ? <Volume2 className="h-5 w-5" /> : <VolumeX className="h-5 w-5" />}
+            </button>
+
+            {/* Mic toggle */}
+            <button
+              onClick={toggleMic}
+              className={cn(
+                "rounded-full p-2 transition-colors",
+                micActive ? "text-primary bg-primary/15" : "text-muted-foreground hover:text-foreground"
+              )}
+              aria-label={micActive ? t("breath.micOn") : t("breath.micOff")}
+            >
+              {micActive ? <Mic className="h-5 w-5" /> : <MicOff className="h-5 w-5" />}
+            </button>
+
+            {/* Heart rate toggle */}
+            <button
+              onClick={() => setHrOpen(true)}
+              className="rounded-full p-2 text-muted-foreground hover:text-foreground"
+              aria-label={t("heart.monitor")}
+            >
+              <Heart className="h-5 w-5" />
+            </button>
+
+            {/* Zen mode toggle */}
+            {state !== "idle" && (
+              <button
+                onClick={toggleZenMode}
+                className="rounded-full p-2 text-muted-foreground hover:text-foreground"
+                aria-label={t("session.zenMode")}
+              >
+                <Maximize2 className="h-5 w-5" />
+              </button>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );
