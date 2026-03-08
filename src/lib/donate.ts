@@ -63,7 +63,13 @@ export interface DonateOptions {
   onClose?: () => void;
 }
 
-export function openDonation(opts: DonateOptions): boolean {
+export async function openDonationAsync(opts: DonateOptions): Promise<boolean> {
+  try {
+    await loadCheckoutScript();
+  } catch {
+    console.warn("Failed to load 2Checkout script");
+    return false;
+  }
   const cart = window.TwoCoInlineCart;
   if (!cart) {
     console.warn("2Checkout InLine Checkout script not loaded");
