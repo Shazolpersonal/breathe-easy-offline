@@ -16,6 +16,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { CreateChallengeDialog } from "@/components/FriendChallenge";
 import { toast } from "sonner";
 import { shareQuote } from "@/lib/shareApp";
+import DonateDialog from "@/components/DonateDialog";
 
 export default function Home() {
   const navigate = useNavigate();
