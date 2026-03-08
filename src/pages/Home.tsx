@@ -84,6 +84,14 @@ export default function Home() {
               <img src="/logo.png" alt="Muhurto Breath logo" className="h-10 w-10" />
               <h1 className="text-2xl font-bold text-foreground">{t("home.appName")}</h1>
             </div>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => setShowDonateDialog(true)}
+                className="flex h-8 w-8 items-center justify-center rounded-full border border-border bg-card text-muted-foreground transition-colors hover:text-primary hover:bg-primary/10"
+                title={t("donate.supportUs")}
+              >
+                <Heart className="h-4 w-4" />
+              </button>
             <div className="flex items-center rounded-full border border-border bg-card p-0.5 text-xs font-medium">
               <button
                 onClick={() => setLanguage("en")}
