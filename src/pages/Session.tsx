@@ -744,6 +744,7 @@ export default function Session() {
             </Button>
             <Button variant="secondary" onClick={() => {
               saveJournal();
+              sessionIdRef.current = crypto.randomUUID();
               setState("idle"); setMoodBefore(null); setMoodAfter(null); setMoodSaved(false); setLevelUpInfo(null); setEarnedXP(null); setCalmResult(null); setJournalNote("");
             }}>{t("session.again")}</Button>
             <Button onClick={() => {
