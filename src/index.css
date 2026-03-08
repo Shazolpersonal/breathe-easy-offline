@@ -271,3 +271,9 @@
     padding-bottom: calc(env(safe-area-inset-bottom) + 1rem);
   }
 }
+
+/* Zen mode: hide bottom nav */
+body.zen-mode .zen-mode-hide {
+  transform: translateY(100%);
+  pointer-events: none;
+}

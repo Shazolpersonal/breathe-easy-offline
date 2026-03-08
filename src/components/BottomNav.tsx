@@ -50,7 +50,7 @@ export default function BottomNav() {
         </div>
       )}
 
-      <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-border bg-card/95 backdrop-blur-md safe-bottom" role="navigation" aria-label="Main navigation">
+      <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-border bg-card/95 backdrop-blur-md safe-bottom transition-transform duration-300 zen-mode-hide" role="navigation" aria-label="Main navigation">
         <div className="mx-auto flex max-w-md items-center justify-around py-2">
           {MAIN_ITEMS.map(({ path, icon: Icon, labelKey }) => {
             const active = location.pathname === path;
