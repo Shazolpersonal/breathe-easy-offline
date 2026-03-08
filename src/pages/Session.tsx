@@ -872,8 +872,17 @@ export default function Session() {
                 else navigate("/");
               }}>{t("session.done.button")}</Button>
             </div>
+
+            <button
+              onClick={() => setShowDonateDialog(true)}
+              className="text-xs text-muted-foreground hover:text-primary transition-colors"
+            >
+              {t("donate.sessionSupport")}
+            </button>
           </div>
         </div>
+
+        <DonateDialog open={showDonateDialog} onOpenChange={setShowDonateDialog} />
       </div>
     );
   }

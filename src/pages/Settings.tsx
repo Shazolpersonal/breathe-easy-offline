@@ -19,6 +19,7 @@ import { VisualizationType } from "@/components/BreathingVisualizer";
 import { getReminders, addReminder, updateReminder, deleteReminder, requestNotificationPermission, getNotificationPermission, Reminder } from "@/lib/reminders";
 import { getAvailableVoices, hasBengaliVoice, previewVoice, type VoiceInfo } from "@/lib/voice";
 import { shareApp } from "@/lib/shareApp";
+import DonateDialog from "@/components/DonateDialog";
 
 export default function Settings() {
   const { theme, setTheme, themeMode, setThemeMode } = useTheme();
