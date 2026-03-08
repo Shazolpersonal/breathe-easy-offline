@@ -134,7 +134,7 @@ export default function DonateDialog({ open, onOpenChange }: DonateDialogProps) 
           {/* Donate button */}
           <Button
             className="w-full gap-2"
-            disabled={amount <= 0}
+            disabled={amount <= 0 || donating}
             onClick={handleDonate}
           >
             <Heart className="h-4 w-4" />
