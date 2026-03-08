@@ -1,41 +1,83 @@
-import { Home, Wind, BookOpen, BarChart3, Settings } from "lucide-react";
+import { Home, Wind, BookOpen, BarChart3, MoreHorizontal } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
+import { useState } from "react";
 
-const NAV_ITEMS = [
+const MAIN_ITEMS = [
   { path: "/", icon: Home, label: "Home" },
   { path: "/session", icon: Wind, label: "Breathe" },
   { path: "/techniques", icon: BookOpen, label: "Library" },
   { path: "/stats", icon: BarChart3, label: "Stats" },
-  { path: "/settings", icon: Settings, label: "Settings" },
+];
+
+const MORE_ITEMS = [
+  { path: "/playlists", label: "Playlists" },
+  { path: "/programs", label: "Programs" },
+  { path: "/settings", label: "Settings" },
 ];
 
 export default function BottomNav() {
   const location = useLocation();
   const navigate = useNavigate();
+  const [moreOpen, setMoreOpen] = useState(false);
+
+  const isMoreActive = MORE_ITEMS.some(i => location.pathname === i.path);
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-border bg-card/95 backdrop-blur-md safe-bottom">
-      <div className="mx-auto flex max-w-md items-center justify-around py-2">
-        {NAV_ITEMS.map(({ path, icon: Icon, label }) => {
-          const active = location.pathname === path;
-          return (
-            <button
-              key={path}
-              onClick={() => navigate(path)}
-              className={cn(
-                "flex flex-col items-center gap-0.5 rounded-xl px-3 py-1.5 text-xs transition-colors",
-                active
-                  ? "text-primary"
-                  : "text-muted-foreground hover:text-foreground"
-              )}
-            >
-              <Icon className={cn("h-5 w-5", active && "drop-shadow-[0_0_6px_hsl(var(--primary))]")} />
-              <span className="font-medium">{label}</span>
-            </button>
-          );
-        })}
-      </div>
-    </nav>
+    <>
+      {/* More menu overlay */}
+      {moreOpen && (
+        <div className="fixed inset-0 z-40" onClick={() => setMoreOpen(false)}>
+          <div
+            className="absolute bottom-16 right-4 rounded-xl border border-border bg-card p-1 shadow-lg"
+            onClick={e => e.stopPropagation()}
+          >
+            {MORE_ITEMS.map(({ path, label }) => (
+              <button
+                key={path}
+                onClick={() => { navigate(path); setMoreOpen(false); }}
+                className={cn(
+                  "block w-full rounded-lg px-4 py-2.5 text-left text-sm transition-colors",
+                  location.pathname === path ? "bg-primary/15 text-primary font-medium" : "text-foreground hover:bg-secondary"
+                )}
+              >
+                {label}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-border bg-card/95 backdrop-blur-md safe-bottom">
+        <div className="mx-auto flex max-w-md items-center justify-around py-2">
+          {MAIN_ITEMS.map(({ path, icon: Icon, label }) => {
+            const active = location.pathname === path;
+            return (
+              <button
+                key={path}
+                onClick={() => navigate(path)}
+                className={cn(
+                  "flex flex-col items-center gap-0.5 rounded-xl px-3 py-1.5 text-xs transition-colors",
+                  active ? "text-primary" : "text-muted-foreground hover:text-foreground"
+                )}
+              >
+                <Icon className={cn("h-5 w-5", active && "drop-shadow-[0_0_6px_hsl(var(--primary))]")} />
+                <span className="font-medium">{label}</span>
+              </button>
+            );
+          })}
+          <button
+            onClick={() => setMoreOpen(!moreOpen)}
+            className={cn(
+              "flex flex-col items-center gap-0.5 rounded-xl px-3 py-1.5 text-xs transition-colors",
+              isMoreActive ? "text-primary" : "text-muted-foreground hover:text-foreground"
+            )}
+          >
+            <MoreHorizontal className={cn("h-5 w-5", isMoreActive && "drop-shadow-[0_0_6px_hsl(var(--primary))]")} />
+            <span className="font-medium">More</span>
+          </button>
+        </div>
+      </nav>
+    </>
   );
 }

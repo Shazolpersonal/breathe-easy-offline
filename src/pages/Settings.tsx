@@ -4,17 +4,23 @@ import { Switch } from "@/components/ui/switch";
 import { Slider } from "@/components/ui/slider";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { exportData, importData } from "@/lib/storage";
-import { Download, Upload, Circle, Waves, BarChart3, Flower2 } from "lucide-react";
+import { Download, Upload, Circle, Waves, BarChart3, Flower2, Plus, Trash2, Bell, BellOff } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toast } from "@/hooks/use-toast";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { VisualizationType } from "@/components/BreathingVisualizer";
+import { getReminders, addReminder, updateReminder, deleteReminder, requestNotificationPermission, getNotificationPermission, Reminder } from "@/lib/reminders";
+
+const DAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
 export default function Settings() {
   const { theme, setTheme } = useTheme();
   const { settings, update } = useSettings();
   const fileRef = useRef<HTMLInputElement>(null);
+  const [reminders, setReminders] = useState(getReminders);
+  const [notifPermission, setNotifPermission] = useState(getNotificationPermission);
 
   const handleExport = () => {
     const blob = new Blob([exportData()], { type: "application/json" });
@@ -41,6 +47,41 @@ export default function Settings() {
       }
     };
     reader.readAsText(file);
+  };
+
+  const handleRequestPermission = async () => {
+    const granted = await requestNotificationPermission();
+    setNotifPermission(getNotificationPermission());
+    if (!granted) toast({ title: "Notification permission denied", variant: "destructive" });
+  };
+
+  const handleAddReminder = () => {
+    const r: Reminder = {
+      id: `reminder-${Date.now()}`,
+      time: "09:00",
+      days: [1, 2, 3, 4, 5], // weekdays
+      enabled: true,
+      message: "Time for your breathing break! 🌬️",
+    };
+    addReminder(r);
+    setReminders(getReminders());
+  };
+
+  const handleUpdateReminder = (id: string, partial: Partial<Reminder>) => {
+    updateReminder(id, partial);
+    setReminders(getReminders());
+  };
+
+  const handleDeleteReminder = (id: string) => {
+    deleteReminder(id);
+    setReminders(getReminders());
+  };
+
+  const toggleReminderDay = (reminderId: string, day: number) => {
+    const r = reminders.find(rem => rem.id === reminderId);
+    if (!r) return;
+    const newDays = r.days.includes(day) ? r.days.filter(d => d !== day) : [...r.days, day];
+    handleUpdateReminder(reminderId, { days: newDays });
   };
 
   return (
@@ -77,13 +118,7 @@ export default function Settings() {
           </div>
           <div>
             <Label className="mb-2 block">Speed: {settings.voiceSpeed.toFixed(1)}x</Label>
-            <Slider
-              min={0.5}
-              max={1.5}
-              step={0.1}
-              value={[settings.voiceSpeed]}
-              onValueChange={([v]) => update({ voiceSpeed: v })}
-            />
+            <Slider min={0.5} max={1.5} step={0.1} value={[settings.voiceSpeed]} onValueChange={([v]) => update({ voiceSpeed: v })} />
           </div>
         </section>
 
@@ -100,13 +135,7 @@ export default function Settings() {
           </div>
           <div>
             <Label className="mb-2 block">Default Duration: {settings.defaultDurationMinutes} min</Label>
-            <Slider
-              min={1}
-              max={30}
-              step={1}
-              value={[settings.defaultDurationMinutes]}
-              onValueChange={([v]) => update({ defaultDurationMinutes: v })}
-            />
+            <Slider min={1} max={30} step={1} value={[settings.defaultDurationMinutes]} onValueChange={([v]) => update({ defaultDurationMinutes: v })} />
           </div>
         </section>
 
@@ -133,6 +162,88 @@ export default function Settings() {
               </button>
             ))}
           </div>
+        </section>
+
+        {/* Reminders */}
+        <section className="rounded-2xl border border-border bg-card p-4 space-y-4">
+          <div className="flex items-center justify-between">
+            <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">Breathing Reminders</h2>
+            <Button size="sm" variant="secondary" className="gap-1 h-7 text-xs" onClick={handleAddReminder}>
+              <Plus className="h-3.5 w-3.5" /> Add
+            </Button>
+          </div>
+
+          {notifPermission !== "granted" && (
+            <div className="rounded-xl bg-secondary/50 p-3">
+              <div className="flex items-center gap-2 mb-2">
+                <BellOff className="h-4 w-4 text-muted-foreground" />
+                <span className="text-xs text-muted-foreground">
+                  {notifPermission === "unsupported"
+                    ? "Notifications not supported in this browser."
+                    : notifPermission === "denied"
+                      ? "Notifications blocked. Enable them in browser settings."
+                      : "Enable notifications for reminders."}
+                </span>
+              </div>
+              {notifPermission === "default" && (
+                <Button size="sm" variant="outline" className="gap-1 text-xs" onClick={handleRequestPermission}>
+                  <Bell className="h-3.5 w-3.5" /> Enable Notifications
+                </Button>
+              )}
+            </div>
+          )}
+
+          {reminders.length === 0 ? (
+            <p className="text-xs text-muted-foreground">No reminders yet. Add one to stay consistent!</p>
+          ) : (
+            <div className="space-y-3">
+              {reminders.map((r) => (
+                <div key={r.id} className="rounded-xl border border-border bg-secondary/20 p-3 space-y-2">
+                  <div className="flex items-center justify-between">
+                    <Input
+                      type="time"
+                      value={r.time}
+                      onChange={e => handleUpdateReminder(r.id, { time: e.target.value })}
+                      className="h-8 w-28 text-sm bg-transparent border-none px-0 font-semibold text-foreground"
+                    />
+                    <div className="flex items-center gap-1">
+                      <Switch
+                        checked={r.enabled}
+                        onCheckedChange={v => handleUpdateReminder(r.id, { enabled: v })}
+                      />
+                      <Button size="icon" variant="ghost" className="h-7 w-7" onClick={() => handleDeleteReminder(r.id)}>
+                        <Trash2 className="h-3.5 w-3.5 text-muted-foreground" />
+                      </Button>
+                    </div>
+                  </div>
+                  <div className="flex gap-1">
+                    {DAYS.map((d, i) => (
+                      <button
+                        key={d}
+                        onClick={() => toggleReminderDay(r.id, i)}
+                        className={cn(
+                          "flex-1 rounded-md py-1 text-[10px] font-medium transition-colors",
+                          r.days.includes(i) ? "bg-primary/20 text-primary" : "bg-secondary text-muted-foreground"
+                        )}
+                      >
+                        {d}
+                      </button>
+                    ))}
+                  </div>
+                  <Input
+                    value={r.message}
+                    onChange={e => handleUpdateReminder(r.id, { message: e.target.value })}
+                    placeholder="Reminder message"
+                    className="h-7 text-xs bg-transparent"
+                  />
+                </div>
+              ))}
+            </div>
+          )}
+
+          <p className="text-[10px] text-muted-foreground">
+            ⚠️ Reminders only fire while the app/tab is open. For best results, keep the PWA installed.
+          </p>
         </section>
 
         {/* Data */}
