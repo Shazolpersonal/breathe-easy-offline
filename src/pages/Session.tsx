@@ -141,6 +141,15 @@ export default function Session() {
   const hrBpmSamplesRef = useRef<number[]>([]);
   const hrCoherenceSamplesRef = useRef<number[]>([]);
 
+  // ─── Soundscape State ───
+  const [soundscapeType, setSoundscapeType] = useState<SoundscapeType>(
+    (settings.soundscapeType as SoundscapeType) || "off"
+  );
+  const soundscapeEngineRef = useRef(getSoundscapeEngine());
+
+  // ─── Zen Mode State ───
+  const [zenMode, setZenMode] = useState(false);
+
   useEffect(() => {
     const moodParam = params.get("mood");
     if (moodParam) setMoodBefore(Number(moodParam));
