@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { Wind, Flame, Zap, TrendingUp, CheckCircle2, Circle, Swords, Quote, Download, X, Trophy } from "lucide-react";
+import { Wind, Flame, Zap, TrendingUp, CheckCircle2, Circle, Swords, Quote, Download, X, Trophy, Share2 } from "lucide-react";
 import SmartSuggestion from "@/components/SmartSuggestion";
 import TechniqueCard from "@/components/TechniqueCard";
 import { PRESET_TECHNIQUES } from "@/lib/techniques";
@@ -15,6 +15,7 @@ import { useState, useMemo, useEffect, useRef } from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { CreateChallengeDialog } from "@/components/FriendChallenge";
 import { toast } from "sonner";
+import { shareQuote } from "@/lib/shareApp";
 
 export default function Home() {
   const navigate = useNavigate();
@@ -149,10 +150,17 @@ export default function Home() {
         <div className="mb-6 rounded-2xl border border-border bg-card p-4">
           <div className="flex items-start gap-3">
             <Quote className="mt-0.5 h-4 w-4 shrink-0 text-primary/60" />
-            <div>
+            <div className="flex-1 min-w-0">
               <p className="text-sm italic text-foreground/80 leading-relaxed">"{dailyQuote.text}"</p>
               <p className="mt-1.5 text-xs text-muted-foreground">— {dailyQuote.author}</p>
             </div>
+            <button
+              onClick={() => shareQuote(dailyQuote.text, dailyQuote.author, language)}
+              className="shrink-0 rounded-full p-1.5 text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors"
+              title={t("share.quote")}
+            >
+              <Share2 className="h-4 w-4" />
+            </button>
           </div>
         </div>
 

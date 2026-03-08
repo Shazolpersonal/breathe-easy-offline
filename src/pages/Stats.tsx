@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, LineChart, Line } from "recharts";
 import { getSessions, getCurrentStreak, getLongestStreak } from "@/lib/storage";
-import { Flame, Clock, Target, Trophy, Brain, BookOpen, ChevronLeft, ChevronRight, Star, Calendar, Zap, TrendingUp } from "lucide-react";
+import { Flame, Clock, Target, Trophy, Brain, BookOpen, ChevronLeft, ChevronRight, Star, Calendar, Zap, TrendingUp, Share2 } from "lucide-react";
 import { checkAllBadges } from "@/lib/achievements";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -11,6 +11,7 @@ import MoodHeatmapCalendar from "@/components/stats/MoodHeatmapCalendar";
 import InsightsTab from "@/components/stats/InsightsTab";
 import { getXPState } from "@/lib/xp";
 import { getMoodRecords } from "@/lib/mood";
+import { shareStreak, shareBadge } from "@/lib/shareApp";
 
 type Tab = "stats" | "insights" | "badges" | "journal" | "reports";
 type TimeRange = "7d" | "30d" | "90d";
@@ -324,20 +325,29 @@ export default function Stats() {
 
             <div className="mb-6 grid grid-cols-2 gap-3">
               {[
-                { icon: Flame, value: streak, label: t("stats.currentStreak"), suffix: streak === 1 ? t("stats.day") : t("stats.days"), span: false },
-                { icon: Trophy, value: longestStreak, label: t("stats.longestStreak"), suffix: longestStreak === 1 ? t("stats.day") : t("stats.days"), span: false },
+                { icon: Flame, value: streak, label: t("stats.currentStreak"), suffix: streak === 1 ? t("stats.day") : t("stats.days"), span: false, shareable: streak >= 3 },
+                { icon: Trophy, value: longestStreak, label: t("stats.longestStreak"), suffix: longestStreak === 1 ? t("stats.day") : t("stats.days"), span: false, shareable: false },
                 { icon: Clock, value: totalMinutes, label: t("stats.totalTime"), suffix: t("stats.min"), span: false },
-                { icon: Target, value: sessions.length, label: t("stats.sessions"), suffix: "", span: false },
+                { icon: Target, value: sessions.length, label: t("stats.sessions"), suffix: "", span: false, shareable: false },
                 ...(avgCalmScore !== null
-                  ? [{ icon: Brain, value: avgCalmScore, label: t("stats.avgCalm"), suffix: "%", span: true }]
+                  ? [{ icon: Brain, value: avgCalmScore, label: t("stats.avgCalm"), suffix: "%", span: true, shareable: false }]
                   : []),
-              ].map(({ icon: Icon, value, label, suffix, span }) => (
-                <div key={label} className={`flex flex-col items-center rounded-2xl border border-border bg-card p-4 ${span ? "col-span-2" : ""}`}>
+              ].map(({ icon: Icon, value, label, suffix, span, shareable }) => (
+                <div key={label} className={`relative flex flex-col items-center rounded-2xl border border-border bg-card p-4 ${span ? "col-span-2" : ""}`}>
                   <Icon className="mb-1 h-5 w-5 text-primary" />
                   <span className="text-xl font-bold text-foreground">
                     {value}{suffix && <span className="ml-1 text-xs font-normal text-muted-foreground">{suffix}</span>}
                   </span>
                   <span className="text-xs text-muted-foreground">{label}</span>
+                  {shareable && (
+                    <button
+                      onClick={() => shareStreak(value as number, language)}
+                      className="absolute top-2 right-2 rounded-full p-1 text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors"
+                      title={t("share.streak")}
+                    >
+                      <Share2 className="h-3.5 w-3.5" />
+                    </button>
+                  )}
                 </div>
               ))}
             </div>
@@ -482,7 +492,14 @@ export default function Stats() {
                     const badgeName = t(`badge.${b.id}.name`);
                     const badgeDesc = t(`badge.${b.id}.description`);
                     return (
-                      <div key={b.id} className="flex flex-col items-center gap-1.5 rounded-2xl border border-primary/20 bg-primary/5 p-3">
+                      <div key={b.id} className="relative flex flex-col items-center gap-1.5 rounded-2xl border border-primary/20 bg-primary/5 p-3">
+                        <button
+                          onClick={() => shareBadge(badgeName !== `badge.${b.id}.name` ? badgeName : b.name, b.emoji, language)}
+                          className="absolute top-1.5 right-1.5 rounded-full p-1 text-muted-foreground/60 hover:text-primary hover:bg-primary/10 transition-colors"
+                          title={t("share.badge")}
+                        >
+                          <Share2 className="h-3 w-3" />
+                        </button>
                         <span className="text-3xl">{b.emoji}</span>
                         <span className="text-xs font-semibold text-foreground text-center leading-tight">{badgeName !== `badge.${b.id}.name` ? badgeName : b.name}</span>
                         <span className="text-[10px] text-muted-foreground text-center leading-tight">{badgeDesc !== `badge.${b.id}.description` ? badgeDesc : b.description}</span>

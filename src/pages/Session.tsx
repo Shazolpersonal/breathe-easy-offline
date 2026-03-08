@@ -24,6 +24,7 @@ import { getCompletedChallengeCount } from "@/lib/challenges";
 import { getPlaylists } from "@/lib/playlists";
 import { completeDay } from "@/lib/programs";
 import { shareOrDownloadCard } from "@/lib/shareCard";
+import { shareApp } from "@/lib/shareApp";
 import { BreathDetector, RhythmUpdate } from "@/lib/breathDetector";
 import { getSoundscapeEngine, SoundscapeType } from "@/lib/soundscapes";
 import SoundscapePicker from "@/components/SoundscapePicker";
@@ -851,6 +852,9 @@ export default function Session() {
           <div className="flex gap-3 justify-center flex-wrap">
             <Button variant="outline" size="sm" className="gap-1" onClick={handleShare}>
               <Share2 className="h-4 w-4" /> {t("session.share")}
+            </Button>
+            <Button variant="outline" size="sm" className="gap-1" onClick={() => shareApp(language)}>
+              <Share2 className="h-4 w-4" /> {t("share.inviteSession")}
             </Button>
             <Button variant="secondary" onClick={() => {
               saveJournal();

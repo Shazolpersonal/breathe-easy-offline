@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { exportData, importData, getLastBackupDate, getDataSummary } from "@/lib/storage";
 import { exportSessionsCSV } from "@/lib/csvExport";
-import { Download, Upload, Circle, Waves, BarChart3, Flower2, Plus, Trash2, Bell, BellOff, Accessibility, Mic, Heart, Music, FileSpreadsheet, AlertTriangle, Database, Volume2, Info } from "lucide-react";
+import { Download, Upload, Circle, Waves, BarChart3, Flower2, Plus, Trash2, Bell, BellOff, Accessibility, Mic, Heart, Music, FileSpreadsheet, AlertTriangle, Database, Volume2, Info, Share2 } from "lucide-react";
 import { SoundscapeType, getSoundscapeEngine } from "@/lib/soundscapes";
 import SoundscapePicker from "@/components/SoundscapePicker";
 import { cn } from "@/lib/utils";
@@ -18,6 +18,7 @@ import { useRef, useState, useEffect } from "react";
 import { VisualizationType } from "@/components/BreathingVisualizer";
 import { getReminders, addReminder, updateReminder, deleteReminder, requestNotificationPermission, getNotificationPermission, Reminder } from "@/lib/reminders";
 import { getAvailableVoices, hasBengaliVoice, previewVoice, type VoiceInfo } from "@/lib/voice";
+import { shareApp } from "@/lib/shareApp";
 
 export default function Settings() {
   const { theme, setTheme, themeMode, setThemeMode } = useTheme();
@@ -580,6 +581,22 @@ export default function Settings() {
             {t("settings.installDesc")}
             <strong className="text-foreground"> {t("settings.installAction")}</strong>{t("settings.installOffline")}
           </p>
+        </section>
+
+        {/* Invite Friends */}
+        <section className="rounded-2xl border border-primary/20 bg-primary/5 p-4">
+          <div className="flex items-center gap-3">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary/15">
+              <Share2 className="h-5 w-5 text-primary" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <h2 className="text-sm font-semibold text-foreground">{t("share.inviteFriends")}</h2>
+              <p className="text-xs text-muted-foreground">{t("share.inviteSubtitle")}</p>
+            </div>
+          </div>
+          <Button className="mt-3 w-full gap-2" onClick={() => shareApp(language)}>
+            <Share2 className="h-4 w-4" /> {t("share.inviteButton")}
+          </Button>
         </section>
       </div>
     </div>

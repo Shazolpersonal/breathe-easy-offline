@@ -1,4 +1,4 @@
-import { Heart, HeartOff, Play, Lock } from "lucide-react";
+import { Heart, HeartOff, Play, Lock, Share2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { BreathingTechnique, getCycleDuration } from "@/lib/techniques";
 import { UserProgression, getLevelName, getLevelProgress, isUnlocked, getUnlockRemaining } from "@/lib/progression";
@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { shareTechnique } from "@/lib/shareApp";
 
 interface TechniqueCardProps {
   technique: BreathingTechnique;
@@ -23,7 +24,7 @@ const difficultyColor = {
 
 export default function TechniqueCard({ technique, isFavorite, onToggleFavorite, compact, progression: propProgression }: TechniqueCardProps) {
   const navigate = useNavigate();
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const cycleSec = getCycleDuration(technique);
   const unlocked = isUnlocked(technique);
   // Bug 5: Use passed progression prop if available, fallback to direct call only in compact/standalone usage
@@ -108,9 +109,20 @@ export default function TechniqueCard({ technique, isFavorite, onToggleFavorite,
             </div>
           )}
         </div>
-        <button onClick={onToggleFavorite} className="ml-2 shrink-0 p-1 text-muted-foreground hover:text-primary">
-          {isFavorite ? <Heart className="h-5 w-5 fill-primary text-primary" /> : <HeartOff className="h-5 w-5" />}
-        </button>
+        <div className="ml-2 flex flex-col gap-1 shrink-0">
+          <button onClick={onToggleFavorite} className="p-1 text-muted-foreground hover:text-primary">
+            {isFavorite ? <Heart className="h-5 w-5 fill-primary text-primary" /> : <HeartOff className="h-5 w-5" />}
+          </button>
+          {unlocked && (
+            <button
+              onClick={() => shareTechnique(techniqueName, techniqueDesc, language)}
+              className="p-1 text-muted-foreground hover:text-primary transition-colors"
+              title={t("share.technique")}
+            >
+              <Share2 className="h-4 w-4" />
+            </button>
+          )}
+        </div>
       </div>
       {unlocked ? (
         <button

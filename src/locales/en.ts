@@ -658,4 +658,15 @@ export const en: Record<string, string> = {
   "onboarding.installButton": "Install Now",
   "onboarding.maybeLater": "Maybe Later",
   "onboarding.step": "Step {{current}} of {{total}}",
+
+  // Sharing
+  "share.quote": "Share Quote",
+  "share.streak": "Share Streak",
+  "share.badge": "Share Badge",
+  "share.technique": "Share",
+  "share.inviteFriends": "Invite Friends",
+  "share.inviteSubtitle": "Share Muhurto Breath with people you care about",
+  "share.inviteButton": "Share App Link",
+  "share.inviteSession": "Invite a Friend",
+  "share.copied": "Link copied!",
 };
