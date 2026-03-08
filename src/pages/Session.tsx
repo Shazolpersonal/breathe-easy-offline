@@ -443,6 +443,37 @@ export default function Session() {
     }, language);
   };
 
+  // ─── Zen Mode Controls ───
+  const toggleZenMode = useCallback(() => {
+    if (zenMode) {
+      if (document.fullscreenElement) document.exitFullscreen().catch(() => {});
+      setZenMode(false);
+    } else {
+      document.documentElement.requestFullscreen().catch(() => {});
+      setZenMode(true);
+    }
+  }, [zenMode]);
+
+  // Listen for fullscreen exit (e.g. pressing Escape)
+  useEffect(() => {
+    const handler = () => {
+      if (!document.fullscreenElement) setZenMode(false);
+    };
+    document.addEventListener("fullscreenchange", handler);
+    return () => document.removeEventListener("fullscreenchange", handler);
+  }, []);
+
+  // Cleanup soundscape on unmount
+  useEffect(() => {
+    return () => { soundscapeEngineRef.current.stop(); };
+  }, []);
+
+  // Add/remove zen-mode class on body for BottomNav hiding
+  useEffect(() => {
+    document.body.classList.toggle("zen-mode", zenMode);
+    return () => { document.body.classList.remove("zen-mode"); };
+  }, [zenMode]);
+
   useEffect(() => {
     if (state === "running") {
       intervalRef.current = setInterval(tick, 1000);
