@@ -1,3 +1,9 @@
+export interface PyramidConfig {
+  startMultiplier: number;  // e.g. 1.0
+  peakMultiplier: number;   // e.g. 1.5
+  steps: number;            // e.g. 5 (rounds up then down)
+}
+
 export interface BreathingTechnique {
   id: string;
   name: string;
@@ -7,6 +13,7 @@ export interface BreathingTechnique {
   phases: BreathingPhase[];
   rounds?: number;
   isCustom?: boolean;
+  pyramid?: PyramidConfig;
 }
 
 export interface BreathingPhase {
