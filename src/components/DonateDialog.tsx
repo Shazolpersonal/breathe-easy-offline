@@ -1,10 +1,10 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Heart } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { openDonationAsync, preloadDonateScript } from "@/lib/donate";
+import { openDonation } from "@/lib/donate";
 import { toast } from "sonner";
 
 interface DonateDialogProps {
@@ -15,10 +15,6 @@ interface DonateDialogProps {
 export default function DonateDialog({ open, onOpenChange }: DonateDialogProps) {
   const { t, language } = useLanguage();
 
-  // Preload the 2Checkout script when dialog opens
-  useEffect(() => {
-    if (open) preloadDonateScript();
-  }, [open]);
   const isBn = language === "bn";
   const currency = isBn ? "BDT" as const : "USD" as const;
   const symbol = isBn ? "৳" : "$";
@@ -29,35 +25,15 @@ export default function DonateDialog({ open, onOpenChange }: DonateDialogProps) 
   const [thanks, setThanks] = useState(false);
 
   const amount = selected ?? (parseFloat(custom) || 0);
-  const [donating, setDonating] = useState(false);
 
-  const handleDonate = async () => {
+  const handleDonate = () => {
     if (amount <= 0) {
       toast.error(t("donate.invalidAmount"));
       return;
     }
 
-    setDonating(true);
-    try {
-      const success = await openDonationAsync({
-        amount,
-        currency,
-        language,
-        onSuccess: () => {
-          setThanks(true);
-          toast.success(t("donate.thanks"));
-        },
-        onClose: () => {},
-      });
-
-      if (!success) {
-        toast.error(t("donate.unavailable"));
-      }
-    } catch {
-      toast.error(t("donate.unavailable"));
-    } finally {
-      setDonating(false);
-    }
+    openDonation({ amount, currency, language });
+    setThanks(true);
   };
 
   const handleClose = (val: boolean) => {
@@ -100,7 +76,6 @@ export default function DonateDialog({ open, onOpenChange }: DonateDialogProps) 
         </DialogHeader>
 
         <div className="space-y-4">
-          {/* Preset amounts */}
           <div className="grid grid-cols-4 gap-2">
             {presets.map((p) => (
               <Button
@@ -115,7 +90,6 @@ export default function DonateDialog({ open, onOpenChange }: DonateDialogProps) 
             ))}
           </div>
 
-          {/* Custom amount */}
           <div className="flex items-center gap-2">
             <span className="text-sm font-medium text-muted-foreground">{symbol}</span>
             <Input
@@ -131,10 +105,9 @@ export default function DonateDialog({ open, onOpenChange }: DonateDialogProps) 
             />
           </div>
 
-          {/* Donate button */}
           <Button
             className="w-full gap-2"
-            disabled={amount <= 0 || donating}
+            disabled={amount <= 0}
             onClick={handleDonate}
           >
             <Heart className="h-4 w-4" />
