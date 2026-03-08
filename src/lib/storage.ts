@@ -42,6 +42,7 @@ export interface AppSettings {
   reducedMotion: boolean;
   breathDetectionEnabled: boolean;
   heartRateEnabled: boolean;
+  dailyGoalMinutes: number;
 }
 
 const KEYS = {
