@@ -26,6 +26,7 @@ import Playlists from "@/pages/Playlists";
 import Programs from "@/pages/Programs";
 import NotFound from "@/pages/NotFound";
 import Onboarding from "@/pages/Onboarding";
+import Guide from "@/pages/Guide";
 
 const queryClient = new QueryClient();
 
