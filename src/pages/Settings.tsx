@@ -30,6 +30,7 @@ export default function Settings() {
   const [notifPermission, setNotifPermission] = useState(getNotificationPermission);
   const [voices, setVoices] = useState(() => getAvailableVoices());
   const [bnAvailable, setBnAvailable] = useState(() => hasBengaliVoice());
+  const [showDonateDialog, setShowDonateDialog] = useState(false);
 
   // Re-fetch voices when they load asynchronously
   useEffect(() => {
