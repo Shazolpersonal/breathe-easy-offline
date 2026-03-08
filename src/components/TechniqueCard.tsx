@@ -1,7 +1,7 @@
 import { Heart, HeartOff, Play, Lock } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { BreathingTechnique, getCycleDuration } from "@/lib/techniques";
-import { getProgression, getLevelName, getLevelProgress, isUnlocked, getUnlockRemaining } from "@/lib/progression";
+import { UserProgression, getLevelName, getLevelProgress, isUnlocked, getUnlockRemaining } from "@/lib/progression";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
@@ -12,6 +12,7 @@ interface TechniqueCardProps {
   isFavorite: boolean;
   onToggleFavorite: () => void;
   compact?: boolean;
+  progression?: UserProgression;
 }
 
 const difficultyColor = {
@@ -20,12 +21,13 @@ const difficultyColor = {
   advanced: "bg-destructive/20 text-destructive",
 };
 
-export default function TechniqueCard({ technique, isFavorite, onToggleFavorite, compact }: TechniqueCardProps) {
+export default function TechniqueCard({ technique, isFavorite, onToggleFavorite, compact, progression: propProgression }: TechniqueCardProps) {
   const navigate = useNavigate();
   const { t } = useLanguage();
   const cycleSec = getCycleDuration(technique);
   const unlocked = isUnlocked(technique);
-  const progression = getProgression(technique.id);
+  // Bug 5: Use passed progression prop if available, fallback to direct call only in compact/standalone usage
+  const progression = propProgression || { techniqueId: technique.id, level: 1, sessionsCompleted: 0, totalCycles: 0 };
 
   const techniqueName = t(`technique.${technique.id}.name`) !== `technique.${technique.id}.name`
     ? t(`technique.${technique.id}.name`)
@@ -41,6 +43,17 @@ export default function TechniqueCard({ technique, isFavorite, onToggleFavorite,
     return translated !== key ? translated : b;
   });
 
+  // Bug 7: Localized level prefix
+  const levelLabel = t("common.levelShort", { level: String(progression.level) });
+
+  // Bug 2: Resolve phase labels at render time from type key
+  const resolvePhaseLabel = (phase: { type: string; label: string }) => {
+    // If label matches a phase type key, translate it; otherwise use as-is (for preset techniques)
+    const phaseKey = `phase.${phase.type}`;
+    const translated = t(phaseKey);
+    return translated !== phaseKey ? translated : phase.label;
+  };
+
   if (compact) {
     return (
       <button
@@ -55,7 +68,7 @@ export default function TechniqueCard({ technique, isFavorite, onToggleFavorite,
         <div className="min-w-0 flex-1">
           <p className="truncate text-sm font-medium text-foreground">{techniqueName}</p>
           <p className="text-xs text-muted-foreground">
-            {unlocked ? `${cycleSec}s · Lv.${progression.level}` : t("techniques.moreSessionsToUnlock", { count: getUnlockRemaining(technique) })}
+            {unlocked ? `${cycleSec}s · ${levelLabel}` : t("techniques.moreSessionsToUnlock", { count: getUnlockRemaining(technique) })}
           </p>
         </div>
       </button>
@@ -73,7 +86,7 @@ export default function TechniqueCard({ technique, isFavorite, onToggleFavorite,
             </Badge>
             {unlocked && progression.sessionsCompleted > 0 && (
               <Badge variant="outline" className="text-[10px] text-primary border-primary/30">
-                Lv.{progression.level}
+                {levelLabel}
               </Badge>
             )}
           </div>
@@ -86,7 +99,7 @@ export default function TechniqueCard({ technique, isFavorite, onToggleFavorite,
             ))}
           </div>
           <p className="mt-2 text-xs text-muted-foreground">
-            {technique.phases.map((p) => `${t(`phase.${p.type}`)} ${p.duration}s`).join(" → ")} ({cycleSec}s/{t("common.cycles")})
+            {technique.phases.map((p) => `${resolvePhaseLabel(p)} ${p.duration}s`).join(" → ")} ({cycleSec}s/{t("common.cycles")})
           </p>
           {unlocked && progression.sessionsCompleted > 0 && progression.level < 5 && (
             <div className="mt-2 flex items-center gap-2">
