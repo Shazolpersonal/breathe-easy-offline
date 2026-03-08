@@ -1,9 +1,11 @@
 import { useNavigate } from "react-router-dom";
-import { Wind, Flame, Zap, TrendingUp, CheckCircle2, Circle, Swords, Quote, Download, X, Trophy, Share2, Heart } from "lucide-react";
+import { Wind, Flame, Zap, TrendingUp, CheckCircle2, Circle, Swords, Quote, Download, X, Trophy, Share2, Heart, Play } from "lucide-react";
 import SmartSuggestion from "@/components/SmartSuggestion";
 import TechniqueCard from "@/components/TechniqueCard";
-import { PRESET_TECHNIQUES } from "@/lib/techniques";
-import { getCustomTechniques, getFavorites, toggleFavorite, getCurrentStreak, getTodayMinutes } from "@/lib/storage";
+import WeeklySummary from "@/components/WeeklySummary";
+import { PRESET_TECHNIQUES, getTechniqueById } from "@/lib/techniques";
+import { getCustomTechniques, getFavorites, toggleFavorite, getCurrentStreak, getTodayMinutes, getLastSessionConfig } from "@/lib/storage";
+import { useSettings } from "@/contexts/SettingsContext";
 import { getDailyChallenges, getChallengeStreak, saveTodayChallengeProgress, areAllChallengesComplete } from "@/lib/challenges";
 import { getXPState, getWeeklyXP, addXP } from "@/lib/xp";
 import { getDailyQuote } from "@/lib/quotes";
@@ -21,12 +23,15 @@ import DonateDialog from "@/components/DonateDialog";
 export default function Home() {
   const navigate = useNavigate();
   const { t, language, setLanguage } = useLanguage();
+  const { settings } = useSettings();
   const [favorites, setFavorites] = useState(getFavorites);
   const [showChallengeDialog, setShowChallengeDialog] = useState(false);
   const [showDonateDialog, setShowDonateDialog] = useState(false);
   const [installDismissed, setInstallDismissed] = useState(isDismissed);
   const streak = useMemo(() => getCurrentStreak(), []);
   const todayMin = useMemo(() => getTodayMinutes(), []);
+  const dailyGoal = settings.dailyGoalMinutes;
+  const goalProgress = Math.min(100, Math.round((todayMin / dailyGoal) * 100));
   const allTechniques = useMemo(() => [...PRESET_TECHNIQUES, ...getCustomTechniques()], []);
   const favTechniques = useMemo(() => allTechniques.filter((tech) => favorites.includes(tech.id)), [allTechniques, favorites]);
   const xpState = useMemo(() => getXPState(), []);
@@ -40,6 +45,7 @@ export default function Home() {
   const showManualInstall = !isPWA && canShowManualInstallHint() && !installDismissed;
   const installPlatform = useMemo(() => getInstallPlatform(), []);
   const allCompleteToastShown = useRef(false);
+  const lastSession = useMemo(() => getLastSessionConfig(), []);
 
   // Save challenge progress & show all-complete celebration
   useEffect(() => {
@@ -175,7 +181,7 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Stats Row */}
+        {/* Stats Row with Daily Goal Ring */}
         <div className="mb-6 grid grid-cols-3 gap-3">
           <div className="flex flex-col items-center rounded-2xl border border-border bg-card p-3">
             <Flame className="mb-1 h-5 w-5 text-primary" />
@@ -183,8 +189,22 @@ export default function Home() {
             <span className="text-[11px] text-muted-foreground">{t("home.dayStreak")}</span>
           </div>
           <div className="flex flex-col items-center rounded-2xl border border-border bg-card p-3">
-            <Wind className="mb-1 h-5 w-5 text-primary" />
-            <span className="text-lg font-bold text-foreground">{todayMin}</span>
+            {/* Daily Goal Progress Ring */}
+            <div className="relative flex h-10 w-10 items-center justify-center mb-0.5">
+              <svg className="h-10 w-10 -rotate-90" viewBox="0 0 40 40">
+                <circle cx="20" cy="20" r="16" fill="none" stroke="hsl(var(--muted))" strokeWidth="3" />
+                <circle
+                  cx="20" cy="20" r="16" fill="none"
+                  stroke={goalProgress >= 100 ? "hsl(var(--primary))" : "hsl(var(--primary) / 0.7)"}
+                  strokeWidth="3"
+                  strokeDasharray={`${(goalProgress / 100) * 100.5} 100.5`}
+                  strokeLinecap="round"
+                  className="transition-all duration-700"
+                />
+              </svg>
+              <Wind className="absolute h-4 w-4 text-primary" />
+            </div>
+            <span className="text-lg font-bold text-foreground">{todayMin}<span className="text-xs font-normal text-muted-foreground">/{dailyGoal}</span></span>
             <span className="text-[11px] text-muted-foreground">{t("home.minToday")}</span>
           </div>
           <div className="flex flex-col items-center rounded-2xl border border-border bg-card p-3">
@@ -304,10 +324,31 @@ export default function Home() {
           </button>
         </div>
 
+        {/* Weekly Summary */}
+        <WeeklySummary />
+
         {/* Smart Suggestion */}
         <div className="mb-6">
           <SmartSuggestion />
         </div>
+
+        {/* Quick Resume */}
+        {lastSession && (
+          <div className="mb-6">
+            <button
+              onClick={() => navigate(`/session?technique=${lastSession.techniqueId}&duration=${lastSession.durationMinutes}`)}
+              className="flex w-full items-center gap-3 rounded-2xl border border-primary/20 bg-primary/5 p-4 transition-colors hover:bg-primary/10"
+            >
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/15">
+                <Play className="h-5 w-5 text-primary" />
+              </div>
+              <div className="text-left flex-1">
+                <p className="text-sm font-medium text-foreground">{t("home.quickResume")}</p>
+                <p className="text-xs text-muted-foreground">{lastSession.techniqueName} · {lastSession.durationMinutes} {t("common.min")}</p>
+              </div>
+            </button>
+          </div>
+        )}
 
         {/* Quick Start */}
         {favTechniques.length > 0 && (

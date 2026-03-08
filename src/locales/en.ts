@@ -885,4 +885,40 @@ export const en: Record<string, string> = {
   // Footer
   "guide.footer1": "Muhurto Breath — Take a moment to breathe. 🌬️",
   "guide.footer2": "Made with ❤️ for mindful breathing.",
+
+  // Daily Goal
+  "settings.dailyGoal": "Daily Goal: {{min}} min",
+  "settings.dailyGoalDesc": "Set a daily breathing target to stay on track",
+
+  // Quick Resume
+  "home.quickResume": "Resume Last Session",
+
+  // Clipboard Backup
+  "settings.copyBackup": "Copy Backup",
+  "settings.pasteRestore": "Paste Restore",
+  "settings.clipboardCopied": "Backup copied to clipboard!",
+  "settings.clipboardError": "Could not copy to clipboard",
+  "settings.clipboardEmpty": "Clipboard is empty",
+  "settings.clipboardReadError": "Could not read clipboard. Please allow clipboard access.",
+
+  // Session History
+  "stats.history": "History",
+  "stats.historySearch": "Search sessions...",
+
+  // Weekly Summary
+  "weekly.title": "Your Week in Review",
+  "weekly.earned": "Earned",
+  "weekly.bestCalm": "Best Calm",
+  "weekly.mostUsed": "Most used: {{technique}}",
+  "weekly.dismiss": "Dismiss",
+  "weekly.shareTitle": "My Weekly Breathing Summary",
+
+  // Breathing Preview
+  "techniques.preview": "Preview breathing pattern",
+
+  // Auto-Difficulty
+  "adaptive.readyToLevelUp": "Ready to level up? 🚀",
+  "adaptive.suggestIncrease": "Your calm scores are consistently high! Try {{minutes}} minutes next time.",
+  "adaptive.acceptIncrease": "Set to {{minutes}} min",
+  "adaptive.durationUpdated": "Default duration updated to {{minutes}} min!",
 };

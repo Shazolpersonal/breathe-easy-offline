@@ -1,4 +1,5 @@
-import { Heart, HeartOff, Play, Lock, Share2 } from "lucide-react";
+import { useState } from "react";
+import { Heart, HeartOff, Play, Lock, Share2, Eye, EyeOff } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { BreathingTechnique, getCycleDuration } from "@/lib/techniques";
 import { UserProgression, getLevelName, getLevelProgress, isUnlocked, getUnlockRemaining } from "@/lib/progression";
@@ -7,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { shareTechnique } from "@/lib/shareApp";
+import BreathingPreview from "@/components/BreathingPreview";
 
 interface TechniqueCardProps {
   technique: BreathingTechnique;
@@ -25,6 +27,7 @@ const difficultyColor = {
 export default function TechniqueCard({ technique, isFavorite, onToggleFavorite, compact, progression: propProgression }: TechniqueCardProps) {
   const navigate = useNavigate();
   const { t, language } = useLanguage();
+  const [previewActive, setPreviewActive] = useState(false);
   const cycleSec = getCycleDuration(technique);
   const unlocked = isUnlocked(technique);
   // Bug 5: Use passed progression prop if available, fallback to direct call only in compact/standalone usage
@@ -114,16 +117,31 @@ export default function TechniqueCard({ technique, isFavorite, onToggleFavorite,
             {isFavorite ? <Heart className="h-5 w-5 fill-primary text-primary" /> : <HeartOff className="h-5 w-5" />}
           </button>
           {unlocked && (
-            <button
-              onClick={() => shareTechnique(techniqueName, techniqueDesc, language)}
-              className="p-1 text-muted-foreground hover:text-primary transition-colors"
-              title={t("share.technique")}
-            >
-              <Share2 className="h-4 w-4" />
-            </button>
+            <>
+              <button
+                onClick={() => setPreviewActive(!previewActive)}
+                className={cn("p-1 transition-colors", previewActive ? "text-primary" : "text-muted-foreground hover:text-primary")}
+                title={t("techniques.preview")}
+              >
+                {previewActive ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+              </button>
+              <button
+                onClick={() => shareTechnique(techniqueName, techniqueDesc, language)}
+                className="p-1 text-muted-foreground hover:text-primary transition-colors"
+                title={t("share.technique")}
+              >
+                <Share2 className="h-4 w-4" />
+              </button>
+            </>
           )}
         </div>
       </div>
+      {/* Breathing Preview */}
+      {previewActive && unlocked && (
+        <div className="mt-2 flex items-center justify-center rounded-xl bg-secondary/50 py-2 px-3">
+          <BreathingPreview technique={technique} active={previewActive} />
+        </div>
+      )}
       {unlocked ? (
         <button
           onClick={() => navigate(`/session?technique=${technique.id}`)}

@@ -7,9 +7,9 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { exportData, importData, getLastBackupDate, getDataSummary } from "@/lib/storage";
+import { exportData, importData, getLastBackupDate, getDataSummary, exportDataCompact, importDataFromCompact } from "@/lib/storage";
 import { exportSessionsCSV } from "@/lib/csvExport";
-import { Download, Upload, Circle, Waves, BarChart3, Flower2, Plus, Trash2, Bell, BellOff, Accessibility, Mic, Heart, Music, FileSpreadsheet, AlertTriangle, Database, Volume2, Info, Share2, HeartHandshake } from "lucide-react";
+import { Download, Upload, Circle, Waves, BarChart3, Flower2, Plus, Trash2, Bell, BellOff, Accessibility, Mic, Heart, Music, FileSpreadsheet, AlertTriangle, Database, Volume2, Info, Share2, HeartHandshake, Clipboard, ClipboardPaste, Target } from "lucide-react";
 import { SoundscapeType, getSoundscapeEngine } from "@/lib/soundscapes";
 import SoundscapePicker from "@/components/SoundscapePicker";
 import { cn } from "@/lib/utils";
@@ -411,6 +411,11 @@ export default function Settings() {
             <Label className="mb-2 block">{t("settings.defaultDuration", { min: settings.defaultDurationMinutes })}</Label>
             <Slider min={1} max={30} step={1} value={[settings.defaultDurationMinutes]} onValueChange={([v]) => update({ defaultDurationMinutes: v })} />
           </div>
+          <div>
+            <Label className="mb-2 block">{t("settings.dailyGoal", { min: settings.dailyGoalMinutes })}</Label>
+            <Slider min={1} max={60} step={1} value={[settings.dailyGoalMinutes]} onValueChange={([v]) => update({ dailyGoalMinutes: v })} />
+            <p className="text-[10px] text-muted-foreground mt-1">{t("settings.dailyGoalDesc")}</p>
+          </div>
         </section>
 
         {/* Visualization */}
@@ -574,6 +579,47 @@ export default function Settings() {
           >
             <FileSpreadsheet className="h-4 w-4" /> {t("settings.exportCSV")}
           </Button>
+
+          {/* Clipboard Backup */}
+          <div className="flex gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              className="gap-1 flex-1"
+              onClick={async () => {
+                try {
+                  const compact = exportDataCompact();
+                  await navigator.clipboard.writeText(compact);
+                  toast({ title: t("settings.clipboardCopied") });
+                } catch {
+                  toast({ title: t("settings.clipboardError"), variant: "destructive" });
+                }
+              }}
+            >
+              <Clipboard className="h-4 w-4" /> {t("settings.copyBackup")}
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              className="gap-1 flex-1"
+              onClick={async () => {
+                try {
+                  const text = await navigator.clipboard.readText();
+                  if (!text.trim()) {
+                    toast({ title: t("settings.clipboardEmpty"), variant: "destructive" });
+                    return;
+                  }
+                  importDataFromCompact(text.trim());
+                  toast({ title: t("settings.dataImported") });
+                  window.location.reload();
+                } catch {
+                  toast({ title: t("settings.clipboardReadError"), variant: "destructive" });
+                }
+              }}
+            >
+              <ClipboardPaste className="h-4 w-4" /> {t("settings.pasteRestore")}
+            </Button>
+          </div>
         </section>
 
         {/* Install */}

@@ -885,4 +885,40 @@ export const bn: Record<string, string> = {
   // Footer
   "guide.footer1": "মুহূর্ত ব্রেথ — একটু সময় নিয়ে শ্বাস নিন। 🌬️",
   "guide.footer2": "মননশীল শ্বাস-প্রশ্বাসের জন্য ❤️ দিয়ে তৈরি।",
+
+  // Daily Goal
+  "settings.dailyGoal": "দৈনিক লক্ষ্য: {{min}} মিনিট",
+  "settings.dailyGoalDesc": "ট্র্যাকে থাকতে একটি দৈনিক শ্বাস-প্রশ্বাসের লক্ষ্য সেট করুন",
+
+  // Quick Resume
+  "home.quickResume": "শেষ সেশন পুনরায় শুরু",
+
+  // Clipboard Backup
+  "settings.copyBackup": "ব্যাকআপ কপি",
+  "settings.pasteRestore": "পেস্ট রিস্টোর",
+  "settings.clipboardCopied": "ব্যাকআপ ক্লিপবোর্ডে কপি হয়েছে!",
+  "settings.clipboardError": "ক্লিপবোর্ডে কপি করা যায়নি",
+  "settings.clipboardEmpty": "ক্লিপবোর্ড খালি",
+  "settings.clipboardReadError": "ক্লিপবোর্ড পড়া যায়নি। অনুগ্রহ করে ক্লিপবোর্ড অ্যাক্সেস অনুমতি দিন।",
+
+  // Session History
+  "stats.history": "ইতিহাস",
+  "stats.historySearch": "সেশন খুঁজুন...",
+
+  // Weekly Summary
+  "weekly.title": "আপনার সাপ্তাহিক পর্যালোচনা",
+  "weekly.earned": "অর্জিত",
+  "weekly.bestCalm": "সেরা প্রশান্তি",
+  "weekly.mostUsed": "সবচেয়ে বেশি ব্যবহৃত: {{technique}}",
+  "weekly.dismiss": "বাতিল",
+  "weekly.shareTitle": "আমার সাপ্তাহিক শ্বাস সারসংক্ষেপ",
+
+  // Breathing Preview
+  "techniques.preview": "শ্বাসের ধরন প্রিভিউ",
+
+  // Auto-Difficulty
+  "adaptive.readyToLevelUp": "স্তর বাড়াতে প্রস্তুত? 🚀",
+  "adaptive.suggestIncrease": "আপনার প্রশান্তি স্কোর ধারাবাহিকভাবে উচ্চ! পরের বার {{minutes}} মিনিট চেষ্টা করুন।",
+  "adaptive.acceptIncrease": "{{minutes}} মিনিট সেট করুন",
+  "adaptive.durationUpdated": "ডিফল্ট সময়কাল {{minutes}} মিনিটে আপডেট হয়েছে!",
 };

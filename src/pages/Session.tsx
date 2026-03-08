@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
-import { Pause, Play, Square, Volume2, VolumeX, TrendingUp, Sparkles, Circle, Waves, BarChart3, Flower2, Share2, SkipForward, Mic, MicOff, Heart, Maximize2, Minimize2 } from "lucide-react";
+import { Pause, Play, Square, Volume2, VolumeX, TrendingUp, Sparkles, Circle, Waves, BarChart3, Flower2, Share2, SkipForward, Mic, MicOff, Heart, Maximize2, Minimize2, ArrowUp } from "lucide-react";
 import BreathingVisualizer, { VisualizationType } from "@/components/BreathingVisualizer";
 import ParticleBackground from "@/components/ParticleBackground";
 import ScreenColorBreathing from "@/components/ScreenColorBreathing";
@@ -8,7 +8,7 @@ import MoodPicker from "@/components/MoodPicker";
 import BreathingFeedback from "@/components/BreathingFeedback";
 import HeartRateMonitorOverlay from "@/components/HeartRateMonitor";
 import { PRESET_TECHNIQUES, getTechniqueById, BreathingPhase, getPyramidPhasesForRound } from "@/lib/techniques";
-import { getCustomTechniques, addSession, getSessions } from "@/lib/storage";
+import { getCustomTechniques, addSession, getSessions, saveLastSessionConfig } from "@/lib/storage";
 import { useSettings } from "@/contexts/SettingsContext";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useSessionContext } from "@/contexts/SessionContext";
@@ -35,6 +35,8 @@ import { Progress } from "@/components/ui/progress";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
+import { requestWakeLock, releaseWakeLock } from "@/lib/wakeLock";
+import { shouldSuggestIncrease, dismissSuggestion } from "@/lib/adaptive";
 
 type SessionState = "idle" | "running" | "paused" | "done" | "playlist-transition";
 
@@ -268,6 +270,7 @@ export default function Session() {
   const finishSession = useCallback(() => {
     clearTimeout(intervalRef.current);
     stopSpeaking();
+    releaseWakeLock();
 
     // Stop soundscape
     soundscapeEngineRef.current.stop();
@@ -510,6 +513,10 @@ export default function Session() {
     setBreathFeedback(null);
     lastEncouragementRef.current = 0;
     setState("running");
+    // Save last session config for Quick Resume
+    saveLastSessionConfig({ techniqueId: technique.id, techniqueName, durationMinutes: durationMin });
+    // Request wake lock
+    requestWakeLock();
     // Start soundscape
     if (soundscapeType !== "off") {
       soundscapeEngineRef.current.start(soundscapeType, settings.soundscapeVolume ?? 0.5);
@@ -802,6 +809,43 @@ export default function Session() {
           {levelUpInfo && <LevelUpBanner level={levelUpInfo.level} techniqueName={techniqueName} label={t("session.levelUp")} />}
           {calmResult && <CalmScoreDisplay result={calmResult} label={t("session.calmScore")} t={t} />}
           {earnedXP && <XPEarnedDisplay breakdown={earnedXP.breakdown} leveledUp={earnedXP.leveledUp} newTitle={earnedXP.newTitle} t={t} />}
+
+          {/* Auto-difficulty suggestion */}
+          {(() => {
+            const suggested = shouldSuggestIncrease(technique.id);
+            if (!suggested) return null;
+            return (
+              <div className="rounded-xl border border-primary/30 bg-primary/5 p-3 w-full max-w-xs animate-fade-in">
+                <div className="flex items-center gap-2 mb-2">
+                  <ArrowUp className="h-4 w-4 text-primary" />
+                  <span className="text-sm font-semibold text-foreground">{t("adaptive.readyToLevelUp")}</span>
+                </div>
+                <p className="text-xs text-muted-foreground mb-2">
+                  {t("adaptive.suggestIncrease", { minutes: suggested })}
+                </p>
+                <div className="flex gap-2">
+                  <Button
+                    size="sm"
+                    className="flex-1 gap-1"
+                    onClick={() => {
+                      update({ defaultDurationMinutes: suggested });
+                      dismissSuggestion(technique.id, suggested);
+                      toast(t("adaptive.durationUpdated", { minutes: suggested }));
+                    }}
+                  >
+                    {t("adaptive.acceptIncrease", { minutes: suggested })}
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    onClick={() => dismissSuggestion(technique.id, suggested)}
+                  >
+                    {t("weekly.dismiss")}
+                  </Button>
+                </div>
+              </div>
+            );
+          })()}
 
           {/* Breath accuracy in done screen */}
           {avgBreathAccuracy !== null && (

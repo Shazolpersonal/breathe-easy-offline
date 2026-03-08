@@ -42,6 +42,7 @@ export interface AppSettings {
   reducedMotion: boolean;
   breathDetectionEnabled: boolean;
   heartRateEnabled: boolean;
+  dailyGoalMinutes: number;
 }
 
 const KEYS = {
@@ -77,6 +78,7 @@ const DEFAULT_SETTINGS: AppSettings = {
   reducedMotion: false,
   breathDetectionEnabled: false,
   heartRateEnabled: false,
+  dailyGoalMinutes: 5,
 };
 
 function getJSON<T>(key: string, fallback: T): T {
@@ -251,6 +253,50 @@ export function exportData(): string {
   }
   data._backupDate = new Date().toISOString();
   return JSON.stringify(data, null, 2);
+}
+
+// Delete a single session
+export function deleteSession(id: string) {
+  const sessions = getSessions().filter(s => s.id !== id);
+  setJSON(KEYS.sessions, sessions);
+}
+
+// Last session config for Quick Resume
+const LAST_SESSION_KEY = "breathe_last_session_config";
+
+export interface LastSessionConfig {
+  techniqueId: string;
+  techniqueName: string;
+  durationMinutes: number;
+}
+
+export function getLastSessionConfig(): LastSessionConfig | null {
+  return getJSON<LastSessionConfig | null>(LAST_SESSION_KEY, null);
+}
+
+export function saveLastSessionConfig(config: LastSessionConfig) {
+  setJSON(LAST_SESSION_KEY, config);
+}
+
+// Compact clipboard backup
+export function exportDataCompact(): string {
+  const data = exportData();
+  // Use btoa for Base64 encoding
+  try {
+    return btoa(unescape(encodeURIComponent(data)));
+  } catch {
+    return data;
+  }
+}
+
+export function importDataFromCompact(base64: string) {
+  try {
+    const json = decodeURIComponent(escape(atob(base64)));
+    importData(json);
+  } catch {
+    // Try as raw JSON fallback
+    importData(base64);
+  }
 }
 
 export function importData(json: string) {
