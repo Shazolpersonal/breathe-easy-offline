@@ -393,6 +393,7 @@ export const en: Record<string, string> = {
   "common.min": "min",
   "common.days": "days",
   "common.sessions": "sessions",
+  "common.cycle": "cycle",
   "common.cycles": "cycles",
   "common.english": "English",
   "common.bengali": "বাংলা",
