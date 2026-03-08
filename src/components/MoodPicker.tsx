@@ -1,5 +1,6 @@
 import { MOODS } from "@/lib/mood";
 import { cn } from "@/lib/utils";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface MoodPickerProps {
   selected: number | null;
@@ -9,6 +10,8 @@ interface MoodPickerProps {
 }
 
 export default function MoodPicker({ selected, onSelect, label, compact }: MoodPickerProps) {
+  const { t } = useLanguage();
+
   return (
     <div className="flex flex-col items-center gap-2">
       {label && (
@@ -34,7 +37,7 @@ export default function MoodPicker({ selected, onSelect, label, compact }: MoodP
               "text-[10px] leading-tight",
               selected === mood.value ? "text-primary font-medium" : "text-muted-foreground"
             )}>
-              {mood.label}
+              {t(`mood.${mood.value}`)}
             </span>
           </button>
         ))}

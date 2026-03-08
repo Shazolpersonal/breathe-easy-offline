@@ -1,5 +1,6 @@
 import { useTheme, THEMES, ThemeId } from "@/contexts/ThemeContext";
 import { useSettings } from "@/contexts/SettingsContext";
+import { useLanguage, Language } from "@/contexts/LanguageContext";
 import { Switch } from "@/components/ui/switch";
 import { Slider } from "@/components/ui/slider";
 import { Label } from "@/components/ui/label";
@@ -13,14 +14,15 @@ import { useRef, useState } from "react";
 import { VisualizationType } from "@/components/BreathingVisualizer";
 import { getReminders, addReminder, updateReminder, deleteReminder, requestNotificationPermission, getNotificationPermission, Reminder } from "@/lib/reminders";
 
-const DAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-
 export default function Settings() {
   const { theme, setTheme } = useTheme();
   const { settings, update } = useSettings();
+  const { t, language, setLanguage } = useLanguage();
   const fileRef = useRef<HTMLInputElement>(null);
   const [reminders, setReminders] = useState(getReminders);
   const [notifPermission, setNotifPermission] = useState(getNotificationPermission);
+
+  const DAYS_KEYS = ["day.sun", "day.mon", "day.tue", "day.wed", "day.thu", "day.fri", "day.sat"];
 
   const handleExport = () => {
     const blob = new Blob([exportData()], { type: "application/json" });
@@ -30,7 +32,7 @@ export default function Settings() {
     a.download = "muhurto-breath-data.json";
     a.click();
     URL.revokeObjectURL(url);
-    toast({ title: "Data exported!" });
+    toast({ title: t("settings.dataExported") });
   };
 
   const handleImport = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -40,10 +42,10 @@ export default function Settings() {
     reader.onload = () => {
       try {
         importData(reader.result as string);
-        toast({ title: "Data imported successfully!" });
+        toast({ title: t("settings.dataImported") });
         window.location.reload();
       } catch {
-        toast({ title: "Invalid file", variant: "destructive" });
+        toast({ title: t("settings.invalidFile"), variant: "destructive" });
       }
     };
     reader.readAsText(file);
@@ -52,16 +54,16 @@ export default function Settings() {
   const handleRequestPermission = async () => {
     const granted = await requestNotificationPermission();
     setNotifPermission(getNotificationPermission());
-    if (!granted) toast({ title: "Notification permission denied", variant: "destructive" });
+    if (!granted) toast({ title: t("settings.notifDenied"), variant: "destructive" });
   };
 
   const handleAddReminder = () => {
     const r: Reminder = {
       id: `reminder-${Date.now()}`,
       time: "09:00",
-      days: [1, 2, 3, 4, 5], // weekdays
+      days: [1, 2, 3, 4, 5],
       enabled: true,
-      message: "Time for your breathing break! 🌬️",
+      message: t("settings.reminders.defaultMessage"),
     };
     addReminder(r);
     setReminders(getReminders());
@@ -87,11 +89,30 @@ export default function Settings() {
   return (
     <div className="min-h-screen px-4 pb-24 pt-12">
       <div className="mx-auto max-w-md space-y-6">
-        <h1 className="text-2xl font-bold text-foreground">Settings</h1>
+        <h1 className="text-2xl font-bold text-foreground">{t("settings.title")}</h1>
+
+        {/* Language */}
+        <section className="rounded-2xl border border-border bg-card p-4">
+          <h2 className="mb-3 text-sm font-semibold uppercase tracking-wider text-muted-foreground">{t("settings.language")}</h2>
+          <div className="flex gap-2">
+            {(["en", "bn"] as Language[]).map((lang) => (
+              <button
+                key={lang}
+                onClick={() => setLanguage(lang)}
+                className={cn(
+                  "flex-1 rounded-xl py-2.5 text-sm font-medium transition-colors",
+                  language === lang ? "bg-primary/20 ring-2 ring-primary text-primary" : "bg-secondary text-muted-foreground hover:bg-secondary/80"
+                )}
+              >
+                {lang === "en" ? t("common.english") : t("common.bengali")}
+              </button>
+            ))}
+          </div>
+        </section>
 
         {/* Themes */}
         <section className="rounded-2xl border border-border bg-card p-4">
-          <h2 className="mb-3 text-sm font-semibold uppercase tracking-wider text-muted-foreground">Theme</h2>
+          <h2 className="mb-3 text-sm font-semibold uppercase tracking-wider text-muted-foreground">{t("settings.theme")}</h2>
           <div className="grid grid-cols-5 gap-2">
             {(Object.keys(THEMES) as ThemeId[]).map((id) => (
               <button
@@ -111,44 +132,44 @@ export default function Settings() {
 
         {/* Voice */}
         <section className="rounded-2xl border border-border bg-card p-4 space-y-4">
-          <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">Voice Guidance</h2>
+          <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">{t("settings.voice")}</h2>
           <div className="flex items-center justify-between">
-            <Label>Enable Voice</Label>
+            <Label>{t("settings.voiceEnable")}</Label>
             <Switch checked={settings.voiceEnabled} onCheckedChange={(v) => update({ voiceEnabled: v })} />
           </div>
           <div>
-            <Label className="mb-2 block">Speed: {settings.voiceSpeed.toFixed(1)}x</Label>
+            <Label className="mb-2 block">{t("settings.voiceSpeed", { speed: settings.voiceSpeed.toFixed(1) })}</Label>
             <Slider min={0.5} max={1.5} step={0.1} value={[settings.voiceSpeed]} onValueChange={([v]) => update({ voiceSpeed: v })} />
           </div>
         </section>
 
         {/* General */}
         <section className="rounded-2xl border border-border bg-card p-4 space-y-4">
-          <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">General</h2>
+          <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">{t("settings.general")}</h2>
           <div className="flex items-center justify-between">
-            <Label>Vibration</Label>
+            <Label>{t("settings.vibration")}</Label>
             <Switch checked={settings.vibrationEnabled} onCheckedChange={(v) => update({ vibrationEnabled: v })} />
           </div>
           <div className="flex items-center justify-between">
-            <Label>Sound Effects</Label>
+            <Label>{t("settings.sound")}</Label>
             <Switch checked={settings.soundEnabled} onCheckedChange={(v) => update({ soundEnabled: v })} />
           </div>
           <div>
-            <Label className="mb-2 block">Default Duration: {settings.defaultDurationMinutes} min</Label>
+            <Label className="mb-2 block">{t("settings.defaultDuration", { min: settings.defaultDurationMinutes })}</Label>
             <Slider min={1} max={30} step={1} value={[settings.defaultDurationMinutes]} onValueChange={([v]) => update({ defaultDurationMinutes: v })} />
           </div>
         </section>
 
         {/* Visualization */}
         <section className="rounded-2xl border border-border bg-card p-4">
-          <h2 className="mb-3 text-sm font-semibold uppercase tracking-wider text-muted-foreground">Breathing Visualization</h2>
+          <h2 className="mb-3 text-sm font-semibold uppercase tracking-wider text-muted-foreground">{t("settings.visualization")}</h2>
           <div className="grid grid-cols-4 gap-2">
             {([
-              { id: "circle" as VisualizationType, icon: Circle, label: "Circle" },
-              { id: "wave" as VisualizationType, icon: Waves, label: "Wave" },
-              { id: "bars" as VisualizationType, icon: BarChart3, label: "Bars" },
-              { id: "mandala" as VisualizationType, icon: Flower2, label: "Mandala" },
-            ]).map(({ id, icon: Icon, label }) => (
+              { id: "circle" as VisualizationType, icon: Circle, labelKey: "viz.circle" },
+              { id: "wave" as VisualizationType, icon: Waves, labelKey: "viz.wave" },
+              { id: "bars" as VisualizationType, icon: BarChart3, labelKey: "viz.bars" },
+              { id: "mandala" as VisualizationType, icon: Flower2, labelKey: "viz.mandala" },
+            ]).map(({ id, icon: Icon, labelKey }) => (
               <button
                 key={id}
                 onClick={() => update({ visualizationType: id })}
@@ -158,7 +179,7 @@ export default function Settings() {
                 )}
               >
                 <Icon className="h-5 w-5 text-foreground" />
-                <span className="text-muted-foreground">{label}</span>
+                <span className="text-muted-foreground">{t(labelKey)}</span>
               </button>
             ))}
           </div>
@@ -167,9 +188,9 @@ export default function Settings() {
         {/* Reminders */}
         <section className="rounded-2xl border border-border bg-card p-4 space-y-4">
           <div className="flex items-center justify-between">
-            <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">Breathing Reminders</h2>
+            <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">{t("settings.reminders")}</h2>
             <Button size="sm" variant="secondary" className="gap-1 h-7 text-xs" onClick={handleAddReminder}>
-              <Plus className="h-3.5 w-3.5" /> Add
+              <Plus className="h-3.5 w-3.5" /> {t("settings.reminders.add")}
             </Button>
           </div>
 
@@ -179,22 +200,22 @@ export default function Settings() {
                 <BellOff className="h-4 w-4 text-muted-foreground" />
                 <span className="text-xs text-muted-foreground">
                   {notifPermission === "unsupported"
-                    ? "Notifications not supported in this browser."
+                    ? t("settings.reminders.unsupported")
                     : notifPermission === "denied"
-                      ? "Notifications blocked. Enable them in browser settings."
-                      : "Enable notifications for reminders."}
+                      ? t("settings.reminders.denied")
+                      : t("settings.reminders.default")}
                 </span>
               </div>
               {notifPermission === "default" && (
                 <Button size="sm" variant="outline" className="gap-1 text-xs" onClick={handleRequestPermission}>
-                  <Bell className="h-3.5 w-3.5" /> Enable Notifications
+                  <Bell className="h-3.5 w-3.5" /> {t("settings.reminders.enableButton")}
                 </Button>
               )}
             </div>
           )}
 
           {reminders.length === 0 ? (
-            <p className="text-xs text-muted-foreground">No reminders yet. Add one to stay consistent!</p>
+            <p className="text-xs text-muted-foreground">{t("settings.reminders.empty")}</p>
           ) : (
             <div className="space-y-3">
               {reminders.map((r) => (
@@ -217,23 +238,23 @@ export default function Settings() {
                     </div>
                   </div>
                   <div className="flex gap-1">
-                    {DAYS.map((d, i) => (
+                    {DAYS_KEYS.map((dk, i) => (
                       <button
-                        key={d}
+                        key={dk}
                         onClick={() => toggleReminderDay(r.id, i)}
                         className={cn(
                           "flex-1 rounded-md py-1 text-[10px] font-medium transition-colors",
                           r.days.includes(i) ? "bg-primary/20 text-primary" : "bg-secondary text-muted-foreground"
                         )}
                       >
-                        {d}
+                        {t(dk)}
                       </button>
                     ))}
                   </div>
                   <Input
                     value={r.message}
                     onChange={e => handleUpdateReminder(r.id, { message: e.target.value })}
-                    placeholder="Reminder message"
+                    placeholder={t("settings.reminders.messagePlaceholder")}
                     className="h-7 text-xs bg-transparent"
                   />
                 </div>
@@ -242,19 +263,19 @@ export default function Settings() {
           )}
 
           <p className="text-[10px] text-muted-foreground">
-            ⚠️ Reminders only fire while the app/tab is open. For best results, keep the PWA installed.
+            {t("settings.reminders.warning")}
           </p>
         </section>
 
         {/* Data */}
         <section className="rounded-2xl border border-border bg-card p-4 space-y-3">
-          <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">Data</h2>
+          <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">{t("settings.data")}</h2>
           <div className="flex gap-2">
             <Button variant="secondary" size="sm" className="gap-1 flex-1" onClick={handleExport}>
-              <Download className="h-4 w-4" /> Export
+              <Download className="h-4 w-4" /> {t("settings.export")}
             </Button>
             <Button variant="secondary" size="sm" className="gap-1 flex-1" onClick={() => fileRef.current?.click()}>
-              <Upload className="h-4 w-4" /> Import
+              <Upload className="h-4 w-4" /> {t("settings.import")}
             </Button>
             <input ref={fileRef} type="file" accept=".json" className="hidden" onChange={handleImport} />
           </div>
@@ -262,10 +283,10 @@ export default function Settings() {
 
         {/* Install */}
         <section className="rounded-2xl border border-border bg-card p-4">
-          <h2 className="mb-2 text-sm font-semibold uppercase tracking-wider text-muted-foreground">Install App</h2>
+          <h2 className="mb-2 text-sm font-semibold uppercase tracking-wider text-muted-foreground">{t("settings.install")}</h2>
           <p className="text-sm text-muted-foreground">
-            On your phone, open this app in Chrome or Safari, tap the share/menu button, and choose
-            <strong className="text-foreground"> "Add to Home Screen"</strong>. The app works fully offline once installed.
+            {t("settings.installDesc")}
+            <strong className="text-foreground"> {t("settings.installAction")}</strong>{t("settings.installOffline")}
           </p>
         </section>
       </div>
