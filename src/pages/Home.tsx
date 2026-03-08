@@ -17,7 +17,7 @@ import { CreateChallengeDialog } from "@/components/FriendChallenge";
 
 export default function Home() {
   const navigate = useNavigate();
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const [favorites, setFavorites] = useState(getFavorites);
   const [showChallengeDialog, setShowChallengeDialog] = useState(false);
   const [installDismissed, setInstallDismissed] = useState(isDismissed);
@@ -27,7 +27,7 @@ export default function Home() {
   const favTechniques = useMemo(() => allTechniques.filter((tech) => favorites.includes(tech.id)), [allTechniques, favorites]);
   const xpState = useMemo(() => getXPState(), []);
   const dailyChallenges = useMemo(() => getDailyChallenges(), []);
-  const dailyQuote = useMemo(() => getDailyQuote(), []);
+  const dailyQuote = useMemo(() => getDailyQuote(language), [language]);
   const activeFriendChallenges = useMemo(() => getActiveChallenges(), []);
   const showInstall = canInstall() && !installDismissed;
 
