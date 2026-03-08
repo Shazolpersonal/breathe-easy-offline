@@ -49,7 +49,6 @@ function CalmScoreDisplay({ result, label, t }: { result: CalmScoreResult; label
       <span className="text-xs text-muted-foreground">{label}</span>
     </div>
   );
-  );
 }
 
 function LevelUpBanner({ level, techniqueName, label }: { level: number; techniqueName: string; label: string }) {
