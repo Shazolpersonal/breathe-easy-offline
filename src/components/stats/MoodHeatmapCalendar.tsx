@@ -12,8 +12,8 @@ export default function MoodHeatmapCalendar() {
   const [year, setYear] = useState(now.getFullYear());
   const [selectedDay, setSelectedDay] = useState<string | null>(null);
 
-  const sessions = getSessions();
-  const moodRecords = getMoodRecords();
+  const sessions = useMemo(() => getSessions(), []);
+  const moodRecords = useMemo(() => getMoodRecords(), []);
 
   const dayKeys = ["day.sun", "day.mon", "day.tue", "day.wed", "day.thu", "day.fri", "day.sat"];
 

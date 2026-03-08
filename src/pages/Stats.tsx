@@ -16,8 +16,8 @@ export default function Stats() {
   const [tab, setTab] = useState<Tab>("stats");
   const sessions = useMemo(() => getSessions(), []);
   const sessionsKey = sessions.length;
-  const streak = getCurrentStreak();
-  const longestStreak = getLongestStreak();
+  const streak = useMemo(() => getCurrentStreak(), [sessionsKey]);
+  const longestStreak = useMemo(() => getLongestStreak(), [sessionsKey]);
   const totalMinutes = Math.round(sessions.reduce((s, r) => s + r.durationSeconds, 0) / 60);
 
   const now = new Date();
@@ -154,19 +154,29 @@ export default function Stats() {
 
         {tab === "stats" && (
           <>
+            {sessions.length === 0 ? (
+              <div className="flex flex-col items-center gap-4 py-16 text-center">
+                <div className="rounded-full bg-primary/10 p-4">
+                  <Target className="h-10 w-10 text-primary" />
+                </div>
+                <h2 className="text-lg font-semibold text-foreground">{t("stats.emptyTitle")}</h2>
+                <p className="max-w-xs text-sm text-muted-foreground">{t("stats.emptyDesc")}</p>
+              </div>
+            ) : (
+            <>
             <ConsistencyCard />
 
             <div className="mb-6 grid grid-cols-2 gap-3">
               {[
-                { icon: Flame, value: streak, label: t("stats.currentStreak"), suffix: t("stats.days") },
-                { icon: Trophy, value: longestStreak, label: t("stats.longestStreak"), suffix: t("stats.days") },
-                { icon: Clock, value: totalMinutes, label: t("stats.totalTime"), suffix: t("stats.min") },
-                { icon: Target, value: sessions.length, label: t("stats.sessions"), suffix: "" },
+                { icon: Flame, value: streak, label: t("stats.currentStreak"), suffix: t("stats.days"), span: false },
+                { icon: Trophy, value: longestStreak, label: t("stats.longestStreak"), suffix: t("stats.days"), span: false },
+                { icon: Clock, value: totalMinutes, label: t("stats.totalTime"), suffix: t("stats.min"), span: false },
+                { icon: Target, value: sessions.length, label: t("stats.sessions"), suffix: "", span: false },
                 ...(avgCalmScore !== null
-                  ? [{ icon: Brain, value: avgCalmScore, label: t("stats.avgCalm"), suffix: "%" }]
+                  ? [{ icon: Brain, value: avgCalmScore, label: t("stats.avgCalm"), suffix: "%", span: true }]
                   : []),
-              ].map(({ icon: Icon, value, label, suffix }) => (
-                <div key={label} className="flex flex-col items-center rounded-2xl border border-border bg-card p-4">
+              ].map(({ icon: Icon, value, label, suffix, span }) => (
+                <div key={label} className={`flex flex-col items-center rounded-2xl border border-border bg-card p-4 ${span ? "col-span-2" : ""}`}>
                   <Icon className="mb-1 h-5 w-5 text-primary" />
                   <span className="text-xl font-bold text-foreground">
                     {value}{suffix && <span className="ml-1 text-xs font-normal text-muted-foreground">{suffix}</span>}
@@ -215,6 +225,8 @@ export default function Stats() {
             )}
 
             <MoodHeatmapCalendar />
+            </>
+            )}
           </>
         )}
 
@@ -324,10 +336,13 @@ export default function Stats() {
             ) : (
               <div className="rounded-2xl border border-border bg-card p-5 space-y-4">
                 <p className="text-sm leading-relaxed text-foreground">
-                  {t("stats.report.summary", { minutes: reportData.totalMin, sessions: reportData.sessions, month: monthLabel })
-                    .split(String(reportData.totalMin))
-                    .flatMap((part, i, arr) => i < arr.length - 1 ? [part, <strong key={`min-${i}`}>{reportData.totalMin}</strong>] : [part])
-                  }
+                  {(() => {
+                    const summary = t("stats.report.summary", { minutes: reportData.totalMin, sessions: reportData.sessions, month: monthLabel });
+                    const boldValues = [String(reportData.totalMin), String(reportData.sessions)];
+                    const regex = new RegExp(`(${boldValues.map(v => v.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|')})`, 'g');
+                    const parts = summary.split(regex);
+                    return parts.map((part, i) => boldValues.includes(part) ? <strong key={i}>{part}</strong> : part);
+                  })()}
                 </p>
                 {reportData.topTechnique && (
                   <p className="text-sm leading-relaxed text-foreground">

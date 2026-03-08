@@ -139,6 +139,8 @@ export const en: Record<string, string> = {
   "stats.locked": "Locked ({{count}})",
   "stats.noJournal": "No journal entries yet. After a session, write how you felt!",
   "stats.noSessions": "No sessions in {{month}}.",
+  "stats.emptyTitle": "Your journey starts here",
+  "stats.emptyDesc": "Complete your first breathing session to see your stats, streaks, and progress.",
   "stats.report.summary": "You breathed {{minutes}} minutes across {{sessions}} sessions in {{month}}.",
   "stats.report.topTechnique": "Your most-used technique was {{name}} ({{count}} sessions).",
   "stats.report.streak": "Your longest streak was {{days}} days.",

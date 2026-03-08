@@ -6,7 +6,7 @@ export interface Insight {
   params: Record<string, string>;
 }
 
-export function getWeeklyInsights(): Insight[] {
+export function getWeeklyInsights(locale: string = "en"): Insight[] {
   const sessions = getSessions();
   const now = new Date();
   const insights: Insight[] = [];
@@ -49,9 +49,9 @@ export function getWeeklyInsights(): Insight[] {
   )[0];
   if (bestHourEntry) {
     const hour = parseInt(bestHourEntry[0]);
-    const ampm = hour >= 12 ? "pm" : "am";
-    const h12 = hour % 12 || 12;
-    insights.push({ key: "insight.bestTime", params: { time: `${h12}${ampm}` } });
+    // Use locale-aware time formatting
+    const timeStr = new Date(2000, 0, 1, hour).toLocaleTimeString(locale, { hour: "numeric", hour12: true });
+    insights.push({ key: "insight.bestTime", params: { time: timeStr } });
   }
 
   // Technique comparison via mood records

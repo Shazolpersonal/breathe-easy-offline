@@ -18,9 +18,9 @@ const INSIGHT_ICONS: Record<string, typeof Lightbulb> = {
 };
 
 export default function InsightsTab() {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
 
-  const insights = useMemo(() => getWeeklyInsights(), []);
+  const insights = useMemo(() => getWeeklyInsights(language === "bn" ? "bn" : "en"), [language]);
 
   if (insights.length === 0) {
     return (
