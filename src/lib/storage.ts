@@ -19,6 +19,7 @@ export interface AppSettings {
   defaultDurationMinutes: number;
   soundEnabled: boolean;
   theme: string;
+  visualizationType: "circle" | "wave" | "bars" | "mandala";
 }
 
 const KEYS = {
@@ -35,6 +36,7 @@ const DEFAULT_SETTINGS: AppSettings = {
   defaultDurationMinutes: 5,
   soundEnabled: true,
   theme: "ocean",
+  visualizationType: "circle",
 };
 
 function getJSON<T>(key: string, fallback: T): T {

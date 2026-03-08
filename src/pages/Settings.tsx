@@ -5,10 +5,11 @@ import { Slider } from "@/components/ui/slider";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { exportData, importData } from "@/lib/storage";
-import { Download, Upload } from "lucide-react";
+import { Download, Upload, Circle, Waves, BarChart3, Flower2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toast } from "@/hooks/use-toast";
 import { useRef } from "react";
+import { VisualizationType } from "@/components/BreathingVisualizer";
 
 export default function Settings() {
   const { theme, setTheme } = useTheme();
@@ -106,6 +107,31 @@ export default function Settings() {
               value={[settings.defaultDurationMinutes]}
               onValueChange={([v]) => update({ defaultDurationMinutes: v })}
             />
+          </div>
+        </section>
+
+        {/* Visualization */}
+        <section className="rounded-2xl border border-border bg-card p-4">
+          <h2 className="mb-3 text-sm font-semibold uppercase tracking-wider text-muted-foreground">Breathing Visualization</h2>
+          <div className="grid grid-cols-4 gap-2">
+            {([
+              { id: "circle" as VisualizationType, icon: Circle, label: "Circle" },
+              { id: "wave" as VisualizationType, icon: Waves, label: "Wave" },
+              { id: "bars" as VisualizationType, icon: BarChart3, label: "Bars" },
+              { id: "mandala" as VisualizationType, icon: Flower2, label: "Mandala" },
+            ]).map(({ id, icon: Icon, label }) => (
+              <button
+                key={id}
+                onClick={() => update({ visualizationType: id })}
+                className={cn(
+                  "flex flex-col items-center gap-1.5 rounded-xl p-3 text-xs transition-colors",
+                  settings.visualizationType === id ? "bg-primary/20 ring-2 ring-primary" : "hover:bg-secondary"
+                )}
+              >
+                <Icon className="h-5 w-5 text-foreground" />
+                <span className="text-muted-foreground">{label}</span>
+              </button>
+            ))}
           </div>
         </section>
 

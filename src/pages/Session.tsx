@@ -1,7 +1,9 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
-import { Pause, Play, Square, Volume2, VolumeX, TrendingUp, Sparkles } from "lucide-react";
-import BreathingCircle from "@/components/BreathingCircle";
+import { Pause, Play, Square, Volume2, VolumeX, TrendingUp, Sparkles, Circle, Waves, BarChart3, Flower2 } from "lucide-react";
+import BreathingVisualizer, { VisualizationType } from "@/components/BreathingVisualizer";
+import ParticleBackground from "@/components/ParticleBackground";
+import ScreenColorBreathing from "@/components/ScreenColorBreathing";
 import MoodPicker from "@/components/MoodPicker";
 import { PRESET_TECHNIQUES, getTechniqueById, getCycleDuration, BreathingPhase } from "@/lib/techniques";
 import { getCustomTechniques, addSession, getSettings } from "@/lib/storage";
@@ -20,6 +22,13 @@ import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 
 type SessionState = "idle" | "running" | "paused" | "done";
+
+const VIZ_OPTIONS: { id: VisualizationType; icon: typeof Circle; label: string }[] = [
+  { id: "circle", icon: Circle, label: "Circle" },
+  { id: "wave", icon: Waves, label: "Wave" },
+  { id: "bars", icon: BarChart3, label: "Bars" },
+  { id: "mandala", icon: Flower2, label: "Mandala" },
+];
 
 function CalmScoreDisplay({ result }: { result: CalmScoreResult }) {
   return (
@@ -70,7 +79,7 @@ function XPEarnedDisplay({ xp, leveledUp, newTitle }: { xp: number; leveledUp: b
 export default function Session() {
   const [params] = useSearchParams();
   const navigate = useNavigate();
-  const { settings } = useSettings();
+  const { settings, update } = useSettings();
 
   const techniqueId = params.get("technique") || "box-breathing";
   const technique = getTechniqueById(techniqueId, getCustomTechniques()) || PRESET_TECHNIQUES[0];
@@ -137,7 +146,6 @@ export default function Session() {
         calmScore: calm.score,
       });
 
-      // XP calculation
       const challengesCompleted = getCompletedChallengeCount();
       const xp = calculateSessionXP(totalElapsed, technique, calm.score, challengesCompleted);
       const xpResult = addXP(xp);
@@ -148,7 +156,6 @@ export default function Session() {
         newTitle: xpResult.newLevel > xpResult.previousLevel ? xpState.title : undefined,
       });
 
-      // Check for new achievement badges
       const newBadges = getNewlyUnlocked();
       newBadges.forEach((badge) => {
         toast(`${badge.emoji} ${badge.name} unlocked!`, {
@@ -249,6 +256,8 @@ export default function Session() {
   const targetDisplay = `${durationMin}:00`;
   const moodImprovement = moodBefore !== null && moodAfter !== null ? moodAfter - moodBefore : null;
 
+  const activePhase = state === "idle" ? "idle" as const : currentPhase.type;
+
   if (state === "done") {
     return (
       <div className="flex min-h-screen flex-col items-center justify-center px-4 pb-24">
@@ -298,8 +307,12 @@ export default function Session() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center px-4 pb-24">
-      <div className="flex flex-col items-center gap-6">
+    <div className="relative flex min-h-screen flex-col items-center justify-center px-4 pb-24 overflow-hidden">
+      {/* Visual layers */}
+      <ScreenColorBreathing phase={activePhase} phaseDuration={currentPhase.duration} />
+      <ParticleBackground phase={activePhase} phaseDuration={currentPhase.duration} />
+
+      <div className="relative z-10 flex flex-col items-center gap-6">
         <div className="text-center">
           <h2 className="text-lg font-semibold text-foreground">{technique.name}</h2>
           <span className="text-xs text-muted-foreground">
@@ -316,8 +329,8 @@ export default function Session() {
           <MoodPicker selected={moodBefore} onSelect={setMoodBefore} label="How are you feeling?" compact />
         )}
 
-        <BreathingCircle
-          phase={state === "idle" ? "idle" : currentPhase.type}
+        <BreathingVisualizer
+          phase={activePhase}
           phaseDuration={currentPhase.duration}
           label={state === "idle" ? "Ready" : currentPhase.label}
           secondsLeft={state === "idle" ? 0 : secondsLeft}
@@ -333,22 +346,45 @@ export default function Session() {
         </div>
 
         {state === "idle" && (
-          <div className="flex gap-2">
-            {[2, 3, 5, 10, 15].map((m) => (
-              <button
-                key={m}
-                onClick={() => setDurationMin(m)}
-                className={cn(
-                  "rounded-full px-3 py-1.5 text-xs font-medium transition-colors",
-                  durationMin === m
-                    ? "bg-primary text-primary-foreground"
-                    : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
-                )}
-              >
-                {m} min
-              </button>
-            ))}
-          </div>
+          <>
+            {/* Duration picker */}
+            <div className="flex gap-2">
+              {[2, 3, 5, 10, 15].map((m) => (
+                <button
+                  key={m}
+                  onClick={() => setDurationMin(m)}
+                  className={cn(
+                    "rounded-full px-3 py-1.5 text-xs font-medium transition-colors",
+                    durationMin === m
+                      ? "bg-primary text-primary-foreground"
+                      : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
+                  )}
+                >
+                  {m} min
+                </button>
+              ))}
+            </div>
+
+            {/* Visualization picker */}
+            <div className="flex gap-1.5">
+              {VIZ_OPTIONS.map(({ id, icon: Icon, label }) => (
+                <button
+                  key={id}
+                  onClick={() => update({ visualizationType: id })}
+                  className={cn(
+                    "flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-medium transition-colors",
+                    settings.visualizationType === id
+                      ? "bg-primary/20 text-primary ring-1 ring-primary/40"
+                      : "bg-secondary/60 text-muted-foreground hover:text-foreground"
+                  )}
+                  title={label}
+                >
+                  <Icon className="h-3.5 w-3.5" />
+                  <span className="hidden sm:inline">{label}</span>
+                </button>
+              ))}
+            </div>
+          </>
         )}
 
         <div className="flex items-center gap-4">
