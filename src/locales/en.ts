@@ -418,4 +418,25 @@ export const en: Record<string, string> = {
   "heart.retry": "Retry",
   "heart.avgBPM": "Average Heart Rate",
   "common.close": "Close",
+
+  // Soundscapes
+  "soundscape.title": "Ambient Sounds",
+  "soundscape.off": "Off",
+  "soundscape.rain": "Rain",
+  "soundscape.ocean": "Ocean",
+  "soundscape.wind": "Wind",
+  "soundscape.volume": "Soundscape Volume",
+  "settings.soundscape": "Ambient Soundscape",
+  "settings.soundscapeDesc": "Procedural ambient sounds during sessions",
+
+  // Theme Mode
+  "settings.themeMode": "Theme Mode",
+  "settings.themeMode.manual": "Manual",
+  "settings.themeMode.auto": "Auto",
+  "settings.themeMode.autoWarm": "Auto + Night Warmth",
+  "settings.themeMode.desc": "Auto matches system dark/light preference",
+
+  // Zen Mode
+  "session.zenMode": "Zen Mode",
+  "session.exitZen": "Exit Zen",
 };
