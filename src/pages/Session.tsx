@@ -374,37 +374,52 @@ export default function Session() {
     const lang = languageRef.current;
     const tFn = tRef.current;
 
-    setSecondsLeft((prev) => {
-      if (prev <= 1) {
-        const now = Date.now();
-        const actualDuration = (now - phaseStartRef.current) / 1000;
+    // Read current values from refs (synchronous, no closures)
+    let sl = secondsLeftRef.current;
+    let pi = phaseIndexRef.current;
 
-        setPhaseIndex((pi) => {
-          phaseTimestampsRef.current.push({ phaseIndex: pi, expectedDuration: phases[pi].duration, actualDuration });
-          const next = (pi + 1) % phases.length;
-          if (next === 0) {
-            setCompletedCycles((c) => c + 1);
-            if (techObj.pyramid) setCurrentRound(r => r + 1);
-          }
+    if (sl <= 1) {
+      // Phase transition
+      const now = Date.now();
+      const actualDuration = (now - phaseStartRef.current) / 1000;
+      phaseTimestampsRef.current.push({ phaseIndex: pi, expectedDuration: phases[pi].duration, actualDuration });
 
-          const nextRoundPhases = techObj.pyramid && next === 0
-            ? getPyramidPhasesForRound(techObj, round + 1)
-            : phases;
-          const nextPhase = nextRoundPhases[next];
-          setSecondsLeft(nextPhase.duration);
-          phaseStartRef.current = Date.now();
+      const next = (pi + 1) % phases.length;
+      let newCycles = completedCyclesRef.current;
+      let newRound = round;
 
-          breathDetectorRef.current?.notifyPhaseChange(next);
-          soundscapeEngineRef.current.syncToPhase(nextPhase.type);
-
-          if (setts.vibrationEnabled) vibratePhaseChange();
-          if (voice) speak(tFn(`phase.${nextPhase.type}`), setts.voiceSpeed, lang);
-          return next;
-        });
-        return prev;
+      if (next === 0) {
+        newCycles += 1;
+        if (techObj.pyramid) newRound = round + 1;
       }
-      return prev - 1;
-    });
+
+      const nextRoundPhases = techObj.pyramid && next === 0
+        ? getPyramidPhasesForRound(techObj, newRound)
+        : phases;
+      const nextPhase = nextRoundPhases[next];
+
+      // Update refs immediately for consistency
+      secondsLeftRef.current = nextPhase.duration;
+      phaseIndexRef.current = next;
+      phaseStartRef.current = Date.now();
+
+      // Flat setState calls (no nesting)
+      setSecondsLeft(nextPhase.duration);
+      setPhaseIndex(next);
+      setCompletedCycles(newCycles);
+      if (next === 0 && techObj.pyramid) setCurrentRound(newRound);
+
+      breathDetectorRef.current?.notifyPhaseChange(next);
+      soundscapeEngineRef.current.syncToPhase(nextPhase.type);
+
+      if (setts.vibrationEnabled) vibratePhaseChange();
+      if (voice) speak(tFn(`phase.${nextPhase.type}`), setts.voiceSpeed, lang);
+    } else {
+      // Normal countdown
+      secondsLeftRef.current = sl - 1;
+      setSecondsLeft(sl - 1);
+    }
+
     setTotalElapsed((te) => te + 1);
   }, []);
 
