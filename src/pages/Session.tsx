@@ -18,6 +18,8 @@ import { calculateSessionXP, addXP, getXPState } from "@/lib/xp";
 import { getCompletedChallengeCount } from "@/lib/challenges";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
+import { Textarea } from "@/components/ui/textarea";
+import { getSessions } from "@/lib/storage";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 
