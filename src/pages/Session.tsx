@@ -23,6 +23,8 @@ import { getPlaylists } from "@/lib/playlists";
 import { completeDay } from "@/lib/programs";
 import { shareOrDownloadCard } from "@/lib/shareCard";
 import { BreathDetector, RhythmUpdate } from "@/lib/breathDetector";
+import { getSoundscapeEngine, SoundscapeType } from "@/lib/soundscapes";
+import SoundscapePicker from "@/components/SoundscapePicker";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Textarea } from "@/components/ui/textarea";
