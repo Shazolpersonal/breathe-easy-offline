@@ -27,6 +27,7 @@ import { shareOrDownloadCard } from "@/lib/shareCard";
 import { BreathDetector, RhythmUpdate } from "@/lib/breathDetector";
 import { getSoundscapeEngine, SoundscapeType } from "@/lib/soundscapes";
 import SoundscapePicker from "@/components/SoundscapePicker";
+import { Slider } from "@/components/ui/slider";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Textarea } from "@/components/ui/textarea";
