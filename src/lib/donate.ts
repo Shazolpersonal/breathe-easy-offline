@@ -33,7 +33,7 @@ declare global {
 }
 
 // Replace with your actual 2Checkout Merchant Code
-const MERCHANT_CODE = "YOUR_MERCHANT_CODE";
+const MERCHANT_CODE = "254949309465";
 
 export interface DonateOptions {
   amount: number;
