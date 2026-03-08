@@ -13,7 +13,7 @@ import { useSettings } from "@/contexts/SettingsContext";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useSessionContext } from "@/contexts/SessionContext";
 import { useKeyboardShortcuts } from "@/hooks/useKeyboardShortcuts";
-import { speak, stopSpeaking } from "@/lib/voice";
+import { speak, stopSpeaking, speakSessionStart, speakSessionEnd, speakCycleMilestone, speakCountdown, speakEncouragement, type SpeakOptions } from "@/lib/voice";
 import { vibratePhaseChange, vibrateDone } from "@/lib/haptics";
 import { saveMoodRecord, getMoodEmoji } from "@/lib/mood";
 import { getProgression, getScaledPhases, updateProgression, getLevelName, getLevelProgress } from "@/lib/progression";
@@ -187,6 +187,7 @@ export default function Session() {
 
   // ─── Zen Mode State ───
   const [zenMode, setZenMode] = useState(false);
+  const lastEncouragementRef = useRef(0); // elapsed seconds when last encouragement was spoken
 
   useEffect(() => {
     const moodParam = params.get("mood");
@@ -348,6 +349,18 @@ export default function Session() {
       completeDay(programId, programDay);
     }
 
+    // Session end voice cue
+    const setts = settingsRef.current;
+    const lang = languageRef.current;
+    if (setts.voiceEnabled && setts.cueSessionEnd && elapsed > 10) {
+      setTimeout(() => {
+        speakSessionEnd(Math.round(elapsed / 60), lang, {
+          rate: setts.voiceSpeed, pitch: setts.voicePitch, volume: setts.voiceVolume,
+          voiceName: lang === "bn" ? setts.voiceNameBn : setts.voiceNameEn, lang,
+        });
+      }, 300);
+    }
+
     vibrateDone();
   }, [completedCycles, technique, moodBefore, phaseIndex, currentPhases, programId, programDay, t, techniqueName]);
 
@@ -393,7 +406,7 @@ export default function Session() {
     setSecondsLeft(nextPhases[0].duration);
 
     setState("running");
-    if (voiceOn) speak(t(`phase.${nextPhases[0].type}`), settings.voiceSpeed, language);
+    if (voiceOn && settings.cuePhaseNames) speak(t(`phase.${nextPhases[0].type}`), { rate: settings.voiceSpeed, pitch: settings.voicePitch, volume: settings.voiceVolume, voiceName: language === "bn" ? settings.voiceNameBn : settings.voiceNameEn, lang: language });
     if (settings.vibrationEnabled) vibratePhaseChange();
   };
 
@@ -445,14 +458,32 @@ export default function Session() {
       soundscapeEngineRef.current.syncToPhase(nextPhase.type);
 
       if (setts.vibrationEnabled) vibratePhaseChange();
-      if (voice) speak(tFn(`phase.${nextPhase.type}`), setts.voiceSpeed, lang);
+      if (voice && setts.cuePhaseNames) speak(tFn(`phase.${nextPhase.type}`), { rate: setts.voiceSpeed, pitch: setts.voicePitch, volume: setts.voiceVolume, voiceName: lang === "bn" ? setts.voiceNameBn : setts.voiceNameEn, lang });
+
+      // Cycle milestone announcement (every 5 cycles)
+      if (voice && setts.cueCycleMilestone && next === 0 && newCycles > 0 && newCycles % 5 === 0) {
+        setTimeout(() => speakCycleMilestone(newCycles, lang, { rate: setts.voiceSpeed, pitch: setts.voicePitch, volume: setts.voiceVolume, voiceName: lang === "bn" ? setts.voiceNameBn : setts.voiceNameEn, lang }), 1500);
+      }
     } else {
       // Normal countdown
-      secondsLeftRef.current = sl - 1;
-      setSecondsLeft(sl - 1);
+      const newSl = sl - 1;
+      secondsLeftRef.current = newSl;
+      setSecondsLeft(newSl);
+
+      // Countdown voice cue (speak remaining seconds when <= 3)
+      if (voice && setts.cueCountdown && newSl > 0 && newSl <= 3) {
+        speakCountdown(newSl, lang, { rate: setts.voiceSpeed, pitch: setts.voicePitch, volume: setts.voiceVolume, voiceName: lang === "bn" ? setts.voiceNameBn : setts.voiceNameEn, lang });
+      }
     }
 
-    setTotalElapsed((te) => te + 1);
+    const newElapsed = elapsedRef.current + 1;
+    setTotalElapsed(newElapsed);
+
+    // Encouragement cue (every ~2 minutes)
+    if (voice && setts.cueEncouragement && newElapsed - lastEncouragementRef.current >= 120) {
+      lastEncouragementRef.current = newElapsed;
+      setTimeout(() => speakEncouragement(lang, { rate: setts.voiceSpeed, pitch: setts.voicePitch, volume: setts.voiceVolume, voiceName: lang === "bn" ? setts.voiceNameBn : setts.voiceNameEn, lang }), 500);
+    }
   }, []);
 
   const start = () => {
@@ -474,12 +505,18 @@ export default function Session() {
     hrBpmSamplesRef.current = [];
     hrCoherenceSamplesRef.current = [];
     setBreathFeedback(null);
+    lastEncouragementRef.current = 0;
     setState("running");
     // Start soundscape
     if (soundscapeType !== "off") {
       soundscapeEngineRef.current.start(soundscapeType, settings.soundscapeVolume ?? 0.5);
     }
-    if (voiceOn) speak(t(`phase.${currentPhases[0].type}`), settings.voiceSpeed, language);
+    const voiceOpts: SpeakOptions = { rate: settings.voiceSpeed, pitch: settings.voicePitch, volume: settings.voiceVolume, voiceName: language === "bn" ? settings.voiceNameBn : settings.voiceNameEn, lang: language };
+    if (voiceOn && settings.cueSessionStart) {
+      speakSessionStart(language, voiceOpts);
+    } else if (voiceOn && settings.cuePhaseNames) {
+      speak(t(`phase.${currentPhases[0].type}`), voiceOpts);
+    }
     if (settings.vibrationEnabled) vibratePhaseChange();
   };
 
@@ -496,7 +533,7 @@ export default function Session() {
     phaseStartRef.current = Date.now();
     // Restore soundscape volume on resume
     soundscapeEngineRef.current.setVolume(settings.soundscapeVolume ?? 0.5);
-    if (voiceOn) speak(getPhaseLabel(currentPhase), settings.voiceSpeed, language);
+    if (voiceOn && settings.cuePhaseNames) speak(getPhaseLabel(currentPhase), { rate: settings.voiceSpeed, pitch: settings.voicePitch, volume: settings.voiceVolume, voiceName: language === "bn" ? settings.voiceNameBn : settings.voiceNameEn, lang: language });
   };
 
   const handleMoodAfter = (mood: number) => {

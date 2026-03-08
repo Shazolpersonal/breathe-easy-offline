@@ -6,16 +6,18 @@ import { Slider } from "@/components/ui/slider";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { exportData, importData, getLastBackupDate, getDataSummary } from "@/lib/storage";
 import { exportSessionsCSV } from "@/lib/csvExport";
-import { Download, Upload, Circle, Waves, BarChart3, Flower2, Plus, Trash2, Bell, BellOff, Accessibility, Mic, Heart, Music, FileSpreadsheet, AlertTriangle, Database } from "lucide-react";
+import { Download, Upload, Circle, Waves, BarChart3, Flower2, Plus, Trash2, Bell, BellOff, Accessibility, Mic, Heart, Music, FileSpreadsheet, AlertTriangle, Database, Volume2, Info } from "lucide-react";
 import { SoundscapeType, getSoundscapeEngine } from "@/lib/soundscapes";
 import SoundscapePicker from "@/components/SoundscapePicker";
 import { cn } from "@/lib/utils";
 import { toast } from "@/hooks/use-toast";
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { VisualizationType } from "@/components/BreathingVisualizer";
 import { getReminders, addReminder, updateReminder, deleteReminder, requestNotificationPermission, getNotificationPermission, Reminder } from "@/lib/reminders";
+import { getAvailableVoices, hasBengaliVoice, previewVoice, type VoiceInfo } from "@/lib/voice";
 
 export default function Settings() {
   const { theme, setTheme, themeMode, setThemeMode } = useTheme();
@@ -24,6 +26,18 @@ export default function Settings() {
   const fileRef = useRef<HTMLInputElement>(null);
   const [reminders, setReminders] = useState(getReminders);
   const [notifPermission, setNotifPermission] = useState(getNotificationPermission);
+  const [voices, setVoices] = useState(() => getAvailableVoices());
+  const [bnAvailable, setBnAvailable] = useState(() => hasBengaliVoice());
+
+  // Re-fetch voices when they load asynchronously
+  useEffect(() => {
+    const handler = () => {
+      setVoices(getAvailableVoices());
+      setBnAvailable(hasBengaliVoice());
+    };
+    window.speechSynthesis?.addEventListener("voiceschanged", handler);
+    return () => window.speechSynthesis?.removeEventListener("voiceschanged", handler);
+  }, []);
 
   const DAYS_KEYS = ["day.sun", "day.mon", "day.tue", "day.wed", "day.thu", "day.fri", "day.sat"];
 
@@ -230,15 +244,153 @@ export default function Settings() {
 
         {/* Voice */}
         <section className="rounded-2xl border border-border bg-card p-4 space-y-4">
-          <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">{t("settings.voice")}</h2>
+          <div className="flex items-center gap-2">
+            <Volume2 className="h-4 w-4 text-muted-foreground" />
+            <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">{t("settings.voice")}</h2>
+          </div>
+
           <div className="flex items-center justify-between">
             <Label>{t("settings.voiceEnable")}</Label>
             <Switch checked={settings.voiceEnabled} onCheckedChange={(v) => update({ voiceEnabled: v })} />
           </div>
-          <div>
-            <Label className="mb-2 block">{t("settings.voiceSpeed", { speed: settings.voiceSpeed.toFixed(1) })}</Label>
-            <Slider min={0.5} max={1.5} step={0.1} value={[settings.voiceSpeed]} onValueChange={([v]) => update({ voiceSpeed: v })} />
-          </div>
+
+          {settings.voiceEnabled && (
+            <>
+              {/* English Voice Picker */}
+              <div>
+                <Label className="mb-2 block text-xs">{t("settings.voiceEn")}</Label>
+                <div className="flex gap-2">
+                  <Select
+                    value={settings.voiceNameEn || "auto"}
+                    onValueChange={(v) => update({ voiceNameEn: v === "auto" ? null : v })}
+                  >
+                    <SelectTrigger className="flex-1 h-9 text-xs">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="auto">{t("settings.voiceAuto")}</SelectItem>
+                      {voices.en.map((v) => (
+                        <SelectItem key={v.name} value={v.name}>
+                          {v.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <Button
+                    size="icon"
+                    variant="outline"
+                    className="h-9 w-9 shrink-0"
+                    onClick={() => previewVoice(settings.voiceNameEn || "", "en", settings.voicePitch, settings.voiceSpeed, settings.voiceVolume)}
+                  >
+                    <Volume2 className="h-3.5 w-3.5" />
+                  </Button>
+                </div>
+              </div>
+
+              {/* Bengali Voice Picker */}
+              <div>
+                <Label className="mb-2 block text-xs">{t("settings.voiceBn")}</Label>
+                {!bnAvailable && (
+                  <div className="flex items-center gap-1.5 mb-2 rounded-lg bg-secondary/50 px-3 py-2">
+                    <Info className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
+                    <span className="text-[10px] text-muted-foreground">{t("settings.voiceBnUnavailable")}</span>
+                  </div>
+                )}
+                <div className="flex gap-2">
+                  <Select
+                    value={settings.voiceNameBn || "auto"}
+                    onValueChange={(v) => update({ voiceNameBn: v === "auto" ? null : v })}
+                  >
+                    <SelectTrigger className="flex-1 h-9 text-xs">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="auto">{t("settings.voiceAuto")}</SelectItem>
+                      {voices.bn.map((v) => (
+                        <SelectItem key={v.name} value={v.name}>
+                          {v.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <Button
+                    size="icon"
+                    variant="outline"
+                    className="h-9 w-9 shrink-0"
+                    onClick={() => previewVoice(settings.voiceNameBn || "", "bn", settings.voicePitch, settings.voiceSpeed, settings.voiceVolume)}
+                  >
+                    <Volume2 className="h-3.5 w-3.5" />
+                  </Button>
+                </div>
+              </div>
+
+              {/* Speed */}
+              <div>
+                <Label className="mb-2 block">{t("settings.voiceSpeed", { speed: settings.voiceSpeed.toFixed(1) })}</Label>
+                <Slider min={0.5} max={1.5} step={0.1} value={[settings.voiceSpeed]} onValueChange={([v]) => update({ voiceSpeed: v })} />
+              </div>
+
+              {/* Pitch */}
+              <div>
+                <Label className="mb-2 block">{t("settings.voicePitch", { pitch: settings.voicePitch.toFixed(1) })}</Label>
+                <Slider min={0.5} max={2.0} step={0.05} value={[settings.voicePitch]} onValueChange={([v]) => update({ voicePitch: v })} />
+                <p className="text-[10px] text-muted-foreground mt-1">{t("settings.voicePitchDesc")}</p>
+              </div>
+
+              {/* Volume */}
+              <div>
+                <Label className="mb-2 block">{t("settings.voiceVolume", { vol: Math.round(settings.voiceVolume * 100) })}</Label>
+                <Slider min={0} max={1} step={0.05} value={[settings.voiceVolume]} onValueChange={([v]) => update({ voiceVolume: v })} />
+              </div>
+
+              {/* Voice Cues */}
+              <div className="space-y-3 pt-2 border-t border-border">
+                <h3 className="text-xs font-medium text-muted-foreground">{t("settings.voiceCues")}</h3>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <Label className="text-xs">{t("settings.cuePhaseNames")}</Label>
+                    <p className="text-[10px] text-muted-foreground">{t("settings.cuePhaseNamesDesc")}</p>
+                  </div>
+                  <Switch checked={settings.cuePhaseNames} onCheckedChange={(v) => update({ cuePhaseNames: v })} />
+                </div>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <Label className="text-xs">{t("settings.cueCountdown")}</Label>
+                    <p className="text-[10px] text-muted-foreground">{t("settings.cueCountdownDesc")}</p>
+                  </div>
+                  <Switch checked={settings.cueCountdown} onCheckedChange={(v) => update({ cueCountdown: v })} />
+                </div>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <Label className="text-xs">{t("settings.cueSessionStart")}</Label>
+                    <p className="text-[10px] text-muted-foreground">{t("settings.cueSessionStartDesc")}</p>
+                  </div>
+                  <Switch checked={settings.cueSessionStart} onCheckedChange={(v) => update({ cueSessionStart: v })} />
+                </div>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <Label className="text-xs">{t("settings.cueSessionEnd")}</Label>
+                    <p className="text-[10px] text-muted-foreground">{t("settings.cueSessionEndDesc")}</p>
+                  </div>
+                  <Switch checked={settings.cueSessionEnd} onCheckedChange={(v) => update({ cueSessionEnd: v })} />
+                </div>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <Label className="text-xs">{t("settings.cueCycleMilestone")}</Label>
+                    <p className="text-[10px] text-muted-foreground">{t("settings.cueCycleMilestoneDesc")}</p>
+                  </div>
+                  <Switch checked={settings.cueCycleMilestone} onCheckedChange={(v) => update({ cueCycleMilestone: v })} />
+                </div>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <Label className="text-xs">{t("settings.cueEncouragement")}</Label>
+                    <p className="text-[10px] text-muted-foreground">{t("settings.cueEncouragementDesc")}</p>
+                  </div>
+                  <Switch checked={settings.cueEncouragement} onCheckedChange={(v) => update({ cueEncouragement: v })} />
+                </div>
+              </div>
+            </>
+          )}
         </section>
 
         {/* General */}

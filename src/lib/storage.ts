@@ -19,6 +19,16 @@ export interface SessionRecord {
 export interface AppSettings {
   voiceEnabled: boolean;
   voiceSpeed: number;
+  voicePitch: number;
+  voiceVolume: number;
+  voiceNameEn: string | null;
+  voiceNameBn: string | null;
+  cuePhaseNames: boolean;
+  cueCountdown: boolean;
+  cueSessionStart: boolean;
+  cueSessionEnd: boolean;
+  cueCycleMilestone: boolean;
+  cueEncouragement: boolean;
   vibrationEnabled: boolean;
   defaultDurationMinutes: number;
   soundEnabled: boolean;
@@ -44,6 +54,16 @@ const KEYS = {
 const DEFAULT_SETTINGS: AppSettings = {
   voiceEnabled: true,
   voiceSpeed: 0.9,
+  voicePitch: 0.95,
+  voiceVolume: 0.8,
+  voiceNameEn: null,
+  voiceNameBn: null,
+  cuePhaseNames: true,
+  cueCountdown: false,
+  cueSessionStart: true,
+  cueSessionEnd: true,
+  cueCycleMilestone: false,
+  cueEncouragement: false,
   vibrationEnabled: true,
   defaultDurationMinutes: 5,
   soundEnabled: true,
