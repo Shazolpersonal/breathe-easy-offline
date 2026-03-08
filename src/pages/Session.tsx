@@ -434,6 +434,13 @@ export default function Session() {
       moodAfter: mood,
       date: new Date().toISOString(),
     });
+    // Also update the session record with moodAfter
+    const allSessions = getSessions();
+    const idx = allSessions.findIndex(s => s.id === sessionIdRef.current);
+    if (idx >= 0) {
+      allSessions[idx].moodAfter = mood;
+      localStorage.setItem("breathe_sessions", JSON.stringify(allSessions));
+    }
     setMoodSaved(true);
   };
 
