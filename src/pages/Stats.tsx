@@ -483,6 +483,98 @@ export default function Stats() {
           </>
         )}
 
+        {tab === "history" && (
+          <div className="space-y-3">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input
+                placeholder={t("stats.historySearch")}
+                value={historySearch}
+                onChange={(e) => setHistorySearch(e.target.value)}
+                className="pl-9 h-9"
+              />
+            </div>
+            {sessions.length === 0 ? (
+              <div className="flex flex-col items-center gap-3 py-12 text-center">
+                <Clock className="h-10 w-10 text-muted-foreground/40" />
+                <p className="text-sm text-muted-foreground">{t("stats.emptyDesc")}</p>
+              </div>
+            ) : (
+              [...sessions]
+                .filter(s => {
+                  if (!historySearch.trim()) return true;
+                  const q = historySearch.toLowerCase();
+                  return s.techniqueName.toLowerCase().includes(q) || s.date.includes(q);
+                })
+                .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+                .map((s) => {
+                  const d = new Date(s.date);
+                  return (
+                    <div key={s.id} className="rounded-2xl border border-border bg-card p-3">
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="text-xs font-medium text-foreground">
+                          {d.toLocaleDateString(locale, { month: "short", day: "numeric", year: "numeric" })}
+                        </span>
+                        <div className="flex items-center gap-1">
+                          <span className="text-[10px] text-muted-foreground">
+                            {d.toLocaleTimeString(locale, { hour: "2-digit", minute: "2-digit" })}
+                          </span>
+                          {deleteConfirm === s.id ? (
+                            <div className="flex gap-1">
+                              <Button
+                                size="sm"
+                                variant="destructive"
+                                className="h-6 text-[10px] px-2"
+                                onClick={() => {
+                                  deleteSession(s.id);
+                                  setSessions(getSessions());
+                                  setDeleteConfirm(null);
+                                }}
+                              >
+                                {t("techniques.delete")}
+                              </Button>
+                              <Button
+                                size="sm"
+                                variant="ghost"
+                                className="h-6 text-[10px] px-2"
+                                onClick={() => setDeleteConfirm(null)}
+                              >
+                                {t("common.cancel")}
+                              </Button>
+                            </div>
+                          ) : (
+                            <button
+                              onClick={() => setDeleteConfirm(s.id)}
+                              className="rounded-full p-1 text-muted-foreground/40 hover:text-destructive transition-colors"
+                            >
+                              <Trash2 className="h-3.5 w-3.5" />
+                            </button>
+                          )}
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2 text-xs text-muted-foreground flex-wrap">
+                        <span className="font-medium text-foreground">{s.techniqueName}</span>
+                        <span>·</span>
+                        <span>{Math.round(s.durationSeconds / 60)} {t("common.min")}</span>
+                        <span>·</span>
+                        <span>{s.completedCycles} {t("common.cycles")}</span>
+                        {s.calmScore != null && (
+                          <>
+                            <span>·</span>
+                            <span className="text-primary">{s.calmScore}%</span>
+                          </>
+                        )}
+                      </div>
+                      {s.journal && (
+                        <p className="mt-1.5 text-xs text-foreground/80 line-clamp-2">{s.journal}</p>
+                      )}
+                    </div>
+                  );
+                })
+            )}
+          </div>
+        )}
+
         {tab === "insights" && <InsightsTab />}
 
         {tab === "badges" && (
