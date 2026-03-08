@@ -18,7 +18,7 @@ import { toast } from "sonner";
 
 export default function Home() {
   const navigate = useNavigate();
-  const { t, language } = useLanguage();
+  const { t, language, setLanguage } = useLanguage();
   const [favorites, setFavorites] = useState(getFavorites);
   const [showChallengeDialog, setShowChallengeDialog] = useState(false);
   const [installDismissed, setInstallDismissed] = useState(isDismissed);
