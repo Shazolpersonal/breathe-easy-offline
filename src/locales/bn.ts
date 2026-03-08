@@ -439,4 +439,30 @@ export const bn: Record<string, string> = {
   // Zen Mode
   "session.zenMode": "জেন মোড",
   "session.exitZen": "জেন থেকে বের হন",
+
+  // Consistency Score
+  "stats.consistency.title": "সাপ্তাহিক ধারাবাহিকতা",
+  "stats.consistency.regularity": "নিয়মিততা",
+  "stats.consistency.completion": "সম্পন্নতা",
+  "stats.consistency.streak": "ধারা",
+
+  // Mood Heatmap
+  "stats.heatmap.avgMood": "গড় মুড",
+  "stats.heatmap.legend": "মুড",
+
+  // Insights
+  "stats.insights": "অন্তর্দৃষ্টি",
+  "stats.insights.empty": "ব্যক্তিগতকৃত অন্তর্দৃষ্টি আনলক করতে এই সপ্তাহে কয়েকটি সেশন সম্পন্ন করুন।",
+  "stats.insights.subtitle": "আপনার গত ৭ দিনের ব্যক্তিগতকৃত অন্তর্দৃষ্টি",
+  "insight.noSessions": "এই সপ্তাহে এখনও কোনো সেশন নেই। অন্তর্দৃষ্টি তৈরি করতে একটি শুরু করুন!",
+  "insight.goodStart": "এই সপ্তাহে ভালো শুরু! আরও কয়েকটি সেশন গভীর অন্তর্দৃষ্টি আনলক করবে।",
+  "insight.streakGoing": "আপনি {{days}}-দিনের ধারায় আছেন! চালিয়ে যান 🔥",
+  "insight.bestTime": "আপনি {{time}}-এ সবচেয়ে ভালো শ্বাস নেন — এটি আপনার সেরা সময়।",
+  "insight.techniqueCompare": "{{best}} এই সপ্তাহে {{second}}-এর চেয়ে {{pct}}% বেশি মুড উন্নত করেছে।",
+  "insight.bestTechnique": "{{name}} মুড উন্নতির জন্য আপনার সবচেয়ে কার্যকর কৌশল ছিল।",
+  "insight.nearRecord": "আপনার দীর্ঘতম ধারা ভাঙতে আর মাত্র {{days}} দিন!",
+  "insight.onRecord": "আপনি আপনার দীর্ঘতম ধারায় আছেন! 🏆",
+  "insight.moreSessionsUp": "গত সপ্তাহের চেয়ে {{count}}টি বেশি সেশন — দারুণ গতি!",
+  "insight.fewerSessions": "গত সপ্তাহের চেয়ে {{count}}টি কম সেশন। আবার ট্র্যাকে ফিরে আসুন!",
+  "insight.durationUp": "আপনি গড়ে {{current}} মিনিট/সেশন নিয়েছেন, গত সপ্তাহে {{previous}} মিনিট থেকে বেড়েছে।",
 };

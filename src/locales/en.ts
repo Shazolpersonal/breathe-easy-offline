@@ -439,4 +439,30 @@ export const en: Record<string, string> = {
   // Zen Mode
   "session.zenMode": "Zen Mode",
   "session.exitZen": "Exit Zen",
+
+  // Consistency Score
+  "stats.consistency.title": "Weekly Consistency",
+  "stats.consistency.regularity": "Regularity",
+  "stats.consistency.completion": "Completion",
+  "stats.consistency.streak": "Streak",
+
+  // Mood Heatmap
+  "stats.heatmap.avgMood": "Avg Mood",
+  "stats.heatmap.legend": "Mood",
+
+  // Insights
+  "stats.insights": "Insights",
+  "stats.insights.empty": "Complete a few sessions this week to unlock personalized insights.",
+  "stats.insights.subtitle": "Personalized insights from your last 7 days",
+  "insight.noSessions": "No sessions this week yet. Start one to build your insights!",
+  "insight.goodStart": "Good start this week! A few more sessions will unlock deeper insights.",
+  "insight.streakGoing": "You're on a {{days}}-day streak! Keep it going 🔥",
+  "insight.bestTime": "You breathe best at {{time}} — that's your sweet spot.",
+  "insight.techniqueCompare": "{{best}} improved your mood {{pct}}% more than {{second}} this week.",
+  "insight.bestTechnique": "{{name}} was your most effective technique for mood improvement.",
+  "insight.nearRecord": "Just {{days}} more days to beat your longest streak ever!",
+  "insight.onRecord": "You're on your longest streak ever! 🏆",
+  "insight.moreSessionsUp": "{{count}} more sessions than last week — great momentum!",
+  "insight.fewerSessions": "{{count}} fewer sessions than last week. Let's get back on track!",
+  "insight.durationUp": "You averaged {{current}} min/session, up from {{previous}} min last week.",
 };
