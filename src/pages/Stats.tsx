@@ -5,6 +5,8 @@ import { Flame, Clock, Target, Trophy, Brain, BookOpen, ChevronLeft, ChevronRigh
 import { checkAllBadges } from "@/lib/achievements";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Progress } from "@/components/ui/progress";
 import ConsistencyCard from "@/components/stats/ConsistencyCard";
 import MoodHeatmapCalendar from "@/components/stats/MoodHeatmapCalendar";
