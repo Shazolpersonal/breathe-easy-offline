@@ -28,8 +28,11 @@ export default function Home() {
       <div className="mx-auto max-w-md">
         {/* Header */}
         <div className="mb-6">
-          <h1 className="text-2xl font-bold text-foreground">{greeting} 🌬️</h1>
-          <p className="mt-1 text-sm text-muted-foreground">Take a moment to breathe.</p>
+          <div className="flex items-center gap-3 mb-1">
+            <img src="/logo.png" alt="Muhurto Breath logo" className="h-10 w-10" />
+            <h1 className="text-2xl font-bold text-foreground">Muhurto Breath</h1>
+          </div>
+          <p className="mt-1 text-sm text-muted-foreground">{greeting} — take a muhurto to breathe.</p>
         </div>
 
         {/* Stats Row */}
