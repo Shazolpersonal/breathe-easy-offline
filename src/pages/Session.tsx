@@ -398,6 +398,10 @@ export default function Session() {
     hrCoherenceSamplesRef.current = [];
     setBreathFeedback(null);
     setState("running");
+    // Start soundscape
+    if (soundscapeType !== "off") {
+      soundscapeEngineRef.current.start(soundscapeType, settings.soundscapeVolume ?? 0.5);
+    }
     if (voiceOn) speak(t(`phase.${currentPhases[0].type}`), settings.voiceSpeed, language);
     if (settings.vibrationEnabled) vibratePhaseChange();
   };
