@@ -46,12 +46,12 @@ export default function BreathingCircle({ phase, phaseDuration, label, secondsLe
             : `0 0 20px 5px hsl(var(--breathe-glow) / 0.15)`,
         } as React.CSSProperties}
       >
-        <div className="flex flex-col items-center gap-1 text-center">
+        <div className="flex flex-col items-center gap-1 text-center" aria-live="polite" aria-atomic="true">
           <span className="text-lg font-semibold text-primary-foreground drop-shadow-md">
             {label}
           </span>
           {phase !== "idle" && (
-            <span className="text-3xl font-bold tabular-nums text-primary-foreground drop-shadow-md">
+            <span className="text-3xl font-bold tabular-nums text-primary-foreground drop-shadow-md" aria-live="assertive">
               {secondsLeft}
             </span>
           )}

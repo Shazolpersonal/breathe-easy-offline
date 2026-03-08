@@ -186,6 +186,13 @@ export const bn: Record<string, string> = {
   "settings.installAction": "\"হোম স্ক্রিনে যোগ করুন\"",
   "settings.installOffline": "। ইনস্টল হলে অ্যাপটি সম্পূর্ণ অফলাইনে কাজ করে।",
   "settings.notifDenied": "নোটিফিকেশন অনুমতি প্রত্যাখ্যান হয়েছে",
+  "settings.accessibility": "অ্যাক্সেসিবিলিটি",
+  "settings.highContrast": "উচ্চ কনট্রাস্ট",
+  "settings.highContrastDesc": "টেক্সট ও বর্ডারের কনট্রাস্ট বাড়ান",
+  "settings.largeText": "বড় টেক্সট",
+  "settings.largeTextDesc": "পড়ার সুবিধার জন্য ফন্ট সাইজ বাড়ান",
+  "settings.reducedMotion": "কম মোশন",
+  "settings.reducedMotionDesc": "সব অ্যানিমেশন ও ট্রানজিশন বন্ধ করুন",
 
   // Visualization types
   "viz.circle": "বৃত্ত",

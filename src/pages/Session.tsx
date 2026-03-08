@@ -548,6 +548,7 @@ export default function Session() {
           <button
             onClick={() => { setVoiceOn(!voiceOn); if (voiceOn) stopSpeaking(); }}
             className="rounded-full p-2 text-muted-foreground hover:text-foreground"
+            aria-label={voiceOn ? t("settings.voiceEnable") : t("settings.voiceEnable")}
           >
             {voiceOn ? <Volume2 className="h-5 w-5" /> : <VolumeX className="h-5 w-5" />}
           </button>

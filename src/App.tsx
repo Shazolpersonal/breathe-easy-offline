@@ -21,9 +21,18 @@ import NotFound from "@/pages/NotFound";
 const queryClient = new QueryClient();
 
 function AppInner() {
+  const { settings } = useSettings();
+
   useEffect(() => {
     startReminderChecker();
   }, []);
+
+  useEffect(() => {
+    const root = document.documentElement;
+    root.setAttribute("data-high-contrast", String(settings.highContrast));
+    root.setAttribute("data-large-text", String(settings.largeText));
+    root.setAttribute("data-reduced-motion", String(settings.reducedMotion));
+  }, [settings.highContrast, settings.largeText, settings.reducedMotion]);
 
   return (
     <>
