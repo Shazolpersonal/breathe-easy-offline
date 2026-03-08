@@ -1,19 +1,20 @@
 import { useNavigate } from "react-router-dom";
-import { Wind, Flame, Zap, TrendingUp, CheckCircle2, Circle, Swords, Quote, Download, X } from "lucide-react";
+import { Wind, Flame, Zap, TrendingUp, CheckCircle2, Circle, Swords, Quote, Download, X, Trophy } from "lucide-react";
 import SmartSuggestion from "@/components/SmartSuggestion";
 import TechniqueCard from "@/components/TechniqueCard";
 import { PRESET_TECHNIQUES } from "@/lib/techniques";
 import { getCustomTechniques, getFavorites, toggleFavorite, getCurrentStreak, getTodayMinutes } from "@/lib/storage";
-import { getDailyChallenges } from "@/lib/challenges";
-import { getXPState, getWeeklyXP } from "@/lib/xp";
+import { getDailyChallenges, getChallengeStreak, saveTodayChallengeProgress, areAllChallengesComplete } from "@/lib/challenges";
+import { getXPState, getWeeklyXP, addXP } from "@/lib/xp";
 import { getDailyQuote } from "@/lib/quotes";
 import { getActiveChallenges, getChallengeProgress } from "@/lib/friendChallenge";
 import { canInstall, promptInstall, isDismissed, dismissInstallBanner, isRunningAsPWA, canShowManualInstallHint, getInstallPlatform } from "@/lib/installPrompt";
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect, useRef } from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { CreateChallengeDialog } from "@/components/FriendChallenge";
+import { toast } from "sonner";
 
 export default function Home() {
   const navigate = useNavigate();
@@ -28,12 +29,28 @@ export default function Home() {
   const xpState = useMemo(() => getXPState(), []);
   const weeklyXP = useMemo(() => getWeeklyXP(), []);
   const dailyChallenges = useMemo(() => getDailyChallenges(), []);
+  const challengeStreak = useMemo(() => getChallengeStreak(), []);
   const dailyQuote = useMemo(() => getDailyQuote(language), [language]);
   const activeFriendChallenges = useMemo(() => getActiveChallenges(), []);
   const isPWA = useMemo(() => isRunningAsPWA(), []);
   const showNativeInstall = canInstall() && !installDismissed;
   const showManualInstall = !isPWA && canShowManualInstallHint() && !installDismissed;
   const installPlatform = useMemo(() => getInstallPlatform(), []);
+  const allCompleteToastShown = useRef(false);
+
+  // Save challenge progress & show all-complete celebration
+  useEffect(() => {
+    saveTodayChallengeProgress();
+    if (areAllChallengesComplete() && !allCompleteToastShown.current) {
+      allCompleteToastShown.current = true;
+      const bonusKey = `breathe_challenge_bonus_${new Date().toISOString().split("T")[0]}`;
+      if (!localStorage.getItem(bonusKey)) {
+        addXP(25, "challenge_bonus");
+        localStorage.setItem(bonusKey, "1");
+        toast.success(t("challenge.allComplete"));
+      }
+    }
+  });
 
   const hour = new Date().getHours();
   const greeting =
@@ -162,11 +179,20 @@ export default function Home() {
 
         {/* Daily Challenges */}
         <div className="mb-6 rounded-2xl border border-border bg-card p-4">
-          <h2 className="mb-3 text-sm font-semibold uppercase tracking-wider text-muted-foreground">{t("home.dailyChallenges")}</h2>
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">{t("home.dailyChallenges")}</h2>
+            {challengeStreak >= 2 && (
+              <span className="flex items-center gap-1 text-xs font-medium text-primary">
+                <Trophy className="h-3.5 w-3.5" />
+                {t("challenge.streak", { days: challengeStreak })}
+              </span>
+            )}
+          </div>
           <div className="space-y-2.5">
             {dailyChallenges.map((c) => {
               const progress = c.getProgress();
               const done = progress >= c.target;
+              const tierColor = c.tier === "hard" ? "text-destructive" : c.tier === "medium" ? "text-primary" : "text-muted-foreground";
               return (
                 <div key={c.id} className="flex items-center gap-3">
                   {done ? (
@@ -177,6 +203,9 @@ export default function Home() {
                   <div className="flex-1 min-w-0">
                     <span className={`text-sm ${done ? "text-primary font-medium line-through" : "text-foreground"}`}>
                       {c.emoji} {t(`challenge.${c.title}`)}
+                    </span>
+                    <span className={`ml-1.5 text-[10px] uppercase font-medium ${tierColor}`}>
+                      {t(`challenge.tier.${c.tier}`)}
                     </span>
                   </div>
                   <span className="text-xs tabular-nums text-muted-foreground">
