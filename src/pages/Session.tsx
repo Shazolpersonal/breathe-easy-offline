@@ -35,7 +35,7 @@ import { toast } from "sonner";
 
 type SessionState = "idle" | "running" | "paused" | "done" | "playlist-transition";
 
-function CalmScoreDisplay({ result, label }: { result: CalmScoreResult; label: string }) {
+function CalmScoreDisplay({ result, label, t }: { result: CalmScoreResult; label: string; t: (key: string) => string }) {
   return (
     <div className="flex flex-col items-center gap-1">
       <div className="relative flex h-20 w-20 items-center justify-center">
@@ -45,9 +45,10 @@ function CalmScoreDisplay({ result, label }: { result: CalmScoreResult; label: s
         </svg>
         <span className="absolute text-lg font-bold text-foreground">{result.score}</span>
       </div>
-      <span className={`text-sm font-medium text-${result.color}`}>{result.label}</span>
+      <span className={`text-sm font-medium text-${result.color}`}>{t(result.labelKey)}</span>
       <span className="text-xs text-muted-foreground">{label}</span>
     </div>
+  );
   );
 }
 
