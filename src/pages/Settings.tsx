@@ -579,6 +579,47 @@ export default function Settings() {
           >
             <FileSpreadsheet className="h-4 w-4" /> {t("settings.exportCSV")}
           </Button>
+
+          {/* Clipboard Backup */}
+          <div className="flex gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              className="gap-1 flex-1"
+              onClick={async () => {
+                try {
+                  const compact = exportDataCompact();
+                  await navigator.clipboard.writeText(compact);
+                  toast({ title: t("settings.clipboardCopied") });
+                } catch {
+                  toast({ title: t("settings.clipboardError"), variant: "destructive" });
+                }
+              }}
+            >
+              <Clipboard className="h-4 w-4" /> {t("settings.copyBackup")}
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              className="gap-1 flex-1"
+              onClick={async () => {
+                try {
+                  const text = await navigator.clipboard.readText();
+                  if (!text.trim()) {
+                    toast({ title: t("settings.clipboardEmpty"), variant: "destructive" });
+                    return;
+                  }
+                  importDataFromCompact(text.trim());
+                  toast({ title: t("settings.dataImported") });
+                  window.location.reload();
+                } catch {
+                  toast({ title: t("settings.clipboardReadError"), variant: "destructive" });
+                }
+              }}
+            >
+              <ClipboardPaste className="h-4 w-4" /> {t("settings.pasteRestore")}
+            </Button>
+          </div>
         </section>
 
         {/* Install */}
