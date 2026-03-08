@@ -77,9 +77,6 @@ export default function Session() {
   const { settings, update } = useSettings();
   const { t, language } = useLanguage();
   const { miniSession, startMiniMode, updateMiniSession, stopMiniSession } = useSessionContext();
-  const navigate = useNavigate();
-  const { settings, update } = useSettings();
-  const { t, language } = useLanguage();
 
   // Playlist support
   const playlistId = params.get("playlist");
