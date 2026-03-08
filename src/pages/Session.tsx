@@ -1128,6 +1128,13 @@ export default function Session() {
               />
             </div>
 
+            {/* Estimated finish time */}
+            <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+              <Clock className="h-3.5 w-3.5" />
+              <span>{t("session.endsAt", { time: estimatedEndTime })}</span>
+            </div>
+            </div>
+
             <div className="flex gap-1.5">
               {VIZ_OPTIONS.map(({ id, icon: Icon, labelKey }) => (
                 <button
