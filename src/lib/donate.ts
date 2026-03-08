@@ -104,6 +104,15 @@ export async function openDonationAsync(opts: DonateOptions): Promise<boolean> {
   return true;
 }
 
+export function openDonation(opts: DonateOptions): boolean {
+  openDonationAsync(opts);
+  return true;
+}
+
 export function isDonateAvailable(): boolean {
-  return !!window.TwoCoInlineCart;
+  return true; // Script is lazy-loaded on demand
+}
+
+export function preloadDonateScript(): void {
+  loadCheckoutScript().catch(() => {});
 }
