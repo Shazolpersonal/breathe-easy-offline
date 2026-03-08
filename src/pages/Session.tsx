@@ -846,6 +846,7 @@ export default function Session() {
         )}
 
         <BreathingVisualizer
+          key={`${phaseIndex}-${completedCycles}`}
           phase={activePhase}
           phaseDuration={currentPhase.duration}
           label={state === "idle" ? t("session.ready") : getPhaseLabel(currentPhase)}
