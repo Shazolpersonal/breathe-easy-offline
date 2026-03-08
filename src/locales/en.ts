@@ -921,4 +921,41 @@ export const en: Record<string, string> = {
   "adaptive.suggestIncrease": "Your calm scores are consistently high! Try {{minutes}} minutes next time.",
   "adaptive.acceptIncrease": "Set to {{minutes}} min",
   "adaptive.durationUpdated": "Default duration updated to {{minutes}} min!",
+
+  // Estimated End Time
+  "session.endsAt": "Ends at {{time}}",
+
+  // Breathing Rate
+  "session.breathingRate": "Breathing Rate",
+  "session.breathsPerMin": "breaths/min",
+
+  // Previous Journal
+  "session.previousJournal": "Last time you wrote:",
+
+  // Technique Recommendation
+  "recommendation.title": "Try Next",
+  "recommendation.try": "Start {{name}}",
+  "recommendation.stillStressed": "Still feeling stressed? This technique is designed for deep relaxation.",
+  "recommendation.neutral": "Feeling balanced — try this technique to boost your focus and energy.",
+  "recommendation.feelingGood": "Great mood! This gentle technique helps maintain your calm state.",
+
+  // Streak Freeze
+  "home.freezeReady": "1 freeze ready",
+  "home.freezeUsed": "Freeze used",
+
+  // Backup Nudge
+  "backup.nudgeTitle": "Back up your data",
+  "backup.nudgeDesc": "Last backup was {{days}} days ago. You have {{sessions}} sessions at risk.",
+  "backup.nudgeNever": "You've never backed up. {{sessions}} sessions could be lost.",
+  "backup.copyNow": "Copy Backup Now",
+
+  // Auto-Backup
+  "autoBackup.copied": "Auto-backup: {{count}} sessions saved to clipboard! 📋",
+  "settings.autoBackup": "Auto-Backup",
+  "settings.autoBackupDesc": "Copy backup to clipboard every 10 sessions",
+
+  // Share Backup
+  "settings.shareBackup": "Share Backup",
+  "settings.shareBackupTitle": "Muhurto Breath Backup",
+  "settings.backupShared": "Backup shared!",
 };
