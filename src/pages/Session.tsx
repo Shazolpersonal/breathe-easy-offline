@@ -36,6 +36,12 @@ import { toast } from "sonner";
 
 type SessionState = "idle" | "running" | "paused" | "done" | "playlist-transition";
 
+const calmColorMap: Record<string, string> = {
+  "primary": "text-primary",
+  "accent": "text-accent",
+  "muted-foreground": "text-muted-foreground",
+};
+
 function CalmScoreDisplay({ result, label, t }: { result: CalmScoreResult; label: string; t: (key: string) => string }) {
   return (
     <div className="flex flex-col items-center gap-1">
@@ -46,7 +52,7 @@ function CalmScoreDisplay({ result, label, t }: { result: CalmScoreResult; label
         </svg>
         <span className="absolute text-lg font-bold text-foreground">{result.score}</span>
       </div>
-      <span className={`text-sm font-medium text-${result.color}`}>{t(result.labelKey)}</span>
+      <span className={`text-sm font-medium ${calmColorMap[result.color] || "text-foreground"}`}>{t(result.labelKey)}</span>
       <span className="text-xs text-muted-foreground">{label}</span>
     </div>
   );
@@ -718,7 +724,7 @@ export default function Session() {
           <div className="text-5xl">🙏</div>
           <div>
             <h2 className="text-2xl font-bold text-foreground">{t("session.done.title")}</h2>
-            <p className="mt-1 text-muted-foreground">{t("session.done.stats", { min: Math.round(totalElapsed / 60), cycles: completedCycles })}</p>
+            <p className="mt-1 text-muted-foreground">{t(completedCycles === 1 ? "session.done.stats_one" : "session.done.stats", { min: Math.round(totalElapsed / 60), cycles: completedCycles })}</p>
             <p className="text-sm text-muted-foreground">{techniqueName}</p>
             {playlist && <p className="text-xs text-primary mt-1">{t("session.done.playlistComplete")}</p>}
             {programId && programDay && <p className="text-xs text-primary mt-1">{t("session.done.dayComplete", { day: programDay })}</p>}

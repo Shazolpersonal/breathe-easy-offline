@@ -168,8 +168,8 @@ export default function Stats() {
 
             <div className="mb-6 grid grid-cols-2 gap-3">
               {[
-                { icon: Flame, value: streak, label: t("stats.currentStreak"), suffix: t("stats.days"), span: false },
-                { icon: Trophy, value: longestStreak, label: t("stats.longestStreak"), suffix: t("stats.days"), span: false },
+                { icon: Flame, value: streak, label: t("stats.currentStreak"), suffix: streak === 1 ? t("stats.day") : t("stats.days"), span: false },
+                { icon: Trophy, value: longestStreak, label: t("stats.longestStreak"), suffix: longestStreak === 1 ? t("stats.day") : t("stats.days"), span: false },
                 { icon: Clock, value: totalMinutes, label: t("stats.totalTime"), suffix: t("stats.min"), span: false },
                 { icon: Target, value: sessions.length, label: t("stats.sessions"), suffix: "", span: false },
                 ...(avgCalmScore !== null

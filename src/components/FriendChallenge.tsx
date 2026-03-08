@@ -234,7 +234,7 @@ export function AcceptChallengeDialog({ open, onOpenChange, challenge }: AcceptC
           {challenge.targetCycles > 0 && (
             <div className="flex justify-between text-sm">
               <span className="text-muted-foreground">{t("challenge.friend.targetCycles")}</span>
-              <span className="font-medium text-foreground">{challenge.targetCycles} cycles</span>
+              <span className="font-medium text-foreground">{challenge.targetCycles} {challenge.targetCycles === 1 ? t("common.cycle") : t("common.cycles")}</span>
             </div>
           )}
         </div>
