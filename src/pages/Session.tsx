@@ -511,10 +511,24 @@ export default function Session() {
 
   useEffect(() => {
     if (state === "running") {
-      intervalRef.current = setInterval(tick, 1000);
+      let expected = Date.now() + 1000;
+      const run = () => {
+        tick();
+        const drift = Date.now() - expected;
+        expected += 1000;
+        intervalRef.current = setTimeout(run, Math.max(0, 1000 - drift));
+      };
+      intervalRef.current = setTimeout(run, 1000);
     }
-    return () => clearInterval(intervalRef.current);
+    return () => clearTimeout(intervalRef.current);
   }, [state, tick]);
+
+  // Auto-stop when duration reached (moved out of setState callback)
+  useEffect(() => {
+    if (state === "running" && totalElapsed >= durationMin * 60) {
+      stop();
+    }
+  }, [totalElapsed, state, durationMin, stop]);
 
   // ─── Keyboard Shortcuts ───
   useKeyboardShortcuts({
