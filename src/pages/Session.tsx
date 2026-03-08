@@ -161,9 +161,19 @@ export default function Session() {
     if (moodParam) setMoodBefore(Number(moodParam));
   }, [params]);
 
-  const intervalRef = useRef<ReturnType<typeof setInterval>>();
+  const intervalRef = useRef<ReturnType<typeof setTimeout>>();
   const durationMinRef = useRef(durationMin);
   durationMinRef.current = durationMin;
+  const settingsRef = useRef(settings);
+  settingsRef.current = settings;
+  const currentPhasesRef = useRef(currentPhases);
+  currentPhasesRef.current = currentPhases;
+  const techniqueRef = useRef(technique);
+  techniqueRef.current = technique;
+  const tRef = useRef(t);
+  tRef.current = t;
+  const languageRef = useRef(language);
+  languageRef.current = language;
   const currentPhase: BreathingPhase = currentPhases[phaseIndex];
 
   const getPhaseLabel = (phase: BreathingPhase) => t(`phase.${phase.type}`);
