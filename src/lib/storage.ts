@@ -19,6 +19,16 @@ export interface SessionRecord {
 export interface AppSettings {
   voiceEnabled: boolean;
   voiceSpeed: number;
+  voicePitch: number;
+  voiceVolume: number;
+  voiceNameEn: string | null;
+  voiceNameBn: string | null;
+  cuePhaseNames: boolean;
+  cueCountdown: boolean;
+  cueSessionStart: boolean;
+  cueSessionEnd: boolean;
+  cueCycleMilestone: boolean;
+  cueEncouragement: boolean;
   vibrationEnabled: boolean;
   defaultDurationMinutes: number;
   soundEnabled: boolean;
