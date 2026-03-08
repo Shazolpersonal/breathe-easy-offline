@@ -554,4 +554,30 @@ export const en: Record<string, string> = {
 
   // Mini Player
   "mini.backToSession": "Back to session",
+
+  // Onboarding
+  "onboarding.welcome": "Welcome to",
+  "onboarding.appName": "Muhurto Breath",
+  "onboarding.tagline": "Your mindful breathing companion",
+  "onboarding.selectLanguage": "Choose your language",
+  "onboarding.next": "Next",
+  "onboarding.back": "Back",
+  "onboarding.skip": "Skip",
+  "onboarding.start": "Start Breathing",
+  "onboarding.feature1.title": "Guided Techniques",
+  "onboarding.feature1.desc": "Science-backed breathing patterns for calm, focus, and better sleep.",
+  "onboarding.feature2.title": "Track Your Progress",
+  "onboarding.feature2.desc": "Mood tracking, streaks, badges, and detailed insights into your practice.",
+  "onboarding.feature3.title": "Works Offline",
+  "onboarding.feature3.desc": "Your data stays on your device. No account needed — completely private.",
+  "onboarding.featuresTitle": "What you can do",
+  "onboarding.personalizeTitle": "Make it yours",
+  "onboarding.chooseTheme": "Choose a theme",
+  "onboarding.voiceGuidance": "Voice guidance during sessions",
+  "onboarding.hapticFeedback": "Vibration feedback on phase changes",
+  "onboarding.installTitle": "Install for the best experience",
+  "onboarding.installDesc": "Add to your home screen for instant access, offline use, and a full-screen experience.",
+  "onboarding.installButton": "Install Now",
+  "onboarding.maybeLater": "Maybe Later",
+  "onboarding.step": "Step {{current}} of {{total}}",
 };
