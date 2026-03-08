@@ -416,6 +416,13 @@ export default function Settings() {
             <Slider min={1} max={60} step={1} value={[settings.dailyGoalMinutes]} onValueChange={([v]) => update({ dailyGoalMinutes: v })} />
             <p className="text-[10px] text-muted-foreground mt-1">{t("settings.dailyGoalDesc")}</p>
           </div>
+          <div className="flex items-center justify-between">
+            <div>
+              <Label>{t("settings.autoBackup")}</Label>
+              <p className="text-xs text-muted-foreground">{t("settings.autoBackupDesc")}</p>
+            </div>
+            <Switch checked={settings.autoBackupEnabled} onCheckedChange={(v) => update({ autoBackupEnabled: v })} />
+          </div>
         </section>
 
         {/* Visualization */}
