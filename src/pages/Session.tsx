@@ -24,6 +24,7 @@ import { getCompletedChallengeCount } from "@/lib/challenges";
 import { getPlaylists } from "@/lib/playlists";
 import { completeDay } from "@/lib/programs";
 import { shareOrDownloadCard } from "@/lib/shareCard";
+import { shareApp } from "@/lib/shareApp";
 import { BreathDetector, RhythmUpdate } from "@/lib/breathDetector";
 import { getSoundscapeEngine, SoundscapeType } from "@/lib/soundscapes";
 import SoundscapePicker from "@/components/SoundscapePicker";
