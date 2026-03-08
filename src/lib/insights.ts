@@ -6,7 +6,7 @@ export interface Insight {
   params: Record<string, string>;
 }
 
-export function getWeeklyInsights(): Insight[] {
+export function getWeeklyInsights(locale: string = "en"): Insight[] {
   const sessions = getSessions();
   const now = new Date();
   const insights: Insight[] = [];
