@@ -22,7 +22,9 @@ export default function Stats() {
   const { t, language } = useLanguage();
   const [tab, setTab] = useState<Tab>("stats");
   const [timeRange, setTimeRange] = useState<TimeRange>("7d");
-  const sessions = useMemo(() => getSessions(), []);
+  const [sessions, setSessions] = useState(() => getSessions());
+  const [historySearch, setHistorySearch] = useState("");
+  const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
   const sessionsKey = sessions.length;
   const streak = useMemo(() => getCurrentStreak(), [sessionsKey]);
   const longestStreak = useMemo(() => getLongestStreak(), [sessionsKey]);
