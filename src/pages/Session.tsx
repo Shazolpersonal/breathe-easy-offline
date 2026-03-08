@@ -366,46 +366,47 @@ export default function Session() {
   };
 
   const tick = useCallback(() => {
+    const phases = currentPhasesRef.current;
+    const techObj = techniqueRef.current;
+    const voice = voiceOnRef.current;
+    const setts = settingsRef.current;
+    const round = currentRoundRef.current;
+    const lang = languageRef.current;
+    const tFn = tRef.current;
+
     setSecondsLeft((prev) => {
       if (prev <= 1) {
         const now = Date.now();
         const actualDuration = (now - phaseStartRef.current) / 1000;
 
         setPhaseIndex((pi) => {
-          phaseTimestampsRef.current.push({ phaseIndex: pi, expectedDuration: currentPhases[pi].duration, actualDuration });
-          const next = (pi + 1) % currentPhases.length;
+          phaseTimestampsRef.current.push({ phaseIndex: pi, expectedDuration: phases[pi].duration, actualDuration });
+          const next = (pi + 1) % phases.length;
           if (next === 0) {
             setCompletedCycles((c) => c + 1);
-            if (technique.pyramid) setCurrentRound(r => r + 1);
+            if (techObj.pyramid) setCurrentRound(r => r + 1);
           }
 
-          const nextRoundPhases = technique.pyramid && next === 0
-            ? getPyramidPhasesForRound(technique, currentRound + 1)
-            : currentPhases;
+          const nextRoundPhases = techObj.pyramid && next === 0
+            ? getPyramidPhasesForRound(techObj, round + 1)
+            : phases;
           const nextPhase = nextRoundPhases[next];
           setSecondsLeft(nextPhase.duration);
           phaseStartRef.current = Date.now();
 
-          // Notify breath detector of phase change
           breathDetectorRef.current?.notifyPhaseChange(next);
-
-          // Sync soundscape to phase
           soundscapeEngineRef.current.syncToPhase(nextPhase.type);
 
-          if (settings.vibrationEnabled) vibratePhaseChange();
-          if (voiceOn) speak(t(`phase.${nextPhase.type}`), settings.voiceSpeed, language);
+          if (setts.vibrationEnabled) vibratePhaseChange();
+          if (voice) speak(tFn(`phase.${nextPhase.type}`), setts.voiceSpeed, lang);
           return next;
         });
         return prev;
       }
       return prev - 1;
     });
-    setTotalElapsed((te) => {
-      const newT = te + 1;
-      if (newT >= durationMinRef.current * 60) stop();
-      return newT;
-    });
-  }, [currentPhases, voiceOn, settings, stop, technique, currentRound, t, language]);
+    setTotalElapsed((te) => te + 1);
+  }, []);
 
   const start = () => {
     sessionIdRef.current = crypto.randomUUID();
