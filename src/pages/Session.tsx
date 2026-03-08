@@ -349,6 +349,18 @@ export default function Session() {
       completeDay(programId, programDay);
     }
 
+    // Session end voice cue
+    const setts = settingsRef.current;
+    const lang = languageRef.current;
+    if (setts.voiceEnabled && setts.cueSessionEnd && elapsed > 10) {
+      setTimeout(() => {
+        speakSessionEnd(Math.round(elapsed / 60), lang, {
+          rate: setts.voiceSpeed, pitch: setts.voicePitch, volume: setts.voiceVolume,
+          voiceName: lang === "bn" ? setts.voiceNameBn : setts.voiceNameEn, lang,
+        });
+      }, 300);
+    }
+
     vibrateDone();
   }, [completedCycles, technique, moodBefore, phaseIndex, currentPhases, programId, programDay, t, techniqueName]);
 
