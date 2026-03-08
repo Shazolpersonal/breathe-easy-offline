@@ -31,6 +31,7 @@ export const bn: Record<string, string> = {
   "session.resume": "পুনরায় শুরু",
   "session.stop": "থামুন",
   "session.done.title": "সাবাশ!",
+  "session.done.stats_one": "{{min}} মিনিট · {{cycles}} চক্র",
   "session.done.stats": "{{min}} মিনিট · {{cycles}} চক্র",
   "session.done.playlistComplete": "প্লেলিস্ট সম্পন্ন! 🎵",
   "session.done.dayComplete": "দিন {{day}} সম্পন্ন! ✅",
