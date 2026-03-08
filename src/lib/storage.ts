@@ -19,6 +19,7 @@ export interface AppSettings {
   defaultDurationMinutes: number;
   soundEnabled: boolean;
   theme: string;
+  visualizationType: "circle" | "wave" | "bars" | "mandala";
 }
 
 const KEYS = {
