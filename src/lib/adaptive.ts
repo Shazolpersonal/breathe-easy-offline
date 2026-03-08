@@ -82,6 +82,40 @@ export function getAdaptiveSession(currentMood?: number | null): AdaptiveResult 
   return null;
 }
 
+/**
+ * Checks if the user should be suggested to increase duration for a technique.
+ * Returns suggested new duration (in minutes) or null if no suggestion.
+ */
+export function shouldSuggestIncrease(techniqueId: string): number | null {
+  const sessions = getSessions();
+  const techSessions = sessions
+    .filter(s => s.techniqueId === techniqueId && s.calmScore != null && s.durationSeconds > 30)
+    .slice(-5);
+
+  if (techSessions.length < 5) return null;
+
+  const avgCalm = techSessions.reduce((sum, s) => sum + s.calmScore!, 0) / techSessions.length;
+  if (avgCalm < 75) return null;
+
+  // Suggest 1 minute more than their average
+  const avgDuration = techSessions.reduce((sum, s) => sum + s.durationSeconds, 0) / techSessions.length;
+  const currentMin = Math.round(avgDuration / 60);
+  const suggested = currentMin + 1;
+
+  // Don't suggest if already at 30+ minutes
+  if (suggested > 30) return null;
+
+  // Check if we've already suggested this (don't nag)
+  const suggestKey = `breathe_suggest_${techniqueId}_${suggested}`;
+  if (localStorage.getItem(suggestKey)) return null;
+
+  return suggested;
+}
+
+export function dismissSuggestion(techniqueId: string, suggestedMin: number) {
+  localStorage.setItem(`breathe_suggest_${techniqueId}_${suggestedMin}`, "1");
+}
+
 function findBestByCalm(
   sessions: SessionRecord[],
   allTechniques: BreathingTechnique[]
