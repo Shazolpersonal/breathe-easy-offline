@@ -3,14 +3,15 @@ import { Sparkles } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { getSmartSuggestion, getSuggestionTechnique } from "@/lib/suggestions";
 import { getAdaptiveSuggestionForMood } from "@/lib/mood";
-import { getTechniqueById } from "@/lib/techniques";
-import { getCustomTechniques } from "@/lib/storage";
 import { PRESET_TECHNIQUES } from "@/lib/techniques";
+import { getCustomTechniques } from "@/lib/storage";
 import MoodPicker from "@/components/MoodPicker";
 import { Button } from "@/components/ui/button";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function SmartSuggestion() {
   const navigate = useNavigate();
+  const { t } = useLanguage();
   const [selectedMood, setSelectedMood] = useState<number | null>(null);
 
   const adaptive = selectedMood !== null ? getAdaptiveSuggestionForMood(selectedMood) : null;
@@ -18,10 +19,17 @@ export default function SmartSuggestion() {
   const fallback = getSmartSuggestion();
   const fallbackTechnique = getSuggestionTechnique(fallback);
 
-  const message = adaptive ? adaptive.message : fallback.message;
   const techniqueId = adaptive ? adaptive.techniqueId : fallbackTechnique.id;
   const allTechniques = [...PRESET_TECHNIQUES, ...getCustomTechniques()];
-  const technique = allTechniques.find((t) => t.id === techniqueId) || PRESET_TECHNIQUES[0];
+  const technique = allTechniques.find((tech) => tech.id === techniqueId) || PRESET_TECHNIQUES[0];
+
+  // Build translated message
+  const message = adaptive
+    ? t("suggestion.adaptive", {
+        mood: t(`mood.${selectedMood}`).toLowerCase(),
+        technique: t(`technique.${technique.id}.name`),
+      })
+    : t(fallback.messageKey, fallback.messageParams);
 
   const handleStart = () => {
     const moodParam = selectedMood !== null ? `&mood=${selectedMood}` : "";
@@ -35,7 +43,7 @@ export default function SmartSuggestion() {
         <MoodPicker
           selected={selectedMood}
           onSelect={setSelectedMood}
-          label="How are you feeling?"
+          label={t("mood.howFeeling")}
           compact
         />
       </div>
@@ -47,10 +55,10 @@ export default function SmartSuggestion() {
         <div className="flex-1">
           <p className="text-sm text-foreground">{message}</p>
           {adaptive && (
-            <p className="mt-0.5 text-xs text-muted-foreground">Based on your past sessions</p>
+            <p className="mt-0.5 text-xs text-muted-foreground">{t("home.basedOnSessions")}</p>
           )}
           <Button size="sm" className="mt-3" onClick={handleStart}>
-            Start {technique.name}
+            {t("suggestion.start", { technique: t(`technique.${technique.id}.name`) })}
           </Button>
         </div>
       </div>

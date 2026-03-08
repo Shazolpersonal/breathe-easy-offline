@@ -6,7 +6,7 @@ function getSynth(): SpeechSynthesis | null {
   return synth;
 }
 
-export function speak(text: string, rate = 0.9) {
+export function speak(text: string, rate = 0.9, lang: string = "en") {
   const s = getSynth();
   if (!s) return;
   s.cancel();
@@ -14,12 +14,13 @@ export function speak(text: string, rate = 0.9) {
   utterance.rate = rate;
   utterance.pitch = 0.95;
   utterance.volume = 0.8;
-  // Try to pick a good voice
   const voices = s.getVoices();
+  const langPrefix = lang === "bn" ? "bn" : "en";
   const preferred = voices.find(
-    (v) => v.lang.startsWith("en") && v.name.toLowerCase().includes("female")
-  ) || voices.find((v) => v.lang.startsWith("en")) || voices[0];
+    (v) => v.lang.startsWith(langPrefix) && v.name.toLowerCase().includes("female")
+  ) || voices.find((v) => v.lang.startsWith(langPrefix)) || voices.find((v) => v.lang.startsWith("en")) || voices[0];
   if (preferred) utterance.voice = preferred;
+  utterance.lang = lang === "bn" ? "bn-BD" : "en-US";
   s.speak(utterance);
 }
 

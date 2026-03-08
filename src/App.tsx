@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "@/contexts/ThemeContext";
 import { SettingsProvider } from "@/contexts/SettingsContext";
+import { LanguageProvider } from "@/contexts/LanguageContext";
 import { useEffect } from "react";
 import { startReminderChecker } from "@/lib/reminders";
 import BottomNav from "@/components/BottomNav";
@@ -48,11 +49,13 @@ function AppInner() {
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <ThemeProvider>
-      <SettingsProvider>
-        <TooltipProvider>
-          <AppInner />
-        </TooltipProvider>
-      </SettingsProvider>
+      <LanguageProvider>
+        <SettingsProvider>
+          <TooltipProvider>
+            <AppInner />
+          </TooltipProvider>
+        </SettingsProvider>
+      </LanguageProvider>
     </ThemeProvider>
   </QueryClientProvider>
 );

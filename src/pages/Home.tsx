@@ -8,9 +8,11 @@ import { getDailyChallenges } from "@/lib/challenges";
 import { getXPState } from "@/lib/xp";
 import { Progress } from "@/components/ui/progress";
 import { useState, useMemo } from "react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function Home() {
   const navigate = useNavigate();
+  const { t } = useLanguage();
   const [favorites, setFavorites] = useState(getFavorites);
   const streak = getCurrentStreak();
   const todayMin = getTodayMinutes();
@@ -21,7 +23,7 @@ export default function Home() {
 
   const hour = new Date().getHours();
   const greeting =
-    hour < 12 ? "Good Morning" : hour < 17 ? "Good Afternoon" : hour < 22 ? "Good Evening" : "Night Owl";
+    hour < 12 ? t("home.greeting.morning") : hour < 17 ? t("home.greeting.afternoon") : hour < 22 ? t("home.greeting.evening") : t("home.greeting.night");
 
   const handleToggleFav = (id: string) => {
     toggleFavorite(id);
@@ -35,9 +37,9 @@ export default function Home() {
         <div className="mb-6">
           <div className="flex items-center gap-3 mb-1">
             <img src="/logo.png" alt="Muhurto Breath logo" className="h-10 w-10" />
-            <h1 className="text-2xl font-bold text-foreground">Muhurto Breath</h1>
+            <h1 className="text-2xl font-bold text-foreground">{t("home.appName")}</h1>
           </div>
-          <p className="mt-1 text-sm text-muted-foreground">{greeting} — take a muhurto to breathe.</p>
+          <p className="mt-1 text-sm text-muted-foreground">{greeting} {t("home.subtitle")}</p>
         </div>
 
         {/* Stats Row */}
@@ -45,17 +47,17 @@ export default function Home() {
           <div className="flex flex-col items-center rounded-2xl border border-border bg-card p-3">
             <Flame className="mb-1 h-5 w-5 text-primary" />
             <span className="text-lg font-bold text-foreground">{streak}</span>
-            <span className="text-[11px] text-muted-foreground">Day Streak</span>
+            <span className="text-[11px] text-muted-foreground">{t("home.dayStreak")}</span>
           </div>
           <div className="flex flex-col items-center rounded-2xl border border-border bg-card p-3">
             <Wind className="mb-1 h-5 w-5 text-primary" />
             <span className="text-lg font-bold text-foreground">{todayMin}</span>
-            <span className="text-[11px] text-muted-foreground">Min Today</span>
+            <span className="text-[11px] text-muted-foreground">{t("home.minToday")}</span>
           </div>
           <div className="flex flex-col items-center rounded-2xl border border-border bg-card p-3">
             <Zap className="mb-1 h-5 w-5 text-primary" />
             <span className="text-lg font-bold text-foreground">Lv.{xpState.level}</span>
-            <span className="text-[11px] text-muted-foreground">{xpState.title}</span>
+            <span className="text-[11px] text-muted-foreground">{t(`xp.${xpState.title}`)}</span>
           </div>
         </div>
 
@@ -64,7 +66,7 @@ export default function Home() {
           <div className="flex items-center justify-between mb-1.5">
             <span className="text-xs font-medium text-muted-foreground">{xpState.totalXP} XP</span>
             {xpState.xpToNext > 0 && (
-              <span className="text-xs text-muted-foreground">{xpState.xpToNext} XP to next level</span>
+              <span className="text-xs text-muted-foreground">{t("home.xpToNext", { xp: xpState.xpToNext })}</span>
             )}
           </div>
           <Progress value={xpState.progressToNext} className="h-2" />
@@ -72,7 +74,7 @@ export default function Home() {
 
         {/* Daily Challenges */}
         <div className="mb-6 rounded-2xl border border-border bg-card p-4">
-          <h2 className="mb-3 text-sm font-semibold uppercase tracking-wider text-muted-foreground">Daily Challenges</h2>
+          <h2 className="mb-3 text-sm font-semibold uppercase tracking-wider text-muted-foreground">{t("home.dailyChallenges")}</h2>
           <div className="space-y-2.5">
             {dailyChallenges.map((c) => {
               const progress = c.getProgress();
@@ -86,7 +88,7 @@ export default function Home() {
                   )}
                   <div className="flex-1 min-w-0">
                     <span className={`text-sm ${done ? "text-primary font-medium line-through" : "text-foreground"}`}>
-                      {c.emoji} {c.title}
+                      {c.emoji} {t(`challenge.${c.title}`)}
                     </span>
                   </div>
                   <span className="text-xs tabular-nums text-muted-foreground">
@@ -106,14 +108,14 @@ export default function Home() {
         {/* Quick Start */}
         {favTechniques.length > 0 && (
           <div className="mb-6">
-            <h2 className="mb-3 text-sm font-semibold uppercase tracking-wider text-muted-foreground">Quick Start</h2>
+            <h2 className="mb-3 text-sm font-semibold uppercase tracking-wider text-muted-foreground">{t("home.quickStart")}</h2>
             <div className="grid grid-cols-2 gap-2">
-              {favTechniques.slice(0, 4).map((t) => (
+              {favTechniques.slice(0, 4).map((tech) => (
                 <TechniqueCard
-                  key={t.id}
-                  technique={t}
+                  key={tech.id}
+                  technique={tech}
                   isFavorite={true}
-                  onToggleFavorite={() => handleToggleFav(t.id)}
+                  onToggleFavorite={() => handleToggleFav(tech.id)}
                   compact
                 />
               ))}
@@ -132,7 +134,7 @@ export default function Home() {
         >
           <Wind className="h-8 w-8 text-primary-foreground" />
         </button>
-        <p className="mt-2 text-center text-xs text-muted-foreground">Tap to breathe</p>
+        <p className="mt-2 text-center text-xs text-muted-foreground">{t("home.tapToBreathe")}</p>
       </div>
     </div>
   );

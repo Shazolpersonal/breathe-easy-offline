@@ -2,23 +2,25 @@ import { Home, Wind, BookOpen, BarChart3, MoreHorizontal } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const MAIN_ITEMS = [
-  { path: "/", icon: Home, label: "Home" },
-  { path: "/session", icon: Wind, label: "Breathe" },
-  { path: "/techniques", icon: BookOpen, label: "Library" },
-  { path: "/stats", icon: BarChart3, label: "Stats" },
+  { path: "/", icon: Home, labelKey: "nav.home" },
+  { path: "/session", icon: Wind, labelKey: "nav.breathe" },
+  { path: "/techniques", icon: BookOpen, labelKey: "nav.library" },
+  { path: "/stats", icon: BarChart3, labelKey: "nav.stats" },
 ];
 
 const MORE_ITEMS = [
-  { path: "/playlists", label: "Playlists" },
-  { path: "/programs", label: "Programs" },
-  { path: "/settings", label: "Settings" },
+  { path: "/playlists", labelKey: "nav.playlists" },
+  { path: "/programs", labelKey: "nav.programs" },
+  { path: "/settings", labelKey: "nav.settings" },
 ];
 
 export default function BottomNav() {
   const location = useLocation();
   const navigate = useNavigate();
+  const { t } = useLanguage();
   const [moreOpen, setMoreOpen] = useState(false);
 
   const isMoreActive = MORE_ITEMS.some(i => location.pathname === i.path);
@@ -32,7 +34,7 @@ export default function BottomNav() {
             className="absolute bottom-16 right-4 rounded-xl border border-border bg-card p-1 shadow-lg"
             onClick={e => e.stopPropagation()}
           >
-            {MORE_ITEMS.map(({ path, label }) => (
+            {MORE_ITEMS.map(({ path, labelKey }) => (
               <button
                 key={path}
                 onClick={() => { navigate(path); setMoreOpen(false); }}
@@ -41,7 +43,7 @@ export default function BottomNav() {
                   location.pathname === path ? "bg-primary/15 text-primary font-medium" : "text-foreground hover:bg-secondary"
                 )}
               >
-                {label}
+                {t(labelKey)}
               </button>
             ))}
           </div>
@@ -50,7 +52,7 @@ export default function BottomNav() {
 
       <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-border bg-card/95 backdrop-blur-md safe-bottom">
         <div className="mx-auto flex max-w-md items-center justify-around py-2">
-          {MAIN_ITEMS.map(({ path, icon: Icon, label }) => {
+          {MAIN_ITEMS.map(({ path, icon: Icon, labelKey }) => {
             const active = location.pathname === path;
             return (
               <button
@@ -62,7 +64,7 @@ export default function BottomNav() {
                 )}
               >
                 <Icon className={cn("h-5 w-5", active && "drop-shadow-[0_0_6px_hsl(var(--primary))]")} />
-                <span className="font-medium">{label}</span>
+                <span className="font-medium">{t(labelKey)}</span>
               </button>
             );
           })}
@@ -74,7 +76,7 @@ export default function BottomNav() {
             )}
           >
             <MoreHorizontal className={cn("h-5 w-5", isMoreActive && "drop-shadow-[0_0_6px_hsl(var(--primary))]")} />
-            <span className="font-medium">More</span>
+            <span className="font-medium">{t("nav.more")}</span>
           </button>
         </div>
       </nav>

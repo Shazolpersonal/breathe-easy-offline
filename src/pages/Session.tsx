@@ -8,6 +8,7 @@ import MoodPicker from "@/components/MoodPicker";
 import { PRESET_TECHNIQUES, getTechniqueById, BreathingPhase, getPyramidPhasesForRound } from "@/lib/techniques";
 import { getCustomTechniques, addSession, getSessions } from "@/lib/storage";
 import { useSettings } from "@/contexts/SettingsContext";
+import { useLanguage } from "@/contexts/LanguageContext";
 import { speak, stopSpeaking } from "@/lib/voice";
 import { vibratePhaseChange, vibrateDone } from "@/lib/haptics";
 import { saveMoodRecord, getMoodEmoji } from "@/lib/mood";
@@ -27,14 +28,7 @@ import { toast } from "sonner";
 
 type SessionState = "idle" | "running" | "paused" | "done" | "playlist-transition";
 
-const VIZ_OPTIONS: { id: VisualizationType; icon: typeof Circle; label: string }[] = [
-  { id: "circle", icon: Circle, label: "Circle" },
-  { id: "wave", icon: Waves, label: "Wave" },
-  { id: "bars", icon: BarChart3, label: "Bars" },
-  { id: "mandala", icon: Flower2, label: "Mandala" },
-];
-
-function CalmScoreDisplay({ result }: { result: CalmScoreResult }) {
+function CalmScoreDisplay({ result, label }: { result: CalmScoreResult; label: string }) {
   return (
     <div className="flex flex-col items-center gap-1">
       <div className="relative flex h-20 w-20 items-center justify-center">
@@ -45,16 +39,16 @@ function CalmScoreDisplay({ result }: { result: CalmScoreResult }) {
         <span className="absolute text-lg font-bold text-foreground">{result.score}</span>
       </div>
       <span className={`text-sm font-medium text-${result.color}`}>{result.label}</span>
-      <span className="text-xs text-muted-foreground">Calm Score</span>
+      <span className="text-xs text-muted-foreground">{label}</span>
     </div>
   );
 }
 
-function LevelUpBanner({ level, techniqueName }: { level: number; techniqueName: string }) {
+function LevelUpBanner({ level, techniqueName, label }: { level: number; techniqueName: string; label: string }) {
   return (
     <div className="flex flex-col items-center gap-1 rounded-xl bg-primary/10 px-4 py-3">
       <TrendingUp className="h-5 w-5 text-primary" />
-      <span className="text-sm font-semibold text-primary">Level Up!</span>
+      <span className="text-sm font-semibold text-primary">{label}</span>
       <span className="text-xs text-muted-foreground">{techniqueName} → {getLevelName(level)}</span>
     </div>
   );
@@ -65,7 +59,7 @@ function XPEarnedDisplay({ xp, leveledUp, newTitle }: { xp: number; leveledUp: b
     <div className="flex flex-col items-center gap-1 rounded-xl bg-accent/50 px-4 py-3">
       <Sparkles className="h-5 w-5 text-primary" />
       <span className="text-lg font-bold text-primary">+{xp} XP</span>
-      {leveledUp && newTitle && <span className="text-xs font-medium text-primary">🎉 New title: {newTitle}</span>}
+      {leveledUp && newTitle && <span className="text-xs font-medium text-primary">🎉 {newTitle}</span>}
     </div>
   );
 }
@@ -74,6 +68,7 @@ export default function Session() {
   const [params] = useSearchParams();
   const navigate = useNavigate();
   const { settings, update } = useSettings();
+  const { t, language } = useLanguage();
 
   // Playlist support
   const playlistId = params.get("playlist");
@@ -85,10 +80,15 @@ export default function Session() {
   const programDay = params.get("day") ? Number(params.get("day")) : null;
   const paramDuration = params.get("duration") ? Number(params.get("duration")) : null;
 
-  // Current technique (may change during playlist)
   const currentPlaylistStep = playlist?.steps[playlistStepIdx];
   const techniqueId = currentPlaylistStep?.techniqueId || params.get("technique") || "box-breathing";
   const technique = getTechniqueById(techniqueId, getCustomTechniques()) || PRESET_TECHNIQUES[0];
+
+  const techniqueName = (() => {
+    const key = `technique.${technique.id}.name`;
+    const translated = t(key);
+    return translated !== key ? translated : technique.name;
+  })();
 
   const progression = getProgression(techniqueId);
   const basePhases = getScaledPhases(technique, progression.level);
@@ -102,7 +102,6 @@ export default function Session() {
     paramDuration || currentPlaylistStep?.durationMinutes || settings.defaultDurationMinutes
   );
 
-  // Pyramid: track current round for phase scaling
   const [currentRound, setCurrentRound] = useState(0);
   const currentPhases = useMemo(() => {
     if (technique.pyramid) return getPyramidPhasesForRound(technique, currentRound);
@@ -124,7 +123,6 @@ export default function Session() {
   const phaseTimestampsRef = useRef<PhaseTimestamp[]>([]);
   const [calmResult, setCalmResult] = useState<CalmScoreResult | null>(null);
 
-  // Playlist transition
   const [nextTechniqueName, setNextTechniqueName] = useState("");
 
   useEffect(() => {
@@ -134,6 +132,8 @@ export default function Session() {
 
   const intervalRef = useRef<ReturnType<typeof setInterval>>();
   const currentPhase: BreathingPhase = currentPhases[phaseIndex];
+
+  const getPhaseLabel = (phase: BreathingPhase) => t(`phase.${phase.type}`);
 
   const saveJournal = useCallback(() => {
     if (journalNote.trim()) {
@@ -188,7 +188,6 @@ export default function Session() {
       });
     }
 
-    // Complete program day if applicable
     if (programId && programDay) {
       completeDay(programId, programDay);
     }
@@ -199,17 +198,18 @@ export default function Session() {
   const stop = useCallback(() => {
     finishSession();
 
-    // If playlist has more steps, transition
     if (playlist && playlistStepIdx < playlist.steps.length - 1) {
       const nextStep = playlist.steps[playlistStepIdx + 1];
       const nextTech = getTechniqueById(nextStep.techniqueId, getCustomTechniques());
-      setNextTechniqueName(nextTech?.name || nextStep.techniqueId);
+      const nextKey = `technique.${nextStep.techniqueId}.name`;
+      const nextTranslated = t(nextKey);
+      setNextTechniqueName(nextTranslated !== nextKey ? nextTranslated : (nextTech?.name || nextStep.techniqueId));
       setState("playlist-transition");
       return;
     }
 
     setState("done");
-  }, [finishSession, playlist, playlistStepIdx]);
+  }, [finishSession, playlist, playlistStepIdx, t]);
 
   const advancePlaylist = () => {
     if (!playlist) return;
@@ -218,7 +218,6 @@ export default function Session() {
     setPlaylistStepIdx(nextIdx);
     setDurationMin(nextStep.durationMinutes);
 
-    // Reset session state for next technique
     sessionIdRef.current = crypto.randomUUID();
     setPhaseIndex(0);
     setTotalElapsed(0);
@@ -235,7 +234,7 @@ export default function Session() {
     setSecondsLeft(nextPhases[0].duration);
 
     setState("running");
-    if (voiceOn) speak(nextPhases[0].label, settings.voiceSpeed);
+    if (voiceOn) speak(t(`phase.${nextPhases[0].type}`), settings.voiceSpeed, language);
     if (settings.vibrationEnabled) vibratePhaseChange();
   };
 
@@ -250,11 +249,9 @@ export default function Session() {
           const next = (pi + 1) % currentPhases.length;
           if (next === 0) {
             setCompletedCycles((c) => c + 1);
-            // Pyramid: advance round
             if (technique.pyramid) setCurrentRound(r => r + 1);
           }
 
-          // Get phases for potentially new round
           const nextRoundPhases = technique.pyramid && next === 0
             ? getPyramidPhasesForRound(technique, currentRound + 1)
             : currentPhases;
@@ -263,19 +260,19 @@ export default function Session() {
           phaseStartRef.current = Date.now();
 
           if (settings.vibrationEnabled) vibratePhaseChange();
-          if (voiceOn) speak(nextPhase.label, settings.voiceSpeed);
+          if (voiceOn) speak(t(`phase.${nextPhase.type}`), settings.voiceSpeed, language);
           return next;
         });
         return prev;
       }
       return prev - 1;
     });
-    setTotalElapsed((t) => {
-      const newT = t + 1;
+    setTotalElapsed((te) => {
+      const newT = te + 1;
       if (newT >= durationMin * 60) stop();
       return newT;
     });
-  }, [currentPhases, voiceOn, settings, durationMin, stop, technique, currentRound]);
+  }, [currentPhases, voiceOn, settings, durationMin, stop, technique, currentRound, t, language]);
 
   const start = () => {
     sessionIdRef.current = crypto.randomUUID();
@@ -293,7 +290,7 @@ export default function Session() {
     phaseTimestampsRef.current = [];
     phaseStartRef.current = Date.now();
     setState("running");
-    if (voiceOn) speak(currentPhases[0].label, settings.voiceSpeed);
+    if (voiceOn) speak(t(`phase.${currentPhases[0].type}`), settings.voiceSpeed, language);
     if (settings.vibrationEnabled) vibratePhaseChange();
   };
 
@@ -306,7 +303,7 @@ export default function Session() {
   const resume = () => {
     setState("running");
     phaseStartRef.current = Date.now();
-    if (voiceOn) speak(currentPhase.label, settings.voiceSpeed);
+    if (voiceOn) speak(getPhaseLabel(currentPhase), settings.voiceSpeed, language);
   };
 
   const handleMoodAfter = (mood: number) => {
@@ -323,12 +320,12 @@ export default function Session() {
 
   const handleShare = async () => {
     await shareOrDownloadCard({
-      techniqueName: technique.name,
+      techniqueName,
       durationMinutes: Math.round(totalElapsed / 60),
       cycles: completedCycles,
       calmScore: calmResult?.score,
       date: new Date().toISOString(),
-    });
+    }, language);
   };
 
   useEffect(() => {
@@ -343,6 +340,13 @@ export default function Session() {
   const moodImprovement = moodBefore !== null && moodAfter !== null ? moodAfter - moodBefore : null;
   const activePhase = state === "idle" ? "idle" as const : currentPhase.type;
 
+  const VIZ_OPTIONS: { id: VisualizationType; icon: typeof Circle; labelKey: string }[] = [
+    { id: "circle", icon: Circle, labelKey: "viz.circle" },
+    { id: "wave", icon: Waves, labelKey: "viz.wave" },
+    { id: "bars", icon: BarChart3, labelKey: "viz.bars" },
+    { id: "mandala", icon: Flower2, labelKey: "viz.mandala" },
+  ];
+
   // Playlist transition screen
   if (state === "playlist-transition") {
     return (
@@ -350,14 +354,14 @@ export default function Session() {
         <div className="text-center space-y-6">
           <SkipForward className="mx-auto h-12 w-12 text-primary animate-pulse" />
           <div>
-            <p className="text-sm text-muted-foreground">Next up</p>
+            <p className="text-sm text-muted-foreground">{t("session.nextUp")}</p>
             <h2 className="text-2xl font-bold text-foreground">{nextTechniqueName}</h2>
             <p className="text-sm text-muted-foreground">
-              Step {playlistStepIdx + 2} of {playlist!.steps.length}
+              {t("session.step", { current: playlistStepIdx + 2, total: playlist!.steps.length })}
             </p>
           </div>
           <Button size="lg" className="rounded-full px-8 gap-2" onClick={advancePlaylist}>
-            <Play className="h-5 w-5" /> Continue
+            <Play className="h-5 w-5" /> {t("session.continue")}
           </Button>
         </div>
       </div>
@@ -370,36 +374,36 @@ export default function Session() {
         <div className="text-center space-y-5">
           <div className="text-5xl">🙏</div>
           <div>
-            <h2 className="text-2xl font-bold text-foreground">Well Done!</h2>
-            <p className="mt-1 text-muted-foreground">{Math.round(totalElapsed / 60)} min · {completedCycles} cycles</p>
-            <p className="text-sm text-muted-foreground">{technique.name}</p>
-            {playlist && <p className="text-xs text-primary mt-1">Playlist complete! 🎵</p>}
-            {programId && programDay && <p className="text-xs text-primary mt-1">Day {programDay} complete! ✅</p>}
+            <h2 className="text-2xl font-bold text-foreground">{t("session.done.title")}</h2>
+            <p className="mt-1 text-muted-foreground">{t("session.done.stats", { min: Math.round(totalElapsed / 60), cycles: completedCycles })}</p>
+            <p className="text-sm text-muted-foreground">{techniqueName}</p>
+            {playlist && <p className="text-xs text-primary mt-1">{t("session.done.playlistComplete")}</p>}
+            {programId && programDay && <p className="text-xs text-primary mt-1">{t("session.done.dayComplete", { day: programDay })}</p>}
             <span className="inline-block mt-1 rounded-full bg-primary/15 px-2.5 py-0.5 text-xs font-medium text-primary">
-              Lv.{progression.level} {getLevelName(progression.level)}
+              Lv.{progression.level} {t(`level.${getLevelName(progression.level)}`)}
             </span>
           </div>
 
-          {levelUpInfo && <LevelUpBanner level={levelUpInfo.level} techniqueName={technique.name} />}
-          {calmResult && <CalmScoreDisplay result={calmResult} />}
+          {levelUpInfo && <LevelUpBanner level={levelUpInfo.level} techniqueName={techniqueName} label={t("session.levelUp")} />}
+          {calmResult && <CalmScoreDisplay result={calmResult} label={t("session.calmScore")} />}
           {earnedXP && <XPEarnedDisplay xp={earnedXP.xp} leveledUp={earnedXP.leveledUp} newTitle={earnedXP.newTitle} />}
 
           <div>
             {!moodSaved ? (
-              <MoodPicker selected={moodAfter} onSelect={handleMoodAfter} label="How do you feel now?" />
+              <MoodPicker selected={moodAfter} onSelect={handleMoodAfter} label={t("session.moodAfter")} />
             ) : (
               <div className="flex flex-col items-center gap-1">
                 <span className="text-3xl">{getMoodEmoji(moodAfter!)}</span>
-                {moodImprovement !== null && moodImprovement > 0 && <span className="text-sm font-medium text-primary">+{moodImprovement} mood boost!</span>}
-                {moodImprovement !== null && moodImprovement === 0 && <span className="text-sm text-muted-foreground">Mood maintained</span>}
-                {moodImprovement !== null && moodImprovement < 0 && <span className="text-sm text-muted-foreground">Keep practicing 💪</span>}
+                {moodImprovement !== null && moodImprovement > 0 && <span className="text-sm font-medium text-primary">{t("session.moodBoost", { improvement: moodImprovement })}</span>}
+                {moodImprovement !== null && moodImprovement === 0 && <span className="text-sm text-muted-foreground">{t("session.moodMaintained")}</span>}
+                {moodImprovement !== null && moodImprovement < 0 && <span className="text-sm text-muted-foreground">{t("session.keepPracticing")}</span>}
               </div>
             )}
           </div>
 
           <div className="w-full max-w-xs">
             <Textarea
-              placeholder="How did this session feel? (optional)"
+              placeholder={t("session.journal.placeholder")}
               value={journalNote}
               onChange={(e) => setJournalNote(e.target.value)}
               className="min-h-[60px] resize-none bg-secondary/50 border-border text-sm"
@@ -409,17 +413,17 @@ export default function Session() {
 
           <div className="flex gap-3 justify-center flex-wrap">
             <Button variant="outline" size="sm" className="gap-1" onClick={handleShare}>
-              <Share2 className="h-4 w-4" /> Share
+              <Share2 className="h-4 w-4" /> {t("session.share")}
             </Button>
             <Button variant="secondary" onClick={() => {
               saveJournal();
               setState("idle"); setMoodBefore(null); setMoodAfter(null); setMoodSaved(false); setLevelUpInfo(null); setEarnedXP(null); setCalmResult(null); setJournalNote("");
-            }}>Again</Button>
+            }}>{t("session.again")}</Button>
             <Button onClick={() => {
               saveJournal();
               if (programId) navigate("/programs");
               else navigate("/");
-            }}>Done</Button>
+            }}>{t("session.done.button")}</Button>
           </div>
         </div>
       </div>
@@ -436,8 +440,8 @@ export default function Session() {
         {playlist && state !== "idle" && (
           <div className="w-full max-w-xs">
             <div className="flex items-center justify-between mb-1">
-              <span className="text-xs text-muted-foreground">Step {playlistStepIdx + 1}/{playlist.steps.length}</span>
-              <span className="text-xs text-primary font-medium">{technique.name}</span>
+              <span className="text-xs text-muted-foreground">{t("session.step", { current: playlistStepIdx + 1, total: playlist.steps.length })}</span>
+              <span className="text-xs text-primary font-medium">{techniqueName}</span>
             </div>
             <div className="flex gap-1">
               {playlist.steps.map((_, i) => (
@@ -448,12 +452,12 @@ export default function Session() {
         )}
 
         <div className="text-center">
-          <h2 className="text-lg font-semibold text-foreground">{technique.name}</h2>
+          <h2 className="text-lg font-semibold text-foreground">{techniqueName}</h2>
           <span className="text-xs text-muted-foreground">
-            Lv.{progression.level} {getLevelName(progression.level)}
+            Lv.{progression.level} {t(`level.${getLevelName(progression.level)}`)}
           </span>
           {technique.pyramid && state !== "idle" && (
-            <p className="text-xs text-primary mt-0.5">Round {currentRound + 1} (Pyramid)</p>
+            <p className="text-xs text-primary mt-0.5">{t("session.round", { round: currentRound + 1 })}</p>
           )}
           {progression.level < 5 && (
             <div className="mx-auto mt-1 w-32">
@@ -463,19 +467,19 @@ export default function Session() {
         </div>
 
         {state === "idle" && (
-          <MoodPicker selected={moodBefore} onSelect={setMoodBefore} label="How are you feeling?" compact />
+          <MoodPicker selected={moodBefore} onSelect={setMoodBefore} label={t("mood.howFeeling")} compact />
         )}
 
         <BreathingVisualizer
           phase={activePhase}
           phaseDuration={currentPhase.duration}
-          label={state === "idle" ? "Ready" : currentPhase.label}
+          label={state === "idle" ? t("session.ready") : getPhaseLabel(currentPhase)}
           secondsLeft={state === "idle" ? 0 : secondsLeft}
         />
 
         <div className="text-center">
           <span className="text-sm tabular-nums text-muted-foreground">{elapsedDisplay} / {targetDisplay}</span>
-          {state !== "idle" && <p className="text-xs text-muted-foreground">{completedCycles} cycles</p>}
+          {state !== "idle" && <p className="text-xs text-muted-foreground">{t("session.cycles", { count: completedCycles })}</p>}
         </div>
 
         {state === "idle" && (
@@ -490,13 +494,13 @@ export default function Session() {
                     durationMin === m ? "bg-primary text-primary-foreground" : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
                   )}
                 >
-                  {m} min
+                  {m} {t("common.min")}
                 </button>
               ))}
             </div>
 
             <div className="flex gap-1.5">
-              {VIZ_OPTIONS.map(({ id, icon: Icon, label }) => (
+              {VIZ_OPTIONS.map(({ id, icon: Icon, labelKey }) => (
                 <button
                   key={id}
                   onClick={() => update({ visualizationType: id })}
@@ -506,10 +510,10 @@ export default function Session() {
                       ? "bg-primary/20 text-primary ring-1 ring-primary/40"
                       : "bg-secondary/60 text-muted-foreground hover:text-foreground"
                   )}
-                  title={label}
+                  title={t(labelKey)}
                 >
                   <Icon className="h-3.5 w-3.5" />
-                  <span className="hidden sm:inline">{label}</span>
+                  <span className="hidden sm:inline">{t(labelKey)}</span>
                 </button>
               ))}
             </div>
@@ -519,7 +523,7 @@ export default function Session() {
         <div className="flex items-center gap-4">
           {state === "idle" ? (
             <Button size="lg" onClick={start} className="gap-2 rounded-full px-8">
-              <Play className="h-5 w-5" /> Start
+              <Play className="h-5 w-5" /> {t("session.start")}
             </Button>
           ) : state === "running" ? (
             <>
