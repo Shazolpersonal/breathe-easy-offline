@@ -626,6 +626,7 @@ export default function Session() {
   useEffect(() => {
     return () => {
       if (stateRef.current === "running" || stateRef.current === "paused") {
+        // Entering mini mode — keep soundscape alive for restore
         startMiniMode({
           isActive: true,
           isPaused: stateRef.current === "paused",
@@ -643,6 +644,9 @@ export default function Session() {
           voiceOn: voiceOnRef.current,
           soundscapeType: soundscapeTypeRef.current,
         });
+      } else {
+        // Not entering mini mode — clean up soundscape
+        soundscapeEngineRef.current.stop();
       }
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
