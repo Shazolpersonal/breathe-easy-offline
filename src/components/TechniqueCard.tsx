@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { shareTechnique } from "@/lib/shareApp";
 
 interface TechniqueCardProps {
   technique: BreathingTechnique;
