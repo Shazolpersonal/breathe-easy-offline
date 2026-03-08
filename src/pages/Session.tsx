@@ -955,8 +955,10 @@ export default function Session() {
                   step={0.05}
                   value={[settings.soundscapeVolume ?? 0.5]}
                   onValueChange={([v]) => {
-                    update({ soundscapeVolume: v });
                     soundscapeEngineRef.current.setVolume(v);
+                  }}
+                  onValueCommit={([v]) => {
+                    update({ soundscapeVolume: v });
                   }}
                   className="w-16"
                 />

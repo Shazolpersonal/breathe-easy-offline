@@ -1,4 +1,6 @@
 import { createContext, useContext, useState, useCallback, useEffect, useRef, ReactNode } from "react";
+import { addSession } from "@/lib/storage";
+import { updateProgression } from "@/lib/progression";
 
 export interface MiniSessionState {
   isActive: boolean;
@@ -56,8 +58,21 @@ export function SessionProvider({ children }: { children: ReactNode }) {
         setMiniSession((prev) => {
           if (!prev || prev.isPaused || !prev.isActive) return prev;
           const newElapsed = prev.elapsed + 1;
-          // Auto-stop if exceeded total duration
+          // Auto-stop if exceeded total duration — save session before clearing
           if (newElapsed >= prev.totalDuration * 60) {
+            // Save the session so it isn't lost
+            if (newElapsed > 10) {
+              addSession({
+                id: crypto.randomUUID(),
+                techniqueId: prev.techniqueId,
+                techniqueName: prev.techniqueName,
+                date: new Date().toISOString(),
+                durationSeconds: newElapsed,
+                completedCycles: prev.completedCycles,
+                moodBefore: prev.moodBefore ?? undefined,
+              });
+              updateProgression(prev.techniqueId, prev.completedCycles);
+            }
             return null;
           }
           return { ...prev, elapsed: newElapsed };
