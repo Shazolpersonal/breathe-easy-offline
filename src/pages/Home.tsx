@@ -27,7 +27,7 @@ export default function Home() {
   const favTechniques = useMemo(() => allTechniques.filter((tech) => favorites.includes(tech.id)), [allTechniques, favorites]);
   const xpState = useMemo(() => getXPState(), []);
   const dailyChallenges = useMemo(() => getDailyChallenges(), []);
-  const dailyQuote = useMemo(() => getDailyQuote(), []);
+  const dailyQuote = useMemo(() => getDailyQuote(language), [language]);
   const activeFriendChallenges = useMemo(() => getActiveChallenges(), []);
   const showInstall = canInstall() && !installDismissed;
 
