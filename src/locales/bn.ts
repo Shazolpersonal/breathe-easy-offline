@@ -554,4 +554,30 @@ export const bn: Record<string, string> = {
 
   // Mini Player
   "mini.backToSession": "সেশনে ফিরে যান",
+
+  // Onboarding
+  "onboarding.welcome": "স্বাগতম",
+  "onboarding.appName": "মুহূর্ত ব্রেথ",
+  "onboarding.tagline": "আপনার মননশীল শ্বাস-প্রশ্বাসের সঙ্গী",
+  "onboarding.selectLanguage": "আপনার ভাষা বেছে নিন",
+  "onboarding.next": "পরবর্তী",
+  "onboarding.back": "পিছনে",
+  "onboarding.skip": "এড়িয়ে যান",
+  "onboarding.start": "শ্বাস শুরু করুন",
+  "onboarding.feature1.title": "গাইডেড কৌশল",
+  "onboarding.feature1.desc": "শান্তি, মনোযোগ এবং ভালো ঘুমের জন্য বিজ্ঞানসম্মত শ্বাস-প্রশ্বাসের ধরন।",
+  "onboarding.feature2.title": "অগ্রগতি ট্র্যাক করুন",
+  "onboarding.feature2.desc": "মুড ট্র্যাকিং, ধারা, ব্যাজ এবং আপনার অনুশীলনের বিস্তারিত বিশ্লেষণ।",
+  "onboarding.feature3.title": "অফলাইনে কাজ করে",
+  "onboarding.feature3.desc": "আপনার ডেটা আপনার ডিভাইসে থাকে। কোনো অ্যাকাউন্ট লাগবে না — সম্পূর্ণ ব্যক্তিগত।",
+  "onboarding.featuresTitle": "আপনি যা করতে পারেন",
+  "onboarding.personalizeTitle": "নিজের মতো করুন",
+  "onboarding.chooseTheme": "একটি থিম বেছে নিন",
+  "onboarding.voiceGuidance": "সেশনের সময় ভয়েস গাইডেন্স",
+  "onboarding.hapticFeedback": "ফেজ পরিবর্তনে কম্পন ফিডব্যাক",
+  "onboarding.installTitle": "সেরা অভিজ্ঞতার জন্য ইনস্টল করুন",
+  "onboarding.installDesc": "তাৎক্ষণিক অ্যাক্সেস, অফলাইন ব্যবহার এবং ফুলস্ক্রিন অভিজ্ঞতার জন্য হোম স্ক্রিনে যোগ করুন।",
+  "onboarding.installButton": "এখনই ইনস্টল করুন",
+  "onboarding.maybeLater": "পরে হবে",
+  "onboarding.step": "ধাপ {{current}} / {{total}}",
 };

@@ -8,7 +8,7 @@ import { ThemeProvider } from "@/contexts/ThemeContext";
 import { SettingsProvider } from "@/contexts/SettingsContext";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import { SessionProvider } from "@/contexts/SessionContext";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useSettings } from "@/contexts/SettingsContext";
 import { startReminderChecker } from "@/lib/reminders";
 import { parseChallengeFromURL, FriendChallengeParams } from "@/lib/friendChallenge";
@@ -25,6 +25,7 @@ import Settings from "@/pages/Settings";
 import Playlists from "@/pages/Playlists";
 import Programs from "@/pages/Programs";
 import NotFound from "@/pages/NotFound";
+import Onboarding from "@/pages/Onboarding";
 
 const queryClient = new QueryClient();
 
@@ -86,6 +87,20 @@ function AppInner() {
   );
 }
 
+function AppShell() {
+  const [onboarded, setOnboarded] = useState(() => localStorage.getItem("breathe_onboarding_done") === "1");
+
+  const handleOnboardingComplete = useCallback(() => {
+    setOnboarded(true);
+  }, []);
+
+  if (!onboarded) {
+    return <Onboarding onComplete={handleOnboardingComplete} />;
+  }
+
+  return <AppInner />;
+}
+
 const App = () => (
   <ErrorBoundary>
     <QueryClientProvider client={queryClient}>
@@ -95,7 +110,7 @@ const App = () => (
             <TooltipProvider>
               <BrowserRouter>
                 <SessionProvider>
-                  <AppInner />
+                  <AppShell />
                 </SessionProvider>
               </BrowserRouter>
             </TooltipProvider>
