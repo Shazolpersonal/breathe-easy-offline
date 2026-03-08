@@ -582,6 +582,22 @@ export default function Settings() {
             <strong className="text-foreground"> {t("settings.installAction")}</strong>{t("settings.installOffline")}
           </p>
         </section>
+
+        {/* Invite Friends */}
+        <section className="rounded-2xl border border-primary/20 bg-primary/5 p-4">
+          <div className="flex items-center gap-3">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary/15">
+              <Share2 className="h-5 w-5 text-primary" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <h2 className="text-sm font-semibold text-foreground">{t("share.inviteFriends")}</h2>
+              <p className="text-xs text-muted-foreground">{t("share.inviteSubtitle")}</p>
+            </div>
+          </div>
+          <Button className="mt-3 w-full gap-2" onClick={() => shareApp(language)}>
+            <Share2 className="h-4 w-4" /> {t("share.inviteButton")}
+          </Button>
+        </section>
       </div>
     </div>
   );

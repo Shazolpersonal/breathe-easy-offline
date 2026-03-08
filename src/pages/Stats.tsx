@@ -492,7 +492,14 @@ export default function Stats() {
                     const badgeName = t(`badge.${b.id}.name`);
                     const badgeDesc = t(`badge.${b.id}.description`);
                     return (
-                      <div key={b.id} className="flex flex-col items-center gap-1.5 rounded-2xl border border-primary/20 bg-primary/5 p-3">
+                      <div key={b.id} className="relative flex flex-col items-center gap-1.5 rounded-2xl border border-primary/20 bg-primary/5 p-3">
+                        <button
+                          onClick={() => shareBadge(badgeName !== `badge.${b.id}.name` ? badgeName : b.name, b.emoji, language)}
+                          className="absolute top-1.5 right-1.5 rounded-full p-1 text-muted-foreground/60 hover:text-primary hover:bg-primary/10 transition-colors"
+                          title={t("share.badge")}
+                        >
+                          <Share2 className="h-3 w-3" />
+                        </button>
                         <span className="text-3xl">{b.emoji}</span>
                         <span className="text-xs font-semibold text-foreground text-center leading-tight">{badgeName !== `badge.${b.id}.name` ? badgeName : b.name}</span>
                         <span className="text-[10px] text-muted-foreground text-center leading-tight">{badgeDesc !== `badge.${b.id}.description` ? badgeDesc : b.description}</span>

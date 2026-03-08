@@ -853,6 +853,9 @@ export default function Session() {
             <Button variant="outline" size="sm" className="gap-1" onClick={handleShare}>
               <Share2 className="h-4 w-4" /> {t("session.share")}
             </Button>
+            <Button variant="outline" size="sm" className="gap-1" onClick={() => shareApp(language)}>
+              <Share2 className="h-4 w-4" /> {t("share.inviteSession")}
+            </Button>
             <Button variant="secondary" onClick={() => {
               saveJournal();
               sessionIdRef.current = crypto.randomUUID();

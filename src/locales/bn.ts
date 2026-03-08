@@ -658,4 +658,15 @@ export const bn: Record<string, string> = {
   "onboarding.installButton": "এখনই ইনস্টল করুন",
   "onboarding.maybeLater": "পরে হবে",
   "onboarding.step": "ধাপ {{current}} / {{total}}",
+
+  // Sharing
+  "share.quote": "উদ্ধৃতি শেয়ার",
+  "share.streak": "ধারা শেয়ার",
+  "share.badge": "ব্যাজ শেয়ার",
+  "share.technique": "শেয়ার",
+  "share.inviteFriends": "বন্ধুদের আমন্ত্রণ",
+  "share.inviteSubtitle": "আপনার প্রিয়জনদের সাথে মুহূর্ত ব্রেথ শেয়ার করুন",
+  "share.inviteButton": "অ্যাপ লিংক শেয়ার",
+  "share.inviteSession": "বন্ধুকে আমন্ত্রণ",
+  "share.copied": "লিংক কপি হয়েছে!",
 };
