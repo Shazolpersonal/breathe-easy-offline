@@ -181,7 +181,7 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Stats Row */}
+        {/* Stats Row with Daily Goal Ring */}
         <div className="mb-6 grid grid-cols-3 gap-3">
           <div className="flex flex-col items-center rounded-2xl border border-border bg-card p-3">
             <Flame className="mb-1 h-5 w-5 text-primary" />
@@ -189,8 +189,22 @@ export default function Home() {
             <span className="text-[11px] text-muted-foreground">{t("home.dayStreak")}</span>
           </div>
           <div className="flex flex-col items-center rounded-2xl border border-border bg-card p-3">
-            <Wind className="mb-1 h-5 w-5 text-primary" />
-            <span className="text-lg font-bold text-foreground">{todayMin}</span>
+            {/* Daily Goal Progress Ring */}
+            <div className="relative flex h-10 w-10 items-center justify-center mb-0.5">
+              <svg className="h-10 w-10 -rotate-90" viewBox="0 0 40 40">
+                <circle cx="20" cy="20" r="16" fill="none" stroke="hsl(var(--muted))" strokeWidth="3" />
+                <circle
+                  cx="20" cy="20" r="16" fill="none"
+                  stroke={goalProgress >= 100 ? "hsl(var(--primary))" : "hsl(var(--primary) / 0.7)"}
+                  strokeWidth="3"
+                  strokeDasharray={`${(goalProgress / 100) * 100.5} 100.5`}
+                  strokeLinecap="round"
+                  className="transition-all duration-700"
+                />
+              </svg>
+              <Wind className="absolute h-4 w-4 text-primary" />
+            </div>
+            <span className="text-lg font-bold text-foreground">{todayMin}<span className="text-xs font-normal text-muted-foreground">/{dailyGoal}</span></span>
             <span className="text-[11px] text-muted-foreground">{t("home.minToday")}</span>
           </div>
           <div className="flex flex-col items-center rounded-2xl border border-border bg-card p-3">
