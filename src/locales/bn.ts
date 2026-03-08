@@ -139,6 +139,8 @@ export const bn: Record<string, string> = {
   "stats.locked": "লক ({{count}})",
   "stats.noJournal": "এখনও কোনও জার্নাল এন্ট্রি নেই। সেশনের পরে লিখুন কেমন লাগলো!",
   "stats.noSessions": "{{month}}-এ কোনও সেশন নেই।",
+  "stats.emptyTitle": "আপনার যাত্রা এখানে শুরু",
+  "stats.emptyDesc": "আপনার পরিসংখ্যান, ধারা এবং অগ্রগতি দেখতে প্রথম শ্বাস সেশন সম্পন্ন করুন।",
   "stats.report.summary": "আপনি {{month}}-এ {{sessions}}টি সেশনে {{minutes}} মিনিট শ্বাস নিয়েছেন।",
   "stats.report.topTechnique": "আপনার সবচেয়ে বেশি ব্যবহৃত কৌশল ছিল {{name}} ({{count}}টি সেশন)।",
   "stats.report.streak": "আপনার দীর্ঘতম ধারা ছিল {{days}} দিন।",
