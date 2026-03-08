@@ -159,6 +159,8 @@ export default function Session() {
   }, [params]);
 
   const intervalRef = useRef<ReturnType<typeof setInterval>>();
+  const durationMinRef = useRef(durationMin);
+  durationMinRef.current = durationMin;
   const currentPhase: BreathingPhase = currentPhases[phaseIndex];
 
   const getPhaseLabel = (phase: BreathingPhase) => t(`phase.${phase.type}`);
