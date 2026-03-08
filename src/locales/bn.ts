@@ -465,4 +465,32 @@ export const bn: Record<string, string> = {
   "insight.moreSessionsUp": "গত সপ্তাহের চেয়ে {{count}}টি বেশি সেশন — দারুণ গতি!",
   "insight.fewerSessions": "গত সপ্তাহের চেয়ে {{count}}টি কম সেশন। আবার ট্র্যাকে ফিরে আসুন!",
   "insight.durationUp": "আপনি গড়ে {{current}} মিনিট/সেশন নিয়েছেন, গত সপ্তাহে {{previous}} মিনিট থেকে বেড়েছে।",
+
+  // Friend Challenge
+  "challenge.friend.title": "বন্ধুকে চ্যালেঞ্জ করুন",
+  "challenge.friend.subtitle": "একটি শ্বাস চ্যালেঞ্জ তৈরি করে শেয়ার করুন",
+  "challenge.friend.createTitle": "চ্যালেঞ্জ তৈরি",
+  "challenge.friend.createDesc": "একটি লক্ষ্য নির্ধারণ করুন এবং বন্ধুর সাথে লিংক শেয়ার করুন",
+  "challenge.friend.yourName": "আপনার নাম",
+  "challenge.friend.namePlaceholder": "আপনার নাম লিখুন",
+  "challenge.friend.technique": "কৌশল",
+  "challenge.friend.targetMin": "লক্ষ্য (মিনিট)",
+  "challenge.friend.targetCycles": "লক্ষ্য (চক্র)",
+  "challenge.friend.generate": "লিংক তৈরি করুন",
+  "challenge.friend.copy": "কপি",
+  "challenge.friend.share": "শেয়ার",
+  "challenge.friend.copied": "চ্যালেঞ্জ লিংক কপি হয়েছে!",
+  "challenge.friend.shareTitle": "শ্বাস চ্যালেঞ্জ",
+  "challenge.friend.shareText": "{{name}} আপনাকে একটি শ্বাস সেশনে চ্যালেঞ্জ করেছে!",
+  "challenge.friend.incomingTitle": "আপনাকে চ্যালেঞ্জ করা হয়েছে!",
+  "challenge.friend.incomingDesc": "{{name}} আপনাকে একটি শ্বাস সেশনে চ্যালেঞ্জ করেছে",
+  "challenge.friend.acceptButton": "চ্যালেঞ্জ গ্রহণ করুন",
+  "challenge.friend.accepted": "চ্যালেঞ্জ গৃহীত!",
+  "challenge.friend.acceptedMessage": "চ্যালেঞ্জ গৃহীত! এখন আপনার সেশন শুরু করুন।",
+  "challenge.friend.active": "বন্ধু চ্যালেঞ্জ",
+  "challenge.friend.from": "{{name}} থেকে",
+
+  // CSV Export
+  "settings.exportCSV": "CSV এক্সপোর্ট",
+  "settings.csvExported": "সেশন CSV হিসেবে এক্সপোর্ট হয়েছে!",
 };
