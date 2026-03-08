@@ -419,11 +419,15 @@ export default function Session() {
     clearInterval(intervalRef.current);
     setState("paused");
     stopSpeaking();
+    // Mute soundscape on pause
+    soundscapeEngineRef.current.setVolume(0);
   };
 
   const resume = () => {
     setState("running");
     phaseStartRef.current = Date.now();
+    // Restore soundscape volume on resume
+    soundscapeEngineRef.current.setVolume(settings.soundscapeVolume ?? 0.5);
     if (voiceOn) speak(getPhaseLabel(currentPhase), settings.voiceSpeed, language);
   };
 
