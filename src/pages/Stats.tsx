@@ -111,7 +111,7 @@ export default function Stats() {
     return { sessions: monthSessions.length, totalMin, topTechnique, avgCalm, streak: mStreak };
   }, [sessions, reportMonth, reportYear]);
 
-  const { unlocked, locked } = useMemo(() => checkAllBadges(), [sessions]);
+  const { unlocked, locked } = useMemo(() => checkAllBadges(sessions), [sessionsKey]);
 
   const monthLabel = new Date(reportYear, reportMonth).toLocaleDateString(locale, { month: "long", year: "numeric" });
 
