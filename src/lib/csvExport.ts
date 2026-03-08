@@ -2,11 +2,18 @@ import { getSessions } from "./storage";
 import { PRESET_TECHNIQUES } from "./techniques";
 import { getCustomTechniques } from "./storage";
 
+const FORMULA_CHARS = ['=', '+', '-', '@', '\t', '\r'];
+
 function escapeCSV(value: string): string {
-  if (value.includes(",") || value.includes('"') || value.includes("\n")) {
-    return `"${value.replace(/"/g, '""')}"`;
+  // Strip leading formula-trigger characters to prevent spreadsheet injection
+  let sanitized = value;
+  while (sanitized.length > 0 && FORMULA_CHARS.includes(sanitized[0])) {
+    sanitized = sanitized.slice(1);
   }
-  return value;
+  if (sanitized.includes(",") || sanitized.includes('"') || sanitized.includes("\n")) {
+    return `"${sanitized.replace(/"/g, '""')}"`;
+  }
+  return sanitized;
 }
 
 export function exportSessionsCSV(): void {
