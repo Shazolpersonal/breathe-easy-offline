@@ -1,8 +1,10 @@
-import { Heart, HeartOff, Play } from "lucide-react";
+import { Heart, HeartOff, Play, Lock } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { BreathingTechnique, getCycleDuration } from "@/lib/techniques";
+import { getProgression, getLevelName, getLevelProgress, isUnlocked, getUnlockRemaining } from "@/lib/progression";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
+import { Progress } from "@/components/ui/progress";
 
 interface TechniqueCardProps {
   technique: BreathingTechnique;
@@ -20,24 +22,32 @@ const difficultyColor = {
 export default function TechniqueCard({ technique, isFavorite, onToggleFavorite, compact }: TechniqueCardProps) {
   const navigate = useNavigate();
   const cycleSec = getCycleDuration(technique);
+  const unlocked = isUnlocked(technique);
+  const progression = getProgression(technique.id);
 
   if (compact) {
     return (
       <button
-        onClick={() => navigate(`/session?technique=${technique.id}`)}
-        className="flex items-center gap-3 rounded-xl border border-border bg-card p-3 text-left transition-colors hover:bg-secondary"
+        onClick={() => unlocked && navigate(`/session?technique=${technique.id}`)}
+        className={cn(
+          "flex items-center gap-3 rounded-xl border border-border bg-card p-3 text-left transition-colors",
+          unlocked ? "hover:bg-secondary" : "opacity-50 cursor-not-allowed"
+        )}
+        disabled={!unlocked}
       >
-        <Play className="h-4 w-4 shrink-0 text-primary" />
+        {unlocked ? <Play className="h-4 w-4 shrink-0 text-primary" /> : <Lock className="h-4 w-4 shrink-0 text-muted-foreground" />}
         <div className="min-w-0 flex-1">
           <p className="truncate text-sm font-medium text-foreground">{technique.name}</p>
-          <p className="text-xs text-muted-foreground">{cycleSec}s cycle</p>
+          <p className="text-xs text-muted-foreground">
+            {unlocked ? `${cycleSec}s · Lv.${progression.level}` : `${getUnlockRemaining(technique)} more sessions`}
+          </p>
         </div>
       </button>
     );
   }
 
   return (
-    <div className="rounded-2xl border border-border bg-card p-4">
+    <div className={cn("rounded-2xl border border-border bg-card p-4", !unlocked && "opacity-60")}>
       <div className="flex items-start justify-between">
         <div className="flex-1">
           <div className="flex items-center gap-2">
@@ -45,6 +55,11 @@ export default function TechniqueCard({ technique, isFavorite, onToggleFavorite,
             <Badge variant="secondary" className={cn("text-[10px]", difficultyColor[technique.difficulty])}>
               {technique.difficulty}
             </Badge>
+            {unlocked && progression.sessionsCompleted > 0 && (
+              <Badge variant="outline" className="text-[10px] text-primary border-primary/30">
+                Lv.{progression.level}
+              </Badge>
+            )}
           </div>
           <p className="mt-1 text-sm text-muted-foreground">{technique.description}</p>
           <div className="mt-2 flex flex-wrap gap-1">
@@ -57,18 +72,31 @@ export default function TechniqueCard({ technique, isFavorite, onToggleFavorite,
           <p className="mt-2 text-xs text-muted-foreground">
             {technique.phases.map((p) => `${p.label} ${p.duration}s`).join(" → ")} ({cycleSec}s/cycle)
           </p>
+          {unlocked && progression.sessionsCompleted > 0 && progression.level < 5 && (
+            <div className="mt-2 flex items-center gap-2">
+              <Progress value={getLevelProgress(progression)} className="h-1.5 flex-1" />
+              <span className="text-[10px] text-muted-foreground">{getLevelName(progression.level)}</span>
+            </div>
+          )}
         </div>
         <button onClick={onToggleFavorite} className="ml-2 shrink-0 p-1 text-muted-foreground hover:text-primary">
           {isFavorite ? <Heart className="h-5 w-5 fill-primary text-primary" /> : <HeartOff className="h-5 w-5" />}
         </button>
       </div>
-      <button
-        onClick={() => navigate(`/session?technique=${technique.id}`)}
-        className="mt-3 flex w-full items-center justify-center gap-2 rounded-xl bg-primary py-2.5 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
-      >
-        <Play className="h-4 w-4" />
-        Start Session
-      </button>
+      {unlocked ? (
+        <button
+          onClick={() => navigate(`/session?technique=${technique.id}`)}
+          className="mt-3 flex w-full items-center justify-center gap-2 rounded-xl bg-primary py-2.5 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
+        >
+          <Play className="h-4 w-4" />
+          Start Session
+        </button>
+      ) : (
+        <div className="mt-3 flex w-full items-center justify-center gap-2 rounded-xl bg-muted py-2.5 text-sm font-medium text-muted-foreground">
+          <Lock className="h-4 w-4" />
+          {getUnlockRemaining(technique)} more sessions to unlock
+        </div>
+      )}
     </div>
   );
 }
