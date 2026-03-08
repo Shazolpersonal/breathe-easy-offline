@@ -393,7 +393,7 @@ export default function Session() {
     setSecondsLeft(nextPhases[0].duration);
 
     setState("running");
-    if (voiceOn) speak(t(`phase.${nextPhases[0].type}`), settings.voiceSpeed, language);
+    if (voiceOn && settings.cuePhaseNames) speak(t(`phase.${nextPhases[0].type}`), { rate: settings.voiceSpeed, pitch: settings.voicePitch, volume: settings.voiceVolume, voiceName: language === "bn" ? settings.voiceNameBn : settings.voiceNameEn, lang: language });
     if (settings.vibrationEnabled) vibratePhaseChange();
   };
 
