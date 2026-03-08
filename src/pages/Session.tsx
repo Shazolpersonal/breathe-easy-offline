@@ -2,11 +2,13 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { Pause, Play, Square, Volume2, VolumeX } from "lucide-react";
 import BreathingCircle from "@/components/BreathingCircle";
+import MoodPicker from "@/components/MoodPicker";
 import { PRESET_TECHNIQUES, getTechniqueById, getCycleDuration, BreathingPhase } from "@/lib/techniques";
 import { getCustomTechniques, addSession, getSettings } from "@/lib/storage";
 import { useSettings } from "@/contexts/SettingsContext";
 import { speak, stopSpeaking } from "@/lib/voice";
 import { vibratePhaseChange, vibrateDone } from "@/lib/haptics";
+import { saveMoodRecord, getMoodEmoji } from "@/lib/mood";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -29,6 +31,18 @@ export default function Session() {
   const [voiceOn, setVoiceOn] = useState(settings.voiceEnabled);
   const [durationMin, setDurationMin] = useState(settings.defaultDurationMinutes);
 
+  // Mood state
+  const [moodBefore, setMoodBefore] = useState<number | null>(null);
+  const [moodAfter, setMoodAfter] = useState<number | null>(null);
+  const [moodSaved, setMoodSaved] = useState(false);
+  const sessionIdRef = useRef(crypto.randomUUID());
+
+  // Check if mood was passed from home page
+  useEffect(() => {
+    const moodParam = params.get("mood");
+    if (moodParam) setMoodBefore(Number(moodParam));
+  }, [params]);
+
   const intervalRef = useRef<ReturnType<typeof setInterval>>();
   const startTimeRef = useRef(0);
 
@@ -39,22 +53,22 @@ export default function Session() {
     stopSpeaking();
     if (totalElapsed > 10) {
       addSession({
-        id: crypto.randomUUID(),
+        id: sessionIdRef.current,
         techniqueId: technique.id,
         techniqueName: technique.name,
         date: new Date().toISOString(),
         durationSeconds: totalElapsed,
         completedCycles,
+        moodBefore: moodBefore ?? undefined,
       });
     }
     setState("done");
     vibrateDone();
-  }, [totalElapsed, completedCycles, technique]);
+  }, [totalElapsed, completedCycles, technique, moodBefore]);
 
   const tick = useCallback(() => {
     setSecondsLeft((prev) => {
       if (prev <= 1) {
-        // Move to next phase
         setPhaseIndex((pi) => {
           const next = (pi + 1) % technique.phases.length;
           if (next === 0) {
@@ -66,7 +80,7 @@ export default function Session() {
           if (voiceOn) speak(nextPhase.label, settings.voiceSpeed);
           return next;
         });
-        return prev; // will be overwritten
+        return prev;
       }
       return prev - 1;
     });
@@ -80,10 +94,13 @@ export default function Session() {
   }, [technique, voiceOn, settings, durationMin, stop]);
 
   const start = () => {
+    sessionIdRef.current = crypto.randomUUID();
     setPhaseIndex(0);
     setSecondsLeft(technique.phases[0].duration);
     setTotalElapsed(0);
     setCompletedCycles(0);
+    setMoodAfter(null);
+    setMoodSaved(false);
     setState("running");
     startTimeRef.current = Date.now();
     if (voiceOn) speak(technique.phases[0].label, settings.voiceSpeed);
@@ -101,6 +118,18 @@ export default function Session() {
     if (voiceOn) speak(currentPhase.label, settings.voiceSpeed);
   };
 
+  const handleMoodAfter = (mood: number) => {
+    setMoodAfter(mood);
+    saveMoodRecord({
+      sessionId: sessionIdRef.current,
+      techniqueId: technique.id,
+      moodBefore: moodBefore ?? 3,
+      moodAfter: mood,
+      date: new Date().toISOString(),
+    });
+    setMoodSaved(true);
+  };
+
   useEffect(() => {
     if (state === "running") {
       intervalRef.current = setInterval(tick, 1000);
@@ -110,6 +139,8 @@ export default function Session() {
 
   const elapsedDisplay = `${Math.floor(totalElapsed / 60)}:${String(totalElapsed % 60).padStart(2, "0")}`;
   const targetDisplay = `${durationMin}:00`;
+
+  const moodImprovement = moodBefore !== null && moodAfter !== null ? moodAfter - moodBefore : null;
 
   if (state === "done") {
     return (
@@ -121,8 +152,35 @@ export default function Session() {
             {Math.round(totalElapsed / 60)} min · {completedCycles} cycles
           </p>
           <p className="text-sm text-muted-foreground">{technique.name}</p>
-          <div className="mt-6 flex gap-3">
-            <Button variant="secondary" onClick={() => { setState("idle"); }}>Again</Button>
+
+          {/* Post-session mood check-in */}
+          <div className="mt-6">
+            {!moodSaved ? (
+              <MoodPicker
+                selected={moodAfter}
+                onSelect={handleMoodAfter}
+                label="How do you feel now?"
+              />
+            ) : (
+              <div className="flex flex-col items-center gap-1">
+                <span className="text-3xl">{getMoodEmoji(moodAfter!)}</span>
+                {moodImprovement !== null && moodImprovement > 0 && (
+                  <span className="text-sm font-medium text-primary">
+                    +{moodImprovement} mood boost!
+                  </span>
+                )}
+                {moodImprovement !== null && moodImprovement === 0 && (
+                  <span className="text-sm text-muted-foreground">Mood maintained</span>
+                )}
+                {moodImprovement !== null && moodImprovement < 0 && (
+                  <span className="text-sm text-muted-foreground">Keep practicing 💪</span>
+                )}
+              </div>
+            )}
+          </div>
+
+          <div className="mt-6 flex gap-3 justify-center">
+            <Button variant="secondary" onClick={() => { setState("idle"); setMoodBefore(null); setMoodAfter(null); setMoodSaved(false); }}>Again</Button>
             <Button onClick={() => navigate("/")}>Done</Button>
           </div>
         </div>
@@ -133,10 +191,18 @@ export default function Session() {
   return (
     <div className="flex min-h-screen flex-col items-center justify-center px-4 pb-24">
       <div className="flex flex-col items-center gap-6">
-        {/* Technique name */}
         <h2 className="text-lg font-semibold text-foreground">{technique.name}</h2>
 
-        {/* Breathing Circle */}
+        {/* Pre-session mood (idle only) */}
+        {state === "idle" && (
+          <MoodPicker
+            selected={moodBefore}
+            onSelect={setMoodBefore}
+            label="How are you feeling?"
+            compact
+          />
+        )}
+
         <BreathingCircle
           phase={state === "idle" ? "idle" : currentPhase.type}
           phaseDuration={currentPhase.duration}
@@ -144,7 +210,6 @@ export default function Session() {
           secondsLeft={state === "idle" ? 0 : secondsLeft}
         />
 
-        {/* Timer */}
         <div className="text-center">
           <span className="text-sm tabular-nums text-muted-foreground">
             {elapsedDisplay} / {targetDisplay}
@@ -154,7 +219,6 @@ export default function Session() {
           )}
         </div>
 
-        {/* Duration selector (only when idle) */}
         {state === "idle" && (
           <div className="flex gap-2">
             {[2, 3, 5, 10, 15].map((m) => (
@@ -174,7 +238,6 @@ export default function Session() {
           </div>
         )}
 
-        {/* Controls */}
         <div className="flex items-center gap-4">
           {state === "idle" ? (
             <Button size="lg" onClick={start} className="gap-2 rounded-full px-8">
@@ -200,7 +263,6 @@ export default function Session() {
             </>
           )}
 
-          {/* Voice toggle */}
           <button
             onClick={() => { setVoiceOn(!voiceOn); if (voiceOn) stopSpeaking(); }}
             className="rounded-full p-2 text-muted-foreground hover:text-foreground"
