@@ -447,6 +447,11 @@ export default function Session() {
 
       if (setts.vibrationEnabled) vibratePhaseChange();
       if (voice && setts.cuePhaseNames) speak(tFn(`phase.${nextPhase.type}`), { rate: setts.voiceSpeed, pitch: setts.voicePitch, volume: setts.voiceVolume, voiceName: lang === "bn" ? setts.voiceNameBn : setts.voiceNameEn, lang });
+
+      // Cycle milestone announcement (every 5 cycles)
+      if (voice && setts.cueCycleMilestone && next === 0 && newCycles > 0 && newCycles % 5 === 0) {
+        setTimeout(() => speakCycleMilestone(newCycles, lang, { rate: setts.voiceSpeed, pitch: setts.voicePitch, volume: setts.voiceVolume, voiceName: lang === "bn" ? setts.voiceNameBn : setts.voiceNameEn, lang }), 1500);
+      }
     } else {
       // Normal countdown
       secondsLeftRef.current = sl - 1;
