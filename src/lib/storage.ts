@@ -41,6 +41,9 @@ const DEFAULT_SETTINGS: AppSettings = {
   soundEnabled: true,
   theme: "ocean",
   visualizationType: "circle",
+  highContrast: false,
+  largeText: false,
+  reducedMotion: false,
 };
 
 function getJSON<T>(key: string, fallback: T): T {
