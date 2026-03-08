@@ -392,6 +392,8 @@ export const en: Record<string, string> = {
   "common.cycles": "cycles",
   "common.english": "English",
   "common.bengali": "বাংলা",
+  "common.cancel": "Cancel",
+  "common.levelShort": "Lv.{{level}}",
 
   // Notification
   "notif.title": "Muhurto Breath 🌬️",

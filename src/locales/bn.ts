@@ -392,6 +392,8 @@ export const bn: Record<string, string> = {
   "common.cycles": "চক্র",
   "common.english": "English",
   "common.bengali": "বাংলা",
+  "common.cancel": "বাতিল",
+  "common.levelShort": "স্তর {{level}}",
 
   // Notification
   "notif.title": "মুহূর্ত ব্রেথ 🌬️",
