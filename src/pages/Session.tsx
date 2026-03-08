@@ -263,16 +263,21 @@ export default function Session() {
       ? Math.round(hrCoherenceSamples.reduce((a, b) => a + b, 0) / hrCoherenceSamples.length)
       : undefined;
 
-    if (totalElapsed > 10) {
+    const elapsed = elapsedRef.current;
+
+    // Re-read progression after update
+    setProgressionState(getProgression(technique.id));
+
+    if (elapsed > 10) {
       addSession({
         id: sessionIdRef.current,
         techniqueId: technique.id,
-        techniqueName: technique.name,
+        techniqueName: techniqueName,
         date: new Date().toISOString(),
-        durationSeconds: totalElapsed,
+        durationSeconds: elapsed,
         completedCycles,
         moodBefore: moodBefore ?? undefined,
-        moodAfter: undefined, // Will be updated when user picks mood after
+        moodAfter: undefined,
         calmScore: calm.score,
         breathAccuracy: avgBreathAccuracy,
         avgHeartRate: avgHR,
@@ -280,18 +285,20 @@ export default function Session() {
       });
 
       const challengesCompleted = getCompletedChallengeCount();
-      const xp = calculateSessionXP(totalElapsed, technique, calm.score, challengesCompleted);
+      const xp = calculateSessionXP(elapsed, technique, calm.score, challengesCompleted);
       const xpResult = addXP(xp);
       const xpState = getXPState();
       setEarnedXP({
         xp,
         leveledUp: xpResult.newLevel > xpResult.previousLevel,
-        newTitle: xpResult.newLevel > xpResult.previousLevel ? xpState.title : undefined,
+        newTitle: xpResult.newLevel > xpResult.previousLevel ? t(`xp.${xpState.title}`) : undefined,
       });
 
       const newBadges = getNewlyUnlocked();
       newBadges.forEach((badge) => {
-        toast(`${badge.emoji} ${badge.name} unlocked!`, { description: badge.description });
+        toast(`${badge.emoji} ${t(`badge.${badge.id}.name`)} ${t("session.badgeUnlocked")}`, {
+          description: t(`badge.${badge.id}.description`),
+        });
       });
     }
 
@@ -300,7 +307,7 @@ export default function Session() {
     }
 
     vibrateDone();
-  }, [totalElapsed, completedCycles, technique, moodBefore, phaseIndex, currentPhases, programId, programDay]);
+  }, [completedCycles, technique, moodBefore, phaseIndex, currentPhases, programId, programDay, t, techniqueName]);
 
   const stop = useCallback(() => {
     finishSession();
