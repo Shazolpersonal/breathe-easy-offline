@@ -320,6 +320,23 @@ export const bn: Record<string, string> = {
   "xp.Calm Master": "প্রশান্তি মাস্টার",
   "xp.Zen Sage": "জেন সাধু",
   "xp.Enlightened": "জ্ঞানী",
+  "xp.Breath Sage": "শ্বাস ঋষি",
+  "xp.Inner Peace": "অন্তর শান্তি",
+  "xp.Transcendent": "অতিক্রান্ত",
+  "xp.Eternal Calm": "চিরন্তন প্রশান্তি",
+  "xp.Ascended": "আরোহিত",
+
+  // XP Breakdown
+  "xp.base": "বেস",
+  "xp.duration": "সময়কাল",
+  "xp.difficulty": "কঠিনতা",
+  "xp.calmBonus": "প্রশান্তি স্কোর",
+  "xp.moodBonus": "মুড বৃদ্ধি",
+  "xp.streakBonus": "ধারা",
+  "xp.firstOfDay": "আজকের প্রথম",
+  "xp.challengeBonus": "চ্যালেঞ্জ",
+  "xp.total": "মোট",
+  "xp.weeklyXP": "এই সপ্তাহে {{xp}} XP",
 
   // Progression levels
   "level.Beginner": "শিক্ষানবিশ",

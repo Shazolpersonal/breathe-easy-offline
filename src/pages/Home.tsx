@@ -146,9 +146,16 @@ export default function Home() {
         <div className="mb-6 rounded-2xl border border-border bg-card p-3">
           <div className="flex items-center justify-between mb-1.5">
             <span className="text-xs font-medium text-muted-foreground">{xpState.totalXP} XP</span>
-            {xpState.xpToNext > 0 && (
-              <span className="text-xs text-muted-foreground">{t("home.xpToNext", { xp: xpState.xpToNext })}</span>
-            )}
+            <div className="flex items-center gap-2">
+              {weeklyXP > 0 && (
+                <span className="text-xs text-primary font-medium">
+                  {t("xp.weeklyXP", { xp: weeklyXP })}
+                </span>
+              )}
+              {xpState.xpToNext > 0 && (
+                <span className="text-xs text-muted-foreground">{t("home.xpToNext", { xp: xpState.xpToNext })}</span>
+              )}
+            </div>
           </div>
           <Progress value={xpState.progressToNext} className="h-2" />
         </div>
