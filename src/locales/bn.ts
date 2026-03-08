@@ -49,6 +49,7 @@ export const bn: Record<string, string> = {
   "session.step": "ধাপ {{current}} / {{total}}",
   "session.continue": "চালিয়ে যান",
   "session.round": "রাউন্ড {{round}} (পিরামিড)",
+  "session.cycle": "{{count}} চক্র",
   "session.cycles": "{{count}} চক্র",
   "session.startSession": "সেশন শুরু",
 
