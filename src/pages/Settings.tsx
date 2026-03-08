@@ -110,7 +110,29 @@ export default function Settings() {
           </div>
         </section>
 
-        {/* Data */}
+        {/* Visualization */}
+        <section className="rounded-2xl border border-border bg-card p-4">
+          <h2 className="mb-3 text-sm font-semibold uppercase tracking-wider text-muted-foreground">Breathing Visualization</h2>
+          <div className="grid grid-cols-4 gap-2">
+            {([
+              { id: "circle" as VisualizationType, icon: Circle, label: "Circle" },
+              { id: "wave" as VisualizationType, icon: Waves, label: "Wave" },
+              { id: "bars" as VisualizationType, icon: BarChart3, label: "Bars" },
+              { id: "mandala" as VisualizationType, icon: Flower2, label: "Mandala" },
+            ]).map(({ id, icon: Icon, label }) => (
+              <button
+                key={id}
+                onClick={() => update({ visualizationType: id })}
+                className={cn(
+                  "flex flex-col items-center gap-1.5 rounded-xl p-3 text-xs transition-colors",
+                  settings.visualizationType === id ? "bg-primary/20 ring-2 ring-primary" : "hover:bg-secondary"
+                )}
+              >
+                <Icon className="h-5 w-5 text-foreground" />
+                <span className="text-muted-foreground">{label}</span>
+              </button>
+            ))}
+          </div>
         <section className="rounded-2xl border border-border bg-card p-4 space-y-3">
           <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">Data</h2>
           <div className="flex gap-2">
