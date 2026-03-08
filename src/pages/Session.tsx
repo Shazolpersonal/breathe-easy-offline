@@ -761,7 +761,7 @@ export default function Session() {
 
           {levelUpInfo && <LevelUpBanner level={levelUpInfo.level} techniqueName={techniqueName} label={t("session.levelUp")} />}
           {calmResult && <CalmScoreDisplay result={calmResult} label={t("session.calmScore")} t={t} />}
-          {earnedXP && <XPEarnedDisplay xp={earnedXP.xp} leveledUp={earnedXP.leveledUp} newTitle={earnedXP.newTitle} />}
+          {earnedXP && <XPEarnedDisplay breakdown={earnedXP.breakdown} leveledUp={earnedXP.leveledUp} newTitle={earnedXP.newTitle} t={t} />}
 
           {/* Breath accuracy in done screen */}
           {avgBreathAccuracy !== null && (
