@@ -363,6 +363,9 @@ export default function Session() {
           // Notify breath detector of phase change
           breathDetectorRef.current?.notifyPhaseChange(next);
 
+          // Sync soundscape to phase
+          soundscapeEngineRef.current.syncToPhase(nextPhase.type);
+
           if (settings.vibrationEnabled) vibratePhaseChange();
           if (voiceOn) speak(t(`phase.${nextPhase.type}`), settings.voiceSpeed, language);
           return next;
