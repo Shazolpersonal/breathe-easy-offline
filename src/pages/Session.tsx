@@ -36,6 +36,12 @@ import { toast } from "sonner";
 
 type SessionState = "idle" | "running" | "paused" | "done" | "playlist-transition";
 
+const calmColorMap: Record<string, string> = {
+  "primary": "text-primary",
+  "accent": "text-accent",
+  "muted-foreground": "text-muted-foreground",
+};
+
 function CalmScoreDisplay({ result, label, t }: { result: CalmScoreResult; label: string; t: (key: string) => string }) {
   return (
     <div className="flex flex-col items-center gap-1">
@@ -46,7 +52,7 @@ function CalmScoreDisplay({ result, label, t }: { result: CalmScoreResult; label
         </svg>
         <span className="absolute text-lg font-bold text-foreground">{result.score}</span>
       </div>
-      <span className={`text-sm font-medium text-${result.color}`}>{t(result.labelKey)}</span>
+      <span className={`text-sm font-medium ${calmColorMap[result.color] || "text-foreground"}`}>{t(result.labelKey)}</span>
       <span className="text-xs text-muted-foreground">{label}</span>
     </div>
   );
