@@ -4,42 +4,45 @@ import { getSessions, getCurrentStreak, getLongestStreak } from "@/lib/storage";
 import { Flame, Clock, Target, Trophy, Brain, BookOpen, ChevronLeft, ChevronRight } from "lucide-react";
 import { checkAllBadges } from "@/lib/achievements";
 import { cn } from "@/lib/utils";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 type Tab = "stats" | "badges" | "journal" | "reports";
 
-const TIME_BUCKETS = [
-  { label: "Night", range: [21, 6], key: "night" },
-  { label: "Morning", range: [6, 9], key: "morning" },
-  { label: "Midday", range: [9, 12], key: "midday" },
-  { label: "Afternoon", range: [12, 17], key: "afternoon" },
-  { label: "Evening", range: [17, 21], key: "evening" },
-];
-
-function getTimeBucket(hour: number) {
-  if (hour >= 6 && hour < 9) return "morning";
-  if (hour >= 9 && hour < 12) return "midday";
-  if (hour >= 12 && hour < 17) return "afternoon";
-  if (hour >= 17 && hour < 21) return "evening";
-  return "night";
-}
-
 export default function Stats() {
+  const { t, language } = useLanguage();
   const [tab, setTab] = useState<Tab>("stats");
   const sessions = getSessions();
   const streak = getCurrentStreak();
   const longestStreak = getLongestStreak();
   const totalMinutes = Math.round(sessions.reduce((s, r) => s + r.durationSeconds, 0) / 60);
 
-  // Report month selector
   const now = new Date();
   const [reportMonth, setReportMonth] = useState(now.getMonth());
   const [reportYear, setReportYear] = useState(now.getFullYear());
+
+  const locale = language === "bn" ? "bn" : "en";
 
   const avgCalmScore = useMemo(() => {
     const scored = sessions.filter((s) => s.calmScore != null);
     if (scored.length === 0) return null;
     return Math.round(scored.reduce((sum, s) => sum + s.calmScore!, 0) / scored.length);
   }, [sessions]);
+
+  const TIME_BUCKET_KEYS = [
+    { labelKey: "stats.timeBucket.night", range: [21, 6], key: "night" },
+    { labelKey: "stats.timeBucket.morning", range: [6, 9], key: "morning" },
+    { labelKey: "stats.timeBucket.midday", range: [9, 12], key: "midday" },
+    { labelKey: "stats.timeBucket.afternoon", range: [12, 17], key: "afternoon" },
+    { labelKey: "stats.timeBucket.evening", range: [17, 21], key: "evening" },
+  ];
+
+  function getTimeBucket(hour: number) {
+    if (hour >= 6 && hour < 9) return "morning";
+    if (hour >= 9 && hour < 12) return "midday";
+    if (hour >= 12 && hour < 17) return "afternoon";
+    if (hour >= 17 && hour < 21) return "evening";
+    return "night";
+  }
 
   const weeklyData = useMemo(() => {
     const days: Record<string, number> = {};
@@ -55,17 +58,14 @@ export default function Stats() {
       if (day in days) days[day] += Math.round(s.durationSeconds / 60);
     });
     return Object.entries(days).map(([date, minutes]) => ({
-      day: new Date(date).toLocaleDateString("en", { weekday: "short" }),
+      day: new Date(date).toLocaleDateString(locale, { weekday: "short" }),
       minutes,
     }));
-  }, [sessions]);
+  }, [sessions, locale]);
 
   const calmTrendData = useMemo(() => {
     const scored = sessions.filter((s) => s.calmScore != null).slice(-14);
-    return scored.map((s, i) => ({
-      session: i + 1,
-      score: s.calmScore!,
-    }));
+    return scored.map((s, i) => ({ session: i + 1, score: s.calmScore! }));
   }, [sessions]);
 
   const heatmapData = useMemo(() => {
@@ -87,8 +87,8 @@ export default function Stats() {
       const hour = new Date(s.date).getHours();
       buckets[getTimeBucket(hour)]++;
     });
-    return TIME_BUCKETS.map((b) => ({ name: b.label, sessions: buckets[b.key] }));
-  }, [sessions]);
+    return TIME_BUCKET_KEYS.map((b) => ({ name: t(b.labelKey), sessions: buckets[b.key] }));
+  }, [sessions, t]);
 
   const journalSessions = useMemo(() => {
     return sessions.filter((s) => s.journal).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
@@ -109,7 +109,6 @@ export default function Stats() {
     const scored = monthSessions.filter((s) => s.calmScore != null);
     const avgCalm = scored.length > 0 ? Math.round(scored.reduce((sum, s) => sum + s.calmScore!, 0) / scored.length) : null;
 
-    // Streak within the month
     const dates = [...new Set(monthSessions.map((s) => s.date.split("T")[0]))].sort();
     let mStreak = dates.length > 0 ? 1 : 0;
     let cur = 1;
@@ -123,7 +122,7 @@ export default function Stats() {
 
   const { unlocked, locked } = useMemo(() => checkAllBadges(), [sessions]);
 
-  const monthLabel = new Date(reportYear, reportMonth).toLocaleDateString("en", { month: "long", year: "numeric" });
+  const monthLabel = new Date(reportYear, reportMonth).toLocaleDateString(locale, { month: "long", year: "numeric" });
 
   const prevMonth = () => {
     if (reportMonth === 0) { setReportMonth(11); setReportYear(reportYear - 1); }
@@ -134,38 +133,43 @@ export default function Stats() {
     else setReportMonth(reportMonth + 1);
   };
 
+  const tabLabels: Record<Tab, string> = {
+    stats: t("stats.overview"),
+    badges: t("stats.badges"),
+    journal: t("stats.journal"),
+    reports: t("stats.reports"),
+  };
+
   return (
     <div className="min-h-screen px-4 pb-24 pt-12">
       <div className="mx-auto max-w-md">
-        <h1 className="mb-4 text-2xl font-bold text-foreground">Statistics</h1>
+        <h1 className="mb-4 text-2xl font-bold text-foreground">{t("stats.title")}</h1>
 
-        {/* Tab Switcher */}
         <div className="mb-6 flex gap-1 rounded-xl bg-secondary p-1">
-          {(["stats", "badges", "journal", "reports"] as Tab[]).map((t) => (
+          {(["stats", "badges", "journal", "reports"] as Tab[]).map((tabKey) => (
             <button
-              key={t}
-              onClick={() => setTab(t)}
+              key={tabKey}
+              onClick={() => setTab(tabKey)}
               className={cn(
                 "flex-1 rounded-lg py-2 text-xs font-medium transition-colors",
-                tab === t ? "bg-card text-foreground shadow-sm" : "text-muted-foreground"
+                tab === tabKey ? "bg-card text-foreground shadow-sm" : "text-muted-foreground"
               )}
             >
-              {t === "stats" ? "Overview" : t === "badges" ? `Badges` : t === "journal" ? "Journal" : "Reports"}
+              {tabLabels[tabKey]}
             </button>
           ))}
         </div>
 
         {tab === "stats" && (
           <>
-            {/* Stat Cards */}
             <div className="mb-6 grid grid-cols-2 gap-3">
               {[
-                { icon: Flame, value: streak, label: "Current Streak", suffix: "days" },
-                { icon: Trophy, value: longestStreak, label: "Longest Streak", suffix: "days" },
-                { icon: Clock, value: totalMinutes, label: "Total Time", suffix: "min" },
-                { icon: Target, value: sessions.length, label: "Sessions", suffix: "" },
+                { icon: Flame, value: streak, label: t("stats.currentStreak"), suffix: t("stats.days") },
+                { icon: Trophy, value: longestStreak, label: t("stats.longestStreak"), suffix: t("stats.days") },
+                { icon: Clock, value: totalMinutes, label: t("stats.totalTime"), suffix: t("stats.min") },
+                { icon: Target, value: sessions.length, label: t("stats.sessions"), suffix: "" },
                 ...(avgCalmScore !== null
-                  ? [{ icon: Brain, value: avgCalmScore, label: "Avg Calm Score", suffix: "%" }]
+                  ? [{ icon: Brain, value: avgCalmScore, label: t("stats.avgCalm"), suffix: "%" }]
                   : []),
               ].map(({ icon: Icon, value, label, suffix }) => (
                 <div key={label} className="flex flex-col items-center rounded-2xl border border-border bg-card p-4">
@@ -178,9 +182,8 @@ export default function Stats() {
               ))}
             </div>
 
-            {/* Weekly Chart */}
             <div className="mb-6 rounded-2xl border border-border bg-card p-4">
-              <h2 className="mb-3 text-sm font-semibold text-muted-foreground">This Week</h2>
+              <h2 className="mb-3 text-sm font-semibold text-muted-foreground">{t("stats.thisWeek")}</h2>
               <ResponsiveContainer width="100%" height={160}>
                 <BarChart data={weeklyData}>
                   <XAxis dataKey="day" tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }} axisLine={false} tickLine={false} />
@@ -191,9 +194,8 @@ export default function Stats() {
               </ResponsiveContainer>
             </div>
 
-            {/* Time of Day */}
             <div className="mb-6 rounded-2xl border border-border bg-card p-4">
-              <h2 className="mb-3 text-sm font-semibold text-muted-foreground">Time of Day</h2>
+              <h2 className="mb-3 text-sm font-semibold text-muted-foreground">{t("stats.timeOfDay")}</h2>
               <ResponsiveContainer width="100%" height={140}>
                 <BarChart data={timeOfDayData}>
                   <XAxis dataKey="name" tick={{ fontSize: 10, fill: "hsl(var(--muted-foreground))" }} axisLine={false} tickLine={false} />
@@ -204,10 +206,9 @@ export default function Stats() {
               </ResponsiveContainer>
             </div>
 
-            {/* Calm Score Trend */}
             {calmTrendData.length >= 2 && (
               <div className="mb-6 rounded-2xl border border-border bg-card p-4">
-                <h2 className="mb-3 text-sm font-semibold text-muted-foreground">Calm Score Trend</h2>
+                <h2 className="mb-3 text-sm font-semibold text-muted-foreground">{t("stats.calmTrend")}</h2>
                 <ResponsiveContainer width="100%" height={120}>
                   <LineChart data={calmTrendData}>
                     <XAxis dataKey="session" tick={{ fontSize: 10, fill: "hsl(var(--muted-foreground))" }} axisLine={false} tickLine={false} />
@@ -219,14 +220,13 @@ export default function Stats() {
               </div>
             )}
 
-            {/* 30-day heatmap */}
             <div className="rounded-2xl border border-border bg-card p-4">
-              <h2 className="mb-3 text-sm font-semibold text-muted-foreground">Last 30 Days</h2>
+              <h2 className="mb-3 text-sm font-semibold text-muted-foreground">{t("stats.last30")}</h2>
               <div className="flex flex-wrap gap-1.5">
                 {heatmapData.map(({ date, count }) => (
                   <div
                     key={date}
-                    title={`${date}: ${count} sessions`}
+                    title={`${date}: ${count} ${t("common.sessions")}`}
                     className="h-5 w-5 rounded-sm transition-colors"
                     style={{
                       background: count === 0
@@ -249,32 +249,40 @@ export default function Stats() {
             {unlocked.length > 0 && (
               <div>
                 <h2 className="mb-3 text-sm font-semibold uppercase tracking-wider text-muted-foreground">
-                  Unlocked ({unlocked.length})
+                  {t("stats.unlocked", { count: unlocked.length })}
                 </h2>
                 <div className="grid grid-cols-3 gap-3">
-                  {unlocked.map((b) => (
-                    <div key={b.id} className="flex flex-col items-center gap-1.5 rounded-2xl border border-primary/20 bg-primary/5 p-3">
-                      <span className="text-3xl">{b.emoji}</span>
-                      <span className="text-xs font-semibold text-foreground text-center leading-tight">{b.name}</span>
-                      <span className="text-[10px] text-muted-foreground text-center leading-tight">{b.description}</span>
-                    </div>
-                  ))}
+                  {unlocked.map((b) => {
+                    const badgeName = t(`badge.${b.id}.name`);
+                    const badgeDesc = t(`badge.${b.id}.description`);
+                    return (
+                      <div key={b.id} className="flex flex-col items-center gap-1.5 rounded-2xl border border-primary/20 bg-primary/5 p-3">
+                        <span className="text-3xl">{b.emoji}</span>
+                        <span className="text-xs font-semibold text-foreground text-center leading-tight">{badgeName !== `badge.${b.id}.name` ? badgeName : b.name}</span>
+                        <span className="text-[10px] text-muted-foreground text-center leading-tight">{badgeDesc !== `badge.${b.id}.description` ? badgeDesc : b.description}</span>
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
             )}
             {locked.length > 0 && (
               <div>
                 <h2 className="mb-3 text-sm font-semibold uppercase tracking-wider text-muted-foreground">
-                  Locked ({locked.length})
+                  {t("stats.locked", { count: locked.length })}
                 </h2>
                 <div className="grid grid-cols-3 gap-3">
-                  {locked.map((b) => (
-                    <div key={b.id} className="flex flex-col items-center gap-1.5 rounded-2xl border border-border bg-card p-3 opacity-50 grayscale">
-                      <span className="text-3xl">{b.emoji}</span>
-                      <span className="text-xs font-semibold text-foreground text-center leading-tight">{b.name}</span>
-                      <span className="text-[10px] text-muted-foreground text-center leading-tight">{b.description}</span>
-                    </div>
-                  ))}
+                  {locked.map((b) => {
+                    const badgeName = t(`badge.${b.id}.name`);
+                    const badgeDesc = t(`badge.${b.id}.description`);
+                    return (
+                      <div key={b.id} className="flex flex-col items-center gap-1.5 rounded-2xl border border-border bg-card p-3 opacity-50 grayscale">
+                        <span className="text-3xl">{b.emoji}</span>
+                        <span className="text-xs font-semibold text-foreground text-center leading-tight">{badgeName !== `badge.${b.id}.name` ? badgeName : b.name}</span>
+                        <span className="text-[10px] text-muted-foreground text-center leading-tight">{badgeDesc !== `badge.${b.id}.description` ? badgeDesc : b.description}</span>
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
             )}
@@ -286,7 +294,7 @@ export default function Stats() {
             {journalSessions.length === 0 ? (
               <div className="flex flex-col items-center gap-3 py-12 text-center">
                 <BookOpen className="h-10 w-10 text-muted-foreground/40" />
-                <p className="text-sm text-muted-foreground">No journal entries yet. After a session, write how you felt!</p>
+                <p className="text-sm text-muted-foreground">{t("stats.noJournal")}</p>
               </div>
             ) : (
               journalSessions.map((s) => {
@@ -295,20 +303,20 @@ export default function Stats() {
                   <div key={s.id} className="rounded-2xl border border-border bg-card p-4">
                     <div className="mb-2 flex items-center justify-between">
                       <span className="text-xs font-medium text-foreground">
-                        {d.toLocaleDateString("en", { month: "short", day: "numeric", year: "numeric" })}
+                        {d.toLocaleDateString(locale, { month: "short", day: "numeric", year: "numeric" })}
                       </span>
                       <span className="text-xs text-muted-foreground">
-                        {d.toLocaleTimeString("en", { hour: "2-digit", minute: "2-digit" })}
+                        {d.toLocaleTimeString(locale, { hour: "2-digit", minute: "2-digit" })}
                       </span>
                     </div>
                     <div className="mb-2 flex items-center gap-2 text-xs text-muted-foreground">
                       <span>{s.techniqueName}</span>
                       <span>·</span>
-                      <span>{Math.round(s.durationSeconds / 60)} min</span>
+                      <span>{Math.round(s.durationSeconds / 60)} {t("common.min")}</span>
                       {s.calmScore != null && (
                         <>
                           <span>·</span>
-                          <span>Calm {s.calmScore}%</span>
+                          <span>{t("session.calmScore")} {s.calmScore}%</span>
                         </>
                       )}
                     </div>
@@ -322,7 +330,6 @@ export default function Stats() {
 
         {tab === "reports" && (
           <div className="space-y-4">
-            {/* Month selector */}
             <div className="flex items-center justify-between rounded-2xl border border-border bg-card px-4 py-3">
               <button onClick={prevMonth} className="rounded-full p-1 text-muted-foreground hover:text-foreground">
                 <ChevronLeft className="h-5 w-5" />
@@ -336,47 +343,54 @@ export default function Stats() {
             {reportData.sessions === 0 ? (
               <div className="flex flex-col items-center gap-3 py-12 text-center">
                 <Target className="h-10 w-10 text-muted-foreground/40" />
-                <p className="text-sm text-muted-foreground">No sessions in {monthLabel}.</p>
+                <p className="text-sm text-muted-foreground">{t("stats.noSessions", { month: monthLabel })}</p>
               </div>
             ) : (
               <div className="rounded-2xl border border-border bg-card p-5 space-y-4">
-                <p className="text-sm leading-relaxed text-foreground">
-                  You breathed <strong>{reportData.totalMin} minutes</strong> across{" "}
-                  <strong>{reportData.sessions} sessions</strong> in {monthLabel}.
-                </p>
+                <p className="text-sm leading-relaxed text-foreground" dangerouslySetInnerHTML={{
+                  __html: t("stats.report.summary", { minutes: reportData.totalMin, sessions: reportData.sessions, month: monthLabel })
+                    .replace(String(reportData.totalMin), `<strong>${reportData.totalMin}</strong>`)
+                    .replace(String(reportData.sessions), `<strong>${reportData.sessions}</strong>`)
+                }} />
                 {reportData.topTechnique && (
-                  <p className="text-sm leading-relaxed text-foreground">
-                    Your most-used technique was <strong>{reportData.topTechnique.name}</strong> ({reportData.topTechnique.count} sessions).
-                  </p>
+                  <p className="text-sm leading-relaxed text-foreground" dangerouslySetInnerHTML={{
+                    __html: t("stats.report.topTechnique", { name: reportData.topTechnique.name, count: reportData.topTechnique.count })
+                      .replace(reportData.topTechnique.name, `<strong>${reportData.topTechnique.name}</strong>`)
+                      .replace(String(reportData.topTechnique.count), `<strong>${reportData.topTechnique.count}</strong>`)
+                  }} />
                 )}
                 {reportData.streak > 0 && (
-                  <p className="text-sm leading-relaxed text-foreground">
-                    Your longest streak was <strong>{reportData.streak} days</strong>.
-                  </p>
+                  <p className="text-sm leading-relaxed text-foreground" dangerouslySetInnerHTML={{
+                    __html: t("stats.report.streak", { days: reportData.streak })
+                      .replace(String(reportData.streak), `<strong>${reportData.streak}</strong>`)
+                  }} />
                 )}
                 {reportData.avgCalm !== null && (
-                  <p className="text-sm leading-relaxed text-foreground">
-                    Average calm score: <strong>{reportData.avgCalm}%</strong>.
-                  </p>
+                  <p className="text-sm leading-relaxed text-foreground" dangerouslySetInnerHTML={{
+                    __html: t("stats.report.avgCalm", { score: reportData.avgCalm })
+                      .replace(String(reportData.avgCalm), `<strong>${reportData.avgCalm}</strong>`)
+                  }} />
                 )}
 
                 <div className="grid grid-cols-2 gap-3 pt-2">
                   <div className="flex flex-col items-center rounded-xl bg-secondary/50 p-3">
                     <span className="text-lg font-bold text-foreground">{reportData.sessions}</span>
-                    <span className="text-xs text-muted-foreground">Sessions</span>
+                    <span className="text-xs text-muted-foreground">{t("stats.report.sessions")}</span>
                   </div>
                   <div className="flex flex-col items-center rounded-xl bg-secondary/50 p-3">
                     <span className="text-lg font-bold text-foreground">{reportData.totalMin}</span>
-                    <span className="text-xs text-muted-foreground">Minutes</span>
+                    <span className="text-xs text-muted-foreground">{t("stats.report.minutes")}</span>
                   </div>
                   <div className="flex flex-col items-center rounded-xl bg-secondary/50 p-3">
                     <span className="text-lg font-bold text-foreground">{reportData.streak}</span>
-                    <span className="text-xs text-muted-foreground">Day Streak</span>
+                    <span className="text-xs text-muted-foreground">{t("stats.report.streakDays")}</span>
                   </div>
-                  <div className="flex flex-col items-center rounded-xl bg-secondary/50 p-3">
-                    <span className="text-lg font-bold text-foreground">{reportData.avgCalm ?? "—"}</span>
-                    <span className="text-xs text-muted-foreground">Avg Calm</span>
-                  </div>
+                  {reportData.avgCalm !== null && (
+                    <div className="flex flex-col items-center rounded-xl bg-secondary/50 p-3">
+                      <span className="text-lg font-bold text-foreground">{reportData.avgCalm}%</span>
+                      <span className="text-xs text-muted-foreground">{t("stats.report.calmPercent")}</span>
+                    </div>
+                  )}
                 </div>
               </div>
             )}
