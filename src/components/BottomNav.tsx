@@ -1,4 +1,4 @@
-import { Home, Wind, BookOpen, BarChart3, MoreHorizontal } from "lucide-react";
+import { Home, Wind, BookOpen, BarChart3, MoreHorizontal, ListMusic, GraduationCap, BookOpenText, Settings2 } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
@@ -13,10 +13,10 @@ const MAIN_ITEMS = [
 ];
 
 const MORE_ITEMS = [
-  { path: "/playlists", labelKey: "nav.playlists" },
-  { path: "/programs", labelKey: "nav.programs" },
-  { path: "/guide", labelKey: "nav.guide" },
-  { path: "/settings", labelKey: "nav.settings" },
+  { path: "/playlists", labelKey: "nav.playlists", icon: ListMusic },
+  { path: "/programs", labelKey: "nav.programs", icon: GraduationCap },
+  { path: "/guide", labelKey: "nav.guide", icon: BookOpenText },
+  { path: "/settings", labelKey: "nav.settings", icon: Settings2 },
 ];
 
 export default function BottomNav() {
@@ -33,23 +33,35 @@ export default function BottomNav() {
     <>
       {/* More menu overlay */}
       {moreOpen && (
-        <div className="fixed inset-0 z-40" onClick={() => setMoreOpen(false)}>
+        <div className="fixed inset-0 z-[60]" onClick={() => setMoreOpen(false)}>
           <div
-            className="absolute bottom-16 right-4 rounded-xl border border-border bg-card p-1 shadow-lg"
+            className="absolute bottom-20 right-3 min-w-[200px] rounded-2xl border border-border/60 bg-card/90 backdrop-blur-xl shadow-2xl shadow-black/20 animate-in fade-in-0 zoom-in-95 slide-in-from-bottom-3 duration-200 overflow-hidden"
             onClick={e => e.stopPropagation()}
           >
-            {MORE_ITEMS.map(({ path, labelKey }) => (
-              <button
-                key={path}
-                onClick={() => { navigate(path); setMoreOpen(false); }}
-                className={cn(
-                  "block w-full rounded-lg px-4 py-2.5 text-left text-sm transition-colors",
-                  location.pathname === path ? "bg-primary/15 text-primary font-medium" : "text-foreground hover:bg-secondary"
-                )}
-              >
-                {t(labelKey)}
-              </button>
-            ))}
+            {MORE_ITEMS.map(({ path, labelKey, icon: Icon }, idx) => {
+              const active = location.pathname === path;
+              return (
+                <button
+                  key={path}
+                  onClick={() => { navigate(path); setMoreOpen(false); }}
+                  className={cn(
+                    "relative flex w-full items-center gap-3 px-4 py-3.5 text-sm transition-colors",
+                    idx < MORE_ITEMS.length - 1 && "border-b border-border/30",
+                    active
+                      ? "bg-primary/10 text-primary font-medium"
+                      : "text-foreground hover:bg-secondary/60"
+                  )}
+                >
+                  {active && (
+                    <span className="absolute left-0 top-1/2 -translate-y-1/2 h-5 w-[3px] rounded-r-full bg-primary" />
+                  )}
+                  <Icon className={cn("h-4.5 w-4.5 shrink-0", active ? "text-primary" : "text-muted-foreground")} />
+                  <span>{t(labelKey)}</span>
+                </button>
+              );
+            })}
+            {/* Caret */}
+            <div className="absolute -bottom-1.5 right-6 h-3 w-3 rotate-45 border-r border-b border-border/60 bg-card/90" />
           </div>
         </div>
       )}
