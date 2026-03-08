@@ -523,13 +523,25 @@ export default function Session() {
   // ─── Mini-Player Sync ───
   // On mount, restore from mini session if running
   useEffect(() => {
-    if (miniSession?.isActive) {
-      // Restore elapsed time from mini-player into session state
+    if (miniSession?.isActive && miniSession.techniqueId === techniqueId) {
       setTotalElapsed(miniSession.elapsed);
+      setPhaseIndex(miniSession.phaseIndex);
+      setSecondsLeft(miniSession.secondsLeft);
+      setCompletedCycles(miniSession.completedCycles);
+      setCurrentRound(miniSession.currentRound);
+      setDurationMin(miniSession.durationMin);
+      setMoodBefore(miniSession.moodBefore);
+      setVoiceOn(miniSession.voiceOn);
+      setSoundscapeType(miniSession.soundscapeType as SoundscapeType);
+      phaseStartRef.current = Date.now();
       if (miniSession.isPaused) {
         setState("paused");
       } else {
         setState("running");
+        // Restart soundscape if it was playing
+        if (miniSession.soundscapeType !== "off") {
+          soundscapeEngineRef.current.start(miniSession.soundscapeType as SoundscapeType, settings.soundscapeVolume ?? 0.5);
+        }
       }
       stopMiniSession();
     }
@@ -543,13 +555,29 @@ export default function Session() {
     };
   }, []);
 
-  // We use a ref to track current state for the unmount effect
+  // We use refs to track current state for the unmount effect
   const stateRef = useRef(state);
   stateRef.current = state;
   const elapsedRef = useRef(totalElapsed);
   elapsedRef.current = totalElapsed;
   const phaseRef = useRef(currentPhase);
   phaseRef.current = currentPhase;
+  const phaseIndexRef = useRef(phaseIndex);
+  phaseIndexRef.current = phaseIndex;
+  const secondsLeftRef = useRef(secondsLeft);
+  secondsLeftRef.current = secondsLeft;
+  const completedCyclesRef = useRef(completedCycles);
+  completedCyclesRef.current = completedCycles;
+  const currentRoundRef = useRef(currentRound);
+  currentRoundRef.current = currentRound;
+  const durationMinRef = useRef(durationMin);
+  durationMinRef.current = durationMin;
+  const moodBeforeRef = useRef(moodBefore);
+  moodBeforeRef.current = moodBefore;
+  const voiceOnRef = useRef(voiceOn);
+  voiceOnRef.current = voiceOn;
+  const soundscapeTypeRef = useRef(soundscapeType);
+  soundscapeTypeRef.current = soundscapeType;
 
   useEffect(() => {
     return () => {
@@ -561,12 +589,20 @@ export default function Session() {
           techniqueName: technique.name,
           currentPhase: phaseRef.current.type,
           elapsed: elapsedRef.current,
-          totalDuration: durationMin,
+          totalDuration: durationMinRef.current,
+          phaseIndex: phaseIndexRef.current,
+          secondsLeft: secondsLeftRef.current,
+          completedCycles: completedCyclesRef.current,
+          currentRound: currentRoundRef.current,
+          durationMin: durationMinRef.current,
+          moodBefore: moodBeforeRef.current,
+          voiceOn: voiceOnRef.current,
+          soundscapeType: soundscapeTypeRef.current,
         });
       }
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [technique.id, technique.name, durationMin]);
+  }, [technique.id, technique.name]);
 
   const elapsedDisplay = `${Math.floor(totalElapsed / 60)}:${String(totalElapsed % 60).padStart(2, "0")}`;
   const targetDisplay = `${durationMin}:00`;
