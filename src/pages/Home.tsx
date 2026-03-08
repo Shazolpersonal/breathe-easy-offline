@@ -29,7 +29,10 @@ export default function Home() {
   const dailyChallenges = useMemo(() => getDailyChallenges(), []);
   const dailyQuote = useMemo(() => getDailyQuote(language), [language]);
   const activeFriendChallenges = useMemo(() => getActiveChallenges(), []);
-  const showInstall = canInstall() && !installDismissed;
+  const isPWA = useMemo(() => isRunningAsPWA(), []);
+  const showNativeInstall = canInstall() && !installDismissed;
+  const showManualInstall = !isPWA && canShowManualInstallHint() && !installDismissed;
+  const installPlatform = useMemo(() => getInstallPlatform(), []);
 
   const hour = new Date().getHours();
   const greeting =
