@@ -7,6 +7,7 @@ import { ThemeProvider } from "@/contexts/ThemeContext";
 import { SettingsProvider } from "@/contexts/SettingsContext";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import { useEffect } from "react";
+import { useSettings } from "@/contexts/SettingsContext";
 import { startReminderChecker } from "@/lib/reminders";
 import BottomNav from "@/components/BottomNav";
 import Home from "@/pages/Home";
