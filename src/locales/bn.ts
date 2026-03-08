@@ -151,6 +151,7 @@ export const bn: Record<string, string> = {
   "stats.totalTime": "মোট সময়",
   "stats.sessions": "সেশন",
   "stats.avgCalm": "গড় প্রশান্তি স্কোর",
+  "stats.day": "দিন",
   "stats.days": "দিন",
   "stats.min": "মিনিট",
   "stats.thisWeek": "এই সপ্তাহ",
