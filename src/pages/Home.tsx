@@ -341,6 +341,7 @@ export default function Home() {
       </div>
 
       <CreateChallengeDialog open={showChallengeDialog} onOpenChange={setShowChallengeDialog} />
+      <DonateDialog open={showDonateDialog} onOpenChange={setShowDonateDialog} />
     </div>
   );
 }
