@@ -37,6 +37,7 @@ import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { requestWakeLock, releaseWakeLock } from "@/lib/wakeLock";
 import { shouldSuggestIncrease, dismissSuggestion } from "@/lib/adaptive";
+import { getPostSessionRecommendation, PostSessionRecommendation } from "@/lib/suggestions";
 
 type SessionState = "idle" | "running" | "paused" | "done" | "playlist-transition";
 
