@@ -27,12 +27,34 @@ export default defineConfig(({ mode }) => ({
         display: "standalone",
         orientation: "portrait",
         start_url: "/",
+        categories: ["health", "lifestyle"],
         icons: [
           { src: "/favicon.ico", sizes: "64x64", type: "image/x-icon" },
+        ],
+        shortcuts: [
+          {
+            name: "Box Breathing",
+            short_name: "Box",
+            url: "/session?technique=box-breathing",
+            icons: [{ src: "/favicon.ico", sizes: "64x64" }],
+          },
+          {
+            name: "4-7-8 Relaxation",
+            short_name: "4-7-8",
+            url: "/session?technique=4-7-8",
+            icons: [{ src: "/favicon.ico", sizes: "64x64" }],
+          },
+          {
+            name: "Wim Hof Method",
+            short_name: "Wim Hof",
+            url: "/session?technique=wim-hof",
+            icons: [{ src: "/favicon.ico", sizes: "64x64" }],
+          },
         ],
       },
       workbox: {
         globPatterns: ["**/*.{js,css,html,ico,png,svg,woff2}"],
+        navigateFallbackDenylist: [/^\/~oauth/],
       },
     }),
   ].filter(Boolean),
