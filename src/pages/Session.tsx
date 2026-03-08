@@ -91,16 +91,18 @@ export default function Session() {
 
   const currentPlaylistStep = playlist?.steps[playlistStepIdx];
   const techniqueId = currentPlaylistStep?.techniqueId || params.get("technique") || "box-breathing";
-  const technique = getTechniqueById(techniqueId, getCustomTechniques()) || PRESET_TECHNIQUES[0];
+  const customTechniques = useMemo(() => getCustomTechniques(), [techniqueId]);
+  const technique = getTechniqueById(techniqueId, customTechniques) || PRESET_TECHNIQUES[0];
 
-  const techniqueName = (() => {
+  const techniqueName = useMemo(() => {
     const key = `technique.${technique.id}.name`;
     const translated = t(key);
     return translated !== key ? translated : technique.name;
-  })();
+  }, [technique.id, technique.name, t]);
 
-  const progression = getProgression(techniqueId);
-  const basePhases = getScaledPhases(technique, progression.level);
+  const [progressionState, setProgressionState] = useState(() => getProgression(techniqueId));
+  const progression = progressionState;
+  const basePhases = useMemo(() => getScaledPhases(technique, progression.level), [technique, progression.level]);
 
   const [state, setState] = useState<SessionState>("idle");
   const [phaseIndex, setPhaseIndex] = useState(0);
@@ -261,16 +263,21 @@ export default function Session() {
       ? Math.round(hrCoherenceSamples.reduce((a, b) => a + b, 0) / hrCoherenceSamples.length)
       : undefined;
 
-    if (totalElapsed > 10) {
+    const elapsed = elapsedRef.current;
+
+    // Re-read progression after update
+    setProgressionState(getProgression(technique.id));
+
+    if (elapsed > 10) {
       addSession({
         id: sessionIdRef.current,
         techniqueId: technique.id,
-        techniqueName: technique.name,
+        techniqueName: techniqueName,
         date: new Date().toISOString(),
-        durationSeconds: totalElapsed,
+        durationSeconds: elapsed,
         completedCycles,
         moodBefore: moodBefore ?? undefined,
-        moodAfter: undefined, // Will be updated when user picks mood after
+        moodAfter: undefined,
         calmScore: calm.score,
         breathAccuracy: avgBreathAccuracy,
         avgHeartRate: avgHR,
@@ -278,18 +285,20 @@ export default function Session() {
       });
 
       const challengesCompleted = getCompletedChallengeCount();
-      const xp = calculateSessionXP(totalElapsed, technique, calm.score, challengesCompleted);
+      const xp = calculateSessionXP(elapsed, technique, calm.score, challengesCompleted);
       const xpResult = addXP(xp);
       const xpState = getXPState();
       setEarnedXP({
         xp,
         leveledUp: xpResult.newLevel > xpResult.previousLevel,
-        newTitle: xpResult.newLevel > xpResult.previousLevel ? xpState.title : undefined,
+        newTitle: xpResult.newLevel > xpResult.previousLevel ? t(`xp.${xpState.title}`) : undefined,
       });
 
       const newBadges = getNewlyUnlocked();
       newBadges.forEach((badge) => {
-        toast(`${badge.emoji} ${badge.name} unlocked!`, { description: badge.description });
+        toast(`${badge.emoji} ${t(`badge.${badge.id}.name`)} ${t("session.badgeUnlocked")}`, {
+          description: t(`badge.${badge.id}.description`),
+        });
       });
     }
 
@@ -298,7 +307,7 @@ export default function Session() {
     }
 
     vibrateDone();
-  }, [totalElapsed, completedCycles, technique, moodBefore, phaseIndex, currentPhases, programId, programDay]);
+  }, [completedCycles, technique, moodBefore, phaseIndex, currentPhases, programId, programDay, t, techniqueName]);
 
   const stop = useCallback(() => {
     finishSession();
@@ -673,7 +682,7 @@ export default function Session() {
             {playlist && <p className="text-xs text-primary mt-1">{t("session.done.playlistComplete")}</p>}
             {programId && programDay && <p className="text-xs text-primary mt-1">{t("session.done.dayComplete", { day: programDay })}</p>}
             <span className="inline-block mt-1 rounded-full bg-primary/15 px-2.5 py-0.5 text-xs font-medium text-primary">
-              Lv.{progression.level} {t(`level.${getLevelName(progression.level)}`)}
+              {t("common.levelShort", { level: levelUpInfo ? levelUpInfo.level : progression.level })} {t(`level.${getLevelName(levelUpInfo ? levelUpInfo.level : progression.level)}`)}
             </span>
           </div>
 
@@ -735,6 +744,7 @@ export default function Session() {
             </Button>
             <Button variant="secondary" onClick={() => {
               saveJournal();
+              sessionIdRef.current = crypto.randomUUID();
               setState("idle"); setMoodBefore(null); setMoodAfter(null); setMoodSaved(false); setLevelUpInfo(null); setEarnedXP(null); setCalmResult(null); setJournalNote("");
             }}>{t("session.again")}</Button>
             <Button onClick={() => {
@@ -792,7 +802,7 @@ export default function Session() {
           <div className="text-center">
             <h2 className="text-lg font-semibold text-foreground">{techniqueName}</h2>
             <span className="text-xs text-muted-foreground">
-              Lv.{progression.level} {t(`level.${getLevelName(progression.level)}`)}
+              {t("common.levelShort", { level: progression.level })} {t(`level.${getLevelName(progression.level)}`)}
             </span>
             {technique.pyramid && state !== "idle" && (
               <p className="text-xs text-primary mt-0.5">{t("session.round", { round: currentRound + 1 })}</p>
@@ -839,8 +849,8 @@ export default function Session() {
 
         {state === "idle" && (
           <>
-            <div className="flex gap-2">
-              {[2, 3, 5, 10, 15].map((m) => (
+            <div className="flex gap-2 items-center flex-wrap justify-center">
+              {[2, 3, 5, 10, 15, 20].map((m) => (
                 <button
                   key={m}
                   onClick={() => setDurationMin(m)}
@@ -852,6 +862,19 @@ export default function Session() {
                   {m} {t("common.min")}
                 </button>
               ))}
+              <input
+                type="number"
+                min={1}
+                max={60}
+                value={![2, 3, 5, 10, 15, 20].includes(durationMin) ? durationMin : ""}
+                placeholder="+"
+                onChange={(e) => {
+                  const v = Math.max(1, Math.min(60, Number(e.target.value) || 1));
+                  setDurationMin(v);
+                }}
+                className="w-10 h-7 rounded-full text-center text-xs font-medium bg-secondary text-secondary-foreground border-0 focus:ring-1 focus:ring-primary"
+                aria-label={t("session.customDuration")}
+              />
             </div>
 
             <div className="flex gap-1.5">
@@ -944,7 +967,7 @@ export default function Session() {
             <button
               onClick={() => { setVoiceOn(!voiceOn); if (voiceOn) stopSpeaking(); }}
               className="rounded-full p-2 text-muted-foreground hover:text-foreground"
-              aria-label={voiceOn ? t("settings.voiceEnable") : t("settings.voiceEnable")}
+              aria-label={voiceOn ? t("session.voiceMute") : t("session.voiceUnmute")}
             >
               {voiceOn ? <Volume2 className="h-5 w-5" /> : <VolumeX className="h-5 w-5" />}
             </button>

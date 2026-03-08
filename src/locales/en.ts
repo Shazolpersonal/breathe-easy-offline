@@ -394,6 +394,10 @@ export const en: Record<string, string> = {
   "common.bengali": "বাংলা",
   "common.cancel": "Cancel",
   "common.levelShort": "Lv.{{level}}",
+  "session.badgeUnlocked": "unlocked!",
+  "session.voiceMute": "Mute voice",
+  "session.voiceUnmute": "Unmute voice",
+  "session.customDuration": "Custom duration",
 
   // Notification
   "notif.title": "Muhurto Breath 🌬️",

@@ -394,6 +394,10 @@ export const bn: Record<string, string> = {
   "common.bengali": "বাংলা",
   "common.cancel": "বাতিল",
   "common.levelShort": "স্তর {{level}}",
+  "session.badgeUnlocked": "আনলক হয়েছে!",
+  "session.voiceMute": "ভয়েস নিঃশব্দ",
+  "session.voiceUnmute": "ভয়েস চালু",
+  "session.customDuration": "কাস্টম সময়কাল",
 
   // Notification
   "notif.title": "মুহূর্ত ব্রেথ 🌬️",

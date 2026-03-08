@@ -80,14 +80,15 @@ export function calculateSessionXP(
   durationSeconds: number,
   technique: BreathingTechnique,
   calmScore: number,
-  completedChallenges: number
+  completedChallenges: number,
+  streak?: number
 ): number {
   let xp = 10; // base
   xp += Math.floor(durationSeconds / 60); // +1 per min
   xp = Math.round(xp * (DIFFICULTY_MULTIPLIER[technique.difficulty] || 1));
   if (calmScore >= 80) xp += 5;
   xp += completedChallenges * 15;
-  xp += getCurrentStreak() * 2;
+  xp += (streak ?? getCurrentStreak()) * 2;
   return xp;
 }
 
