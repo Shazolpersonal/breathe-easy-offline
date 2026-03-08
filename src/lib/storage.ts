@@ -21,6 +21,9 @@ export interface AppSettings {
   soundEnabled: boolean;
   theme: string;
   visualizationType: "circle" | "wave" | "bars" | "mandala";
+  highContrast: boolean;
+  largeText: boolean;
+  reducedMotion: boolean;
 }
 
 const KEYS = {
