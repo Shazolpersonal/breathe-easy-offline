@@ -118,7 +118,17 @@ export const BADGES: Badge[] = [
     name: "Consistent",
     emoji: "📅",
     description: "Reach a 30-day streak",
-    check: () => getCurrentStreak() >= 30,
+    check: (s) => {
+      const sessions = s ?? getSessions();
+      const dates = [...new Set(sessions.map(r => r.date.split("T")[0]))].sort();
+      let streak = dates.length > 0 ? 1 : 0;
+      let cur = 1;
+      for (let i = 1; i < dates.length; i++) {
+        const diff = (new Date(dates[i]).getTime() - new Date(dates[i - 1]).getTime()) / 86400000;
+        if (diff === 1) { cur++; streak = Math.max(streak, cur); } else if (diff > 1) cur = 1;
+      }
+      return streak >= 30;
+    },
   },
   {
     id: "deep-diver",

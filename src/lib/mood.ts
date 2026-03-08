@@ -8,12 +8,17 @@ export interface MoodOption {
 }
 
 export const MOODS: MoodOption[] = [
-  { value: 1, emoji: "😫", label: "Stressed" },
-  { value: 2, emoji: "😟", label: "Anxious" },
-  { value: 3, emoji: "😐", label: "Neutral" },
-  { value: 4, emoji: "🙂", label: "Good" },
-  { value: 5, emoji: "😌", label: "Calm" },
+  { value: 1, emoji: "😫", label: "mood.1" },
+  { value: 2, emoji: "😟", label: "mood.2" },
+  { value: 3, emoji: "😐", label: "mood.3" },
+  { value: 4, emoji: "🙂", label: "mood.4" },
+  { value: 5, emoji: "😌", label: "mood.5" },
 ];
+
+/** Get the i18n key for a mood value */
+export function getMoodLabelKey(value: number): string {
+  return MOODS.find((m) => m.value === value)?.label ?? "mood.3";
+}
 
 export interface MoodRecord {
   sessionId: string;

@@ -336,10 +336,13 @@ export default function Stats() {
             ) : (
               <div className="rounded-2xl border border-border bg-card p-5 space-y-4">
                 <p className="text-sm leading-relaxed text-foreground">
-                  {t("stats.report.summary", { minutes: reportData.totalMin, sessions: reportData.sessions, month: monthLabel })
-                    .split(String(reportData.totalMin))
-                    .flatMap((part, i, arr) => i < arr.length - 1 ? [part, <strong key={`min-${i}`}>{reportData.totalMin}</strong>] : [part])
-                  }
+                  {(() => {
+                    const summary = t("stats.report.summary", { minutes: reportData.totalMin, sessions: reportData.sessions, month: monthLabel });
+                    const boldValues = [String(reportData.totalMin), String(reportData.sessions)];
+                    const regex = new RegExp(`(${boldValues.map(v => v.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|')})`, 'g');
+                    const parts = summary.split(regex);
+                    return parts.map((part, i) => boldValues.includes(part) ? <strong key={i}>{part}</strong> : part);
+                  })()}
                 </p>
                 {reportData.topTechnique && (
                   <p className="text-sm leading-relaxed text-foreground">

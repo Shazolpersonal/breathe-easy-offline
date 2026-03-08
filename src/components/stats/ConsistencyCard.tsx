@@ -1,9 +1,10 @@
+import { useMemo } from "react";
 import { getConsistencyScore } from "@/lib/consistency";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function ConsistencyCard() {
   const { t } = useLanguage();
-  const { score, breakdown } = getConsistencyScore();
+  const { score, breakdown } = useMemo(() => getConsistencyScore(), []);
 
   const color =
     score >= 70 ? "hsl(var(--primary))" : score >= 40 ? "hsl(45 90% 55%)" : "hsl(0 70% 55%)";
