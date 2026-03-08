@@ -19,7 +19,7 @@ import { saveMoodRecord, getMoodEmoji } from "@/lib/mood";
 import { getProgression, getScaledPhases, updateProgression, getLevelName, getLevelProgress } from "@/lib/progression";
 import { calculateCalmScore, PhaseTimestamp, CalmScoreResult } from "@/lib/coherence";
 import { getNewlyUnlocked } from "@/lib/achievements";
-import { calculateSessionXP, addXP, getXPState } from "@/lib/xp";
+import { calculateSessionXP, addXP, getXPState, XPBreakdown } from "@/lib/xp";
 import { getCompletedChallengeCount } from "@/lib/challenges";
 import { getPlaylists } from "@/lib/playlists";
 import { completeDay } from "@/lib/programs";
