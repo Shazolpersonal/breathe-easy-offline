@@ -6,9 +6,9 @@ import { Slider } from "@/components/ui/slider";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { exportData, importData } from "@/lib/storage";
+import { exportData, importData, getLastBackupDate, getDataSummary } from "@/lib/storage";
 import { exportSessionsCSV } from "@/lib/csvExport";
-import { Download, Upload, Circle, Waves, BarChart3, Flower2, Plus, Trash2, Bell, BellOff, Accessibility, Mic, Heart, Music, FileSpreadsheet } from "lucide-react";
+import { Download, Upload, Circle, Waves, BarChart3, Flower2, Plus, Trash2, Bell, BellOff, Accessibility, Mic, Heart, Music, FileSpreadsheet, AlertTriangle, Database } from "lucide-react";
 import { SoundscapeType, getSoundscapeEngine } from "@/lib/soundscapes";
 import SoundscapePicker from "@/components/SoundscapePicker";
 import { cn } from "@/lib/utils";
@@ -368,6 +368,37 @@ export default function Settings() {
         {/* Data */}
         <section className="rounded-2xl border border-border bg-card p-4 space-y-3">
           <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">{t("settings.data")}</h2>
+
+          {/* Backup Health Indicator */}
+          {(() => {
+            const summary = getDataSummary();
+            const lastBackup = getLastBackupDate();
+            const daysSinceBackup = lastBackup ? Math.floor((Date.now() - new Date(lastBackup).getTime()) / 86400000) : null;
+            const needsBackup = daysSinceBackup === null || daysSinceBackup >= 30;
+            return (
+              <div className={`rounded-xl p-3 space-y-2 ${needsBackup ? "bg-destructive/10 border border-destructive/20" : "bg-secondary/50"}`}>
+                <div className="flex items-center gap-2">
+                  {needsBackup ? <AlertTriangle className="h-4 w-4 text-destructive" /> : <Database className="h-4 w-4 text-muted-foreground" />}
+                  <span className="text-xs font-medium text-foreground">{t("settings.backupHealth")}</span>
+                </div>
+                <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-[11px] text-muted-foreground">
+                  <span>{t("settings.dataSessions", { count: summary.sessions })}</span>
+                  <span>{t("settings.dataJournals", { count: summary.journals })}</span>
+                  <span>{t("settings.dataMoods", { count: summary.moodRecords })}</span>
+                  <span>{t("settings.dataXP", { xp: summary.xpTotal })}</span>
+                </div>
+                <p className="text-[10px] text-muted-foreground">
+                  {lastBackup
+                    ? t("settings.lastBackup", { days: daysSinceBackup! })
+                    : t("settings.neverBacked")}
+                </p>
+                {needsBackup && (
+                  <p className="text-[10px] font-medium text-destructive">{t("settings.backupWarning")}</p>
+                )}
+              </div>
+            );
+          })()}
+
           <div className="flex gap-2">
             <Button variant="secondary" size="sm" className="gap-1 flex-1" onClick={handleExport}>
               <Download className="h-4 w-4" /> {t("settings.export")}

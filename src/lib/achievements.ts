@@ -1,5 +1,11 @@
 import { getSessions, getCustomTechniques, SessionRecord } from "./storage";
 import { getAllProgressionsPublic } from "./progression";
+import { getCurrentStreak } from "./storage";
+
+export interface BadgeProgress {
+  current: number;
+  target: number;
+}
 
 export interface Badge {
   id: string;
@@ -7,6 +13,7 @@ export interface Badge {
   emoji: string;
   description: string;
   check: (sessions?: SessionRecord[]) => boolean;
+  progress: (sessions?: SessionRecord[]) => BadgeProgress;
 }
 
 const SEEN_KEY = "breathe_badges_seen";
@@ -25,6 +32,34 @@ function markBadgesSeen(ids: string[]) {
   localStorage.setItem(SEEN_KEY, JSON.stringify(seen));
 }
 
+function getStreakFromSessions(sessions: SessionRecord[]): number {
+  const dates = [...new Set(sessions.map(r => r.date.split("T")[0]))].sort();
+  let streak = dates.length > 0 ? 1 : 0;
+  let cur = 1;
+  for (let i = 1; i < dates.length; i++) {
+    const diff = (new Date(dates[i]).getTime() - new Date(dates[i - 1]).getTime()) / 86400000;
+    if (diff === 1) { cur++; streak = Math.max(streak, cur); } else if (diff > 1) cur = 1;
+  }
+  if (dates.length > 0) {
+    const lastDate = new Date(dates[dates.length - 1]);
+    const today = new Date(); today.setHours(0,0,0,0); lastDate.setHours(0,0,0,0);
+    const diffToday = (today.getTime() - lastDate.getTime()) / 86400000;
+    if (diffToday > 1) streak = 0;
+  }
+  return streak;
+}
+
+function getLongestStreakFromSessions(sessions: SessionRecord[]): number {
+  const dates = [...new Set(sessions.map(r => r.date.split("T")[0]))].sort();
+  let streak = dates.length > 0 ? 1 : 0;
+  let cur = 1;
+  for (let i = 1; i < dates.length; i++) {
+    const diff = (new Date(dates[i]).getTime() - new Date(dates[i - 1]).getTime()) / 86400000;
+    if (diff === 1) { cur++; streak = Math.max(streak, cur); } else if (diff > 1) cur = 1;
+  }
+  return streak;
+}
+
 export const BADGES: Badge[] = [
   {
     id: "first-breath",
@@ -32,30 +67,15 @@ export const BADGES: Badge[] = [
     emoji: "🌱",
     description: "Complete your first session",
     check: (s) => (s ?? getSessions()).length >= 1,
+    progress: (s) => ({ current: Math.min((s ?? getSessions()).length, 1), target: 1 }),
   },
   {
     id: "week-warrior",
     name: "Week Warrior",
     emoji: "🔥",
     description: "Reach a 7-day streak",
-    check: (s) => {
-      const sessions = s ?? getSessions();
-      const dates = [...new Set(sessions.map(r => r.date.split("T")[0]))].sort();
-      let streak = dates.length > 0 ? 1 : 0;
-      let cur = 1;
-      for (let i = 1; i < dates.length; i++) {
-        const diff = (new Date(dates[i]).getTime() - new Date(dates[i - 1]).getTime()) / 86400000;
-        if (diff === 1) { cur++; streak = Math.max(streak, cur); } else if (diff > 1) cur = 1;
-      }
-      // Also check if streak extends to today
-      if (dates.length > 0) {
-        const lastDate = new Date(dates[dates.length - 1]);
-        const today = new Date(); today.setHours(0,0,0,0); lastDate.setHours(0,0,0,0);
-        const diffToday = (today.getTime() - lastDate.getTime()) / 86400000;
-        if (diffToday > 1) streak = 0; // streak broken
-      }
-      return streak >= 7;
-    },
+    check: (s) => getStreakFromSessions(s ?? getSessions()) >= 7,
+    progress: (s) => ({ current: Math.min(getStreakFromSessions(s ?? getSessions()), 7), target: 7 }),
   },
   {
     id: "night-owl",
@@ -63,6 +83,7 @@ export const BADGES: Badge[] = [
     emoji: "🦉",
     description: "Complete a session after 11 PM",
     check: (s) => (s ?? getSessions()).some((r) => new Date(r.date).getHours() >= 23),
+    progress: (s) => ({ current: (s ?? getSessions()).some((r) => new Date(r.date).getHours() >= 23) ? 1 : 0, target: 1 }),
   },
   {
     id: "early-bird",
@@ -70,6 +91,7 @@ export const BADGES: Badge[] = [
     emoji: "🐦",
     description: "Complete a session before 7 AM",
     check: (s) => (s ?? getSessions()).some((r) => new Date(r.date).getHours() < 7),
+    progress: (s) => ({ current: (s ?? getSessions()).some((r) => new Date(r.date).getHours() < 7) ? 1 : 0, target: 1 }),
   },
   {
     id: "century",
@@ -77,6 +99,7 @@ export const BADGES: Badge[] = [
     emoji: "💯",
     description: "Accumulate 100 total minutes",
     check: (s) => (s ?? getSessions()).reduce((sum, r) => sum + r.durationSeconds, 0) >= 6000,
+    progress: (s) => ({ current: Math.min(Math.round((s ?? getSessions()).reduce((sum, r) => sum + r.durationSeconds, 0) / 60), 100), target: 100 }),
   },
   {
     id: "marathon",
@@ -84,6 +107,10 @@ export const BADGES: Badge[] = [
     emoji: "🏃",
     description: "Single session ≥ 10 minutes",
     check: (s) => (s ?? getSessions()).some((r) => r.durationSeconds >= 600),
+    progress: (s) => {
+      const best = Math.max(0, ...(s ?? getSessions()).map(r => r.durationSeconds));
+      return { current: Math.min(Math.round(best / 60), 10), target: 10 };
+    },
   },
   {
     id: "creator",
@@ -91,6 +118,7 @@ export const BADGES: Badge[] = [
     emoji: "🎨",
     description: "Create a custom technique",
     check: () => getCustomTechniques().length >= 1,
+    progress: () => ({ current: Math.min(getCustomTechniques().length, 1), target: 1 }),
   },
   {
     id: "zen-master",
@@ -98,6 +126,10 @@ export const BADGES: Badge[] = [
     emoji: "🧘",
     description: "Reach Level 5 on any technique",
     check: () => getAllProgressionsPublic().some((p) => p.level >= 5),
+    progress: () => {
+      const maxLevel = Math.max(0, ...getAllProgressionsPublic().map(p => p.level));
+      return { current: Math.min(maxLevel, 5), target: 5 };
+    },
   },
   {
     id: "calm-mind",
@@ -105,6 +137,10 @@ export const BADGES: Badge[] = [
     emoji: "🧠",
     description: "Achieve a calm score ≥ 90",
     check: (s) => (s ?? getSessions()).some((r) => (r.calmScore ?? 0) >= 90),
+    progress: (s) => {
+      const best = Math.max(0, ...(s ?? getSessions()).map(r => r.calmScore ?? 0));
+      return { current: Math.min(best, 90), target: 90 };
+    },
   },
   {
     id: "explorer",
@@ -112,23 +148,15 @@ export const BADGES: Badge[] = [
     emoji: "🧭",
     description: "Try 3 different techniques",
     check: (s) => new Set((s ?? getSessions()).map((r) => r.techniqueId)).size >= 3,
+    progress: (s) => ({ current: Math.min(new Set((s ?? getSessions()).map((r) => r.techniqueId)).size, 3), target: 3 }),
   },
   {
     id: "consistent",
     name: "Consistent",
     emoji: "📅",
     description: "Reach a 30-day streak",
-    check: (s) => {
-      const sessions = s ?? getSessions();
-      const dates = [...new Set(sessions.map(r => r.date.split("T")[0]))].sort();
-      let streak = dates.length > 0 ? 1 : 0;
-      let cur = 1;
-      for (let i = 1; i < dates.length; i++) {
-        const diff = (new Date(dates[i]).getTime() - new Date(dates[i - 1]).getTime()) / 86400000;
-        if (diff === 1) { cur++; streak = Math.max(streak, cur); } else if (diff > 1) cur = 1;
-      }
-      return streak >= 30;
-    },
+    check: (s) => getLongestStreakFromSessions(s ?? getSessions()) >= 30,
+    progress: (s) => ({ current: Math.min(getLongestStreakFromSessions(s ?? getSessions()), 30), target: 30 }),
   },
   {
     id: "deep-diver",
@@ -136,6 +164,7 @@ export const BADGES: Badge[] = [
     emoji: "🌊",
     description: "Complete 50 total sessions",
     check: (s) => (s ?? getSessions()).length >= 50,
+    progress: (s) => ({ current: Math.min((s ?? getSessions()).length, 50), target: 50 }),
   },
   {
     id: "mood-lifter",
@@ -143,6 +172,10 @@ export const BADGES: Badge[] = [
     emoji: "🌈",
     description: "Improve mood by +3 in one session",
     check: (s) => (s ?? getSessions()).some((r) => r.moodBefore != null && r.moodAfter != null && (r.moodAfter - r.moodBefore) >= 3),
+    progress: (s) => {
+      const best = Math.max(0, ...(s ?? getSessions()).filter(r => r.moodBefore != null && r.moodAfter != null).map(r => r.moodAfter! - r.moodBefore!));
+      return { current: Math.min(best, 3), target: 3 };
+    },
   },
   {
     id: "dedicated",
@@ -150,6 +183,7 @@ export const BADGES: Badge[] = [
     emoji: "⭐",
     description: "Accumulate 500 total minutes",
     check: (s) => (s ?? getSessions()).reduce((sum, r) => sum + r.durationSeconds, 0) >= 30000,
+    progress: (s) => ({ current: Math.min(Math.round((s ?? getSessions()).reduce((sum, r) => sum + r.durationSeconds, 0) / 60), 500), target: 500 }),
   },
   {
     id: "perfect-week",
@@ -179,6 +213,31 @@ export const BADGES: Badge[] = [
         }
       }
       return streak >= 7;
+    },
+    progress: (s) => {
+      const sessions = s ?? getSessions();
+      const dayMinutes: Record<string, number> = {};
+      sessions.forEach((r) => {
+        const day = r.date.split("T")[0];
+        dayMinutes[day] = (dayMinutes[day] || 0) + r.durationSeconds / 60;
+      });
+      const days = Object.entries(dayMinutes)
+        .filter(([, m]) => m >= 5)
+        .map(([d]) => d)
+        .sort();
+      let maxStreak = days.length > 0 ? 1 : 0;
+      let cur = 1;
+      for (let i = 1; i < days.length; i++) {
+        const prev = new Date(days[i - 1]);
+        const curr = new Date(days[i]);
+        if ((curr.getTime() - prev.getTime()) / 86400000 === 1) {
+          cur++;
+          maxStreak = Math.max(maxStreak, cur);
+        } else {
+          cur = 1;
+        }
+      }
+      return { current: Math.min(maxStreak, 7), target: 7 };
     },
   },
 ];

@@ -191,14 +191,46 @@ export function toggleFavorite(id: string) {
   setJSON(KEYS.favorites, favs);
 }
 
+// Backup timestamp
+const BACKUP_KEY = "breathe_last_backup";
+
+export function getLastBackupDate(): string | null {
+  return localStorage.getItem(BACKUP_KEY);
+}
+
+function setLastBackupDate() {
+  localStorage.setItem(BACKUP_KEY, new Date().toISOString());
+}
+
+export function getDataSummary(): { sessions: number; journals: number; moodRecords: number; xpTotal: number } {
+  const sessions = getSessions();
+  const journals = sessions.filter(s => s.journal).length;
+  const moodRaw = localStorage.getItem("breathe_mood_records");
+  const moodRecords = moodRaw ? JSON.parse(moodRaw).length : 0;
+  const xpRaw = localStorage.getItem("breathe_xp");
+  const xpTotal = xpRaw ? JSON.parse(xpRaw).totalXP || 0 : 0;
+  return { sessions: sessions.length, journals, moodRecords, xpTotal };
+}
+
 // Export / Import
 export function exportData(): string {
-  return JSON.stringify({
+  setLastBackupDate();
+  const data: Record<string, unknown> = {
     sessions: getSessions(),
     settings: getSettings(),
     customTechniques: getCustomTechniques(),
     favorites: getFavorites(),
-  }, null, 2);
+  };
+  // Include additional localStorage keys for complete backup
+  const extraKeys = ["breathe_xp", "breathe_mood_records", "breathe_challenge_history", "breathe_progression", "breathe_badges_seen"];
+  for (const key of extraKeys) {
+    const raw = localStorage.getItem(key);
+    if (raw) {
+      try { data[key] = JSON.parse(raw); } catch { data[key] = raw; }
+    }
+  }
+  data._backupDate = new Date().toISOString();
+  return JSON.stringify(data, null, 2);
 }
 
 export function importData(json: string) {
@@ -223,5 +255,12 @@ export function importData(json: string) {
   if (data.favorites) {
     if (!Array.isArray(data.favorites)) throw new Error("Invalid favorites data");
     setJSON(KEYS.favorites, data.favorites);
+  }
+  // Restore additional keys
+  const extraKeys = ["breathe_xp", "breathe_mood_records", "breathe_challenge_history", "breathe_progression", "breathe_badges_seen"];
+  for (const key of extraKeys) {
+    if (data[key] != null) {
+      localStorage.setItem(key, typeof data[key] === "string" ? data[key] : JSON.stringify(data[key]));
+    }
   }
 }
