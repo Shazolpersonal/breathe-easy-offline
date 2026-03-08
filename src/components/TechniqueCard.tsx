@@ -27,6 +27,7 @@ const difficultyColor = {
 export default function TechniqueCard({ technique, isFavorite, onToggleFavorite, compact, progression: propProgression }: TechniqueCardProps) {
   const navigate = useNavigate();
   const { t, language } = useLanguage();
+  const [previewActive, setPreviewActive] = useState(false);
   const cycleSec = getCycleDuration(technique);
   const unlocked = isUnlocked(technique);
   // Bug 5: Use passed progression prop if available, fallback to direct call only in compact/standalone usage
