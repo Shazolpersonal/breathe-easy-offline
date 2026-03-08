@@ -724,7 +724,7 @@ export default function Session() {
           <div className="text-5xl">🙏</div>
           <div>
             <h2 className="text-2xl font-bold text-foreground">{t("session.done.title")}</h2>
-            <p className="mt-1 text-muted-foreground">{t("session.done.stats", { min: Math.round(totalElapsed / 60), cycles: completedCycles })}</p>
+            <p className="mt-1 text-muted-foreground">{t(completedCycles === 1 ? "session.done.stats_one" : "session.done.stats", { min: Math.round(totalElapsed / 60), cycles: completedCycles })}</p>
             <p className="text-sm text-muted-foreground">{techniqueName}</p>
             {playlist && <p className="text-xs text-primary mt-1">{t("session.done.playlistComplete")}</p>}
             {programId && programDay && <p className="text-xs text-primary mt-1">{t("session.done.dayComplete", { day: programDay })}</p>}

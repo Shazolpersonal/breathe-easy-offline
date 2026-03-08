@@ -250,6 +250,7 @@ export const bn: Record<string, string> = {
   "programs.dayLabel": "দিন {{day}}",
   "programs.next": "পরবর্তী",
   "programs.enrolled": "নথিভুক্ত",
+  "programs.dayCount": "{{count}} দিন",
   "programs.daysCount": "{{count}} দিন",
 
   "program.stress-relief-7.name": "৭-দিনের চাপ মুক্তি",

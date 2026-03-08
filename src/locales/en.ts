@@ -250,6 +250,7 @@ export const en: Record<string, string> = {
   "programs.dayLabel": "Day {{day}}",
   "programs.next": "Next",
   "programs.enrolled": "Enrolled",
+  "programs.dayCount": "{{count}} day",
   "programs.daysCount": "{{count}} days",
 
   "program.stress-relief-7.name": "7-Day Stress Relief",
