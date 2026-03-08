@@ -802,7 +802,7 @@ export default function Session() {
           <div className="text-center">
             <h2 className="text-lg font-semibold text-foreground">{techniqueName}</h2>
             <span className="text-xs text-muted-foreground">
-              Lv.{progression.level} {t(`level.${getLevelName(progression.level)}`)}
+              {t("common.levelShort", { level: progression.level })} {t(`level.${getLevelName(progression.level)}`)}
             </span>
             {technique.pyramid && state !== "idle" && (
               <p className="text-xs text-primary mt-0.5">{t("session.round", { round: currentRound + 1 })}</p>
