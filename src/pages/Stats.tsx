@@ -15,7 +15,7 @@ import { getXPState } from "@/lib/xp";
 import { getMoodRecords } from "@/lib/mood";
 import { shareStreak, shareBadge } from "@/lib/shareApp";
 
-type Tab = "stats" | "insights" | "badges" | "journal" | "reports";
+type Tab = "stats" | "history" | "insights" | "badges" | "journal" | "reports";
 type TimeRange = "7d" | "30d" | "90d";
 
 export default function Stats() {
