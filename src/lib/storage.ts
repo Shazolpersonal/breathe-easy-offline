@@ -43,6 +43,7 @@ export interface AppSettings {
   breathDetectionEnabled: boolean;
   heartRateEnabled: boolean;
   dailyGoalMinutes: number;
+  autoBackupEnabled: boolean;
 }
 
 const KEYS = {
