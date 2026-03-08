@@ -49,6 +49,7 @@ export const en: Record<string, string> = {
   "session.step": "Step {{current}} of {{total}}",
   "session.continue": "Continue",
   "session.round": "Round {{round}} (Pyramid)",
+  "session.cycle": "{{count}} cycle",
   "session.cycles": "{{count}} cycles",
   "session.startSession": "Start Session",
 
