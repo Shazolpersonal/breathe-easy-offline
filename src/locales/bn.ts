@@ -531,6 +531,11 @@ export const bn: Record<string, string> = {
   "install.title": "মুহূর্ত ব্রেথ ইনস্টল করুন",
   "install.desc": "অফলাইন ব্যবহার, দ্রুত লোডিং এবং হোম স্ক্রিন শর্টকাটের জন্য ইনস্টল করুন।",
   "install.button": "ইনস্টল",
+  "install.manual.title": "ফ্রি অ্যাপ ইনস্টল করুন",
+  "install.manual.ios": "Share বাটনে ট্যাপ করুন, তারপর 'Add to Home Screen' নির্বাচন করুন",
+  "install.manual.android": "ব্রাউজার মেনুতে (⋮) ট্যাপ করুন, তারপর 'Add to Home Screen' নির্বাচন করুন",
+  "install.manual.desktop": "আপনার ব্রাউজার মেনু থেকে এই অ্যাপটি ইনস্টল করুন",
+  "install.manual.free": "ফ্রি · অফলাইন · অ্যাপ স্টোর লাগবে না",
 
   // Keyboard Shortcuts
   "shortcut.title": "কীবোর্ড শর্টকাট",
