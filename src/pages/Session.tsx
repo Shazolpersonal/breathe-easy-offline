@@ -479,7 +479,12 @@ export default function Session() {
     if (soundscapeType !== "off") {
       soundscapeEngineRef.current.start(soundscapeType, settings.soundscapeVolume ?? 0.5);
     }
-    if (voiceOn) speak(t(`phase.${currentPhases[0].type}`), settings.voiceSpeed, language);
+    const voiceOpts: SpeakOptions = { rate: settings.voiceSpeed, pitch: settings.voicePitch, volume: settings.voiceVolume, voiceName: language === "bn" ? settings.voiceNameBn : settings.voiceNameEn, lang: language };
+    if (voiceOn && settings.cueSessionStart) {
+      speakSessionStart(language, voiceOpts);
+    } else if (voiceOn && settings.cuePhaseNames) {
+      speak(t(`phase.${currentPhases[0].type}`), voiceOpts);
+    }
     if (settings.vibrationEnabled) vibratePhaseChange();
   };
 
