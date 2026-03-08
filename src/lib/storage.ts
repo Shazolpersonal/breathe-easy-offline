@@ -7,6 +7,8 @@ export interface SessionRecord {
   date: string; // ISO date string
   durationSeconds: number;
   completedCycles: number;
+  moodBefore?: number;
+  moodAfter?: number;
 }
 
 export interface AppSettings {
