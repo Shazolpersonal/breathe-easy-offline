@@ -477,7 +477,7 @@ export default function Session() {
           secondsLeft={state === "idle" ? 0 : secondsLeft}
         />
 
-        <div className="text-center">
+        <div className="text-center" aria-live="polite" aria-atomic="true">
           <span className="text-sm tabular-nums text-muted-foreground">{elapsedDisplay} / {targetDisplay}</span>
           {state !== "idle" && <p className="text-xs text-muted-foreground">{t("session.cycles", { count: completedCycles })}</p>}
         </div>
