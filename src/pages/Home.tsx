@@ -106,6 +106,7 @@ export default function Home() {
                 বাং
               </button>
             </div>
+            </div>
           </div>
           <p className="mt-1 text-sm text-muted-foreground">{greeting} {t("home.subtitle")}</p>
         </div>
