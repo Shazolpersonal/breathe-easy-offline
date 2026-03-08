@@ -230,7 +230,7 @@ export default function Session() {
   }, [journalNote]);
 
   const finishSession = useCallback(() => {
-    clearInterval(intervalRef.current);
+    clearTimeout(intervalRef.current);
     stopSpeaking();
 
     // Stop soundscape
