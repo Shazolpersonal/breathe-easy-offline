@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
-import { Pause, Play, Square, Volume2, VolumeX } from "lucide-react";
+import { Pause, Play, Square, Volume2, VolumeX, TrendingUp } from "lucide-react";
 import BreathingCircle from "@/components/BreathingCircle";
 import MoodPicker from "@/components/MoodPicker";
 import { PRESET_TECHNIQUES, getTechniqueById, getCycleDuration, BreathingPhase } from "@/lib/techniques";
@@ -9,10 +9,47 @@ import { useSettings } from "@/contexts/SettingsContext";
 import { speak, stopSpeaking } from "@/lib/voice";
 import { vibratePhaseChange, vibrateDone } from "@/lib/haptics";
 import { saveMoodRecord, getMoodEmoji } from "@/lib/mood";
+import { getProgression, getScaledPhases, updateProgression, getLevelName, getLevelProgress, getNextLevelThreshold } from "@/lib/progression";
+import { calculateCalmScore, PhaseTimestamp, CalmScoreResult } from "@/lib/coherence";
 import { Button } from "@/components/ui/button";
+import { Progress } from "@/components/ui/progress";
 import { cn } from "@/lib/utils";
 
 type SessionState = "idle" | "running" | "paused" | "done";
+
+function CalmScoreDisplay({ result }: { result: CalmScoreResult }) {
+  return (
+    <div className="flex flex-col items-center gap-1">
+      <div className="relative flex h-20 w-20 items-center justify-center">
+        <svg className="h-20 w-20 -rotate-90" viewBox="0 0 80 80">
+          <circle cx="40" cy="40" r="34" fill="none" stroke="hsl(var(--muted))" strokeWidth="6" />
+          <circle
+            cx="40" cy="40" r="34" fill="none"
+            stroke={`hsl(var(--${result.color}))`}
+            strokeWidth="6"
+            strokeDasharray={`${(result.score / 100) * 213.6} 213.6`}
+            strokeLinecap="round"
+          />
+        </svg>
+        <span className="absolute text-lg font-bold text-foreground">{result.score}</span>
+      </div>
+      <span className={`text-sm font-medium text-${result.color}`}>{result.label}</span>
+      <span className="text-xs text-muted-foreground">Calm Score</span>
+    </div>
+  );
+}
+
+function LevelUpBanner({ level, techniqueName }: { level: number; techniqueName: string }) {
+  return (
+    <div className="flex flex-col items-center gap-1 rounded-xl bg-primary/10 px-4 py-3">
+      <TrendingUp className="h-5 w-5 text-primary" />
+      <span className="text-sm font-semibold text-primary">Level Up!</span>
+      <span className="text-xs text-muted-foreground">
+        {techniqueName} → {getLevelName(level)}
+      </span>
+    </div>
+  );
+}
 
 export default function Session() {
   const [params] = useSearchParams();
@@ -21,11 +58,13 @@ export default function Session() {
 
   const techniqueId = params.get("technique") || "box-breathing";
   const technique = getTechniqueById(techniqueId, getCustomTechniques()) || PRESET_TECHNIQUES[0];
-  const cycleDuration = getCycleDuration(technique);
+
+  const progression = getProgression(techniqueId);
+  const scaledPhases = getScaledPhases(technique, progression.level);
 
   const [state, setState] = useState<SessionState>("idle");
   const [phaseIndex, setPhaseIndex] = useState(0);
-  const [secondsLeft, setSecondsLeft] = useState(technique.phases[0].duration);
+  const [secondsLeft, setSecondsLeft] = useState(scaledPhases[0].duration);
   const [totalElapsed, setTotalElapsed] = useState(0);
   const [completedCycles, setCompletedCycles] = useState(0);
   const [voiceOn, setVoiceOn] = useState(settings.voiceEnabled);
@@ -37,20 +76,43 @@ export default function Session() {
   const [moodSaved, setMoodSaved] = useState(false);
   const sessionIdRef = useRef(crypto.randomUUID());
 
-  // Check if mood was passed from home page
+  // Level-up state
+  const [levelUpInfo, setLevelUpInfo] = useState<{ level: number } | null>(null);
+
+  // Calm score tracking
+  const phaseStartRef = useRef(Date.now());
+  const phaseTimestampsRef = useRef<PhaseTimestamp[]>([]);
+  const [calmResult, setCalmResult] = useState<CalmScoreResult | null>(null);
+
   useEffect(() => {
     const moodParam = params.get("mood");
     if (moodParam) setMoodBefore(Number(moodParam));
   }, [params]);
 
   const intervalRef = useRef<ReturnType<typeof setInterval>>();
-  const startTimeRef = useRef(0);
 
-  const currentPhase: BreathingPhase = technique.phases[phaseIndex];
+  const currentPhase: BreathingPhase = scaledPhases[phaseIndex];
 
   const stop = useCallback(() => {
     clearInterval(intervalRef.current);
     stopSpeaking();
+
+    // Record final phase timestamp
+    const now = Date.now();
+    const actualDuration = (now - phaseStartRef.current) / 1000;
+    phaseTimestampsRef.current.push({
+      phaseIndex,
+      expectedDuration: scaledPhases[phaseIndex].duration,
+      actualDuration,
+    });
+
+    const calm = calculateCalmScore(phaseTimestampsRef.current);
+    setCalmResult(calm);
+
+    // Update progression
+    const result = updateProgression(technique.id, completedCycles);
+    if (result.leveledUp) setLevelUpInfo({ level: result.newLevel });
+
     if (totalElapsed > 10) {
       addSession({
         id: sessionIdRef.current,
@@ -60,22 +122,34 @@ export default function Session() {
         durationSeconds: totalElapsed,
         completedCycles,
         moodBefore: moodBefore ?? undefined,
+        calmScore: calm.score,
       });
     }
     setState("done");
     vibrateDone();
-  }, [totalElapsed, completedCycles, technique, moodBefore]);
+  }, [totalElapsed, completedCycles, technique, moodBefore, phaseIndex, scaledPhases]);
 
   const tick = useCallback(() => {
     setSecondsLeft((prev) => {
       if (prev <= 1) {
+        // Record phase timestamp
+        const now = Date.now();
+        const actualDuration = (now - phaseStartRef.current) / 1000;
+
         setPhaseIndex((pi) => {
-          const next = (pi + 1) % technique.phases.length;
-          if (next === 0) {
-            setCompletedCycles((c) => c + 1);
-          }
-          const nextPhase = technique.phases[next];
+          phaseTimestampsRef.current.push({
+            phaseIndex: pi,
+            expectedDuration: scaledPhases[pi].duration,
+            actualDuration,
+          });
+
+          const next = (pi + 1) % scaledPhases.length;
+          if (next === 0) setCompletedCycles((c) => c + 1);
+
+          const nextPhase = scaledPhases[next];
           setSecondsLeft(nextPhase.duration);
+          phaseStartRef.current = Date.now();
+
           if (settings.vibrationEnabled) vibratePhaseChange();
           if (voiceOn) speak(nextPhase.label, settings.voiceSpeed);
           return next;
@@ -86,24 +160,25 @@ export default function Session() {
     });
     setTotalElapsed((t) => {
       const newT = t + 1;
-      if (newT >= durationMin * 60) {
-        stop();
-      }
+      if (newT >= durationMin * 60) stop();
       return newT;
     });
-  }, [technique, voiceOn, settings, durationMin, stop]);
+  }, [scaledPhases, voiceOn, settings, durationMin, stop]);
 
   const start = () => {
     sessionIdRef.current = crypto.randomUUID();
     setPhaseIndex(0);
-    setSecondsLeft(technique.phases[0].duration);
+    setSecondsLeft(scaledPhases[0].duration);
     setTotalElapsed(0);
     setCompletedCycles(0);
     setMoodAfter(null);
     setMoodSaved(false);
+    setLevelUpInfo(null);
+    setCalmResult(null);
+    phaseTimestampsRef.current = [];
+    phaseStartRef.current = Date.now();
     setState("running");
-    startTimeRef.current = Date.now();
-    if (voiceOn) speak(technique.phases[0].label, settings.voiceSpeed);
+    if (voiceOn) speak(scaledPhases[0].label, settings.voiceSpeed);
     if (settings.vibrationEnabled) vibratePhaseChange();
   };
 
@@ -115,6 +190,7 @@ export default function Session() {
 
   const resume = () => {
     setState("running");
+    phaseStartRef.current = Date.now();
     if (voiceOn) speak(currentPhase.label, settings.voiceSpeed);
   };
 
@@ -139,35 +215,39 @@ export default function Session() {
 
   const elapsedDisplay = `${Math.floor(totalElapsed / 60)}:${String(totalElapsed % 60).padStart(2, "0")}`;
   const targetDisplay = `${durationMin}:00`;
-
   const moodImprovement = moodBefore !== null && moodAfter !== null ? moodAfter - moodBefore : null;
 
   if (state === "done") {
     return (
       <div className="flex min-h-screen flex-col items-center justify-center px-4 pb-24">
-        <div className="text-center">
-          <div className="mb-4 text-5xl">🙏</div>
-          <h2 className="text-2xl font-bold text-foreground">Well Done!</h2>
-          <p className="mt-2 text-muted-foreground">
-            {Math.round(totalElapsed / 60)} min · {completedCycles} cycles
-          </p>
-          <p className="text-sm text-muted-foreground">{technique.name}</p>
+        <div className="text-center space-y-5">
+          <div className="text-5xl">🙏</div>
+          <div>
+            <h2 className="text-2xl font-bold text-foreground">Well Done!</h2>
+            <p className="mt-1 text-muted-foreground">
+              {Math.round(totalElapsed / 60)} min · {completedCycles} cycles
+            </p>
+            <p className="text-sm text-muted-foreground">{technique.name}</p>
+            <span className="inline-block mt-1 rounded-full bg-primary/15 px-2.5 py-0.5 text-xs font-medium text-primary">
+              Lv.{progression.level} {getLevelName(progression.level)}
+            </span>
+          </div>
 
-          {/* Post-session mood check-in */}
-          <div className="mt-6">
+          {/* Level Up */}
+          {levelUpInfo && <LevelUpBanner level={levelUpInfo.level} techniqueName={technique.name} />}
+
+          {/* Calm Score */}
+          {calmResult && <CalmScoreDisplay result={calmResult} />}
+
+          {/* Post-session mood */}
+          <div>
             {!moodSaved ? (
-              <MoodPicker
-                selected={moodAfter}
-                onSelect={handleMoodAfter}
-                label="How do you feel now?"
-              />
+              <MoodPicker selected={moodAfter} onSelect={handleMoodAfter} label="How do you feel now?" />
             ) : (
               <div className="flex flex-col items-center gap-1">
                 <span className="text-3xl">{getMoodEmoji(moodAfter!)}</span>
                 {moodImprovement !== null && moodImprovement > 0 && (
-                  <span className="text-sm font-medium text-primary">
-                    +{moodImprovement} mood boost!
-                  </span>
+                  <span className="text-sm font-medium text-primary">+{moodImprovement} mood boost!</span>
                 )}
                 {moodImprovement !== null && moodImprovement === 0 && (
                   <span className="text-sm text-muted-foreground">Mood maintained</span>
@@ -179,8 +259,8 @@ export default function Session() {
             )}
           </div>
 
-          <div className="mt-6 flex gap-3 justify-center">
-            <Button variant="secondary" onClick={() => { setState("idle"); setMoodBefore(null); setMoodAfter(null); setMoodSaved(false); }}>Again</Button>
+          <div className="flex gap-3 justify-center">
+            <Button variant="secondary" onClick={() => { setState("idle"); setMoodBefore(null); setMoodAfter(null); setMoodSaved(false); setLevelUpInfo(null); setCalmResult(null); }}>Again</Button>
             <Button onClick={() => navigate("/")}>Done</Button>
           </div>
         </div>
@@ -191,16 +271,20 @@ export default function Session() {
   return (
     <div className="flex min-h-screen flex-col items-center justify-center px-4 pb-24">
       <div className="flex flex-col items-center gap-6">
-        <h2 className="text-lg font-semibold text-foreground">{technique.name}</h2>
+        <div className="text-center">
+          <h2 className="text-lg font-semibold text-foreground">{technique.name}</h2>
+          <span className="text-xs text-muted-foreground">
+            Lv.{progression.level} {getLevelName(progression.level)}
+          </span>
+          {progression.level < 5 && (
+            <div className="mx-auto mt-1 w-32">
+              <Progress value={getLevelProgress(progression)} className="h-1.5" />
+            </div>
+          )}
+        </div>
 
-        {/* Pre-session mood (idle only) */}
         {state === "idle" && (
-          <MoodPicker
-            selected={moodBefore}
-            onSelect={setMoodBefore}
-            label="How are you feeling?"
-            compact
-          />
+          <MoodPicker selected={moodBefore} onSelect={setMoodBefore} label="How are you feeling?" compact />
         )}
 
         <BreathingCircle
