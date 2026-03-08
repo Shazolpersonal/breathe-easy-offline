@@ -536,10 +536,10 @@ export default function Session() {
             </>
           ) : (
             <>
-              <Button size="icon" variant="secondary" onClick={resume} className="h-12 w-12 rounded-full">
+              <Button size="icon" variant="secondary" onClick={resume} className="h-12 w-12 rounded-full" aria-label={t("session.resume")}>
                 <Play className="h-5 w-5" />
               </Button>
-              <Button size="icon" variant="destructive" onClick={stop} className="h-12 w-12 rounded-full">
+              <Button size="icon" variant="destructive" onClick={stop} className="h-12 w-12 rounded-full" aria-label={t("session.stop")}>
                 <Square className="h-5 w-5" />
               </Button>
             </>
