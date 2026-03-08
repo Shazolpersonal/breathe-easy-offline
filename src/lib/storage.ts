@@ -77,6 +77,7 @@ const DEFAULT_SETTINGS: AppSettings = {
   reducedMotion: false,
   breathDetectionEnabled: false,
   heartRateEnabled: false,
+  dailyGoalMinutes: 5,
 };
 
 function getJSON<T>(key: string, fallback: T): T {
