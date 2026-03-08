@@ -437,7 +437,7 @@ export default function Session() {
   };
 
   const pause = () => {
-    clearInterval(intervalRef.current);
+    clearTimeout(intervalRef.current);
     setState("paused");
     stopSpeaking();
     // Mute soundscape on pause
