@@ -383,7 +383,7 @@ export default function Session() {
       if (newT >= durationMinRef.current * 60) stop();
       return newT;
     });
-  }, [currentPhases, voiceOn, settings, durationMin, stop, technique, currentRound, t, language]);
+  }, [currentPhases, voiceOn, settings, stop, technique, currentRound, t, language]);
 
   const start = () => {
     sessionIdRef.current = crypto.randomUUID();
