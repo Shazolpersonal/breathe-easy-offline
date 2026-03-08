@@ -493,4 +493,27 @@ export const en: Record<string, string> = {
   // CSV Export
   "settings.exportCSV": "Export CSV",
   "settings.csvExported": "Sessions exported as CSV!",
+
+  // PWA Install
+  "install.title": "Install Muhurto Breath",
+  "install.desc": "Install for offline use, faster loading, and home screen shortcuts.",
+  "install.button": "Install",
+
+  // Keyboard Shortcuts
+  "shortcut.title": "Keyboard Shortcuts",
+  "shortcut.global": "Global",
+  "shortcut.session": "During Session",
+  "shortcut.goHome": "Go to Home",
+  "shortcut.goSession": "Go to Breathe",
+  "shortcut.goLibrary": "Go to Library",
+  "shortcut.goStats": "Go to Stats",
+  "shortcut.showHelp": "Show shortcuts",
+  "shortcut.playPause": "Start / Pause / Resume",
+  "shortcut.stop": "Stop / Exit Zen",
+  "shortcut.zenMode": "Toggle Zen Mode",
+  "shortcut.toggleVoice": "Toggle voice",
+  "shortcut.toggleSound": "Toggle soundscape",
+
+  // Mini Player
+  "mini.backToSession": "Back to session",
 };

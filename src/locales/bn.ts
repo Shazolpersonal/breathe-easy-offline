@@ -493,4 +493,27 @@ export const bn: Record<string, string> = {
   // CSV Export
   "settings.exportCSV": "CSV এক্সপোর্ট",
   "settings.csvExported": "সেশন CSV হিসেবে এক্সপোর্ট হয়েছে!",
+
+  // PWA Install
+  "install.title": "মুহূর্ত ব্রেথ ইনস্টল করুন",
+  "install.desc": "অফলাইন ব্যবহার, দ্রুত লোডিং এবং হোম স্ক্রিন শর্টকাটের জন্য ইনস্টল করুন।",
+  "install.button": "ইনস্টল",
+
+  // Keyboard Shortcuts
+  "shortcut.title": "কীবোর্ড শর্টকাট",
+  "shortcut.global": "সার্বজনীন",
+  "shortcut.session": "সেশনের সময়",
+  "shortcut.goHome": "হোমে যান",
+  "shortcut.goSession": "শ্বাসে যান",
+  "shortcut.goLibrary": "লাইব্রেরিতে যান",
+  "shortcut.goStats": "পরিসংখ্যানে যান",
+  "shortcut.showHelp": "শর্টকাট দেখান",
+  "shortcut.playPause": "শুরু / বিরতি / পুনরায় শুরু",
+  "shortcut.stop": "থামুন / জেন থেকে বের হন",
+  "shortcut.zenMode": "জেন মোড টগল",
+  "shortcut.toggleVoice": "ভয়েস টগল",
+  "shortcut.toggleSound": "সাউন্ডস্কেপ টগল",
+
+  // Mini Player
+  "mini.backToSession": "সেশনে ফিরে যান",
 };
