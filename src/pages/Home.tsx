@@ -4,7 +4,7 @@ import SmartSuggestion from "@/components/SmartSuggestion";
 import TechniqueCard from "@/components/TechniqueCard";
 import WeeklySummary from "@/components/WeeklySummary";
 import { PRESET_TECHNIQUES, getTechniqueById } from "@/lib/techniques";
-import { getCustomTechniques, getFavorites, toggleFavorite, getCurrentStreak, getTodayMinutes, getLastSessionConfig } from "@/lib/storage";
+import { getCustomTechniques, getFavorites, toggleFavorite, getCurrentStreak, getTodayMinutes, getLastSessionConfig, getStreakFreezeInfo, getLastBackupDate, getDataSummary, exportDataCompact } from "@/lib/storage";
 import { useSettings } from "@/contexts/SettingsContext";
 import { getDailyChallenges, getChallengeStreak, saveTodayChallengeProgress, areAllChallengesComplete } from "@/lib/challenges";
 import { getXPState, getWeeklyXP, addXP } from "@/lib/xp";
