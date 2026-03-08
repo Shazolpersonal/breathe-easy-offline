@@ -14,6 +14,11 @@ interface DonateDialogProps {
 
 export default function DonateDialog({ open, onOpenChange }: DonateDialogProps) {
   const { t, language } = useLanguage();
+
+  // Preload the 2Checkout script when dialog opens
+  useEffect(() => {
+    if (open) preloadDonateScript();
+  }, [open]);
   const isBn = language === "bn";
   const currency = isBn ? "BDT" as const : "USD" as const;
   const symbol = isBn ? "৳" : "$";
