@@ -454,11 +454,24 @@ export default function Session() {
       }
     } else {
       // Normal countdown
-      secondsLeftRef.current = sl - 1;
-      setSecondsLeft(sl - 1);
+      const newSl = sl - 1;
+      secondsLeftRef.current = newSl;
+      setSecondsLeft(newSl);
+
+      // Countdown voice cue (speak remaining seconds when <= 3)
+      if (voice && setts.cueCountdown && newSl > 0 && newSl <= 3) {
+        speakCountdown(newSl, lang, { rate: setts.voiceSpeed, pitch: setts.voicePitch, volume: setts.voiceVolume, voiceName: lang === "bn" ? setts.voiceNameBn : setts.voiceNameEn, lang });
+      }
     }
 
-    setTotalElapsed((te) => te + 1);
+    const newElapsed = elapsedRef.current + 1;
+    setTotalElapsed(newElapsed);
+
+    // Encouragement cue (every ~2 minutes)
+    if (voice && setts.cueEncouragement && newElapsed - lastEncouragementRef.current >= 120) {
+      lastEncouragementRef.current = newElapsed;
+      setTimeout(() => speakEncouragement(lang, { rate: setts.voiceSpeed, pitch: setts.voicePitch, volume: setts.voiceVolume, voiceName: lang === "bn" ? setts.voiceNameBn : setts.voiceNameEn, lang }), 500);
+    }
   }, []);
 
   const start = () => {
