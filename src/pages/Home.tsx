@@ -29,12 +29,28 @@ export default function Home() {
   const xpState = useMemo(() => getXPState(), []);
   const weeklyXP = useMemo(() => getWeeklyXP(), []);
   const dailyChallenges = useMemo(() => getDailyChallenges(), []);
+  const challengeStreak = useMemo(() => getChallengeStreak(), []);
   const dailyQuote = useMemo(() => getDailyQuote(language), [language]);
   const activeFriendChallenges = useMemo(() => getActiveChallenges(), []);
   const isPWA = useMemo(() => isRunningAsPWA(), []);
   const showNativeInstall = canInstall() && !installDismissed;
   const showManualInstall = !isPWA && canShowManualInstallHint() && !installDismissed;
   const installPlatform = useMemo(() => getInstallPlatform(), []);
+  const allCompleteToastShown = useRef(false);
+
+  // Save challenge progress & show all-complete celebration
+  useEffect(() => {
+    saveTodayChallengeProgress();
+    if (areAllChallengesComplete() && !allCompleteToastShown.current) {
+      allCompleteToastShown.current = true;
+      const bonusKey = `breathe_challenge_bonus_${new Date().toISOString().split("T")[0]}`;
+      if (!localStorage.getItem(bonusKey)) {
+        addXP(25, "challenge_bonus");
+        localStorage.setItem(bonusKey, "1");
+        toast.success(t("challenge.allComplete"));
+      }
+    }
+  });
 
   const hour = new Date().getHours();
   const greeting =
