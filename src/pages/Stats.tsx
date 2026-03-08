@@ -254,6 +254,7 @@ export default function Stats() {
 
   const tabLabels: Record<Tab, string> = {
     stats: t("stats.overview"),
+    history: t("stats.history"),
     insights: t("stats.insights"),
     badges: t("stats.badges"),
     journal: t("stats.journal"),
