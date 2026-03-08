@@ -445,7 +445,7 @@ export default function Session() {
       soundscapeEngineRef.current.syncToPhase(nextPhase.type);
 
       if (setts.vibrationEnabled) vibratePhaseChange();
-      if (voice) speak(tFn(`phase.${nextPhase.type}`), setts.voiceSpeed, lang);
+      if (voice && setts.cuePhaseNames) speak(tFn(`phase.${nextPhase.type}`), { rate: setts.voiceSpeed, pitch: setts.voicePitch, volume: setts.voiceVolume, voiceName: lang === "bn" ? setts.voiceNameBn : setts.voiceNameEn, lang });
     } else {
       // Normal countdown
       secondsLeftRef.current = sl - 1;
