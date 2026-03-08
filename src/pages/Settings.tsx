@@ -627,6 +627,31 @@ export default function Settings() {
               <ClipboardPaste className="h-4 w-4" /> {t("settings.pasteRestore")}
             </Button>
           </div>
+
+          {/* Share Backup via Web Share API */}
+          {typeof navigator.share === "function" && (
+            <Button
+              variant="outline"
+              size="sm"
+              className="w-full gap-1"
+              onClick={async () => {
+                try {
+                  const compact = exportDataCompact();
+                  await navigator.share({
+                    title: t("settings.shareBackupTitle"),
+                    text: compact,
+                  });
+                  toast({ title: t("settings.backupShared") });
+                } catch (e: any) {
+                  if (e?.name !== "AbortError") {
+                    toast({ title: t("settings.clipboardError"), variant: "destructive" });
+                  }
+                }
+              }}
+            >
+              <Send className="h-4 w-4" /> {t("settings.shareBackup")}
+            </Button>
+          )}
         </section>
 
         {/* Install */}
