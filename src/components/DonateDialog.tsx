@@ -1,10 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Heart } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { openDonation, isDonateAvailable } from "@/lib/donate";
+import { openDonationAsync, preloadDonateScript } from "@/lib/donate";
 import { toast } from "sonner";
 
 interface DonateDialogProps {
