@@ -133,6 +133,9 @@ export default function Settings() {
               </button>
             ))}
           </div>
+        </section>
+
+        {/* Data */}
         <section className="rounded-2xl border border-border bg-card p-4 space-y-3">
           <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">Data</h2>
           <div className="flex gap-2">
