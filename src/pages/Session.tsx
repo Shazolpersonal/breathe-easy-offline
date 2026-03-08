@@ -484,6 +484,74 @@ export default function Session() {
     return () => clearInterval(intervalRef.current);
   }, [state, tick]);
 
+  // ─── Keyboard Shortcuts ───
+  useKeyboardShortcuts({
+    sessionActive: state === "running" || state === "paused",
+    onSpace: () => {
+      if (state === "idle") start();
+      else if (state === "running") pause();
+      else if (state === "paused") resume();
+    },
+    onEscape: () => {
+      if (zenMode) toggleZenMode();
+      else if (state === "running" || state === "paused") stop();
+    },
+    onF: () => {
+      if (state === "running" || state === "paused") toggleZenMode();
+    },
+    onM: () => {
+      setVoiceOn((v) => { if (v) stopSpeaking(); return !v; });
+    },
+    onS: () => {
+      if (soundscapeType !== "off") {
+        soundscapeEngineRef.current.stop();
+        setSoundscapeType("off");
+      }
+    },
+    onNavigate: (path) => navigate(path),
+  });
+
+  // ─── Mini-Player Sync ───
+  // On mount, restore from mini session if exists
+  useEffect(() => {
+    if (miniSession?.isActive) {
+      stopMiniSession();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Sync state to mini-player context when navigating away
+  useEffect(() => {
+    return () => {
+      // This runs on unmount — if session is running/paused, start mini mode
+    };
+  }, []);
+
+  // We use a ref to track current state for the unmount effect
+  const stateRef = useRef(state);
+  stateRef.current = state;
+  const elapsedRef = useRef(totalElapsed);
+  elapsedRef.current = totalElapsed;
+  const phaseRef = useRef(currentPhase);
+  phaseRef.current = currentPhase;
+
+  useEffect(() => {
+    return () => {
+      if (stateRef.current === "running" || stateRef.current === "paused") {
+        startMiniMode({
+          isActive: true,
+          isPaused: stateRef.current === "paused",
+          techniqueId: technique.id,
+          techniqueName: technique.name,
+          currentPhase: phaseRef.current.type,
+          elapsed: elapsedRef.current,
+          totalDuration: durationMin,
+        });
+      }
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [technique.id, technique.name, durationMin]);
+
   const elapsedDisplay = `${Math.floor(totalElapsed / 60)}:${String(totalElapsed % 60).padStart(2, "0")}`;
   const targetDisplay = `${durationMin}:00`;
   const moodImprovement = moodBefore !== null && moodAfter !== null ? moodAfter - moodBefore : null;
