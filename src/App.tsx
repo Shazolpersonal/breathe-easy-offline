@@ -8,7 +8,7 @@ import { ThemeProvider } from "@/contexts/ThemeContext";
 import { SettingsProvider } from "@/contexts/SettingsContext";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import { SessionProvider } from "@/contexts/SessionContext";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useSettings } from "@/contexts/SettingsContext";
 import { startReminderChecker } from "@/lib/reminders";
 import { parseChallengeFromURL, FriendChallengeParams } from "@/lib/friendChallenge";
