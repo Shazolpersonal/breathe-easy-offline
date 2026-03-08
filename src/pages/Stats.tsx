@@ -328,17 +328,26 @@ export default function Stats() {
                 { icon: Flame, value: streak, label: t("stats.currentStreak"), suffix: streak === 1 ? t("stats.day") : t("stats.days"), span: false, shareable: streak >= 3 },
                 { icon: Trophy, value: longestStreak, label: t("stats.longestStreak"), suffix: longestStreak === 1 ? t("stats.day") : t("stats.days"), span: false, shareable: false },
                 { icon: Clock, value: totalMinutes, label: t("stats.totalTime"), suffix: t("stats.min"), span: false },
-                { icon: Target, value: sessions.length, label: t("stats.sessions"), suffix: "", span: false },
+                { icon: Target, value: sessions.length, label: t("stats.sessions"), suffix: "", span: false, shareable: false },
                 ...(avgCalmScore !== null
-                  ? [{ icon: Brain, value: avgCalmScore, label: t("stats.avgCalm"), suffix: "%", span: true }]
+                  ? [{ icon: Brain, value: avgCalmScore, label: t("stats.avgCalm"), suffix: "%", span: true, shareable: false }]
                   : []),
-              ].map(({ icon: Icon, value, label, suffix, span }) => (
-                <div key={label} className={`flex flex-col items-center rounded-2xl border border-border bg-card p-4 ${span ? "col-span-2" : ""}`}>
+              ].map(({ icon: Icon, value, label, suffix, span, shareable }) => (
+                <div key={label} className={`relative flex flex-col items-center rounded-2xl border border-border bg-card p-4 ${span ? "col-span-2" : ""}`}>
                   <Icon className="mb-1 h-5 w-5 text-primary" />
                   <span className="text-xl font-bold text-foreground">
                     {value}{suffix && <span className="ml-1 text-xs font-normal text-muted-foreground">{suffix}</span>}
                   </span>
                   <span className="text-xs text-muted-foreground">{label}</span>
+                  {shareable && (
+                    <button
+                      onClick={() => shareStreak(value as number, language)}
+                      className="absolute top-2 right-2 rounded-full p-1 text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors"
+                      title={t("share.streak")}
+                    >
+                      <Share2 className="h-3.5 w-3.5" />
+                    </button>
+                  )}
                 </div>
               ))}
             </div>
