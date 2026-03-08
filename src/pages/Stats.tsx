@@ -1,13 +1,19 @@
 import { useMemo } from "react";
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, LineChart, Line } from "recharts";
 import { getSessions, getCurrentStreak, getLongestStreak } from "@/lib/storage";
-import { Flame, Clock, Target, Trophy } from "lucide-react";
+import { Flame, Clock, Target, Trophy, Brain } from "lucide-react";
 
 export default function Stats() {
   const sessions = getSessions();
   const streak = getCurrentStreak();
   const longestStreak = getLongestStreak();
   const totalMinutes = Math.round(sessions.reduce((s, r) => s + r.durationSeconds, 0) / 60);
+
+  const avgCalmScore = useMemo(() => {
+    const scored = sessions.filter((s) => s.calmScore != null);
+    if (scored.length === 0) return null;
+    return Math.round(scored.reduce((sum, s) => sum + s.calmScore!, 0) / scored.length);
+  }, [sessions]);
 
   const weeklyData = useMemo(() => {
     const days: Record<string, number> = {};
@@ -28,7 +34,14 @@ export default function Stats() {
     }));
   }, [sessions]);
 
-  // Calendar heatmap for last 30 days
+  const calmTrendData = useMemo(() => {
+    const scored = sessions.filter((s) => s.calmScore != null).slice(-14);
+    return scored.map((s, i) => ({
+      session: i + 1,
+      score: s.calmScore!,
+    }));
+  }, [sessions]);
+
   const heatmapData = useMemo(() => {
     const days: { date: string; count: number }[] = [];
     const today = new Date();
@@ -54,6 +67,9 @@ export default function Stats() {
             { icon: Trophy, value: longestStreak, label: "Longest Streak", suffix: "days" },
             { icon: Clock, value: totalMinutes, label: "Total Time", suffix: "min" },
             { icon: Target, value: sessions.length, label: "Sessions", suffix: "" },
+            ...(avgCalmScore !== null
+              ? [{ icon: Brain, value: avgCalmScore, label: "Avg Calm Score", suffix: "%" }]
+              : []),
           ].map(({ icon: Icon, value, label, suffix }) => (
             <div key={label} className="flex flex-col items-center rounded-2xl border border-border bg-card p-4">
               <Icon className="mb-1 h-5 w-5 text-primary" />
@@ -80,6 +96,23 @@ export default function Stats() {
             </BarChart>
           </ResponsiveContainer>
         </div>
+
+        {/* Calm Score Trend */}
+        {calmTrendData.length >= 2 && (
+          <div className="mb-6 rounded-2xl border border-border bg-card p-4">
+            <h2 className="mb-3 text-sm font-semibold text-muted-foreground">Calm Score Trend</h2>
+            <ResponsiveContainer width="100%" height={120}>
+              <LineChart data={calmTrendData}>
+                <XAxis dataKey="session" tick={{ fontSize: 10, fill: "hsl(var(--muted-foreground))" }} axisLine={false} tickLine={false} />
+                <YAxis domain={[0, 100]} hide />
+                <Tooltip
+                  contentStyle={{ background: "hsl(var(--card))", border: "1px solid hsl(var(--border))", borderRadius: 12, fontSize: 12 }}
+                />
+                <Line type="monotone" dataKey="score" stroke="hsl(var(--primary))" strokeWidth={2} dot={{ r: 3, fill: "hsl(var(--primary))" }} />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+        )}
 
         {/* 30-day heatmap */}
         <div className="rounded-2xl border border-border bg-card p-4">

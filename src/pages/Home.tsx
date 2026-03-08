@@ -1,10 +1,11 @@
 import { useNavigate } from "react-router-dom";
-import { Wind, Flame, Zap } from "lucide-react";
+import { Wind, Flame, Zap, TrendingUp } from "lucide-react";
 import SmartSuggestion from "@/components/SmartSuggestion";
 import TechniqueCard from "@/components/TechniqueCard";
 import { PRESET_TECHNIQUES } from "@/lib/techniques";
-import { getCustomTechniques, getFavorites, toggleFavorite, getCurrentStreak, getTodayMinutes } from "@/lib/storage";
-import { useState } from "react";
+import { getCustomTechniques, getFavorites, toggleFavorite, getCurrentStreak, getTodayMinutes, getSessions } from "@/lib/storage";
+import { getTotalSessionCount } from "@/lib/progression";
+import { useState, useMemo } from "react";
 
 export default function Home() {
   const navigate = useNavigate();
