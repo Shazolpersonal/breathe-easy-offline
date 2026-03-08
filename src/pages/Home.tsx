@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { Wind, Flame, Zap, TrendingUp, CheckCircle2, Circle, Swords, Quote } from "lucide-react";
+import { Wind, Flame, Zap, TrendingUp, CheckCircle2, Circle, Swords, Quote, Download, X } from "lucide-react";
 import SmartSuggestion from "@/components/SmartSuggestion";
 import TechniqueCard from "@/components/TechniqueCard";
 import { PRESET_TECHNIQUES } from "@/lib/techniques";
@@ -8,7 +8,9 @@ import { getDailyChallenges } from "@/lib/challenges";
 import { getXPState } from "@/lib/xp";
 import { getDailyQuote } from "@/lib/quotes";
 import { getActiveChallenges, getChallengeProgress } from "@/lib/friendChallenge";
+import { canInstall, promptInstall, isDismissed, dismissInstallBanner } from "@/lib/installPrompt";
 import { Progress } from "@/components/ui/progress";
+import { Button } from "@/components/ui/button";
 import { useState, useMemo } from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { CreateChallengeDialog } from "@/components/FriendChallenge";
@@ -18,6 +20,7 @@ export default function Home() {
   const { t } = useLanguage();
   const [favorites, setFavorites] = useState(getFavorites);
   const [showChallengeDialog, setShowChallengeDialog] = useState(false);
+  const [installDismissed, setInstallDismissed] = useState(isDismissed);
   const streak = getCurrentStreak();
   const todayMin = getTodayMinutes();
   const allTechniques = [...PRESET_TECHNIQUES, ...getCustomTechniques()];
@@ -26,6 +29,7 @@ export default function Home() {
   const dailyChallenges = useMemo(() => getDailyChallenges(), []);
   const dailyQuote = useMemo(() => getDailyQuote(), []);
   const activeFriendChallenges = useMemo(() => getActiveChallenges(), []);
+  const showInstall = canInstall() && !installDismissed;
 
   const hour = new Date().getHours();
   const greeting =
@@ -34,6 +38,16 @@ export default function Home() {
   const handleToggleFav = (id: string) => {
     toggleFavorite(id);
     setFavorites(getFavorites());
+  };
+
+  const handleInstall = async () => {
+    await promptInstall();
+    setInstallDismissed(true);
+  };
+
+  const handleDismissInstall = () => {
+    dismissInstallBanner();
+    setInstallDismissed(true);
   };
 
   return (
@@ -47,6 +61,27 @@ export default function Home() {
           </div>
           <p className="mt-1 text-sm text-muted-foreground">{greeting} {t("home.subtitle")}</p>
         </div>
+
+        {/* PWA Install Banner */}
+        {showInstall && (
+          <div className="mb-6 rounded-2xl border border-primary/30 bg-primary/5 p-4">
+            <div className="flex items-start gap-3">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary/15">
+                <Download className="h-5 w-5 text-primary" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-medium text-foreground">{t("install.title")}</p>
+                <p className="text-xs text-muted-foreground">{t("install.desc")}</p>
+                <Button size="sm" className="mt-2 gap-1" onClick={handleInstall}>
+                  <Download className="h-3.5 w-3.5" /> {t("install.button")}
+                </Button>
+              </div>
+              <button onClick={handleDismissInstall} className="shrink-0 rounded-full p-1 text-muted-foreground hover:text-foreground">
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+          </div>
+        )}
 
         {/* Daily Quote */}
         <div className="mb-6 rounded-2xl border border-border bg-card p-4">
