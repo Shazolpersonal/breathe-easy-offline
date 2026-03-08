@@ -14,7 +14,8 @@ type Tab = "stats" | "insights" | "badges" | "journal" | "reports";
 export default function Stats() {
   const { t, language } = useLanguage();
   const [tab, setTab] = useState<Tab>("stats");
-  const sessions = getSessions();
+  const sessions = useMemo(() => getSessions(), []);
+  const sessionsKey = sessions.length;
   const streak = getCurrentStreak();
   const longestStreak = getLongestStreak();
   const totalMinutes = Math.round(sessions.reduce((s, r) => s + r.durationSeconds, 0) / 60);
