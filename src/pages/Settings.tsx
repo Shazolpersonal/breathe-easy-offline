@@ -411,6 +411,11 @@ export default function Settings() {
             <Label className="mb-2 block">{t("settings.defaultDuration", { min: settings.defaultDurationMinutes })}</Label>
             <Slider min={1} max={30} step={1} value={[settings.defaultDurationMinutes]} onValueChange={([v]) => update({ defaultDurationMinutes: v })} />
           </div>
+          <div>
+            <Label className="mb-2 block">{t("settings.dailyGoal", { min: settings.dailyGoalMinutes })}</Label>
+            <Slider min={1} max={60} step={1} value={[settings.dailyGoalMinutes]} onValueChange={([v]) => update({ dailyGoalMinutes: v })} />
+            <p className="text-[10px] text-muted-foreground mt-1">{t("settings.dailyGoalDesc")}</p>
+          </div>
         </section>
 
         {/* Visualization */}
