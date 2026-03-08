@@ -91,3 +91,23 @@ export function getTechniqueById(id: string, customTechniques: BreathingTechniqu
 export function getCycleDuration(technique: BreathingTechnique): number {
   return technique.phases.reduce((sum, p) => sum + p.duration, 0);
 }
+
+/**
+ * For pyramid breathing: returns scaled phases for a given round.
+ * Round 0..steps-1 ramps up, then mirrors back down.
+ */
+export function getPyramidPhasesForRound(technique: BreathingTechnique, round: number): BreathingPhase[] {
+  if (!technique.pyramid) return technique.phases;
+  const { startMultiplier, peakMultiplier, steps } = technique.pyramid;
+  // Create a triangle pattern: 0,1,...,steps-1,steps-2,...,0
+  const totalCycleLen = steps * 2 - 1;
+  const pos = round % totalCycleLen;
+  const mirroredPos = pos < steps ? pos : totalCycleLen - 1 - pos;
+  const t = steps > 1 ? mirroredPos / (steps - 1) : 0;
+  const multiplier = startMultiplier + t * (peakMultiplier - startMultiplier);
+
+  return technique.phases.map(p => ({
+    ...p,
+    duration: Math.round(p.duration * multiplier),
+  }));
+}
