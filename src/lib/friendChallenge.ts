@@ -90,6 +90,11 @@ export function getChallengeProgress(challenge: FriendChallenge): {
 }
 
 export function getActiveChallenges(): FriendChallenge[] {
-  const today = new Date().toISOString().split("T")[0];
-  return getFriendChallenges().filter((c) => c.date === today);
+  const today = new Date();
+  return getFriendChallenges().filter((c) => {
+    // Active if accepted within the last 7 days (not just creation date)
+    const acceptedDate = new Date(c.acceptedAt);
+    const daysSinceAccepted = Math.floor((today.getTime() - acceptedDate.getTime()) / 86400000);
+    return daysSinceAccepted < 7;
+  });
 }

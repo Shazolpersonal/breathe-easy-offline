@@ -92,11 +92,13 @@ export function getBestTechniqueForMood(currentMood: number): string | null {
 }
 
 /**
- * Get an adaptive suggestion message for a mood level.
+ * Get an adaptive suggestion for a mood level.
+ * Returns data for the component to build a localized string.
  */
 export function getAdaptiveSuggestionForMood(currentMood: number): {
   techniqueId: string;
-  message: string;
+  techniqueName: string;
+  moodValue: number;
 } | null {
   const bestId = getBestTechniqueForMood(currentMood);
   if (!bestId) return null;
@@ -105,9 +107,9 @@ export function getAdaptiveSuggestionForMood(currentMood: number): {
   const technique = allTechniques.find((t) => t.id === bestId);
   if (!technique) return null;
 
-  const moodLabel = getMoodLabel(currentMood).toLowerCase();
   return {
     techniqueId: bestId,
-    message: `When you're ${moodLabel}, ${technique.name} helped you most.`,
+    techniqueName: technique.name,
+    moodValue: currentMood,
   };
 }

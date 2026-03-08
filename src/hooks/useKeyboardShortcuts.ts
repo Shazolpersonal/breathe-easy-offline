@@ -1,4 +1,4 @@
-import { useEffect, useCallback } from "react";
+import { useEffect, useRef } from "react";
 
 export interface KeyboardShortcutCallbacks {
   onSpace?: () => void;
@@ -20,8 +20,13 @@ const NAV_KEYS: Record<string, string> = {
 };
 
 export function useKeyboardShortcuts(callbacks: KeyboardShortcutCallbacks) {
-  const handler = useCallback(
-    (e: KeyboardEvent) => {
+  // Use refs to avoid re-creating event listener on every render
+  const callbacksRef = useRef(callbacks);
+  callbacksRef.current = callbacks;
+
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      const cb = callbacksRef.current;
       const target = e.target as HTMLElement;
       // Don't intercept when user is typing in input/textarea
       if (
@@ -35,33 +40,33 @@ export function useKeyboardShortcuts(callbacks: KeyboardShortcutCallbacks) {
 
       if (e.key === "?" && !e.ctrlKey && !e.metaKey) {
         e.preventDefault();
-        callbacks.onHelp?.();
+        cb.onHelp?.();
         return;
       }
 
       if (e.key === " " && !e.ctrlKey && !e.metaKey) {
         e.preventDefault();
-        callbacks.onSpace?.();
+        cb.onSpace?.();
         return;
       }
 
       if (e.key === "Escape") {
-        callbacks.onEscape?.();
+        cb.onEscape?.();
         return;
       }
 
       const lowerKey = e.key.toLowerCase();
 
-      if (callbacks.sessionActive) {
+      if (cb.sessionActive) {
         if (lowerKey === "f" && !e.ctrlKey && !e.metaKey) {
           e.preventDefault();
-          callbacks.onF?.();
+          cb.onF?.();
         } else if (lowerKey === "m" && !e.ctrlKey && !e.metaKey) {
           e.preventDefault();
-          callbacks.onM?.();
+          cb.onM?.();
         } else if (lowerKey === "s" && !e.ctrlKey && !e.metaKey) {
           e.preventDefault();
-          callbacks.onS?.();
+          cb.onS?.();
         }
         return;
       }
@@ -70,14 +75,11 @@ export function useKeyboardShortcuts(callbacks: KeyboardShortcutCallbacks) {
       const navPath = NAV_KEYS[e.key];
       if (navPath && !e.ctrlKey && !e.metaKey && !e.altKey) {
         e.preventDefault();
-        callbacks.onNavigate?.(navPath);
+        cb.onNavigate?.(navPath);
       }
-    },
-    [callbacks]
-  );
+    };
 
-  useEffect(() => {
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
-  }, [handler]);
+  }, []);
 }

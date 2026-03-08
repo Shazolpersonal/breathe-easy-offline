@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useCallback, ReactNode } from "react";
+import { createContext, useContext, useState, useCallback, useEffect, useRef, ReactNode } from "react";
 
 export interface MiniSessionState {
   isActive: boolean;
@@ -26,6 +26,7 @@ const SessionContext = createContext<SessionContextType>({
 
 export function SessionProvider({ children }: { children: ReactNode }) {
   const [miniSession, setMiniSession] = useState<MiniSessionState | null>(null);
+  const intervalRef = useRef<ReturnType<typeof setInterval>>();
 
   const startMiniMode = useCallback((state: MiniSessionState) => {
     setMiniSession(state);
@@ -38,6 +39,24 @@ export function SessionProvider({ children }: { children: ReactNode }) {
   const stopMiniSession = useCallback(() => {
     setMiniSession(null);
   }, []);
+
+  // Timer: tick elapsed every second when mini session is active and not paused
+  useEffect(() => {
+    if (miniSession?.isActive && !miniSession.isPaused) {
+      intervalRef.current = setInterval(() => {
+        setMiniSession((prev) => {
+          if (!prev || prev.isPaused || !prev.isActive) return prev;
+          const newElapsed = prev.elapsed + 1;
+          // Auto-stop if exceeded total duration
+          if (newElapsed >= prev.totalDuration * 60) {
+            return null;
+          }
+          return { ...prev, elapsed: newElapsed };
+        });
+      }, 1000);
+    }
+    return () => clearInterval(intervalRef.current);
+  }, [miniSession?.isActive, miniSession?.isPaused]);
 
   return (
     <SessionContext.Provider value={{ miniSession, startMiniMode, updateMiniSession, stopMiniSession }}>

@@ -1,10 +1,15 @@
 import { getSessions, getCurrentStreak, getLongestStreak } from "./storage";
 import { getMoodRecords } from "./mood";
 
-export function getWeeklyInsights(): string[] {
+export interface Insight {
+  key: string;
+  params: Record<string, string>;
+}
+
+export function getWeeklyInsights(): Insight[] {
   const sessions = getSessions();
   const now = new Date();
-  const insights: string[] = [];
+  const insights: Insight[] = [];
 
   const thisWeek = sessions.filter((s) => {
     const diff = (now.getTime() - new Date(s.date).getTime()) / 86400000;
@@ -17,15 +22,14 @@ export function getWeeklyInsights(): string[] {
   });
 
   if (thisWeek.length < 3) {
-    // Fallback encouraging messages
     if (thisWeek.length === 0) {
-      insights.push("insight.noSessions");
+      insights.push({ key: "insight.noSessions", params: {} });
     } else {
-      insights.push("insight.goodStart");
+      insights.push({ key: "insight.goodStart", params: {} });
     }
     const streak = getCurrentStreak();
     if (streak > 0) {
-      insights.push(`insight.streakGoing|${streak}`);
+      insights.push({ key: "insight.streakGoing", params: { days: String(streak) } });
     }
     return insights;
   }
@@ -47,7 +51,7 @@ export function getWeeklyInsights(): string[] {
     const hour = parseInt(bestHourEntry[0]);
     const ampm = hour >= 12 ? "pm" : "am";
     const h12 = hour % 12 || 12;
-    insights.push(`insight.bestTime|${h12}${ampm}`);
+    insights.push({ key: "insight.bestTime", params: { time: `${h12}${ampm}` } });
   }
 
   // Technique comparison via mood records
@@ -80,10 +84,10 @@ export function getWeeklyInsights(): string[] {
       if (secondAvg > 0) {
         const pctBetter = Math.round(((bestAvg - secondAvg) / secondAvg) * 100);
         if (pctBetter > 10) {
-          insights.push(`insight.techniqueCompare|${best.name}|${pctBetter}|${second.name}`);
+          insights.push({ key: "insight.techniqueCompare", params: { best: best.name, pct: String(pctBetter), second: second.name } });
         }
       } else if (bestAvg > 0) {
-        insights.push(`insight.bestTechnique|${best.name}`);
+        insights.push({ key: "insight.bestTechnique", params: { name: best.name } });
       }
     }
   }
@@ -92,18 +96,18 @@ export function getWeeklyInsights(): string[] {
   const currentStreak = getCurrentStreak();
   const longestStreak = getLongestStreak();
   if (currentStreak > 0 && currentStreak >= longestStreak - 2 && currentStreak < longestStreak) {
-    insights.push(`insight.nearRecord|${longestStreak - currentStreak}`);
+    insights.push({ key: "insight.nearRecord", params: { days: String(longestStreak - currentStreak) } });
   } else if (currentStreak >= longestStreak && currentStreak > 1) {
-    insights.push("insight.onRecord");
+    insights.push({ key: "insight.onRecord", params: {} });
   }
 
   // Consistency comparison
   if (lastWeek.length > 0) {
     const diff = thisWeek.length - lastWeek.length;
     if (diff > 0) {
-      insights.push(`insight.moreSessionsUp|${diff}`);
+      insights.push({ key: "insight.moreSessionsUp", params: { count: String(diff) } });
     } else if (diff < 0) {
-      insights.push(`insight.fewerSessions|${Math.abs(diff)}`);
+      insights.push({ key: "insight.fewerSessions", params: { count: String(Math.abs(diff)) } });
     }
   }
 
@@ -112,7 +116,7 @@ export function getWeeklyInsights(): string[] {
     const thisAvg = Math.round(thisWeek.reduce((s, r) => s + r.durationSeconds, 0) / thisWeek.length / 60);
     const lastAvg = Math.round(lastWeek.reduce((s, r) => s + r.durationSeconds, 0) / lastWeek.length / 60);
     if (thisAvg > lastAvg && lastAvg > 0) {
-      insights.push(`insight.durationUp|${thisAvg}|${lastAvg}`);
+      insights.push({ key: "insight.durationUp", params: { current: String(thisAvg), previous: String(lastAvg) } });
     }
   }
 

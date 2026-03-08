@@ -1,4 +1,4 @@
-import { getSessions, getCurrentStreak } from "./storage";
+import { getSessions, getCurrentStreak, getSettings } from "./storage";
 
 export interface ConsistencyBreakdown {
   regularity: number; // 0-100
@@ -13,6 +13,7 @@ export interface ConsistencyResult {
 
 export function getConsistencyScore(): ConsistencyResult {
   const sessions = getSessions();
+  const settings = getSettings();
   const now = new Date();
 
   // Last 7 days
@@ -28,8 +29,7 @@ export function getConsistencyScore(): ConsistencyResult {
   // Regularity (40%): days with sessions / 7
   const regularity = Math.round((weekDates.size / 7) * 100);
 
-  // Completion (30%): avg completion rate
-  // Use defaultDuration from settings as target, fallback 5 min = 300s
+  // Completion (30%): avg completion rate using user's default duration
   const weekSessions = sessions.filter((s) => {
     const sDate = s.date.split("T")[0];
     const daysDiff = Math.floor((now.getTime() - new Date(sDate).getTime()) / 86400000);
@@ -38,7 +38,7 @@ export function getConsistencyScore(): ConsistencyResult {
 
   let completion = 0;
   if (weekSessions.length > 0) {
-    const targetSeconds = 300; // 5 min default target
+    const targetSeconds = (settings.defaultDurationMinutes || 5) * 60;
     const rates = weekSessions.map((s) => Math.min(s.durationSeconds / targetSeconds, 1));
     completion = Math.round((rates.reduce((a, b) => a + b, 0) / rates.length) * 100);
   }
