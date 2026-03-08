@@ -27,6 +27,8 @@ export interface AppSettings {
   highContrast: boolean;
   largeText: boolean;
   reducedMotion: boolean;
+  breathDetectionEnabled: boolean;
+  heartRateEnabled: boolean;
 }
 
 const KEYS = {
