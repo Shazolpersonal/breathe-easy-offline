@@ -849,8 +849,8 @@ export default function Session() {
 
         {state === "idle" && (
           <>
-            <div className="flex gap-2">
-              {[2, 3, 5, 10, 15].map((m) => (
+            <div className="flex gap-2 items-center flex-wrap justify-center">
+              {[2, 3, 5, 10, 15, 20].map((m) => (
                 <button
                   key={m}
                   onClick={() => setDurationMin(m)}
@@ -862,6 +862,19 @@ export default function Session() {
                   {m} {t("common.min")}
                 </button>
               ))}
+              <input
+                type="number"
+                min={1}
+                max={60}
+                value={![2, 3, 5, 10, 15, 20].includes(durationMin) ? durationMin : ""}
+                placeholder="+"
+                onChange={(e) => {
+                  const v = Math.max(1, Math.min(60, Number(e.target.value) || 1));
+                  setDurationMin(v);
+                }}
+                className="w-10 h-7 rounded-full text-center text-xs font-medium bg-secondary text-secondary-foreground border-0 focus:ring-1 focus:ring-primary"
+                aria-label={t("session.customDuration")}
+              />
             </div>
 
             <div className="flex gap-1.5">
