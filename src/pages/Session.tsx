@@ -881,7 +881,7 @@ export default function Session() {
                   setSoundscapeType(type);
                   // Actually switch the audio engine
                   soundscapeEngineRef.current.stop();
-                  if (type !== "off" && state === "running") {
+                  if (type !== "off" && (state === "running" || state === "paused")) {
                     soundscapeEngineRef.current.start(type, settings.soundscapeVolume ?? 0.5);
                   }
                 }}
