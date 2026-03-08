@@ -31,6 +31,7 @@ export const en: Record<string, string> = {
   "session.resume": "Resume",
   "session.stop": "Stop",
   "session.done.title": "Well Done!",
+  "session.done.stats_one": "{{min}} min · {{cycles}} cycle",
   "session.done.stats": "{{min}} min · {{cycles}} cycles",
   "session.done.playlistComplete": "Playlist complete! 🎵",
   "session.done.dayComplete": "Day {{day}} complete! ✅",
