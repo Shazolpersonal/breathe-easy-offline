@@ -26,6 +26,7 @@ import Playlists from "@/pages/Playlists";
 import Programs from "@/pages/Programs";
 import NotFound from "@/pages/NotFound";
 import Onboarding from "@/pages/Onboarding";
+import Guide from "@/pages/Guide";
 
 const queryClient = new QueryClient();
 
@@ -73,6 +74,7 @@ function AppInner() {
         <Route path="/settings" element={<Settings />} />
         <Route path="/playlists" element={<Playlists />} />
         <Route path="/programs" element={<Programs />} />
+        <Route path="/guide" element={<Guide />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
       <MiniPlayer />

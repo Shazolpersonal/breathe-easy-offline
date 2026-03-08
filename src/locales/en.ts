@@ -8,6 +8,7 @@ export const en: Record<string, string> = {
   "nav.playlists": "Playlists",
   "nav.programs": "Programs",
   "nav.settings": "Settings",
+  "nav.guide": "Guide",
 
   // Home
   "home.appName": "Muhurto Breath",
