@@ -80,6 +80,7 @@ const DEFAULT_SETTINGS: AppSettings = {
   breathDetectionEnabled: false,
   heartRateEnabled: false,
   dailyGoalMinutes: 5,
+  autoBackupEnabled: true,
 };
 
 function getJSON<T>(key: string, fallback: T): T {
