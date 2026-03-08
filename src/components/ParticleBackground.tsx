@@ -127,7 +127,7 @@ export default function ParticleBackground({ phase }: ParticleBackgroundProps) {
       cancelAnimationFrame(animRef.current);
       window.removeEventListener("resize", resize);
     };
-  }, []);
+  }, [themeAttr]);
 
   return (
     <canvas
