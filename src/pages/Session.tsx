@@ -327,11 +327,11 @@ export default function Session() {
       });
 
       const challengesCompleted = getCompletedChallengeCount();
-      const xp = calculateSessionXP(elapsed, technique, calm.score, challengesCompleted);
-      const xpResult = addXP(xp);
+      const breakdown = calculateSessionXP(elapsed, technique, calm.score, challengesCompleted, undefined, moodBefore ?? undefined, undefined);
+      const xpResult = addXP(breakdown.total, techniqueName);
       const xpState = getXPState();
       setEarnedXP({
-        xp,
+        breakdown,
         leveledUp: xpResult.newLevel > xpResult.previousLevel,
         newTitle: xpResult.newLevel > xpResult.previousLevel ? t(`xp.${xpState.title}`) : undefined,
       });
