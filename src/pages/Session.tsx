@@ -525,7 +525,7 @@ export default function Session() {
         }
         // Restore to the settings default
         const restored = (settings.soundscapeType as SoundscapeType) || "rain";
-        if (restored !== "off" && state === "running") {
+        if (restored !== "off" && (state === "running" || state === "paused")) {
           soundscapeEngineRef.current.start(restored, settings.soundscapeVolume ?? 0.5);
         }
         return restored;
