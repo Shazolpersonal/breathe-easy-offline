@@ -18,6 +18,8 @@ import { calculateSessionXP, addXP, getXPState } from "@/lib/xp";
 import { getCompletedChallengeCount } from "@/lib/challenges";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
+import { Textarea } from "@/components/ui/textarea";
+import { getSessions } from "@/lib/storage";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 
@@ -102,6 +104,7 @@ export default function Session() {
 
   const [levelUpInfo, setLevelUpInfo] = useState<{ level: number } | null>(null);
   const [earnedXP, setEarnedXP] = useState<{ xp: number; leveledUp: boolean; newTitle?: string } | null>(null);
+  const [journalNote, setJournalNote] = useState("");
 
   const phaseStartRef = useRef(Date.now());
   const phaseTimestampsRef = useRef<PhaseTimestamp[]>([]);
@@ -297,9 +300,40 @@ export default function Session() {
             )}
           </div>
 
+          {/* Session Journal */}
+          <div className="w-full max-w-xs">
+            <Textarea
+              placeholder="How did this session feel? (optional)"
+              value={journalNote}
+              onChange={(e) => setJournalNote(e.target.value)}
+              className="min-h-[60px] resize-none bg-secondary/50 border-border text-sm"
+              rows={3}
+            />
+          </div>
+
           <div className="flex gap-3 justify-center">
-            <Button variant="secondary" onClick={() => { setState("idle"); setMoodBefore(null); setMoodAfter(null); setMoodSaved(false); setLevelUpInfo(null); setEarnedXP(null); setCalmResult(null); }}>Again</Button>
-            <Button onClick={() => navigate("/")}>Done</Button>
+            <Button variant="secondary" onClick={() => {
+              if (journalNote.trim()) {
+                const allSessions = getSessions();
+                const idx = allSessions.findIndex(s => s.id === sessionIdRef.current);
+                if (idx >= 0) {
+                  allSessions[idx].journal = journalNote.trim();
+                  localStorage.setItem("breathe_sessions", JSON.stringify(allSessions));
+                }
+              }
+              setState("idle"); setMoodBefore(null); setMoodAfter(null); setMoodSaved(false); setLevelUpInfo(null); setEarnedXP(null); setCalmResult(null); setJournalNote("");
+            }}>Again</Button>
+            <Button onClick={() => {
+              if (journalNote.trim()) {
+                const allSessions = getSessions();
+                const idx = allSessions.findIndex(s => s.id === sessionIdRef.current);
+                if (idx >= 0) {
+                  allSessions[idx].journal = journalNote.trim();
+                  localStorage.setItem("breathe_sessions", JSON.stringify(allSessions));
+                }
+              }
+              navigate("/");
+            }}>Done</Button>
           </div>
         </div>
       </div>
