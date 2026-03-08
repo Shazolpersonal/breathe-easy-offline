@@ -477,7 +477,7 @@ export default function Session() {
           secondsLeft={state === "idle" ? 0 : secondsLeft}
         />
 
-        <div className="text-center">
+        <div className="text-center" aria-live="polite" aria-atomic="true">
           <span className="text-sm tabular-nums text-muted-foreground">{elapsedDisplay} / {targetDisplay}</span>
           {state !== "idle" && <p className="text-xs text-muted-foreground">{t("session.cycles", { count: completedCycles })}</p>}
         </div>
@@ -527,19 +527,19 @@ export default function Session() {
             </Button>
           ) : state === "running" ? (
             <>
-              <Button size="icon" variant="secondary" onClick={pause} className="h-12 w-12 rounded-full">
+              <Button size="icon" variant="secondary" onClick={pause} className="h-12 w-12 rounded-full" aria-label={t("session.pause")}>
                 <Pause className="h-5 w-5" />
               </Button>
-              <Button size="icon" variant="destructive" onClick={stop} className="h-12 w-12 rounded-full">
+              <Button size="icon" variant="destructive" onClick={stop} className="h-12 w-12 rounded-full" aria-label={t("session.stop")}>
                 <Square className="h-5 w-5" />
               </Button>
             </>
           ) : (
             <>
-              <Button size="icon" variant="secondary" onClick={resume} className="h-12 w-12 rounded-full">
+              <Button size="icon" variant="secondary" onClick={resume} className="h-12 w-12 rounded-full" aria-label={t("session.resume")}>
                 <Play className="h-5 w-5" />
               </Button>
-              <Button size="icon" variant="destructive" onClick={stop} className="h-12 w-12 rounded-full">
+              <Button size="icon" variant="destructive" onClick={stop} className="h-12 w-12 rounded-full" aria-label={t("session.stop")}>
                 <Square className="h-5 w-5" />
               </Button>
             </>
@@ -548,6 +548,7 @@ export default function Session() {
           <button
             onClick={() => { setVoiceOn(!voiceOn); if (voiceOn) stopSpeaking(); }}
             className="rounded-full p-2 text-muted-foreground hover:text-foreground"
+            aria-label={voiceOn ? t("settings.voiceEnable") : t("settings.voiceEnable")}
           >
             {voiceOn ? <Volume2 className="h-5 w-5" /> : <VolumeX className="h-5 w-5" />}
           </button>

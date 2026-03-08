@@ -149,6 +149,37 @@
   }
 }
 
+/* High Contrast Mode */
+[data-high-contrast="true"] {
+  --foreground: 0 0% 98%;
+  --card-foreground: 0 0% 98%;
+  --popover-foreground: 0 0% 98%;
+  --muted-foreground: 0 0% 72%;
+  --border: 0 0% 35%;
+  --input: 0 0% 35%;
+}
+
+[data-high-contrast="true"] .bg-card,
+[data-high-contrast="true"] [class*="bg-card"] {
+  --card: var(--background);
+  border-width: 2px;
+}
+
+/* Large Text Mode */
+[data-large-text="true"] {
+  font-size: 18px;
+  line-height: 1.6;
+}
+
+/* Reduced Motion Mode */
+[data-reduced-motion="true"] *,
+[data-reduced-motion="true"] *::before,
+[data-reduced-motion="true"] *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+}
+
 @layer base {
   * {
     @apply border-border;

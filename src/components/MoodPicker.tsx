@@ -19,11 +19,14 @@ export default function MoodPicker({ selected, onSelect, label, compact }: MoodP
           {label}
         </p>
       )}
-      <div className="flex gap-1.5">
+      <div className="flex gap-1.5" role="radiogroup" aria-label={label || "Mood selection"}>
         {MOODS.map((mood) => (
           <button
             key={mood.value}
             onClick={() => onSelect(mood.value)}
+            role="radio"
+            aria-checked={selected === mood.value}
+            aria-label={t(`mood.${mood.value}`)}
             className={cn(
               "flex flex-col items-center gap-0.5 rounded-xl px-2.5 py-2 transition-all",
               compact ? "px-2 py-1.5" : "px-3 py-2",

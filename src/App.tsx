@@ -7,6 +7,7 @@ import { ThemeProvider } from "@/contexts/ThemeContext";
 import { SettingsProvider } from "@/contexts/SettingsContext";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import { useEffect } from "react";
+import { useSettings } from "@/contexts/SettingsContext";
 import { startReminderChecker } from "@/lib/reminders";
 import BottomNav from "@/components/BottomNav";
 import Home from "@/pages/Home";
@@ -21,9 +22,18 @@ import NotFound from "@/pages/NotFound";
 const queryClient = new QueryClient();
 
 function AppInner() {
+  const { settings } = useSettings();
+
   useEffect(() => {
     startReminderChecker();
   }, []);
+
+  useEffect(() => {
+    const root = document.documentElement;
+    root.setAttribute("data-high-contrast", String(settings.highContrast));
+    root.setAttribute("data-large-text", String(settings.largeText));
+    root.setAttribute("data-reduced-motion", String(settings.reducedMotion));
+  }, [settings.highContrast, settings.largeText, settings.reducedMotion]);
 
   return (
     <>

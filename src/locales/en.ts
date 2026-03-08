@@ -186,6 +186,13 @@ export const en: Record<string, string> = {
   "settings.installAction": "\"Add to Home Screen\"",
   "settings.installOffline": ". The app works fully offline once installed.",
   "settings.notifDenied": "Notification permission denied",
+  "settings.accessibility": "Accessibility",
+  "settings.highContrast": "High Contrast",
+  "settings.highContrastDesc": "Increase text and border contrast",
+  "settings.largeText": "Large Text",
+  "settings.largeTextDesc": "Increase base font size for readability",
+  "settings.reducedMotion": "Reduced Motion",
+  "settings.reducedMotionDesc": "Disable all animations and transitions",
 
   // Visualization types
   "viz.circle": "Circle",

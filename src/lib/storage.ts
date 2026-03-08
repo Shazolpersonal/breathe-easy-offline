@@ -21,6 +21,9 @@ export interface AppSettings {
   soundEnabled: boolean;
   theme: string;
   visualizationType: "circle" | "wave" | "bars" | "mandala";
+  highContrast: boolean;
+  largeText: boolean;
+  reducedMotion: boolean;
 }
 
 const KEYS = {
@@ -38,6 +41,9 @@ const DEFAULT_SETTINGS: AppSettings = {
   soundEnabled: true,
   theme: "ocean",
   visualizationType: "circle",
+  highContrast: false,
+  largeText: false,
+  reducedMotion: false,
 };
 
 function getJSON<T>(key: string, fallback: T): T {
