@@ -159,7 +159,7 @@ export default function Session() {
   const sessionIdRef = useRef(crypto.randomUUID());
 
   const [levelUpInfo, setLevelUpInfo] = useState<{ level: number } | null>(null);
-  const [earnedXP, setEarnedXP] = useState<{ xp: number; leveledUp: boolean; newTitle?: string } | null>(null);
+  const [earnedXP, setEarnedXP] = useState<{ breakdown: XPBreakdown; leveledUp: boolean; newTitle?: string } | null>(null);
   const [journalNote, setJournalNote] = useState("");
 
   const phaseStartRef = useRef(Date.now());
