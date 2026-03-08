@@ -1,10 +1,12 @@
 import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
-import { Pause, Play, Square, Volume2, VolumeX, TrendingUp, Sparkles, Circle, Waves, BarChart3, Flower2, Share2, SkipForward } from "lucide-react";
+import { Pause, Play, Square, Volume2, VolumeX, TrendingUp, Sparkles, Circle, Waves, BarChart3, Flower2, Share2, SkipForward, Mic, MicOff, Heart } from "lucide-react";
 import BreathingVisualizer, { VisualizationType } from "@/components/BreathingVisualizer";
 import ParticleBackground from "@/components/ParticleBackground";
 import ScreenColorBreathing from "@/components/ScreenColorBreathing";
 import MoodPicker from "@/components/MoodPicker";
+import BreathingFeedback from "@/components/BreathingFeedback";
+import HeartRateMonitorOverlay from "@/components/HeartRateMonitor";
 import { PRESET_TECHNIQUES, getTechniqueById, BreathingPhase, getPyramidPhasesForRound } from "@/lib/techniques";
 import { getCustomTechniques, addSession, getSessions } from "@/lib/storage";
 import { useSettings } from "@/contexts/SettingsContext";
@@ -20,6 +22,7 @@ import { getCompletedChallengeCount } from "@/lib/challenges";
 import { getPlaylists } from "@/lib/playlists";
 import { completeDay } from "@/lib/programs";
 import { shareOrDownloadCard } from "@/lib/shareCard";
+import { BreathDetector, RhythmUpdate } from "@/lib/breathDetector";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Textarea } from "@/components/ui/textarea";
@@ -125,6 +128,17 @@ export default function Session() {
 
   const [nextTechniqueName, setNextTechniqueName] = useState("");
 
+  // ─── Breath Detection State ───
+  const [micActive, setMicActive] = useState(false);
+  const breathDetectorRef = useRef<BreathDetector | null>(null);
+  const [breathFeedback, setBreathFeedback] = useState<RhythmUpdate | null>(null);
+  const breathAccuracySamplesRef = useRef<number[]>([]);
+
+  // ─── Heart Rate State ───
+  const [hrOpen, setHrOpen] = useState(false);
+  const hrBpmSamplesRef = useRef<number[]>([]);
+  const hrCoherenceSamplesRef = useRef<number[]>([]);
+
   useEffect(() => {
     const moodParam = params.get("mood");
     if (moodParam) setMoodBefore(Number(moodParam));
@@ -134,6 +148,46 @@ export default function Session() {
   const currentPhase: BreathingPhase = currentPhases[phaseIndex];
 
   const getPhaseLabel = (phase: BreathingPhase) => t(`phase.${phase.type}`);
+
+  // ─── Breath Detection Controls ───
+  const toggleMic = useCallback(async () => {
+    if (micActive) {
+      breathDetectorRef.current?.stop();
+      breathDetectorRef.current = null;
+      setMicActive(false);
+      setBreathFeedback(null);
+      return;
+    }
+
+    const detector = new BreathDetector();
+    detector.setExpectedPhases(currentPhases.map(p => p.duration));
+    detector.onRhythmUpdate((update) => {
+      setBreathFeedback(update);
+      breathAccuracySamplesRef.current.push(update.accuracy);
+    });
+
+    const success = await detector.start();
+    if (success) {
+      breathDetectorRef.current = detector;
+      setMicActive(true);
+    } else {
+      toast(t("breath.micError"));
+    }
+  }, [micActive, currentPhases, t]);
+
+  // Cleanup breath detector on unmount
+  useEffect(() => {
+    return () => {
+      breathDetectorRef.current?.stop();
+      breathDetectorRef.current = null;
+    };
+  }, []);
+
+  // ─── Heart Rate Data Handler ───
+  const handleHRData = useCallback((bpm: number | null, coherence: number) => {
+    if (bpm !== null) hrBpmSamplesRef.current.push(bpm);
+    hrCoherenceSamplesRef.current.push(coherence);
+  }, []);
 
   const saveJournal = useCallback(() => {
     if (journalNote.trim()) {
@@ -150,6 +204,11 @@ export default function Session() {
     clearInterval(intervalRef.current);
     stopSpeaking();
 
+    // Stop breath detector
+    breathDetectorRef.current?.stop();
+    breathDetectorRef.current = null;
+    setMicActive(false);
+
     const now = Date.now();
     const actualDuration = (now - phaseStartRef.current) / 1000;
     phaseTimestampsRef.current.push({ phaseIndex, expectedDuration: currentPhases[phaseIndex].duration, actualDuration });
@@ -159,6 +218,22 @@ export default function Session() {
 
     const result = updateProgression(technique.id, completedCycles);
     if (result.leveledUp) setLevelUpInfo({ level: result.newLevel });
+
+    // Calculate breath accuracy average
+    const breathSamples = breathAccuracySamplesRef.current;
+    const avgBreathAccuracy = breathSamples.length > 0
+      ? Math.round(breathSamples.reduce((a, b) => a + b, 0) / breathSamples.length)
+      : undefined;
+
+    // Calculate HR averages
+    const hrSamples = hrBpmSamplesRef.current;
+    const avgHR = hrSamples.length > 0
+      ? Math.round(hrSamples.reduce((a, b) => a + b, 0) / hrSamples.length)
+      : undefined;
+    const hrCoherenceSamples = hrCoherenceSamplesRef.current;
+    const avgCoherence = hrCoherenceSamples.length > 0
+      ? Math.round(hrCoherenceSamples.reduce((a, b) => a + b, 0) / hrCoherenceSamples.length)
+      : undefined;
 
     if (totalElapsed > 10) {
       addSession({
@@ -170,6 +245,9 @@ export default function Session() {
         completedCycles,
         moodBefore: moodBefore ?? undefined,
         calmScore: calm.score,
+        breathAccuracy: avgBreathAccuracy,
+        avgHeartRate: avgHR,
+        heartCoherence: avgCoherence,
       });
 
       const challengesCompleted = getCompletedChallengeCount();
@@ -228,6 +306,9 @@ export default function Session() {
     setCalmResult(null);
     setLevelUpInfo(null);
     setEarnedXP(null);
+    breathAccuracySamplesRef.current = [];
+    hrBpmSamplesRef.current = [];
+    hrCoherenceSamplesRef.current = [];
 
     const nextTech = getTechniqueById(nextStep.techniqueId, getCustomTechniques()) || PRESET_TECHNIQUES[0];
     const nextPhases = getScaledPhases(nextTech, getProgression(nextStep.techniqueId).level);
@@ -259,6 +340,9 @@ export default function Session() {
           setSecondsLeft(nextPhase.duration);
           phaseStartRef.current = Date.now();
 
+          // Notify breath detector of phase change
+          breathDetectorRef.current?.notifyPhaseChange(next);
+
           if (settings.vibrationEnabled) vibratePhaseChange();
           if (voiceOn) speak(t(`phase.${nextPhase.type}`), settings.voiceSpeed, language);
           return next;
@@ -289,6 +373,10 @@ export default function Session() {
     setJournalNote("");
     phaseTimestampsRef.current = [];
     phaseStartRef.current = Date.now();
+    breathAccuracySamplesRef.current = [];
+    hrBpmSamplesRef.current = [];
+    hrCoherenceSamplesRef.current = [];
+    setBreathFeedback(null);
     setState("running");
     if (voiceOn) speak(t(`phase.${currentPhases[0].type}`), settings.voiceSpeed, language);
     if (settings.vibrationEnabled) vibratePhaseChange();
@@ -340,6 +428,17 @@ export default function Session() {
   const moodImprovement = moodBefore !== null && moodAfter !== null ? moodAfter - moodBefore : null;
   const activePhase = state === "idle" ? "idle" as const : currentPhase.type;
 
+  // Done screen extra data
+  const avgBreathAccuracy = breathAccuracySamplesRef.current.length > 0
+    ? Math.round(breathAccuracySamplesRef.current.reduce((a, b) => a + b, 0) / breathAccuracySamplesRef.current.length)
+    : null;
+  const avgHR = hrBpmSamplesRef.current.length > 0
+    ? Math.round(hrBpmSamplesRef.current.reduce((a, b) => a + b, 0) / hrBpmSamplesRef.current.length)
+    : null;
+  const avgHRCoherence = hrCoherenceSamplesRef.current.length > 0
+    ? Math.round(hrCoherenceSamplesRef.current.reduce((a, b) => a + b, 0) / hrCoherenceSamplesRef.current.length)
+    : null;
+
   const VIZ_OPTIONS: { id: VisualizationType; icon: typeof Circle; labelKey: string }[] = [
     { id: "circle", icon: Circle, labelKey: "viz.circle" },
     { id: "wave", icon: Waves, labelKey: "viz.wave" },
@@ -388,6 +487,31 @@ export default function Session() {
           {calmResult && <CalmScoreDisplay result={calmResult} label={t("session.calmScore")} />}
           {earnedXP && <XPEarnedDisplay xp={earnedXP.xp} leveledUp={earnedXP.leveledUp} newTitle={earnedXP.newTitle} />}
 
+          {/* Breath accuracy in done screen */}
+          {avgBreathAccuracy !== null && (
+            <div className="rounded-xl border border-border bg-card p-3 space-y-1">
+              <div className="flex items-center justify-center gap-2">
+                <Mic className="h-4 w-4 text-primary" />
+                <span className="text-sm font-medium text-foreground">{t("breath.rhythmAccuracy")}</span>
+              </div>
+              <div className="text-2xl font-bold text-primary">{avgBreathAccuracy}%</div>
+            </div>
+          )}
+
+          {/* Heart rate in done screen */}
+          {avgHR !== null && (
+            <div className="rounded-xl border border-border bg-card p-3 space-y-1">
+              <div className="flex items-center justify-center gap-2">
+                <Heart className="h-4 w-4 text-destructive" />
+                <span className="text-sm font-medium text-foreground">{t("heart.avgBPM")}</span>
+              </div>
+              <div className="text-2xl font-bold text-foreground">{avgHR} <span className="text-sm font-normal text-muted-foreground">BPM</span></div>
+              {avgHRCoherence !== null && (
+                <p className="text-xs text-muted-foreground">{t("heart.coherence")}: {avgHRCoherence}%</p>
+              )}
+            </div>
+          )}
+
           <div>
             {!moodSaved ? (
               <MoodPicker selected={moodAfter} onSelect={handleMoodAfter} label={t("session.moodAfter")} />
@@ -435,6 +559,14 @@ export default function Session() {
       <ScreenColorBreathing phase={activePhase} phaseDuration={currentPhase.duration} />
       <ParticleBackground phase={activePhase} phaseDuration={currentPhase.duration} />
 
+      {/* Heart Rate Overlay */}
+      <HeartRateMonitorOverlay
+        open={hrOpen}
+        onClose={() => setHrOpen(false)}
+        onData={handleHRData}
+        currentPhase={currentPhase.type}
+      />
+
       <div className="relative z-10 flex flex-col items-center gap-6">
         {/* Playlist progress bar */}
         {playlist && state !== "idle" && (
@@ -476,6 +608,15 @@ export default function Session() {
           label={state === "idle" ? t("session.ready") : getPhaseLabel(currentPhase)}
           secondsLeft={state === "idle" ? 0 : secondsLeft}
         />
+
+        {/* Breathing feedback overlay */}
+        {micActive && breathFeedback && state === "running" && (
+          <BreathingFeedback
+            volume={breathFeedback.volume}
+            accuracy={breathFeedback.accuracy}
+            isBreathing={breathFeedback.isBreathing}
+          />
+        )}
 
         <div className="text-center" aria-live="polite" aria-atomic="true">
           <span className="text-sm tabular-nums text-muted-foreground">{elapsedDisplay} / {targetDisplay}</span>
@@ -551,6 +692,27 @@ export default function Session() {
             aria-label={voiceOn ? t("settings.voiceEnable") : t("settings.voiceEnable")}
           >
             {voiceOn ? <Volume2 className="h-5 w-5" /> : <VolumeX className="h-5 w-5" />}
+          </button>
+
+          {/* Mic toggle */}
+          <button
+            onClick={toggleMic}
+            className={cn(
+              "rounded-full p-2 transition-colors",
+              micActive ? "text-primary bg-primary/15" : "text-muted-foreground hover:text-foreground"
+            )}
+            aria-label={micActive ? t("breath.micOn") : t("breath.micOff")}
+          >
+            {micActive ? <Mic className="h-5 w-5" /> : <MicOff className="h-5 w-5" />}
+          </button>
+
+          {/* Heart rate toggle */}
+          <button
+            onClick={() => setHrOpen(true)}
+            className="rounded-full p-2 text-muted-foreground hover:text-foreground"
+            aria-label={t("heart.monitor")}
+          >
+            <Heart className="h-5 w-5" />
           </button>
         </div>
       </div>

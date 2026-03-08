@@ -11,6 +11,9 @@ export interface SessionRecord {
   moodAfter?: number;
   calmScore?: number;
   journal?: string;
+  breathAccuracy?: number;
+  avgHeartRate?: number;
+  heartCoherence?: number;
 }
 
 export interface AppSettings {
@@ -24,6 +27,8 @@ export interface AppSettings {
   highContrast: boolean;
   largeText: boolean;
   reducedMotion: boolean;
+  breathDetectionEnabled: boolean;
+  heartRateEnabled: boolean;
 }
 
 const KEYS = {
@@ -44,6 +49,8 @@ const DEFAULT_SETTINGS: AppSettings = {
   highContrast: false,
   largeText: false,
   reducedMotion: false,
+  breathDetectionEnabled: false,
+  heartRateEnabled: false,
 };
 
 function getJSON<T>(key: string, fallback: T): T {

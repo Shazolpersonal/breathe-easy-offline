@@ -382,4 +382,40 @@ export const bn: Record<string, string> = {
   "day.thu": "বৃহঃ",
   "day.fri": "শুক্র",
   "day.sat": "শনি",
+
+  // Adaptive Intelligence
+  "adaptive.smartSession": "স্মার্ট সেশন",
+  "adaptive.startSmart": "স্মার্ট শুরু",
+  "adaptive.moodBased": "আপনার মুডের ইতিহাসের উপর ভিত্তি করে, এই কৌশলটি আপনার জন্য সবচেয়ে ভালো কাজ করে।",
+  "adaptive.timeBased": "{{bucket}} সময়ের জন্য আপনার সেরা কৌশল।",
+  "adaptive.overall": "আগের সেশনের উপর ভিত্তি করে আপনার সবচেয়ে কার্যকর কৌশল।",
+
+  // Breath Detection
+  "settings.intelligence": "বুদ্ধিমত্তা ও সেন্সর",
+  "settings.breathDetection": "শ্বাস সনাক্তকরণ",
+  "settings.breathDetectionDesc": "শ্বাসের ছন্দ সনাক্ত করতে মাইক্রোফোন ব্যবহার করুন। সব ডেটা ডিভাইসে থাকে।",
+  "settings.heartRate": "হৃদস্পন্দন মনিটর",
+  "settings.heartRateDesc": "আঙুলের ডগা দিয়ে হৃদস্পন্দন অনুমান করতে ক্যামেরা ব্যবহার করুন। সব ডেটা ডিভাইসে থাকে।",
+  "breath.micError": "মাইক্রোফোন অ্যাক্সেস করা যায়নি। অনুগ্রহ করে অনুমতি পরীক্ষা করুন।",
+  "breath.micOn": "মাইক শুনছে",
+  "breath.micOff": "মাইক সক্রিয় করুন",
+  "breath.rhythmAccuracy": "ছন্দ নির্ভুলতা",
+  "breath.goodSync": "ভালো সিঙ্ক",
+  "breath.slightlyOff": "সামান্য ভিন্ন",
+  "breath.outOfSync": "সিঙ্কের বাইরে",
+
+  // Heart Rate
+  "heart.monitor": "হৃদস্পন্দন",
+  "heart.warmingUp": "প্রস্তুত হচ্ছে...",
+  "heart.placeFingerTip": "পিছনের ক্যামেরায় আপনার আঙুলের ডগা রাখুন",
+  "heart.instructions": "ক্যামেরা লেন্স সম্পূর্ণভাবে আঙুলের ডগা দিয়ে ঢাকুন। সেরা ফলাফলের জন্য স্থির থাকুন।",
+  "heart.signalQuality": "সংকেত মান",
+  "heart.coherence": "শ্বাস সমন্বয়",
+  "heart.highCoherence": "হৃদস্পন্দন শ্বাসের সাথে সিঙ্ক",
+  "heart.moderateCoherence": "শ্বাসের সাথে আংশিক সিঙ্ক",
+  "heart.lowCoherence": "সমন্বয় তৈরি হচ্ছে...",
+  "heart.cameraError": "ক্যামেরা অ্যাক্সেস করা যায়নি। অনুগ্রহ করে অনুমতি পরীক্ষা করুন।",
+  "heart.retry": "আবার চেষ্টা",
+  "heart.avgBPM": "গড় হৃদস্পন্দন",
+  "common.close": "বন্ধ",
 };

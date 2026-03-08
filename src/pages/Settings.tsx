@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { exportData, importData } from "@/lib/storage";
-import { Download, Upload, Circle, Waves, BarChart3, Flower2, Plus, Trash2, Bell, BellOff, Accessibility } from "lucide-react";
+import { Download, Upload, Circle, Waves, BarChart3, Flower2, Plus, Trash2, Bell, BellOff, Accessibility, Mic, Heart } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toast } from "@/hooks/use-toast";
 import { useRef, useState } from "react";
@@ -156,6 +156,28 @@ export default function Settings() {
               <p className="text-xs text-muted-foreground">{t("settings.reducedMotionDesc")}</p>
             </div>
             <Switch checked={settings.reducedMotion} onCheckedChange={(v) => update({ reducedMotion: v })} />
+          </div>
+        </section>
+
+        {/* Intelligence & Sensors */}
+        <section className="rounded-2xl border border-border bg-card p-4 space-y-4">
+          <div className="flex items-center gap-2">
+            <Mic className="h-4 w-4 text-muted-foreground" />
+            <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">{t("settings.intelligence")}</h2>
+          </div>
+          <div className="flex items-center justify-between">
+            <div>
+              <Label>{t("settings.breathDetection")}</Label>
+              <p className="text-xs text-muted-foreground">{t("settings.breathDetectionDesc")}</p>
+            </div>
+            <Switch checked={settings.breathDetectionEnabled} onCheckedChange={(v) => update({ breathDetectionEnabled: v })} />
+          </div>
+          <div className="flex items-center justify-between">
+            <div>
+              <Label>{t("settings.heartRate")}</Label>
+              <p className="text-xs text-muted-foreground">{t("settings.heartRateDesc")}</p>
+            </div>
+            <Switch checked={settings.heartRateEnabled} onCheckedChange={(v) => update({ heartRateEnabled: v })} />
           </div>
         </section>
 
