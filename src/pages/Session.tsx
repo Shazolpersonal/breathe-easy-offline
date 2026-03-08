@@ -350,6 +350,20 @@ export default function Session() {
           description: t(`badge.${badge.id}.description`),
         });
       });
+
+      // Auto-backup every 10 sessions
+      const appSettings = getSettings();
+      if (appSettings.autoBackupEnabled) {
+        const totalCount = getTotalSessionCount();
+        if (totalCount > 0 && totalCount % 10 === 0) {
+          try {
+            const compact = exportDataCompact();
+            navigator.clipboard.writeText(compact).then(() => {
+              toast(t("autoBackup.copied", { count: totalCount }));
+            }).catch(() => {});
+          } catch {}
+        }
+      }
     }
 
     if (programId && programDay) {
