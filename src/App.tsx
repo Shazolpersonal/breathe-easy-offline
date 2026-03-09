@@ -65,19 +65,29 @@ function AppInner() {
 
   return (
     <>
+      {/* Skip to main content link for accessibility */}
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[200] focus:rounded-lg focus:bg-primary focus:px-4 focus:py-2 focus:text-primary-foreground focus:outline-none"
+      >
+        {t("a11y.skipToMain")}
+      </a>
+      <OfflineIndicator />
       <Toaster />
       <Sonner />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/session" element={<Session />} />
-        <Route path="/techniques" element={<Techniques />} />
-        <Route path="/stats" element={<Stats />} />
-        <Route path="/settings" element={<Settings />} />
-        <Route path="/playlists" element={<Playlists />} />
-        <Route path="/programs" element={<Programs />} />
-        <Route path="/guide" element={<Guide />} />
-        <Route path="*" element={<NotFound />} />
-      </Routes>
+      <main id="main-content">
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/session" element={<Session />} />
+          <Route path="/techniques" element={<Techniques />} />
+          <Route path="/stats" element={<Stats />} />
+          <Route path="/settings" element={<Settings />} />
+          <Route path="/playlists" element={<Playlists />} />
+          <Route path="/programs" element={<Programs />} />
+          <Route path="/guide" element={<Guide />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </main>
       <MiniPlayer />
       <BottomNav />
       <AcceptChallengeDialog

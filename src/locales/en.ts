@@ -921,4 +921,51 @@ export const en: Record<string, string> = {
   "adaptive.suggestIncrease": "Your calm scores are consistently high! Try {{minutes}} minutes next time.",
   "adaptive.acceptIncrease": "Set to {{minutes}} min",
   "adaptive.durationUpdated": "Default duration updated to {{minutes}} min!",
+
+  // Update 1: MiniPlayer Session Save
+  "session.savedPartial": "Session saved! Progress preserved.",
+  "session.miniPlayer": "Active breathing session",
+  "session.stopAndSave": "Stop and save session",
+
+  // Update 2: Offline Indicator
+  "common.offline": "You're offline — data is saved locally",
+
+  // Update 3: Journal Confirm
+  "session.unsavedJournal": "You have an unsaved journal entry. Are you sure you want to leave?",
+
+  // Update 4: Session Recovery
+  "recovery.title": "Resume Session?",
+  "recovery.desc": "You have an incomplete {{technique}} session ({{elapsed}} elapsed).",
+  "recovery.technique": "Technique",
+  "recovery.progress": "Progress",
+  "recovery.cycles": "Cycles",
+  "recovery.resume": "Resume",
+  "recovery.discard": "Discard",
+
+  // Update 5: Enhanced Import Validation
+  "import.error.sessionsNotArray": "Sessions data is not a valid array",
+  "import.error.sessionMissingId": "Session missing ID field",
+  "import.error.sessionMissingTechnique": "Session missing technique ID",
+  "import.error.sessionMissingDate": "Session missing date field",
+  "import.error.sessionMissingDuration": "Session missing duration field",
+  "import.error.tooManyErrors": "Too many validation errors",
+  "import.error.invalidSettings": "Settings data is invalid",
+  "import.error.invalidCustomTechniques": "Custom techniques data is invalid",
+  "import.error.invalidFavorites": "Favorites data is invalid",
+  "import.error.invalidJson": "Invalid JSON format",
+  "import.warning.duplicatesSkipped": "{{count}} duplicate sessions were skipped",
+  "import.success": "Imported {{new}} new sessions ({{duplicates}} duplicates skipped)",
+
+  // Update 7: Accessibility
+  "a11y.skipToMain": "Skip to main content",
+
+  // Update 8: Duplicate Detection
+  "import.duplicateTitle": "Duplicates Found",
+  "import.duplicateDesc": "{{count}} sessions already exist. What would you like to do?",
+  "import.skipDuplicates": "Skip duplicates",
+  "import.overwriteDuplicates": "Overwrite with new data",
+
+  // Favorite toggle
+  "techniques.favorite": "Add to favorites",
+  "techniques.unfavorite": "Remove from favorites",
 };
