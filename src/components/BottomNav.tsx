@@ -81,12 +81,13 @@ export default function BottomNav() {
               <button
                 key={path}
                 onClick={() => navigate(path)}
+                aria-current={active ? "page" : undefined}
                 className={cn(
                   "flex flex-col items-center gap-0.5 rounded-xl px-3 py-1.5 text-xs transition-colors",
                   active ? "text-primary" : "text-muted-foreground hover:text-foreground"
                 )}
               >
-                <Icon className={cn("h-5 w-5", active && "drop-shadow-[0_0_6px_hsl(var(--primary))]")} />
+                <Icon className={cn("h-5 w-5", active && "drop-shadow-[0_0_6px_hsl(var(--primary))]")} aria-hidden="true" />
                 <span className="font-medium">{t(labelKey)}</span>
               </button>
             );

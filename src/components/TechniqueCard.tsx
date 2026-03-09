@@ -121,7 +121,7 @@ export default function TechniqueCard({ technique, isFavorite, onToggleFavorite,
           )}
         </div>
         <div className="ml-2 flex flex-col gap-1 shrink-0">
-          <button onClick={onToggleFavorite} className="p-1 text-muted-foreground hover:text-primary">
+          <button onClick={handleToggleFavorite} className="p-1 text-muted-foreground hover:text-primary" aria-label={isFavorite ? t("techniques.unfavorite") : t("techniques.favorite")}>
             {isFavorite ? <Heart className="h-5 w-5 fill-primary text-primary" /> : <HeartOff className="h-5 w-5" />}
           </button>
           {unlocked && (
