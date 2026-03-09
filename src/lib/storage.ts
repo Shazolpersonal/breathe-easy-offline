@@ -299,6 +299,132 @@ export function importDataFromCompact(base64: string) {
   }
 }
 
+// Import validation result
+export interface ImportValidationResult {
+  success: boolean;
+  errors: string[];
+  warnings: string[];
+  stats?: {
+    sessions: number;
+    duplicates: number;
+    newSessions: number;
+  };
+}
+
+export function validateImportData(json: string): ImportValidationResult {
+  const errors: string[] = [];
+  const warnings: string[] = [];
+
+  try {
+    const data = JSON.parse(json);
+
+    // Validate sessions
+    if (data.sessions !== undefined) {
+      if (!Array.isArray(data.sessions)) {
+        errors.push("import.error.sessionsNotArray");
+      } else {
+        for (let i = 0; i < data.sessions.length; i++) {
+          const s = data.sessions[i];
+          if (typeof s.id !== "string") errors.push(`import.error.sessionMissingId`);
+          if (typeof s.techniqueId !== "string") errors.push(`import.error.sessionMissingTechnique`);
+          if (typeof s.date !== "string") errors.push(`import.error.sessionMissingDate`);
+          if (typeof s.durationSeconds !== "number") errors.push(`import.error.sessionMissingDuration`);
+          if (errors.length > 3) {
+            errors.push("import.error.tooManyErrors");
+            break;
+          }
+        }
+      }
+    }
+
+    // Validate settings
+    if (data.settings !== undefined && typeof data.settings !== "object") {
+      errors.push("import.error.invalidSettings");
+    }
+
+    // Validate custom techniques
+    if (data.customTechniques !== undefined && !Array.isArray(data.customTechniques)) {
+      errors.push("import.error.invalidCustomTechniques");
+    }
+
+    // Validate favorites
+    if (data.favorites !== undefined && !Array.isArray(data.favorites)) {
+      errors.push("import.error.invalidFavorites");
+    }
+
+    if (errors.length > 0) {
+      return { success: false, errors, warnings };
+    }
+
+    return { success: true, errors: [], warnings };
+  } catch (e) {
+    return { success: false, errors: ["import.error.invalidJson"], warnings: [] };
+  }
+}
+
+export function importDataSmart(json: string, skipDuplicates: boolean = true): ImportValidationResult {
+  const validation = validateImportData(json);
+  if (!validation.success) return validation;
+
+  const data = JSON.parse(json);
+  const existingSessions = getSessions();
+  const existingIds = new Set(existingSessions.map(s => s.id));
+
+  let duplicateCount = 0;
+  let newCount = 0;
+
+  if (data.sessions && Array.isArray(data.sessions)) {
+    const sessionsToAdd: SessionRecord[] = [];
+
+    for (const s of data.sessions) {
+      if (existingIds.has(s.id)) {
+        duplicateCount++;
+        if (!skipDuplicates) {
+          // Overwrite: remove existing and add new
+          const idx = existingSessions.findIndex(es => es.id === s.id);
+          if (idx >= 0) existingSessions.splice(idx, 1);
+          sessionsToAdd.push(s);
+        }
+      } else {
+        newCount++;
+        sessionsToAdd.push(s);
+      }
+    }
+
+    setJSON(KEYS.sessions, [...existingSessions, ...sessionsToAdd]);
+  }
+
+  // Import other data normally
+  if (data.settings && typeof data.settings === "object") {
+    setJSON(KEYS.settings, data.settings);
+  }
+  if (data.customTechniques && Array.isArray(data.customTechniques)) {
+    setJSON(KEYS.customTechniques, data.customTechniques);
+  }
+  if (data.favorites && Array.isArray(data.favorites)) {
+    setJSON(KEYS.favorites, data.favorites);
+  }
+
+  // Restore additional keys
+  const extraKeys = ["breathe_xp", "breathe_mood_records", "breathe_challenge_history", "breathe_progression", "breathe_badges_seen"];
+  for (const key of extraKeys) {
+    if (data[key] != null) {
+      localStorage.setItem(key, typeof data[key] === "string" ? data[key] : JSON.stringify(data[key]));
+    }
+  }
+
+  return {
+    success: true,
+    errors: [],
+    warnings: duplicateCount > 0 ? ["import.warning.duplicatesSkipped"] : [],
+    stats: {
+      sessions: data.sessions?.length || 0,
+      duplicates: duplicateCount,
+      newSessions: newCount,
+    },
+  };
+}
+
 export function importData(json: string) {
   const data = JSON.parse(json);
   // Validate sessions array

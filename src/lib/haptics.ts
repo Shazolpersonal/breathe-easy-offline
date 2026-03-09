@@ -11,3 +11,20 @@ export function vibratePhaseChange() {
 export function vibrateDone() {
   vibrate([100, 50, 100, 50, 200]);
 }
+
+// New haptic patterns for key actions
+export function vibrateSuccess() {
+  vibrate([50, 30, 100]);
+}
+
+export function vibrateButton() {
+  vibrate(25);
+}
+
+export function vibrateFavorite() {
+  vibrate([20, 30, 20]);
+}
+
+export function vibrateBadgeUnlock() {
+  vibrate([50, 50, 50, 50, 150]);
+}

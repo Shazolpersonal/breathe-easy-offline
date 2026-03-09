@@ -9,6 +9,8 @@ import { Progress } from "@/components/ui/progress";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { shareTechnique } from "@/lib/shareApp";
 import BreathingPreview from "@/components/BreathingPreview";
+import { vibrateFavorite } from "@/lib/haptics";
+import { useSettings } from "@/contexts/SettingsContext";
 
 interface TechniqueCardProps {
   technique: BreathingTechnique;
@@ -27,7 +29,13 @@ const difficultyColor = {
 export default function TechniqueCard({ technique, isFavorite, onToggleFavorite, compact, progression: propProgression }: TechniqueCardProps) {
   const navigate = useNavigate();
   const { t, language } = useLanguage();
+  const { settings } = useSettings();
   const [previewActive, setPreviewActive] = useState(false);
+
+  const handleToggleFavorite = () => {
+    if (settings.vibrationEnabled) vibrateFavorite();
+    onToggleFavorite();
+  };
   const cycleSec = getCycleDuration(technique);
   const unlocked = isUnlocked(technique);
   // Bug 5: Use passed progression prop if available, fallback to direct call only in compact/standalone usage
@@ -113,7 +121,7 @@ export default function TechniqueCard({ technique, isFavorite, onToggleFavorite,
           )}
         </div>
         <div className="ml-2 flex flex-col gap-1 shrink-0">
-          <button onClick={onToggleFavorite} className="p-1 text-muted-foreground hover:text-primary">
+          <button onClick={handleToggleFavorite} className="p-1 text-muted-foreground hover:text-primary" aria-label={isFavorite ? t("techniques.unfavorite") : t("techniques.favorite")}>
             {isFavorite ? <Heart className="h-5 w-5 fill-primary text-primary" /> : <HeartOff className="h-5 w-5" />}
           </button>
           {unlocked && (

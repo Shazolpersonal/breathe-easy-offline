@@ -6,7 +6,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
 import { ThemeProvider } from "@/contexts/ThemeContext";
 import { SettingsProvider } from "@/contexts/SettingsContext";
-import { LanguageProvider } from "@/contexts/LanguageContext";
+import { LanguageProvider, useLanguage } from "@/contexts/LanguageContext";
 import { SessionProvider } from "@/contexts/SessionContext";
 import { useEffect, useState, useCallback } from "react";
 import { useSettings } from "@/contexts/SettingsContext";
@@ -17,6 +17,7 @@ import { useKeyboardShortcuts } from "@/hooks/useKeyboardShortcuts";
 import KeyboardShortcutsHelp from "@/components/KeyboardShortcutsHelp";
 import BottomNav from "@/components/BottomNav";
 import MiniPlayer from "@/components/MiniPlayer";
+import OfflineIndicator from "@/components/OfflineIndicator";
 import Home from "@/pages/Home";
 import Session from "@/pages/Session";
 import Techniques from "@/pages/Techniques";
@@ -33,6 +34,7 @@ const queryClient = new QueryClient();
 function AppInner() {
   const { settings } = useSettings();
   const navigate = useNavigate();
+  const { t } = useLanguage();
   const [incomingChallenge, setIncomingChallenge] = useState<FriendChallengeParams | null>(null);
   const [showAcceptDialog, setShowAcceptDialog] = useState(false);
   const [showShortcuts, setShowShortcuts] = useState(false);
@@ -64,19 +66,29 @@ function AppInner() {
 
   return (
     <>
+      {/* Skip to main content link for accessibility */}
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[200] focus:rounded-lg focus:bg-primary focus:px-4 focus:py-2 focus:text-primary-foreground focus:outline-none"
+      >
+        {t("a11y.skipToMain")}
+      </a>
+      <OfflineIndicator />
       <Toaster />
       <Sonner />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/session" element={<Session />} />
-        <Route path="/techniques" element={<Techniques />} />
-        <Route path="/stats" element={<Stats />} />
-        <Route path="/settings" element={<Settings />} />
-        <Route path="/playlists" element={<Playlists />} />
-        <Route path="/programs" element={<Programs />} />
-        <Route path="/guide" element={<Guide />} />
-        <Route path="*" element={<NotFound />} />
-      </Routes>
+      <main id="main-content">
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/session" element={<Session />} />
+          <Route path="/techniques" element={<Techniques />} />
+          <Route path="/stats" element={<Stats />} />
+          <Route path="/settings" element={<Settings />} />
+          <Route path="/playlists" element={<Playlists />} />
+          <Route path="/programs" element={<Programs />} />
+          <Route path="/guide" element={<Guide />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </main>
       <MiniPlayer />
       <BottomNav />
       <AcceptChallengeDialog

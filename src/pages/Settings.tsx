@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { exportData, importData, getLastBackupDate, getDataSummary, exportDataCompact, importDataFromCompact } from "@/lib/storage";
+import { exportData, importDataSmart, getLastBackupDate, getDataSummary, exportDataCompact, importDataFromCompact, validateImportData } from "@/lib/storage";
 import { exportSessionsCSV } from "@/lib/csvExport";
 import { Download, Upload, Circle, Waves, BarChart3, Flower2, Plus, Trash2, Bell, BellOff, Accessibility, Mic, Heart, Music, FileSpreadsheet, AlertTriangle, Database, Volume2, Info, Share2, HeartHandshake, Clipboard, ClipboardPaste, Target } from "lucide-react";
 import { SoundscapeType, getSoundscapeEngine } from "@/lib/soundscapes";
@@ -60,12 +60,25 @@ export default function Settings() {
     if (!file) return;
     const reader = new FileReader();
     reader.onload = () => {
-      try {
-        importData(reader.result as string);
-        toast({ title: t("settings.dataImported") });
+      const content = reader.result as string;
+      const validation = validateImportData(content);
+      
+      if (!validation.success) {
+        const errorMessage = validation.errors.map(err => t(err)).join(", ");
+        toast({ title: t("settings.invalidFile"), description: errorMessage, variant: "destructive" });
+        return;
+      }
+      
+      const result = importDataSmart(content, true);
+      if (result.success) {
+        const msg = result.stats 
+          ? t("import.success", { new: result.stats.newSessions, duplicates: result.stats.duplicates })
+          : t("settings.dataImported");
+        toast({ title: msg });
         window.location.reload();
-      } catch {
-        toast({ title: t("settings.invalidFile"), variant: "destructive" });
+      } else {
+        const errorMessage = result.errors.map(err => t(err)).join(", ");
+        toast({ title: t("settings.invalidFile"), description: errorMessage, variant: "destructive" });
       }
     };
     reader.readAsText(file);

@@ -921,4 +921,51 @@ export const bn: Record<string, string> = {
   "adaptive.suggestIncrease": "আপনার প্রশান্তি স্কোর ধারাবাহিকভাবে উচ্চ! পরের বার {{minutes}} মিনিট চেষ্টা করুন।",
   "adaptive.acceptIncrease": "{{minutes}} মিনিট সেট করুন",
   "adaptive.durationUpdated": "ডিফল্ট সময়কাল {{minutes}} মিনিটে আপডেট হয়েছে!",
+
+  // Update 1: MiniPlayer Session Save
+  "session.savedPartial": "সেশন সংরক্ষিত! অগ্রগতি সংরক্ষিত হয়েছে।",
+  "session.miniPlayer": "সক্রিয় শ্বাস সেশন",
+  "session.stopAndSave": "থামুন এবং সেশন সংরক্ষণ করুন",
+
+  // Update 2: Offline Indicator
+  "common.offline": "আপনি অফলাইনে আছেন — ডেটা স্থানীয়ভাবে সংরক্ষিত",
+
+  // Update 3: Journal Confirm
+  "session.unsavedJournal": "আপনার একটি অসংরক্ষিত জার্নাল এন্ট্রি আছে। আপনি কি নিশ্চিত যে চলে যেতে চান?",
+
+  // Update 4: Session Recovery
+  "recovery.title": "সেশন পুনরায় শুরু করবেন?",
+  "recovery.desc": "আপনার একটি অসম্পূর্ণ {{technique}} সেশন আছে ({{elapsed}} অতিবাহিত)।",
+  "recovery.technique": "কৌশল",
+  "recovery.progress": "অগ্রগতি",
+  "recovery.cycles": "চক্র",
+  "recovery.resume": "পুনরায় শুরু",
+  "recovery.discard": "বাতিল",
+
+  // Update 5: Enhanced Import Validation
+  "import.error.sessionsNotArray": "সেশন ডেটা একটি বৈধ অ্যারে নয়",
+  "import.error.sessionMissingId": "সেশনে ID ফিল্ড নেই",
+  "import.error.sessionMissingTechnique": "সেশনে কৌশল ID নেই",
+  "import.error.sessionMissingDate": "সেশনে তারিখ ফিল্ড নেই",
+  "import.error.sessionMissingDuration": "সেশনে সময়কাল ফিল্ড নেই",
+  "import.error.tooManyErrors": "অনেক বেশি যাচাইকরণ ত্রুটি",
+  "import.error.invalidSettings": "সেটিংস ডেটা অবৈধ",
+  "import.error.invalidCustomTechniques": "কাস্টম কৌশল ডেটা অবৈধ",
+  "import.error.invalidFavorites": "প্রিয় ডেটা অবৈধ",
+  "import.error.invalidJson": "অবৈধ JSON ফরম্যাট",
+  "import.warning.duplicatesSkipped": "{{count}}টি ডুপ্লিকেট সেশন এড়িয়ে গেছে",
+  "import.success": "{{new}}টি নতুন সেশন ইমপোর্ট হয়েছে ({{duplicates}}টি ডুপ্লিকেট এড়িয়ে গেছে)",
+
+  // Update 7: Accessibility
+  "a11y.skipToMain": "মূল বিষয়বস্তুতে যান",
+
+  // Update 8: Duplicate Detection
+  "import.duplicateTitle": "ডুপ্লিকেট পাওয়া গেছে",
+  "import.duplicateDesc": "{{count}}টি সেশন ইতিমধ্যে বিদ্যমান। আপনি কী করতে চান?",
+  "import.skipDuplicates": "ডুপ্লিকেট এড়িয়ে যান",
+  "import.overwriteDuplicates": "নতুন ডেটা দিয়ে ওভাররাইট করুন",
+
+  // Favorite toggle
+  "techniques.favorite": "প্রিয়তে যোগ করুন",
+  "techniques.unfavorite": "প্রিয় থেকে সরান",
 };
