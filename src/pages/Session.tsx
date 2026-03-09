@@ -256,7 +256,107 @@ export default function Session() {
     };
   }, []);
 
-  // ─── Heart Rate Data Handler ───
+  // ─── Session Recovery on Mount ───
+  useEffect(() => {
+    try {
+      const savedSession = sessionStorage.getItem(SESSION_STORAGE_KEY);
+      if (savedSession) {
+        const parsed = JSON.parse(savedSession) as RecoverableSession;
+        // Only show recovery if session is recent (within 30 minutes)
+        if (Date.now() - parsed.timestamp < 30 * 60 * 1000 && parsed.elapsed > 30) {
+          setRecoverableSession(parsed);
+          setShowRecoveryDialog(true);
+        } else {
+          sessionStorage.removeItem(SESSION_STORAGE_KEY);
+        }
+      }
+    } catch {
+      sessionStorage.removeItem(SESSION_STORAGE_KEY);
+    }
+  }, []);
+
+  // ─── Save Session State Periodically for Recovery ───
+  useEffect(() => {
+    if (state !== "running" && state !== "paused") return;
+    
+    const saveRecoveryState = () => {
+      const recoveryData: RecoverableSession = {
+        techniqueId: technique.id,
+        techniqueName: techniqueName,
+        elapsed: totalElapsed,
+        completedCycles: completedCycles,
+        durationMin: durationMin,
+        moodBefore: moodBefore,
+        phaseIndex: phaseIndex,
+        secondsLeft: secondsLeft,
+        currentRound: currentRound,
+        voiceOn: voiceOn,
+        soundscapeType: soundscapeType,
+        timestamp: Date.now(),
+      };
+      sessionStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify(recoveryData));
+    };
+
+    // Save immediately and then every 10 seconds
+    saveRecoveryState();
+    const interval = setInterval(saveRecoveryState, 10000);
+    
+    return () => clearInterval(interval);
+  }, [state, technique.id, techniqueName, totalElapsed, completedCycles, durationMin, moodBefore, phaseIndex, secondsLeft, currentRound, voiceOn, soundscapeType]);
+
+  // ─── Clear Recovery State When Session Completes ───
+  useEffect(() => {
+    if (state === "done" || state === "idle") {
+      sessionStorage.removeItem(SESSION_STORAGE_KEY);
+    }
+  }, [state]);
+
+  // ─── Confirm Before Losing Journal Entry ───
+  useEffect(() => {
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      if (journalNote.trim().length > 0 && state === "done") {
+        e.preventDefault();
+        e.returnValue = "";
+        return "";
+      }
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    return () => window.removeEventListener("beforeunload", handleBeforeUnload);
+  }, [journalNote, state]);
+
+  const handleRecoverSession = useCallback(() => {
+    if (!recoverableSession) return;
+    
+    setTotalElapsed(recoverableSession.elapsed);
+    setPhaseIndex(recoverableSession.phaseIndex);
+    setSecondsLeft(recoverableSession.secondsLeft);
+    setCompletedCycles(recoverableSession.completedCycles);
+    setCurrentRound(recoverableSession.currentRound);
+    setDurationMin(recoverableSession.durationMin);
+    setMoodBefore(recoverableSession.moodBefore);
+    setVoiceOn(recoverableSession.voiceOn);
+    setSoundscapeType(recoverableSession.soundscapeType as SoundscapeType);
+    phaseStartRef.current = Date.now();
+    setState("paused"); // Start paused so user can resume when ready
+    
+    if (recoverableSession.soundscapeType !== "off") {
+      soundscapeEngineRef.current.start(recoverableSession.soundscapeType as SoundscapeType, settings.soundscapeVolume ?? 0.5);
+      soundscapeEngineRef.current.setVolume(0); // Muted since paused
+    }
+    
+    sessionStorage.removeItem(SESSION_STORAGE_KEY);
+    setShowRecoveryDialog(false);
+    setRecoverableSession(null);
+    toast.success(t("recovery.resume"));
+  }, [recoverableSession, settings.soundscapeVolume, t]);
+
+  const handleDiscardRecovery = useCallback(() => {
+    sessionStorage.removeItem(SESSION_STORAGE_KEY);
+    setShowRecoveryDialog(false);
+    setRecoverableSession(null);
+  }, []);
+
   const handleHRData = useCallback((bpm: number | null, coherence: number) => {
     if (bpm !== null) hrBpmSamplesRef.current.push(bpm);
     hrCoherenceSamplesRef.current.push(coherence);
