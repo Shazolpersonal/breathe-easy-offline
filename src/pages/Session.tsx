@@ -193,7 +193,12 @@ export default function Session() {
   // ─── Zen Mode State ───
   const [zenMode, setZenMode] = useState(false);
   const [showDonateDialog, setShowDonateDialog] = useState(false);
-  const lastEncouragementRef = useRef(0); // elapsed seconds when last encouragement was spoken
+  const lastEncouragementRef = useRef(0);
+
+  // Session recovery state
+  const [showRecoveryDialog, setShowRecoveryDialog] = useState(false);
+  const [recoverableSession, setRecoverableSession] = useState<RecoverableSession | null>(null);
+  const SESSION_STORAGE_KEY = "breathe_session_recovery";
 
   useEffect(() => {
     const moodParam = params.get("mood");
