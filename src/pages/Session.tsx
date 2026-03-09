@@ -1291,6 +1291,14 @@ export default function Session() {
           </div>
         )}
       </div>
+
+      {/* Session Recovery Dialog */}
+      <SessionRecoveryDialog
+        open={showRecoveryDialog}
+        session={recoverableSession}
+        onRecover={handleRecoverSession}
+        onDiscard={handleDiscardRecovery}
+      />
     </div>
   );
 }
