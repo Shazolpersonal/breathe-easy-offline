@@ -9,6 +9,8 @@ import { Progress } from "@/components/ui/progress";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { shareTechnique } from "@/lib/shareApp";
 import BreathingPreview from "@/components/BreathingPreview";
+import { vibrateFavorite } from "@/lib/haptics";
+import { useSettings } from "@/contexts/SettingsContext";
 
 interface TechniqueCardProps {
   technique: BreathingTechnique;
