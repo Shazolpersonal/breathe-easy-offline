@@ -533,7 +533,10 @@ export default function Session() {
     } else if (voiceOn && settings.cuePhaseNames) {
       speak(t(`phase.${currentPhases[0].type}`), voiceOpts);
     }
-    if (settings.vibrationEnabled) vibratePhaseChange();
+    // Haptic feedback on start
+    if (settings.vibrationEnabled) {
+      vibrateSuccess();
+    }
   };
 
   const pause = () => {
