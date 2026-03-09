@@ -17,6 +17,7 @@ import { useKeyboardShortcuts } from "@/hooks/useKeyboardShortcuts";
 import KeyboardShortcutsHelp from "@/components/KeyboardShortcutsHelp";
 import BottomNav from "@/components/BottomNav";
 import MiniPlayer from "@/components/MiniPlayer";
+import OfflineIndicator from "@/components/OfflineIndicator";
 import Home from "@/pages/Home";
 import Session from "@/pages/Session";
 import Techniques from "@/pages/Techniques";
