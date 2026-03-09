@@ -60,12 +60,25 @@ export default function Settings() {
     if (!file) return;
     const reader = new FileReader();
     reader.onload = () => {
-      try {
-        importData(reader.result as string);
-        toast({ title: t("settings.dataImported") });
+      const content = reader.result as string;
+      const validation = validateImportData(content);
+      
+      if (!validation.success) {
+        const errorMessage = validation.errors.map(err => t(err)).join(", ");
+        toast({ title: t("settings.invalidFile"), description: errorMessage, variant: "destructive" });
+        return;
+      }
+      
+      const result = importDataSmart(content, true);
+      if (result.success) {
+        const msg = result.stats 
+          ? t("import.success", { new: result.stats.newSessions, duplicates: result.stats.duplicates })
+          : t("settings.dataImported");
+        toast({ title: msg });
         window.location.reload();
-      } catch {
-        toast({ title: t("settings.invalidFile"), variant: "destructive" });
+      } else {
+        const errorMessage = result.errors.map(err => t(err)).join(", ");
+        toast({ title: t("settings.invalidFile"), description: errorMessage, variant: "destructive" });
       }
     };
     reader.readAsText(file);

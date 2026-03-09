@@ -34,6 +34,7 @@ const queryClient = new QueryClient();
 function AppInner() {
   const { settings } = useSettings();
   const navigate = useNavigate();
+  const { t } = useLanguage();
   const [incomingChallenge, setIncomingChallenge] = useState<FriendChallengeParams | null>(null);
   const [showAcceptDialog, setShowAcceptDialog] = useState(false);
   const [showShortcuts, setShowShortcuts] = useState(false);
