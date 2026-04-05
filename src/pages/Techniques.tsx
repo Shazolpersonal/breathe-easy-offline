@@ -137,7 +137,12 @@ export default function Techniques() {
     <div className="min-h-screen px-4 pb-24 pt-12">
       <div className="mx-auto max-w-md">
         <div className="mb-4 flex items-center justify-between">
-          <h1 className="text-2xl font-bold text-foreground">{t("techniques.title")}</h1>
+          <div className="flex items-center gap-2">
+            <h1 className="text-2xl font-bold text-foreground">{t("techniques.title")}</h1>
+            <span className="rounded-full bg-primary/15 px-2.5 py-0.5 text-xs font-medium text-primary">
+              {t("techniques.count", { count: String(allTechniques.length) })}
+            </span>
+          </div>
           <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
             <DialogTrigger asChild>
               <Button size="sm" variant="secondary" className="gap-1">

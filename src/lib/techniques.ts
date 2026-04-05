@@ -82,6 +82,92 @@ export const PRESET_TECHNIQUES: BreathingTechnique[] = [
       { type: "exhale", duration: 2, label: "Let Go" },
     ],
   },
+  {
+    id: "physiological-sigh",
+    name: "Physiological Sigh",
+    description: "Stanford-researched double inhale followed by a long exhale. The fastest way to calm down in real-time.",
+    benefits: ["Instant calm", "Reduces CO₂", "Science-backed"],
+    difficulty: "beginner",
+    phases: [
+      { type: "inhale", duration: 2, label: "Inhale 1" },
+      { type: "inhale", duration: 1, label: "Inhale 2" },
+      { type: "exhale", duration: 6, label: "Long Exhale" },
+    ],
+  },
+  {
+    id: "resonant-breathing",
+    name: "Resonant Breathing",
+    description: "5.5 breaths per minute — the ideal rate for heart rate variability and nervous system balance.",
+    benefits: ["Maximizes HRV", "Deep relaxation", "Emotional balance"],
+    difficulty: "intermediate",
+    phases: [
+      { type: "inhale", duration: 5.5, label: "Breathe In" },
+      { type: "exhale", duration: 5.5, label: "Breathe Out" },
+    ],
+  },
+  {
+    id: "alternate-nostril",
+    name: "Alternate Nostril (Nadi Shodhana)",
+    description: "Ancient yogic technique. Balances left and right brain hemispheres for mental clarity.",
+    benefits: ["Balances hemispheres", "Reduces anxiety", "Enhances focus"],
+    difficulty: "intermediate",
+    phases: [
+      { type: "inhale", duration: 4, label: "Left Nostril In" },
+      { type: "hold", duration: 4, label: "Hold" },
+      { type: "exhale", duration: 4, label: "Right Nostril Out" },
+      { type: "inhale", duration: 4, label: "Right Nostril In" },
+      { type: "hold", duration: 4, label: "Hold" },
+      { type: "exhale", duration: 4, label: "Left Nostril Out" },
+    ],
+  },
+  {
+    id: "diaphragmatic",
+    name: "Diaphragmatic Breathing",
+    description: "Deep belly breathing that strengthens the diaphragm. Foundation of all breathing practices.",
+    benefits: ["Strengthens diaphragm", "Lowers blood pressure", "Improves core stability"],
+    difficulty: "beginner",
+    phases: [
+      { type: "inhale", duration: 4, label: "Belly Rise" },
+      { type: "exhale", duration: 6, label: "Belly Fall" },
+    ],
+  },
+  {
+    id: "pursed-lip",
+    name: "Pursed Lip Breathing",
+    description: "Medical-grade technique for COPD and asthma patients. Slows breathing rate and improves ventilation.",
+    benefits: ["Opens airways", "Reduces breathlessness", "Medical-grade"],
+    difficulty: "beginner",
+    phases: [
+      { type: "inhale", duration: 2, label: "Nose Inhale" },
+      { type: "exhale", duration: 4, label: "Pursed Exhale" },
+    ],
+  },
+  {
+    id: "energizing-breath",
+    name: "Energizing Breath (2-1-4-1)",
+    description: "Quick inhale, short hold, longer exhale pattern. Activates the sympathetic system for alertness.",
+    benefits: ["Increases alertness", "Morning energizer", "Sharpens mind"],
+    difficulty: "intermediate",
+    phases: [
+      { type: "inhale", duration: 2, label: "Quick Inhale" },
+      { type: "hold", duration: 1, label: "Hold" },
+      { type: "exhale", duration: 4, label: "Controlled Exhale" },
+      { type: "hold-after-exhale", duration: 1, label: "Hold" },
+    ],
+  },
+  {
+    id: "4-4-6-2",
+    name: "Sleep Breath (4-4-6-2)",
+    description: "Optimized for falling asleep. Extended exhale with brief pause creates a gentle lulling rhythm.",
+    benefits: ["Promotes deep sleep", "Reduces racing thoughts", "Gentle rhythm"],
+    difficulty: "beginner",
+    phases: [
+      { type: "inhale", duration: 4, label: "Breathe In" },
+      { type: "hold", duration: 4, label: "Hold" },
+      { type: "exhale", duration: 6, label: "Slow Exhale" },
+      { type: "hold-after-exhale", duration: 2, label: "Rest" },
+    ],
+  },
 ];
 
 export function getTechniqueById(id: string, customTechniques: BreathingTechnique[] = []): BreathingTechnique | undefined {

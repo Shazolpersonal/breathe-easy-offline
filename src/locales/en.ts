@@ -92,6 +92,48 @@ export const en: Record<string, string> = {
   "technique.wim-hof.benefits.1": "Strengthens immunity",
   "technique.wim-hof.benefits.2": "Increases willpower",
 
+  "technique.physiological-sigh.name": "Physiological Sigh",
+  "technique.physiological-sigh.description": "Stanford-researched double inhale followed by a long exhale. The fastest way to calm down in real-time.",
+  "technique.physiological-sigh.benefits.0": "Instant calm",
+  "technique.physiological-sigh.benefits.1": "Reduces CO₂",
+  "technique.physiological-sigh.benefits.2": "Science-backed",
+
+  "technique.resonant-breathing.name": "Resonant Breathing",
+  "technique.resonant-breathing.description": "5.5 breaths per minute — the ideal rate for heart rate variability and nervous system balance.",
+  "technique.resonant-breathing.benefits.0": "Maximizes HRV",
+  "technique.resonant-breathing.benefits.1": "Deep relaxation",
+  "technique.resonant-breathing.benefits.2": "Emotional balance",
+
+  "technique.alternate-nostril.name": "Alternate Nostril (Nadi Shodhana)",
+  "technique.alternate-nostril.description": "Ancient yogic technique. Balances left and right brain hemispheres for mental clarity.",
+  "technique.alternate-nostril.benefits.0": "Balances hemispheres",
+  "technique.alternate-nostril.benefits.1": "Reduces anxiety",
+  "technique.alternate-nostril.benefits.2": "Enhances focus",
+
+  "technique.diaphragmatic.name": "Diaphragmatic Breathing",
+  "technique.diaphragmatic.description": "Deep belly breathing that strengthens the diaphragm. Foundation of all breathing practices.",
+  "technique.diaphragmatic.benefits.0": "Strengthens diaphragm",
+  "technique.diaphragmatic.benefits.1": "Lowers blood pressure",
+  "technique.diaphragmatic.benefits.2": "Improves core stability",
+
+  "technique.pursed-lip.name": "Pursed Lip Breathing",
+  "technique.pursed-lip.description": "Medical-grade technique for COPD and asthma patients. Slows breathing rate and improves ventilation.",
+  "technique.pursed-lip.benefits.0": "Opens airways",
+  "technique.pursed-lip.benefits.1": "Reduces breathlessness",
+  "technique.pursed-lip.benefits.2": "Medical-grade",
+
+  "technique.energizing-breath.name": "Energizing Breath (2-1-4-1)",
+  "technique.energizing-breath.description": "Quick inhale, short hold, longer exhale pattern. Activates the sympathetic system for alertness.",
+  "technique.energizing-breath.benefits.0": "Increases alertness",
+  "technique.energizing-breath.benefits.1": "Morning energizer",
+  "technique.energizing-breath.benefits.2": "Sharpens mind",
+
+  "technique.4-4-6-2.name": "Sleep Breath (4-4-6-2)",
+  "technique.4-4-6-2.description": "Optimized for falling asleep. Extended exhale with brief pause creates a gentle lulling rhythm.",
+  "technique.4-4-6-2.benefits.0": "Promotes deep sleep",
+  "technique.4-4-6-2.benefits.1": "Reduces racing thoughts",
+  "technique.4-4-6-2.benefits.2": "Gentle rhythm",
+
   // Difficulty
   "difficulty.beginner": "beginner",
   "difficulty.intermediate": "intermediate",
@@ -99,6 +141,7 @@ export const en: Record<string, string> = {
 
   // Techniques page
   "techniques.title": "Techniques",
+  "techniques.count": "{{count}} techniques",
   "techniques.custom": "Custom",
   "techniques.createCustom": "Create Custom Technique",
   "techniques.name": "Name",
