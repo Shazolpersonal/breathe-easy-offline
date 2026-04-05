@@ -141,6 +141,7 @@ export const en: Record<string, string> = {
 
   // Techniques page
   "techniques.title": "Techniques",
+  "techniques.count": "{{count}} techniques",
   "techniques.custom": "Custom",
   "techniques.createCustom": "Create Custom Technique",
   "techniques.name": "Name",
