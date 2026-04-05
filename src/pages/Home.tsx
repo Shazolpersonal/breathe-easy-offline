@@ -47,7 +47,7 @@ export default function Home() {
   const allCompleteToastShown = useRef(false);
   const lastSession = useMemo(() => getLastSessionConfig(), []);
 
-  // Save challenge progress & show all-complete celebration
+  // Save challenge progress & show all-complete celebration (run once on mount)
   useEffect(() => {
     saveTodayChallengeProgress();
     if (areAllChallengesComplete() && !allCompleteToastShown.current) {
@@ -59,7 +59,20 @@ export default function Home() {
         toast.success(t("challenge.allComplete"));
       }
     }
-  });
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Calculate time until daily reset (midnight)
+  const timeUntilReset = useMemo(() => {
+    const now = new Date();
+    const midnight = new Date(now);
+    midnight.setHours(24, 0, 0, 0);
+    const diff = midnight.getTime() - now.getTime();
+    const hours = Math.floor(diff / 3600000);
+    const minutes = Math.floor((diff % 3600000) / 60000);
+    return { hours, minutes };
+  }, []);
+
+  const completedCount = useMemo(() => dailyChallenges.filter(c => c.getProgress() >= c.target).length, [dailyChallenges]);
 
   const hour = new Date().getHours();
   const greeting =
@@ -232,9 +245,8 @@ export default function Home() {
           <Progress value={xpState.progressToNext} className="h-2" />
         </div>
 
-        {/* Daily Challenges */}
         <div className="mb-6 rounded-2xl border border-border bg-card p-4">
-          <div className="flex items-center justify-between mb-3">
+          <div className="flex items-center justify-between mb-1">
             <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">{t("home.dailyChallenges")}</h2>
             {challengeStreak >= 2 && (
               <span className="flex items-center gap-1 text-xs font-medium text-primary">
@@ -243,29 +255,48 @@ export default function Home() {
               </span>
             )}
           </div>
-          <div className="space-y-2.5">
+          <div className="flex items-center justify-between mb-3">
+            <span className="text-xs text-muted-foreground">
+              {t("challenge.completedCount", { done: completedCount, total: dailyChallenges.length })}
+            </span>
+            <span className="text-[10px] text-muted-foreground/70">
+              {t("challenge.resetsIn", { hours: timeUntilReset.hours, minutes: timeUntilReset.minutes })}
+            </span>
+          </div>
+          <div className="space-y-3">
             {dailyChallenges.map((c) => {
               const progress = c.getProgress();
               const done = progress >= c.target;
+              const pct = Math.min(100, Math.round((progress / c.target) * 100));
               const tierColor = c.tier === "hard" ? "text-destructive" : c.tier === "medium" ? "text-primary" : "text-muted-foreground";
+              const barColor = done ? "bg-primary" : c.tier === "hard" ? "bg-destructive/60" : c.tier === "medium" ? "bg-primary/60" : "bg-muted-foreground/40";
               return (
-                <div key={c.id} className="flex items-center gap-3">
-                  {done ? (
-                    <CheckCircle2 className="h-5 w-5 shrink-0 text-primary" />
-                  ) : (
-                    <Circle className="h-5 w-5 shrink-0 text-muted-foreground/40" />
-                  )}
-                  <div className="flex-1 min-w-0">
-                    <span className={`text-sm ${done ? "text-primary font-medium line-through" : "text-foreground"}`}>
-                      {c.emoji} {t(`challenge.${c.title}`)}
-                    </span>
-                    <span className={`ml-1.5 text-[10px] uppercase font-medium ${tierColor}`}>
-                      {t(`challenge.tier.${c.tier}`)}
+                <div key={c.id} className={`rounded-xl p-2.5 transition-all duration-300 ${done ? "bg-primary/5 border border-primary/20" : "bg-secondary/30"}`}>
+                  <div className="flex items-center gap-3 mb-1.5">
+                    {done ? (
+                      <CheckCircle2 className="h-5 w-5 shrink-0 text-primary animate-in zoom-in-50 duration-300" />
+                    ) : (
+                      <Circle className="h-5 w-5 shrink-0 text-muted-foreground/40" />
+                    )}
+                    <div className="flex-1 min-w-0">
+                      <span className={`text-sm ${done ? "text-primary font-medium" : "text-foreground"}`}>
+                        {c.emoji} {t(`challenge.${c.title}`)}
+                      </span>
+                      <span className={`ml-1.5 text-[10px] uppercase font-medium ${tierColor}`}>
+                        {t(`challenge.tier.${c.tier}`)}
+                      </span>
+                    </div>
+                    <span className="text-xs tabular-nums text-muted-foreground font-medium">
+                      {Math.min(progress, c.target)}/{c.target}{c.unit ? ` ${t(`challenge.unit.${c.unit}`)}` : ""}
                     </span>
                   </div>
-                  <span className="text-xs tabular-nums text-muted-foreground">
-                    {Math.min(progress, c.target)}/{c.target}
-                  </span>
+                  {/* Progress bar */}
+                  <div className="ml-8 h-1.5 rounded-full bg-muted overflow-hidden">
+                    <div
+                      className={`h-full rounded-full transition-all duration-500 ${barColor}`}
+                      style={{ width: `${pct}%` }}
+                    />
+                  </div>
                 </div>
               );
             })}

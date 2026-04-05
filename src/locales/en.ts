@@ -450,6 +450,14 @@ export const en: Record<string, string> = {
   "challenge.tier.easy": "Easy",
   "challenge.tier.medium": "Medium",
   "challenge.tier.hard": "Hard",
+  "challenge.resetsIn": "Resets in {{hours}}h {{minutes}}m",
+  "challenge.completed": "✅ Challenge complete!",
+  "challenge.unit.sessions": "sessions",
+  "challenge.unit.min": "min",
+  "challenge.unit.cycles": "cycles",
+  "challenge.unit.techniques": "techniques",
+  "challenge.completedCount": "{{done}}/{{total}} completed",
+  "challenge.adaptiveNote": "Target: {{target}} {{unit}} (adapted to you)",
 
   // Smart suggestions
   "suggestion.morning.noSession": "Good morning! Start your day with energizing breath work.",

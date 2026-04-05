@@ -450,6 +450,14 @@ export const bn: Record<string, string> = {
   "challenge.tier.easy": "সহজ",
   "challenge.tier.medium": "মাঝারি",
   "challenge.tier.hard": "কঠিন",
+  "challenge.resetsIn": "{{hours}}ঘ {{minutes}}মি পরে রিসেট",
+  "challenge.completed": "✅ চ্যালেঞ্জ সম্পন্ন!",
+  "challenge.unit.sessions": "সেশন",
+  "challenge.unit.min": "মিনিট",
+  "challenge.unit.cycles": "চক্র",
+  "challenge.unit.techniques": "কৌশল",
+  "challenge.completedCount": "{{done}}/{{total}} সম্পন্ন",
+  "challenge.adaptiveNote": "লক্ষ্য: {{target}} {{unit}} (আপনার জন্য অভিযোজিত)",
 
   // Smart suggestions
   "suggestion.morning.noSession": "সুপ্রভাত! শক্তিদায়ক শ্বাস-প্রশ্বাস দিয়ে দিন শুরু করুন।",
