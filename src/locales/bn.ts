@@ -141,6 +141,7 @@ export const bn: Record<string, string> = {
 
   // Techniques page
   "techniques.title": "কৌশল",
+  "techniques.count": "{{count}}টি কৌশল",
   "techniques.custom": "কাস্টম",
   "techniques.createCustom": "কাস্টম কৌশল তৈরি করুন",
   "techniques.name": "নাম",
