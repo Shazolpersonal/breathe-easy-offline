@@ -92,6 +92,48 @@ export const bn: Record<string, string> = {
   "technique.wim-hof.benefits.1": "রোগ প্রতিরোধ ক্ষমতা শক্তিশালী করে",
   "technique.wim-hof.benefits.2": "ইচ্ছাশক্তি বাড়ায়",
 
+  "technique.physiological-sigh.name": "ফিজিওলজিক্যাল সাই",
+  "technique.physiological-sigh.description": "স্ট্যানফোর্ড গবেষিত ডাবল শ্বাস নেওয়ার পর দীর্ঘ নিঃশ্বাস। তাৎক্ষণিক শান্ত হওয়ার দ্রুততম উপায়।",
+  "technique.physiological-sigh.benefits.0": "তাৎক্ষণিক শান্তি",
+  "technique.physiological-sigh.benefits.1": "CO₂ কমায়",
+  "technique.physiological-sigh.benefits.2": "বিজ্ঞান-ভিত্তিক",
+
+  "technique.resonant-breathing.name": "রেজোন্যান্ট ব্রিদিং",
+  "technique.resonant-breathing.description": "প্রতি মিনিটে ৫.৫ শ্বাস — হার্ট রেট ভেরিয়েবিলিটি ও স্নায়ুতন্ত্রের ভারসাম্যের জন্য আদর্শ হার।",
+  "technique.resonant-breathing.benefits.0": "HRV সর্বোচ্চ করে",
+  "technique.resonant-breathing.benefits.1": "গভীর শিথিলতা",
+  "technique.resonant-breathing.benefits.2": "আবেগের ভারসাম্য",
+
+  "technique.alternate-nostril.name": "অল্টারনেট নস্ট্রিল (নাড়ী শোধন)",
+  "technique.alternate-nostril.description": "প্রাচীন যোগ কৌশল। মানসিক স্বচ্ছতার জন্য বাম ও ডান মস্তিষ্কের ভারসাম্য করে।",
+  "technique.alternate-nostril.benefits.0": "মস্তিষ্কের ভারসাম্য",
+  "technique.alternate-nostril.benefits.1": "উদ্বেগ কমায়",
+  "technique.alternate-nostril.benefits.2": "মনোযোগ বাড়ায়",
+
+  "technique.diaphragmatic.name": "ডায়াফ্রাম্যাটিক ব্রিদিং",
+  "technique.diaphragmatic.description": "গভীর পেটের শ্বাস যা ডায়াফ্রাম শক্তিশালী করে। সব শ্বাস অনুশীলনের ভিত্তি।",
+  "technique.diaphragmatic.benefits.0": "ডায়াফ্রাম শক্তিশালী করে",
+  "technique.diaphragmatic.benefits.1": "রক্তচাপ কমায়",
+  "technique.diaphragmatic.benefits.2": "কোর স্থিতিশীলতা বাড়ায়",
+
+  "technique.pursed-lip.name": "পার্সড লিপ ব্রিদিং",
+  "technique.pursed-lip.description": "COPD ও হাঁপানি রোগীদের জন্য চিকিৎসা-মানের কৌশল। শ্বাসের হার কমায় ও বায়ুচলাচল উন্নত করে।",
+  "technique.pursed-lip.benefits.0": "শ্বাসনালী খোলে",
+  "technique.pursed-lip.benefits.1": "শ্বাসকষ্ট কমায়",
+  "technique.pursed-lip.benefits.2": "চিকিৎসা-মানের",
+
+  "technique.energizing-breath.name": "এনার্জাইজিং ব্রিদ (২-১-৪-১)",
+  "technique.energizing-breath.description": "দ্রুত শ্বাস, সংক্ষিপ্ত ধারণ, দীর্ঘ নিঃশ্বাস। সজাগতার জন্য সিম্প্যাথেটিক সিস্টেম সক্রিয় করে।",
+  "technique.energizing-breath.benefits.0": "সজাগতা বাড়ায়",
+  "technique.energizing-breath.benefits.1": "সকালের শক্তিদায়ক",
+  "technique.energizing-breath.benefits.2": "মন তীক্ষ্ণ করে",
+
+  "technique.4-4-6-2.name": "স্লিপ ব্রিদ (৪-৪-৬-২)",
+  "technique.4-4-6-2.description": "ঘুমানোর জন্য অপ্টিমাইজড। দীর্ঘ নিঃশ্বাস ও সংক্ষিপ্ত বিরতি একটি মৃদু ছন্দ তৈরি করে।",
+  "technique.4-4-6-2.benefits.0": "গভীর ঘুম বাড়ায়",
+  "technique.4-4-6-2.benefits.1": "দৌড়ানো চিন্তা কমায়",
+  "technique.4-4-6-2.benefits.2": "মৃদু ছন্দ",
+
   // Difficulty
   "difficulty.beginner": "সহজ",
   "difficulty.intermediate": "মাঝারি",
