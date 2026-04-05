@@ -47,7 +47,7 @@ export default function Home() {
   const allCompleteToastShown = useRef(false);
   const lastSession = useMemo(() => getLastSessionConfig(), []);
 
-  // Save challenge progress & show all-complete celebration
+  // Save challenge progress & show all-complete celebration (run once on mount)
   useEffect(() => {
     saveTodayChallengeProgress();
     if (areAllChallengesComplete() && !allCompleteToastShown.current) {
@@ -59,7 +59,20 @@ export default function Home() {
         toast.success(t("challenge.allComplete"));
       }
     }
-  });
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Calculate time until daily reset (midnight)
+  const timeUntilReset = useMemo(() => {
+    const now = new Date();
+    const midnight = new Date(now);
+    midnight.setHours(24, 0, 0, 0);
+    const diff = midnight.getTime() - now.getTime();
+    const hours = Math.floor(diff / 3600000);
+    const minutes = Math.floor((diff % 3600000) / 60000);
+    return { hours, minutes };
+  }, []);
+
+  const completedCount = useMemo(() => dailyChallenges.filter(c => c.getProgress() >= c.target).length, [dailyChallenges]);
 
   const hour = new Date().getHours();
   const greeting =
