@@ -1,9 +1,10 @@
-import { BookOpen, Wind, Zap, Trophy, Keyboard, Shield, Accessibility, HelpCircle, ListMusic, GraduationCap, Palette, Heart } from "lucide-react";
+import { BookOpen, Wind, Zap, Trophy, Keyboard, Shield, Accessibility, HelpCircle, ListMusic, GraduationCap, Palette, Heart, Clock, Target, Sparkles, Database, Search } from "lucide-react";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { useState, useMemo } from "react";
 
 function SectionIcon({ icon: Icon, label }: { icon: React.ElementType; label: string }) {
   return (
@@ -21,17 +22,24 @@ function TechniqueTable() {
     { nameKey: "guide.tech.478", patternKey: "guide.tech.478.pattern", diffKey: "guide.tech.478.diff", bestKey: "guide.tech.478.best" },
     { nameKey: "guide.tech.calm", patternKey: "guide.tech.calm.pattern", diffKey: "guide.tech.calm.diff", bestKey: "guide.tech.calm.best" },
     { nameKey: "guide.tech.equal", patternKey: "guide.tech.equal.pattern", diffKey: "guide.tech.equal.diff", bestKey: "guide.tech.equal.best" },
+    { nameKey: "guide.tech.physSigh", patternKey: "guide.tech.physSigh.pattern", diffKey: "guide.tech.physSigh.diff", bestKey: "guide.tech.physSigh.best" },
+    { nameKey: "guide.tech.resonant", patternKey: "guide.tech.resonant.pattern", diffKey: "guide.tech.resonant.diff", bestKey: "guide.tech.resonant.best" },
+    { nameKey: "guide.tech.alternate", patternKey: "guide.tech.alternate.pattern", diffKey: "guide.tech.alternate.diff", bestKey: "guide.tech.alternate.best" },
+    { nameKey: "guide.tech.diaphragmatic", patternKey: "guide.tech.diaphragmatic.pattern", diffKey: "guide.tech.diaphragmatic.diff", bestKey: "guide.tech.diaphragmatic.best" },
+    { nameKey: "guide.tech.pursedLip", patternKey: "guide.tech.pursedLip.pattern", diffKey: "guide.tech.pursedLip.diff", bestKey: "guide.tech.pursedLip.best" },
+    { nameKey: "guide.tech.energizing", patternKey: "guide.tech.energizing.pattern", diffKey: "guide.tech.energizing.diff", bestKey: "guide.tech.energizing.best" },
+    { nameKey: "guide.tech.sleep", patternKey: "guide.tech.sleep.pattern", diffKey: "guide.tech.sleep.diff", bestKey: "guide.tech.sleep.best" },
     { nameKey: "guide.tech.wim", patternKey: "guide.tech.wim.pattern", diffKey: "guide.tech.wim.diff", bestKey: "guide.tech.wim.best" },
   ];
 
   return (
-    <div className="overflow-x-auto">
+    <div className="overflow-x-auto -mx-1">
       <table className="w-full text-sm">
         <thead>
           <tr className="border-b border-border text-left">
-            <th className="pb-2 pr-4 font-semibold text-foreground">{t("guide.table.technique")}</th>
-            <th className="pb-2 pr-4 font-semibold text-foreground">{t("guide.table.pattern")}</th>
-            <th className="pb-2 pr-4 font-semibold text-foreground">{t("guide.table.level")}</th>
+            <th className="pb-2 pr-3 font-semibold text-foreground">{t("guide.table.technique")}</th>
+            <th className="pb-2 pr-3 font-semibold text-foreground">{t("guide.table.pattern")}</th>
+            <th className="pb-2 pr-3 font-semibold text-foreground">{t("guide.table.level")}</th>
             <th className="pb-2 font-semibold text-foreground">{t("guide.table.bestFor")}</th>
           </tr>
         </thead>
@@ -39,16 +47,20 @@ function TechniqueTable() {
           {techniques.map((tech) => {
             const diff = t(tech.diffKey);
             const isAdvanced = diff === "Advanced" || diff === "উন্নত";
+            const isIntermediate = diff === "Intermediate" || diff === "মাঝারি";
             return (
               <tr key={tech.nameKey}>
-                <td className="py-2 pr-4 font-medium text-foreground">{t(tech.nameKey)}</td>
-                <td className="py-2 pr-4 font-mono text-xs text-muted-foreground">{t(tech.patternKey)}</td>
-                <td className="py-2 pr-4">
-                  <Badge variant={isAdvanced ? "destructive" : "secondary"} className="text-xs">
+                <td className="py-2 pr-3 font-medium text-foreground text-xs">{t(tech.nameKey)}</td>
+                <td className="py-2 pr-3 font-mono text-[10px] text-muted-foreground">{t(tech.patternKey)}</td>
+                <td className="py-2 pr-3">
+                  <Badge
+                    variant={isAdvanced ? "destructive" : "secondary"}
+                    className={`text-[10px] ${isIntermediate ? "border-amber-500/50 text-amber-600 dark:text-amber-400" : ""}`}
+                  >
                     {diff}
                   </Badge>
                 </td>
-                <td className="py-2 text-muted-foreground">{t(tech.bestKey)}</td>
+                <td className="py-2 text-muted-foreground text-xs">{t(tech.bestKey)}</td>
               </tr>
             );
           })}
@@ -140,8 +152,84 @@ function InfoBlock({ title, children }: { title: string; children: React.ReactNo
   );
 }
 
+// Quick navigation links at top
+function QuickNav({ onJump }: { onJump: (id: string) => void }) {
+  const { t } = useLanguage();
+  const sections = [
+    { id: "getting-started", icon: "⚡", labelKey: "guide.gettingStarted" },
+    { id: "techniques", icon: "🌬️", labelKey: "guide.techniques" },
+    { id: "sessions", icon: "❤️", labelKey: "guide.sessions" },
+    { id: "smart-features", icon: "✨", labelKey: "guide.smartFeatures" },
+    { id: "progress", icon: "🏆", labelKey: "guide.progress" },
+    { id: "data-backup", icon: "💾", labelKey: "guide.dataBackup" },
+    { id: "faq", icon: "❓", labelKey: "guide.faq" },
+  ];
+
+  return (
+    <div className="flex flex-wrap gap-1.5 mb-4">
+      {sections.map((s) => (
+        <button
+          key={s.id}
+          onClick={() => onJump(s.id)}
+          className="inline-flex items-center gap-1 rounded-full border border-border bg-secondary/40 px-2.5 py-1 text-xs text-foreground hover:bg-primary/10 hover:border-primary/40 transition-colors"
+        >
+          <span>{s.icon}</span>
+          <span>{t(s.labelKey)}</span>
+        </button>
+      ))}
+    </div>
+  );
+}
+
 export default function Guide() {
   const { t } = useLanguage();
+  const [searchQuery, setSearchQuery] = useState("");
+
+  // All section IDs for accordion
+  const ALL_SECTIONS = [
+    "getting-started", "techniques", "sessions", "custom", "playlists",
+    "programs", "smart-features", "progress", "shortcuts", "data-backup",
+    "privacy", "accessibility", "faq"
+  ];
+
+  // Search filter — if user is searching, auto-expand matching sections
+  const filteredSections = useMemo(() => {
+    if (!searchQuery.trim()) return null; // null = show all, don't force open
+    const q = searchQuery.toLowerCase();
+    // We match section IDs based on their content keywords
+    const sectionKeywords: Record<string, string[]> = {
+      "getting-started": ["start", "install", "pwa", "first", "শুরু", "ইনস্টল", "প্রথম"],
+      "techniques": ["technique", "breathing", "box", "478", "calm", "wim", "sigh", "resonant", "nostril", "diaphragm", "pursed", "sleep", "কৌশল", "শ্বাস", "বক্স"],
+      "sessions": ["session", "zen", "voice", "sound", "heart", "calm score", "visual", "সেশন", "জেন", "ভয়েস", "হার্ট"],
+      "custom": ["custom", "pyramid", "create", "কাস্টম", "পিরামিড", "তৈরি"],
+      "playlists": ["playlist", "chain", "প্লেলিস্ট"],
+      "programs": ["program", "stress", "sleep", "focus", "প্রোগ্রাম", "চাপ", "ঘুম", "ফোকাস"],
+      "smart-features": ["smart", "wake", "goal", "resume", "recovery", "finish", "streak freeze", "suggestion", "weekly", "স্মার্ট", "লক্ষ্য", "পুনরায়"],
+      "progress": ["xp", "level", "badge", "streak", "mood", "challenge", "insight", "অগ্রগতি", "স্তর", "ব্যাজ", "ধারা", "মুড"],
+      "shortcuts": ["keyboard", "shortcut", "key", "কীবোর্ড", "শর্টকাট"],
+      "data-backup": ["backup", "export", "import", "csv", "clipboard", "auto-backup", "ব্যাকআপ", "এক্সপোর্ট", "ইমপোর্ট"],
+      "privacy": ["privacy", "local", "offline", "data", "গোপনীয়তা", "লোকাল", "অফলাইন"],
+      "accessibility": ["accessibility", "contrast", "large text", "motion", "অ্যাক্সেসিবিলিটি", "কনট্রাস্ট"],
+      "faq": ["faq", "question", "free", "প্রশ্ন", "বিনামূল্যে"],
+    };
+    return ALL_SECTIONS.filter((id) =>
+      sectionKeywords[id]?.some((kw) => kw.includes(q) || q.includes(kw))
+    );
+  }, [searchQuery]);
+
+  const openSections = filteredSections ?? undefined;
+
+  const handleJump = (id: string) => {
+    const el = document.querySelector(`[data-value="${id}"]`) as HTMLElement | null;
+    if (el) {
+      el.scrollIntoView({ behavior: "smooth", block: "start" });
+      // Trigger click on the trigger to open
+      const trigger = el.querySelector("button") as HTMLButtonElement | null;
+      if (trigger && el.getAttribute("data-state") !== "open") {
+        trigger.click();
+      }
+    }
+  };
 
   return (
     <div className="min-h-screen bg-background pb-24">
@@ -150,17 +238,37 @@ export default function Guide() {
         <div className="flex items-center gap-3 mb-1">
           <BookOpen className="h-7 w-7 text-primary" />
           <h1 className="text-2xl font-bold text-foreground tracking-tight">{t("guide.title")}</h1>
+          <Badge variant="outline" className="text-[10px] ml-auto">{t("guide.version")}</Badge>
         </div>
-        <p className="text-muted-foreground text-sm">{t("guide.subtitle")}</p>
+        <p className="text-muted-foreground text-sm mb-4">{t("guide.subtitle")}</p>
+
+        {/* Search */}
+        <div className="relative mb-3">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder={t("guide.searchPlaceholder")}
+            className="w-full rounded-xl border border-border bg-secondary/30 py-2.5 pl-9 pr-4 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30"
+          />
+        </div>
+
+        {/* Quick Nav */}
+        <QuickNav onJump={handleJump} />
       </div>
 
       <Separator className="max-w-2xl mx-auto" />
 
       <div className="px-4 pt-4 max-w-2xl mx-auto">
-        <Accordion type="multiple" className="space-y-1">
+        <Accordion
+          type="multiple"
+          className="space-y-1"
+          {...(openSections ? { value: openSections } : {})}
+        >
 
           {/* 1. Getting Started */}
-          <AccordionItem value="getting-started" className="border-border rounded-lg border px-4">
+          <AccordionItem value="getting-started" className="border-border rounded-lg border px-4" data-value="getting-started">
             <AccordionTrigger className="hover:no-underline">
               <SectionIcon icon={Zap} label={t("guide.gettingStarted")} />
             </AccordionTrigger>
@@ -187,8 +295,8 @@ export default function Guide() {
             </AccordionContent>
           </AccordionItem>
 
-          {/* 2. Breathing Techniques */}
-          <AccordionItem value="techniques" className="border-border rounded-lg border px-4">
+          {/* 2. Breathing Techniques — now 12 */}
+          <AccordionItem value="techniques" className="border-border rounded-lg border px-4" data-value="techniques">
             <AccordionTrigger className="hover:no-underline">
               <SectionIcon icon={Wind} label={t("guide.techniques")} />
             </AccordionTrigger>
@@ -206,18 +314,22 @@ export default function Guide() {
                   <p className="text-sm text-muted-foreground">
                     {t("guide.difficultyDesc1")}{" "}
                     <Badge variant="secondary" className="text-xs">{t("guide.diffBeginner")}</Badge>,{" "}
-                    <Badge variant="secondary" className="text-xs">{t("guide.diffIntermediate")}</Badge>,{" "}
+                    <Badge variant="secondary" className="text-xs border-amber-500/50 text-amber-600 dark:text-amber-400">{t("guide.diffIntermediate")}</Badge>,{" "}
                     {t("guide.diffOr")}{" "}
                     <Badge variant="destructive" className="text-xs">{t("guide.diffAdvanced")}</Badge>.{" "}
                     {t("guide.difficultyDesc2")}
                   </p>
+                </div>
+                <div>
+                  <h4 className="font-semibold text-foreground mb-1">{t("guide.choosingTechnique")}</h4>
+                  <p className="text-sm text-muted-foreground">{t("guide.choosingTechniqueDesc")}</p>
                 </div>
               </div>
             </AccordionContent>
           </AccordionItem>
 
           {/* 3. Sessions */}
-          <AccordionItem value="sessions" className="border-border rounded-lg border px-4">
+          <AccordionItem value="sessions" className="border-border rounded-lg border px-4" data-value="sessions">
             <AccordionTrigger className="hover:no-underline">
               <SectionIcon icon={Heart} label={t("guide.sessions")} />
             </AccordionTrigger>
@@ -246,17 +358,27 @@ export default function Guide() {
                   <InfoBlock title={`📊 ${t("guide.calmScore")}`}>
                     <p>{t("guide.calmScoreDesc")}</p>
                   </InfoBlock>
+                  <InfoBlock title={`⏱️ ${t("guide.estimatedFinish")}`}>
+                    <p>{t("guide.estimatedFinishDesc")}</p>
+                  </InfoBlock>
+                  <InfoBlock title={`🫁 ${t("guide.breathingRate")}`}>
+                    <p>{t("guide.breathingRateDesc")}</p>
+                  </InfoBlock>
                 </div>
                 <div>
                   <h4 className="font-semibold text-foreground mb-1">{t("guide.visualizations")}</h4>
                   <p className="text-sm text-muted-foreground">{t("guide.visualizationsDesc")}</p>
+                </div>
+                <div>
+                  <h4 className="font-semibold text-foreground mb-1">{t("guide.postSession")}</h4>
+                  <p className="text-sm text-muted-foreground">{t("guide.postSessionDesc")}</p>
                 </div>
               </div>
             </AccordionContent>
           </AccordionItem>
 
           {/* 4. Custom Techniques */}
-          <AccordionItem value="custom" className="border-border rounded-lg border px-4">
+          <AccordionItem value="custom" className="border-border rounded-lg border px-4" data-value="custom">
             <AccordionTrigger className="hover:no-underline">
               <SectionIcon icon={Palette} label={t("guide.customTech")} />
             </AccordionTrigger>
@@ -277,7 +399,7 @@ export default function Guide() {
           </AccordionItem>
 
           {/* 5. Playlists */}
-          <AccordionItem value="playlists" className="border-border rounded-lg border px-4">
+          <AccordionItem value="playlists" className="border-border rounded-lg border px-4" data-value="playlists">
             <AccordionTrigger className="hover:no-underline">
               <SectionIcon icon={ListMusic} label={t("guide.playlists")} />
             </AccordionTrigger>
@@ -296,7 +418,7 @@ export default function Guide() {
           </AccordionItem>
 
           {/* 6. Guided Programs */}
-          <AccordionItem value="programs" className="border-border rounded-lg border px-4">
+          <AccordionItem value="programs" className="border-border rounded-lg border px-4" data-value="programs">
             <AccordionTrigger className="hover:no-underline">
               <SectionIcon icon={GraduationCap} label={t("guide.programs")} />
             </AccordionTrigger>
@@ -319,8 +441,46 @@ export default function Guide() {
             </AccordionContent>
           </AccordionItem>
 
-          {/* 7. Progress & Stats */}
-          <AccordionItem value="progress" className="border-border rounded-lg border px-4">
+          {/* 7. NEW — Smart Features */}
+          <AccordionItem value="smart-features" className="border-border rounded-lg border px-4" data-value="smart-features">
+            <AccordionTrigger className="hover:no-underline">
+              <SectionIcon icon={Sparkles} label={t("guide.smartFeatures")} />
+            </AccordionTrigger>
+            <AccordionContent>
+              <div className="space-y-4">
+                <p className="text-sm text-muted-foreground">{t("guide.smartFeaturesIntro")}</p>
+                <div className="grid gap-3 sm:grid-cols-2">
+                  <InfoBlock title={`🔅 ${t("guide.wakeLock")}`}>
+                    <p>{t("guide.wakeLockDesc")}</p>
+                  </InfoBlock>
+                  <InfoBlock title={`🎯 ${t("guide.dailyGoal")}`}>
+                    <p>{t("guide.dailyGoalDesc")}</p>
+                  </InfoBlock>
+                  <InfoBlock title={`⏩ ${t("guide.quickResume")}`}>
+                    <p>{t("guide.quickResumeDesc")}</p>
+                  </InfoBlock>
+                  <InfoBlock title={`🔄 ${t("guide.sessionRecovery")}`}>
+                    <p>{t("guide.sessionRecoveryDesc")}</p>
+                  </InfoBlock>
+                  <InfoBlock title={`❄️ ${t("guide.streakFreeze")}`}>
+                    <p>{t("guide.streakFreezeDesc")}</p>
+                  </InfoBlock>
+                  <InfoBlock title={`📊 ${t("guide.weeklySummary")}`}>
+                    <p>{t("guide.weeklySummaryDesc")}</p>
+                  </InfoBlock>
+                  <InfoBlock title={`💡 ${t("guide.smartSuggestions")}`}>
+                    <p>{t("guide.smartSuggestionsDesc")}</p>
+                  </InfoBlock>
+                  <InfoBlock title={`📝 ${t("guide.journalInspiration")}`}>
+                    <p>{t("guide.journalInspirationDesc")}</p>
+                  </InfoBlock>
+                </div>
+              </div>
+            </AccordionContent>
+          </AccordionItem>
+
+          {/* 8. Progress & Stats */}
+          <AccordionItem value="progress" className="border-border rounded-lg border px-4" data-value="progress">
             <AccordionTrigger className="hover:no-underline">
               <SectionIcon icon={Trophy} label={t("guide.progress")} />
             </AccordionTrigger>
@@ -389,8 +549,8 @@ export default function Guide() {
             </AccordionContent>
           </AccordionItem>
 
-          {/* 8. Keyboard Shortcuts */}
-          <AccordionItem value="shortcuts" className="border-border rounded-lg border px-4">
+          {/* 9. Keyboard Shortcuts */}
+          <AccordionItem value="shortcuts" className="border-border rounded-lg border px-4" data-value="shortcuts">
             <AccordionTrigger className="hover:no-underline">
               <SectionIcon icon={Keyboard} label={t("guide.shortcuts")} />
             </AccordionTrigger>
@@ -438,8 +598,40 @@ export default function Guide() {
             </AccordionContent>
           </AccordionItem>
 
-          {/* 9. Data & Privacy */}
-          <AccordionItem value="privacy" className="border-border rounded-lg border px-4">
+          {/* 10. NEW — Data & Backup */}
+          <AccordionItem value="data-backup" className="border-border rounded-lg border px-4" data-value="data-backup">
+            <AccordionTrigger className="hover:no-underline">
+              <SectionIcon icon={Database} label={t("guide.dataBackup")} />
+            </AccordionTrigger>
+            <AccordionContent>
+              <div className="space-y-4">
+                <p className="text-sm text-muted-foreground">{t("guide.dataBackupIntro")}</p>
+                <div className="grid gap-3 sm:grid-cols-2">
+                  <InfoBlock title={`📤 ${t("guide.exportImport")}`}>
+                    <p>{t("guide.exportImportDesc")}</p>
+                  </InfoBlock>
+                  <InfoBlock title={`📋 ${t("guide.clipboardBackup")}`}>
+                    <p>{t("guide.clipboardBackupDesc")}</p>
+                  </InfoBlock>
+                  <InfoBlock title={`📊 ${t("guide.csvExport")}`}>
+                    <p>{t("guide.csvExportDesc")}</p>
+                  </InfoBlock>
+                  <InfoBlock title={`🔔 ${t("guide.backupReminder")}`}>
+                    <p>{t("guide.backupReminderDesc")}</p>
+                  </InfoBlock>
+                  <InfoBlock title={`🛡️ ${t("guide.importValidation")}`}>
+                    <p>{t("guide.importValidationDesc")}</p>
+                  </InfoBlock>
+                  <InfoBlock title={`🔍 ${t("guide.duplicateDetection")}`}>
+                    <p>{t("guide.duplicateDetectionDesc")}</p>
+                  </InfoBlock>
+                </div>
+              </div>
+            </AccordionContent>
+          </AccordionItem>
+
+          {/* 11. Data & Privacy */}
+          <AccordionItem value="privacy" className="border-border rounded-lg border px-4" data-value="privacy">
             <AccordionTrigger className="hover:no-underline">
               <SectionIcon icon={Shield} label={t("guide.privacy")} />
             </AccordionTrigger>
@@ -448,12 +640,6 @@ export default function Guide() {
                 <div className="grid gap-3 sm:grid-cols-2">
                   <InfoBlock title={`🔒 ${t("guide.localStorage")}`}>
                     <p>{t("guide.localStorageDesc")}</p>
-                  </InfoBlock>
-                  <InfoBlock title={`📤 ${t("guide.exportImport")}`}>
-                    <p>{t("guide.exportImportDesc")}</p>
-                  </InfoBlock>
-                  <InfoBlock title={`📊 ${t("guide.csvExport")}`}>
-                    <p>{t("guide.csvExportDesc")}</p>
                   </InfoBlock>
                   <InfoBlock title={`📶 ${t("guide.offline")}`}>
                     <p>{t("guide.offlineDesc")}</p>
@@ -464,8 +650,8 @@ export default function Guide() {
             </AccordionContent>
           </AccordionItem>
 
-          {/* 10. Accessibility */}
-          <AccordionItem value="accessibility" className="border-border rounded-lg border px-4">
+          {/* 12. Accessibility */}
+          <AccordionItem value="accessibility" className="border-border rounded-lg border px-4" data-value="accessibility">
             <AccordionTrigger className="hover:no-underline">
               <SectionIcon icon={Accessibility} label={t("guide.accessibility")} />
             </AccordionTrigger>
@@ -489,14 +675,14 @@ export default function Guide() {
             </AccordionContent>
           </AccordionItem>
 
-          {/* 11. FAQ */}
-          <AccordionItem value="faq" className="border-border rounded-lg border px-4">
+          {/* 13. FAQ — expanded to 12 */}
+          <AccordionItem value="faq" className="border-border rounded-lg border px-4" data-value="faq">
             <AccordionTrigger className="hover:no-underline">
               <SectionIcon icon={HelpCircle} label={t("guide.faq")} />
             </AccordionTrigger>
             <AccordionContent>
               <div className="space-y-4">
-                {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
+                {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((i) => (
                   <div key={i}>
                     <h4 className="font-semibold text-foreground text-sm mb-1">{t(`guide.faq${i}.q`)}</h4>
                     <p className="text-sm text-muted-foreground">{t(`guide.faq${i}.a`)}</p>
