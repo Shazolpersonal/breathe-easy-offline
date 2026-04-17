@@ -546,6 +546,7 @@ export default function Stats() {
                             <button
                               onClick={() => setDeleteConfirm(s.id)}
                               className="rounded-full p-1 text-muted-foreground/40 hover:text-destructive transition-colors"
+                              aria-label={t("common.delete")}
                             >
                               <Trash2 className="h-3.5 w-3.5" />
                             </button>
@@ -677,11 +678,11 @@ export default function Stats() {
         {tab === "reports" && (
           <div className="space-y-4">
             <div className="flex items-center justify-between rounded-2xl border border-border bg-card px-4 py-3">
-              <button onClick={prevMonth} className="rounded-full p-1 text-muted-foreground hover:text-foreground">
+              <button onClick={prevMonth} className="rounded-full p-1 text-muted-foreground hover:text-foreground" aria-label={t("stats.prevMonth")}>
                 <ChevronLeft className="h-5 w-5" />
               </button>
               <span className="text-sm font-semibold text-foreground">{monthLabel}</span>
-              <button onClick={nextMonth} className="rounded-full p-1 text-muted-foreground hover:text-foreground">
+              <button onClick={nextMonth} className="rounded-full p-1 text-muted-foreground hover:text-foreground" aria-label={t("stats.nextMonth")}>
                 <ChevronRight className="h-5 w-5" />
               </button>
             </div>

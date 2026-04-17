@@ -144,7 +144,7 @@ export default function Home() {
                   <Download className="h-3.5 w-3.5" /> {t("install.button")}
                 </Button>
               </div>
-              <button onClick={handleDismissInstall} className="shrink-0 rounded-full p-1 text-muted-foreground hover:text-foreground">
+              <button onClick={handleDismissInstall} className="shrink-0 rounded-full p-1 text-muted-foreground hover:text-foreground" aria-label={t("common.close")}>
                 <X className="h-4 w-4" />
               </button>
             </div>
@@ -169,7 +169,7 @@ export default function Home() {
                 </p>
                 <p className="mt-1 text-[11px] text-primary/70">{t("install.manual.free")}</p>
               </div>
-              <button onClick={handleDismissInstall} className="shrink-0 rounded-full p-1 text-muted-foreground hover:text-foreground">
+              <button onClick={handleDismissInstall} className="shrink-0 rounded-full p-1 text-muted-foreground hover:text-foreground" aria-label={t("common.close")}>
                 <X className="h-4 w-4" />
               </button>
             </div>
