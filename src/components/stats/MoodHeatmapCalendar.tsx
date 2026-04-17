@@ -23,10 +23,28 @@ export default function MoodHeatmapCalendar() {
 
     const cells: { day: number; dateKey: string; sessions: typeof sessions; avgMood: number | null; sessionCount: number }[] = [];
 
+    // Optimization: Pre-compute hash maps for sessions and moods by day to turn an O(N * M) filtering loop into O(N + M) lookups.
+    // .substring(0, 10) extracts the 'YYYY-MM-DD' part assuming ISO dates.
+    const sessionMap: Record<string, typeof sessions> = {};
+    sessions.forEach(s => {
+      const dateKey = s.date.substring(0, 10);
+      if (!sessionMap[dateKey]) sessionMap[dateKey] = [];
+      sessionMap[dateKey].push(s);
+    });
+
+    const moodMap: Record<string, typeof moodRecords> = {};
+    moodRecords.forEach(r => {
+      if (r.moodAfter === null) return;
+      const dateKey = r.date.substring(0, 10);
+      if (!moodMap[dateKey]) moodMap[dateKey] = [];
+      moodMap[dateKey].push(r);
+    });
+
     for (let d = 1; d <= daysInMonth; d++) {
       const dateKey = `${year}-${String(month + 1).padStart(2, "0")}-${String(d).padStart(2, "0")}`;
-      const daySessions = sessions.filter((s) => s.date.startsWith(dateKey));
-      const dayMoodRecords = moodRecords.filter((r) => r.date.startsWith(dateKey) && r.moodAfter !== null);
+      // Dictionary lookup replaces .filter() iteration
+      const daySessions = sessionMap[dateKey] || [];
+      const dayMoodRecords = moodMap[dateKey] || [];
 
       let avgMood: number | null = null;
       if (dayMoodRecords.length > 0) {
