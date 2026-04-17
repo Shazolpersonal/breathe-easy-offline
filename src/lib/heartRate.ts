@@ -74,7 +74,7 @@ export class HeartRateMonitor {
       const track = this.stream.getVideoTracks()[0];
       try {
         await track.applyConstraints({
-          advanced: [{ torch: true } as any],
+          advanced: [{ torch: true } as unknown as MediaTrackConstraintSet],
         });
       } catch {
         // Torch not available on all devices — continue without it
@@ -103,8 +103,8 @@ export class HeartRateMonitor {
       const track = this.stream.getVideoTracks()[0];
       // Turn off torch
       try {
-        track.applyConstraints({ advanced: [{ torch: false } as any] }).catch(() => {});
-      } catch {}
+        track.applyConstraints({ advanced: [{ torch: false } as unknown as MediaTrackConstraintSet] }).catch(() => { /* empty */ });
+      } catch { /* empty */ }
       this.stream.getTracks().forEach(t => t.stop());
       this.stream = null;
     }

@@ -40,14 +40,14 @@ export function getWeeklySummary(): WeeklySummaryData {
           .reduce((sum: number, e: { amount: number }) => sum + e.amount, 0);
       }
     }
-  } catch {}
+  } catch { /* empty */ }
 
   // Best calm score
   const calmScores = weekSessions.filter(s => s.calmScore != null).map(s => s.calmScore!);
   const bestCalmScore = calmScores.length > 0 ? Math.max(...calmScores) : null;
 
   // Most used technique
-  const techCount: Record<string, { name: string; count: number }> = {};
+  const techCount: Record<string, { name: string; count: number }> = { /* empty */ };
   weekSessions.forEach(s => {
     if (!techCount[s.techniqueId]) techCount[s.techniqueId] = { name: s.techniqueName, count: 0 };
     techCount[s.techniqueId].count++;

@@ -594,7 +594,8 @@ export const en: Record<string, string> = {
 
   // Theme Mode
   "settings.themeMode": "Theme Mode",
-  "settings.themeMode.manual": "Manual",
+  "settings.themeMode.manual": "Dark",
+  "settings.themeMode.manual-light": "Light",
   "settings.themeMode.auto": "Auto",
   "settings.themeMode.autoWarm": "Auto + Night Warmth",
   "settings.themeMode.desc": "Auto matches system dark/light preference",

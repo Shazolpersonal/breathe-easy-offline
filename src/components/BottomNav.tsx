@@ -45,7 +45,7 @@ export default function BottomNav() {
                   key={path}
                   onClick={() => { navigate(path); setMoreOpen(false); }}
                   className={cn(
-                    "relative flex w-full items-center gap-3 px-4 py-3.5 text-sm transition-colors",
+                    "relative flex w-full items-center gap-4 px-5 py-4 text-base transition-colors",
                     idx < MORE_ITEMS.length - 1 && "border-b border-border/30",
                     active
                       ? "bg-primary/10 text-primary font-medium"
@@ -83,7 +83,7 @@ export default function BottomNav() {
                 onClick={() => navigate(path)}
                 aria-current={active ? "page" : undefined}
                 className={cn(
-                  "flex flex-col items-center gap-0.5 rounded-xl px-3 py-1.5 text-xs transition-colors",
+                  "flex flex-col items-center gap-1 rounded-xl px-4 py-2 text-xs transition-colors",
                   active ? "text-primary" : "text-muted-foreground hover:text-foreground"
                 )}
               >
@@ -95,7 +95,7 @@ export default function BottomNav() {
           <button
             onClick={() => setMoreOpen(!moreOpen)}
             className={cn(
-              "flex flex-col items-center gap-0.5 rounded-xl px-3 py-1.5 text-xs transition-colors",
+              "flex flex-col items-center gap-1 rounded-xl px-4 py-2 text-xs transition-colors",
               isMoreActive ? "text-primary" : "text-muted-foreground hover:text-foreground"
             )}
           >

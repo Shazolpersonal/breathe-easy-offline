@@ -265,7 +265,8 @@ function StepInstall({ t, onInstall }: { t: (k: string) => string; onInstall: ()
         <Smartphone className="h-10 w-10 text-primary" />
       </div>
       <h2 className="text-2xl font-bold text-foreground mb-2">{t("onboarding.installTitle")}</h2>
-      <p className="text-sm text-muted-foreground mb-8">{t("onboarding.installDesc")}</p>
+      <p className="text-sm text-muted-foreground mb-4">{t("onboarding.installDesc")}</p>
+      <p className="text-xs text-primary font-medium mb-8">You can skip this and install later.</p>
 
       {nativeAvailable && (
         <Button onClick={onInstall} size="lg" className="gap-2 w-full mb-3">

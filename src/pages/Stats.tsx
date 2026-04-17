@@ -26,7 +26,25 @@ export default function Stats() {
   const [historySearch, setHistorySearch] = useState("");
   const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
   const sessionsKey = sessions.length;
+
+
+
+
+
+
+
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const streak = useMemo(() => getCurrentStreak(), [sessionsKey]);
+
+
+
+
+
+
+
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const longestStreak = useMemo(() => getLongestStreak(), [sessionsKey]);
   const totalMinutes = Math.round(sessions.reduce((s, r) => s + r.durationSeconds, 0) / 60);
 
@@ -36,15 +54,58 @@ export default function Stats() {
 
   const locale = language === "bn" ? "bn" : "en";
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   const avgCalmScore = useMemo(() => {
     const scored = sessions.filter((s) => s.calmScore != null);
     if (scored.length === 0) return null;
     return Math.round(scored.reduce((sum, s) => sum + s.calmScore!, 0) / scored.length);
   }, [sessions]);
 
+
+
+
+
+
+
+
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const xpState = useMemo(() => getXPState(), [sessionsKey]);
 
   // Lifetime stats
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   const lifetimeStats = useMemo(() => {
     const uniqueDays = new Set(sessions.map(s => s.date.split("T")[0])).size;
     const totalHours = Math.round(sessions.reduce((s, r) => s + r.durationSeconds, 0) / 3600 * 10) / 10;
@@ -52,13 +113,20 @@ export default function Stats() {
     return { uniqueDays, totalHours, firstSession, totalXP: xpState.totalXP };
   }, [sessions, xpState]);
 
-  const TIME_BUCKET_KEYS = [
+
+  const TIME_BUCKET_KEYS = useMemo(() => [
     { labelKey: "stats.timeBucket.night", range: [21, 6], key: "night" },
     { labelKey: "stats.timeBucket.morning", range: [6, 9], key: "morning" },
     { labelKey: "stats.timeBucket.midday", range: [9, 12], key: "midday" },
     { labelKey: "stats.timeBucket.afternoon", range: [12, 17], key: "afternoon" },
     { labelKey: "stats.timeBucket.evening", range: [17, 21], key: "evening" },
-  ];
+  ], []);
+  /* = [
+    { labelKey: "stats.timeBucket.night", range: [21, 6], key: "night" },
+    { labelKey: "stats.timeBucket.morning", range: [6, 9], key: "morning" },
+    { labelKey: "stats.timeBucket.midday", range: [9, 12], key: "midday" },
+    { labelKey: "stats.timeBucket.afternoon", range: [12, 17], key: "afternoon" },
+  */
 
   function getTimeBucket(hour: number) {
     if (hour >= 6 && hour < 9) return "morning";
@@ -69,6 +137,23 @@ export default function Stats() {
   }
 
   // Flexible time range chart data
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   const timeRangeData = useMemo(() => {
     const rangeDays = timeRange === "7d" ? 7 : timeRange === "30d" ? 30 : 90;
     const today = new Date();
@@ -121,6 +206,23 @@ export default function Stats() {
   }, [sessions, timeRange, locale]);
 
   // Technique breakdown
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   const techniqueBreakdown = useMemo(() => {
     const map: Record<string, { name: string; sessions: number; totalCalm: number; calmCount: number }> = {};
     sessions.forEach((s) => {
@@ -138,6 +240,24 @@ export default function Stats() {
   }, [sessions]);
 
   // Mood trend (30-day rolling)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   const moodTrendData = useMemo(() => {
     const records = getMoodRecords().filter(r => r.moodAfter != null);
     if (records.length < 2) return [];
@@ -159,9 +279,22 @@ export default function Stats() {
       const rolling = Math.round(window.reduce((s, w) => s + w.avg, 0) / window.length * 10) / 10;
       return { day: new Date(d.date).toLocaleDateString(locale, { month: "short", day: "numeric" }), mood: d.avg, rolling };
     });
-  }, [sessions, locale]);
+  }, [locale]);
 
   // XP history chart
+
+
+
+
+
+
+
+
+
+
+
+
+
   const xpChartData = useMemo(() => {
     try {
       const raw = localStorage.getItem("breathe_xp");
@@ -183,12 +316,47 @@ export default function Stats() {
         xp,
       }));
     } catch { return []; }
-  }, [sessionsKey, locale]);
+  }, [locale]);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   const calmTrendData = useMemo(() => {
     const scored = sessions.filter((s) => s.calmScore != null).slice(-14);
     return scored.map((s, i) => ({ session: i + 1, score: s.calmScore! }));
   }, [sessions]);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   const timeOfDayData = useMemo(() => {
     const buckets: Record<string, number> = { night: 0, morning: 0, midday: 0, afternoon: 0, evening: 0 };
@@ -197,13 +365,49 @@ export default function Stats() {
       buckets[getTimeBucket(hour)]++;
     });
     return TIME_BUCKET_KEYS.map((b) => ({ name: t(b.labelKey), sessions: buckets[b.key] }));
-  }, [sessions, t]);
+  }, [sessions, t, TIME_BUCKET_KEYS]);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   const journalSessions = useMemo(() => {
     return sessions.filter((s) => s.journal).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
   }, [sessions]);
 
   // Report data with daily chart
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   const reportData = useMemo(() => {
     const monthSessions = sessions.filter((s) => {
       const d = new Date(s.date);
@@ -239,6 +443,16 @@ export default function Stats() {
     return { sessions: monthSessions.length, totalMin, topTechnique, avgCalm, streak: mStreak, dailyMinutes };
   }, [sessions, reportMonth, reportYear]);
 
+
+
+
+
+
+
+
+
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const { unlocked, locked } = useMemo(() => checkAllBadges(sessions), [sessionsKey]);
 
   const monthLabel = new Date(reportYear, reportMonth).toLocaleDateString(locale, { month: "long", year: "numeric" });
@@ -274,7 +488,7 @@ export default function Stats() {
               key={tabKey}
               onClick={() => setTab(tabKey)}
               className={cn(
-                "flex-1 rounded-lg py-2 text-xs font-medium transition-colors",
+                "flex-1 rounded-lg py-2 text-sm font-medium transition-colors",
                 tab === tabKey ? "bg-card text-foreground shadow-sm" : "text-muted-foreground"
               )}
             >
@@ -304,23 +518,23 @@ export default function Stats() {
               <div className="grid grid-cols-2 gap-3">
                 <div className="flex flex-col">
                   <span className="text-lg font-bold text-foreground">{sessions.length}</span>
-                  <span className="text-[11px] text-muted-foreground">{t("stats.totalSessions")}</span>
+                  <span className="text-sm text-muted-foreground">{t("stats.totalSessions")}</span>
                 </div>
                 <div className="flex flex-col">
-                  <span className="text-lg font-bold text-foreground">{lifetimeStats.totalHours}<span className="text-xs font-normal text-muted-foreground ml-0.5">h</span></span>
-                  <span className="text-[11px] text-muted-foreground">{t("stats.totalHours")}</span>
+                  <span className="text-lg font-bold text-foreground">{lifetimeStats.totalHours}<span className="text-sm font-normal text-muted-foreground ml-0.5">h</span></span>
+                  <span className="text-sm text-muted-foreground">{t("stats.totalHours")}</span>
                 </div>
                 <div className="flex flex-col">
                   <span className="text-lg font-bold text-foreground">{lifetimeStats.uniqueDays}</span>
-                  <span className="text-[11px] text-muted-foreground">{t("stats.uniqueDays")}</span>
+                  <span className="text-sm text-muted-foreground">{t("stats.uniqueDays")}</span>
                 </div>
                 <div className="flex flex-col">
-                  <span className="text-lg font-bold text-foreground">{lifetimeStats.totalXP}<span className="text-xs font-normal text-muted-foreground ml-0.5">XP</span></span>
-                  <span className="text-[11px] text-muted-foreground">{t("stats.totalXP")}</span>
+                  <span className="text-lg font-bold text-foreground">{lifetimeStats.totalXP}<span className="text-sm font-normal text-muted-foreground ml-0.5">XP</span></span>
+                  <span className="text-sm text-muted-foreground">{t("stats.totalXP")}</span>
                 </div>
               </div>
               {lifetimeStats.firstSession && (
-                <p className="mt-2 text-[10px] text-muted-foreground">
+                <p className="mt-2 text-sm text-muted-foreground">
                   {t("stats.memberSince", { date: new Date(lifetimeStats.firstSession).toLocaleDateString(locale, { month: "long", year: "numeric" }) })}
                 </p>
               )}
@@ -336,14 +550,14 @@ export default function Stats() {
                 { icon: Target, value: sessions.length, label: t("stats.sessions"), suffix: "", span: false, shareable: false },
                 ...(avgCalmScore !== null
                   ? [{ icon: Brain, value: avgCalmScore, label: t("stats.avgCalm"), suffix: "%", span: true, shareable: false }]
-                  : []),
+                  : [sessions]),
               ].map(({ icon: Icon, value, label, suffix, span, shareable }) => (
                 <div key={label} className={`relative flex flex-col items-center rounded-2xl border border-border bg-card p-4 ${span ? "col-span-2" : ""}`}>
                   <Icon className="mb-1 h-5 w-5 text-primary" />
                   <span className="text-xl font-bold text-foreground">
-                    {value}{suffix && <span className="ml-1 text-xs font-normal text-muted-foreground">{suffix}</span>}
+                    {value}{suffix && <span className="ml-1 text-sm font-normal text-muted-foreground">{suffix}</span>}
                   </span>
-                  <span className="text-xs text-muted-foreground">{label}</span>
+                  <span className="text-sm text-muted-foreground">{label}</span>
                   {shareable && (
                     <button
                       onClick={() => shareStreak(value as number, language)}
@@ -367,7 +581,7 @@ export default function Stats() {
                       key={r}
                       onClick={() => setTimeRange(r)}
                       className={cn(
-                        "rounded-md px-2 py-1 text-[10px] font-medium transition-colors",
+                        "rounded-md px-2 py-1 text-sm font-medium transition-colors",
                         timeRange === r ? "bg-card text-foreground shadow-sm" : "text-muted-foreground"
                       )}
                     >
@@ -377,7 +591,7 @@ export default function Stats() {
                 </div>
               </div>
               <ResponsiveContainer width="100%" height={160}>
-                <BarChart data={timeRangeData}>
+                <BarChart data={timeRangeData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                   <XAxis dataKey="label" tick={{ fontSize: 10, fill: "hsl(var(--muted-foreground))" }} axisLine={false} tickLine={false} />
                   <YAxis hide />
                   <Tooltip contentStyle={tooltipStyle} labelStyle={{ color: "hsl(var(--foreground))" }} />
@@ -397,8 +611,8 @@ export default function Stats() {
                     return (
                       <div key={tech.name}>
                         <div className="mb-1 flex items-center justify-between">
-                          <span className="text-xs font-medium text-foreground truncate max-w-[60%]">{tech.name}</span>
-                          <span className="text-[10px] text-muted-foreground">
+                          <span className="text-sm font-medium text-foreground truncate max-w-[60%]">{tech.name}</span>
+                          <span className="text-sm text-muted-foreground">
                             {tech.sessions} {t("stats.sessions").toLowerCase()}
                             {tech.avgCalm != null && ` · ${tech.avgCalm}%`}
                           </span>
@@ -416,7 +630,7 @@ export default function Stats() {
             <div className="mb-6 rounded-2xl border border-border bg-card p-4">
               <h2 className="mb-3 text-sm font-semibold text-muted-foreground">{t("stats.timeOfDay")}</h2>
               <ResponsiveContainer width="100%" height={140}>
-                <BarChart data={timeOfDayData}>
+                <BarChart data={timeOfDayData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                   <XAxis dataKey="name" tick={{ fontSize: 10, fill: "hsl(var(--muted-foreground))" }} axisLine={false} tickLine={false} />
                   <YAxis hide />
                   <Tooltip contentStyle={tooltipStyle} />
@@ -429,7 +643,7 @@ export default function Stats() {
               <div className="mb-6 rounded-2xl border border-border bg-card p-4">
                 <h2 className="mb-3 text-sm font-semibold text-muted-foreground">{t("stats.calmTrend")}</h2>
                 <ResponsiveContainer width="100%" height={120}>
-                  <LineChart data={calmTrendData}>
+                  <LineChart data={calmTrendData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                     <XAxis dataKey="session" tick={{ fontSize: 10, fill: "hsl(var(--muted-foreground))" }} axisLine={false} tickLine={false} />
                     <YAxis domain={[0, 100]} hide />
                     <Tooltip contentStyle={tooltipStyle} />
@@ -447,7 +661,7 @@ export default function Stats() {
                   {t("stats.moodTrend")}
                 </h2>
                 <ResponsiveContainer width="100%" height={120}>
-                  <LineChart data={moodTrendData}>
+                  <LineChart data={moodTrendData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                     <XAxis dataKey="day" tick={{ fontSize: 9, fill: "hsl(var(--muted-foreground))" }} axisLine={false} tickLine={false} />
                     <YAxis domain={[1, 5]} hide />
                     <Tooltip contentStyle={tooltipStyle} />
@@ -455,7 +669,7 @@ export default function Stats() {
                     <Line type="monotone" dataKey="rolling" stroke="hsl(var(--primary))" strokeWidth={2} dot={false} />
                   </LineChart>
                 </ResponsiveContainer>
-                <p className="mt-1 text-[10px] text-muted-foreground text-center">{t("stats.moodTrendDesc")}</p>
+                <p className="mt-1 text-sm text-muted-foreground text-center">{t("stats.moodTrendDesc")}</p>
               </div>
             )}
 
@@ -467,7 +681,7 @@ export default function Stats() {
                   {t("stats.xpEarned")}
                 </h2>
                 <ResponsiveContainer width="100%" height={100}>
-                  <BarChart data={xpChartData}>
+                  <BarChart data={xpChartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                     <XAxis dataKey="day" tick={{ fontSize: 9, fill: "hsl(var(--muted-foreground))" }} axisLine={false} tickLine={false} interval={4} />
                     <YAxis hide />
                     <Tooltip contentStyle={tooltipStyle} />
@@ -512,11 +726,11 @@ export default function Stats() {
                   return (
                     <div key={s.id} className="rounded-2xl border border-border bg-card p-3">
                       <div className="flex items-center justify-between mb-1">
-                        <span className="text-xs font-medium text-foreground">
+                        <span className="text-sm font-medium text-foreground">
                           {d.toLocaleDateString(locale, { month: "short", day: "numeric", year: "numeric" })}
                         </span>
                         <div className="flex items-center gap-1">
-                          <span className="text-[10px] text-muted-foreground">
+                          <span className="text-sm text-muted-foreground">
                             {d.toLocaleTimeString(locale, { hour: "2-digit", minute: "2-digit" })}
                           </span>
                           {deleteConfirm === s.id ? (
@@ -524,7 +738,7 @@ export default function Stats() {
                               <Button
                                 size="sm"
                                 variant="destructive"
-                                className="h-6 text-[10px] px-2"
+                                className="h-6 text-sm px-2"
                                 onClick={() => {
                                   deleteSession(s.id);
                                   setSessions(getSessions());
@@ -536,7 +750,7 @@ export default function Stats() {
                               <Button
                                 size="sm"
                                 variant="ghost"
-                                className="h-6 text-[10px] px-2"
+                                className="h-6 text-sm px-2"
                                 onClick={() => setDeleteConfirm(null)}
                               >
                                 {t("common.cancel")}
@@ -552,7 +766,7 @@ export default function Stats() {
                           )}
                         </div>
                       </div>
-                      <div className="flex items-center gap-2 text-xs text-muted-foreground flex-wrap">
+                      <div className="flex items-center gap-2 text-sm text-muted-foreground flex-wrap">
                         <span className="font-medium text-foreground">{s.techniqueName}</span>
                         <span>·</span>
                         <span>{Math.round(s.durationSeconds / 60)} {t("common.min")}</span>
@@ -566,7 +780,7 @@ export default function Stats() {
                         )}
                       </div>
                       {s.journal && (
-                        <p className="mt-1.5 text-xs text-foreground/80 line-clamp-2">{s.journal}</p>
+                        <p className="mt-1.5 text-sm text-foreground/80 line-clamp-2">{s.journal}</p>
                       )}
                     </div>
                   );
@@ -598,8 +812,8 @@ export default function Stats() {
                           <Share2 className="h-3 w-3" />
                         </button>
                         <span className="text-3xl">{b.emoji}</span>
-                        <span className="text-xs font-semibold text-foreground text-center leading-tight">{badgeName !== `badge.${b.id}.name` ? badgeName : b.name}</span>
-                        <span className="text-[10px] text-muted-foreground text-center leading-tight">{badgeDesc !== `badge.${b.id}.description` ? badgeDesc : b.description}</span>
+                        <span className="text-sm font-semibold text-foreground text-center leading-tight">{badgeName !== `badge.${b.id}.name` ? badgeName : b.name}</span>
+                        <span className="text-sm text-muted-foreground text-center leading-tight">{badgeDesc !== `badge.${b.id}.description` ? badgeDesc : b.description}</span>
                       </div>
                     );
                   })}
@@ -620,11 +834,11 @@ export default function Stats() {
                     return (
                       <div key={b.id} className="flex flex-col items-center gap-1.5 rounded-2xl border border-border bg-card p-3">
                         <span className="text-3xl grayscale opacity-50">{b.emoji}</span>
-                        <span className="text-xs font-semibold text-foreground text-center leading-tight opacity-60">{badgeName !== `badge.${b.id}.name` ? badgeName : b.name}</span>
-                        <span className="text-[10px] text-muted-foreground text-center leading-tight">{badgeDesc !== `badge.${b.id}.description` ? badgeDesc : b.description}</span>
+                        <span className="text-sm font-semibold text-foreground text-center leading-tight opacity-60">{badgeName !== `badge.${b.id}.name` ? badgeName : b.name}</span>
+                        <span className="text-sm text-muted-foreground text-center leading-tight">{badgeDesc !== `badge.${b.id}.description` ? badgeDesc : b.description}</span>
                         <div className="w-full mt-1">
                           <Progress value={pct} className="h-1.5" />
-                          <span className="text-[9px] text-muted-foreground mt-0.5 block text-center">{prog.current}/{prog.target}</span>
+                          <span className="text-sm text-muted-foreground mt-0.5 block text-center">{prog.current}/{prog.target}</span>
                         </div>
                       </div>
                     );
@@ -648,14 +862,14 @@ export default function Stats() {
                 return (
                   <div key={s.id} className="rounded-2xl border border-border bg-card p-4">
                     <div className="mb-2 flex items-center justify-between">
-                      <span className="text-xs font-medium text-foreground">
+                      <span className="text-sm font-medium text-foreground">
                         {d.toLocaleDateString(locale, { month: "short", day: "numeric", year: "numeric" })}
                       </span>
-                      <span className="text-xs text-muted-foreground">
+                      <span className="text-sm text-muted-foreground">
                         {d.toLocaleTimeString(locale, { hour: "2-digit", minute: "2-digit" })}
                       </span>
                     </div>
-                    <div className="mb-2 flex items-center gap-2 text-xs text-muted-foreground">
+                    <div className="mb-2 flex items-center gap-2 text-sm text-muted-foreground">
                       <span>{s.techniqueName}</span>
                       <span>·</span>
                       <span>{Math.round(s.durationSeconds / 60)} {t("common.min")}</span>
@@ -720,9 +934,9 @@ export default function Stats() {
 
                 {/* Daily Minutes Chart */}
                 <div className="pt-2">
-                  <h3 className="mb-2 text-xs font-medium text-muted-foreground">{t("stats.report.dailyChart")}</h3>
+                  <h3 className="mb-2 text-sm font-medium text-muted-foreground">{t("stats.report.dailyChart")}</h3>
                   <ResponsiveContainer width="100%" height={80}>
-                    <BarChart data={reportData.dailyMinutes}>
+                    <BarChart data={reportData.dailyMinutes} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                       <XAxis dataKey="day" tick={{ fontSize: 8, fill: "hsl(var(--muted-foreground))" }} axisLine={false} tickLine={false} interval={4} />
                       <YAxis hide />
                       <Tooltip contentStyle={tooltipStyle} />
@@ -734,20 +948,20 @@ export default function Stats() {
                 <div className="grid grid-cols-2 gap-3 pt-2">
                   <div className="flex flex-col items-center rounded-xl bg-secondary/50 p-3">
                     <span className="text-lg font-bold text-foreground">{reportData.sessions}</span>
-                    <span className="text-xs text-muted-foreground">{t("stats.report.sessions")}</span>
+                    <span className="text-sm text-muted-foreground">{t("stats.report.sessions")}</span>
                   </div>
                   <div className="flex flex-col items-center rounded-xl bg-secondary/50 p-3">
                     <span className="text-lg font-bold text-foreground">{reportData.totalMin}</span>
-                    <span className="text-xs text-muted-foreground">{t("stats.report.minutes")}</span>
+                    <span className="text-sm text-muted-foreground">{t("stats.report.minutes")}</span>
                   </div>
                   <div className="flex flex-col items-center rounded-xl bg-secondary/50 p-3">
                     <span className="text-lg font-bold text-foreground">{reportData.streak}</span>
-                    <span className="text-xs text-muted-foreground">{t("stats.report.streakDays")}</span>
+                    <span className="text-sm text-muted-foreground">{t("stats.report.streakDays")}</span>
                   </div>
                   {reportData.avgCalm !== null && (
                     <div className="flex flex-col items-center rounded-xl bg-secondary/50 p-3">
                       <span className="text-lg font-bold text-foreground">{reportData.avgCalm}%</span>
-                      <span className="text-xs text-muted-foreground">{t("stats.report.calmPercent")}</span>
+                      <span className="text-sm text-muted-foreground">{t("stats.report.calmPercent")}</span>
                     </div>
                   )}
                 </div>

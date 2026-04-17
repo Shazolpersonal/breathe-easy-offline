@@ -19,7 +19,7 @@ export default function WeeklySummary() {
   const handleShare = async () => {
     const text = `🧘 ${t("weekly.shareTitle")}\n📊 ${summary.totalSessions} ${t("common.sessions")} · ${summary.totalMinutes} ${t("common.min")}\n🔥 ${summary.streak} ${t("common.days")} ${t("home.dayStreak").toLowerCase()}\n⚡ ${summary.xpEarned} XP\n${summary.bestCalmScore ? `🧠 ${t("weekly.bestCalm")}: ${summary.bestCalmScore}%` : ""}\n\nmuhurto.lovable.app`;
     if (navigator.share) {
-      try { await navigator.share({ text }); } catch {}
+      try { await navigator.share({ text }); } catch { /* empty */ }
     } else {
       await navigator.clipboard.writeText(text);
     }

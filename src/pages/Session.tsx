@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
-import { Pause, Play, Square, Volume2, VolumeX, TrendingUp, Sparkles, Circle, Waves, BarChart3, Flower2, Share2, SkipForward, Mic, MicOff, Heart, Maximize2, Minimize2, ArrowUp } from "lucide-react";
+import { Pause, Play, Square, Volume2, VolumeX, TrendingUp, Sparkles, Circle, Waves, BarChart3, Flower2, Share2, SkipForward, Mic, MicOff, Heart, Maximize2, Minimize2, ArrowUp, Settings2 } from "lucide-react";
 import BreathingVisualizer, { VisualizationType } from "@/components/BreathingVisualizer";
 import ParticleBackground from "@/components/ParticleBackground";
 import ScreenColorBreathing from "@/components/ScreenColorBreathing";
@@ -31,6 +31,7 @@ import { BreathDetector, RhythmUpdate } from "@/lib/breathDetector";
 import { getSoundscapeEngine, SoundscapeType } from "@/lib/soundscapes";
 import SoundscapePicker from "@/components/SoundscapePicker";
 import { Slider } from "@/components/ui/slider";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Textarea } from "@/components/ui/textarea";
@@ -128,7 +129,10 @@ export default function Session() {
 
   const currentPlaylistStep = playlist?.steps[playlistStepIdx];
   const techniqueId = currentPlaylistStep?.techniqueId || params.get("technique") || "box-breathing";
-  const customTechniques = useMemo(() => getCustomTechniques(), [techniqueId]);
+
+
+
+  const customTechniques = useMemo(() => getCustomTechniques(), []);
   const technique = getTechniqueById(techniqueId, customTechniques) || PRESET_TECHNIQUES[0];
 
   const techniqueName = useMemo(() => {
@@ -249,12 +253,7 @@ export default function Session() {
   }, [micActive, currentPhases, t]);
 
   // Cleanup breath detector on unmount
-  useEffect(() => {
-    return () => {
-      breathDetectorRef.current?.stop();
-      breathDetectorRef.current = null;
-    };
-  }, []);
+
 
   // ─── Session Recovery on Mount ───
   useEffect(() => {
@@ -379,7 +378,8 @@ export default function Session() {
     releaseWakeLock();
 
     // Stop soundscape
-    soundscapeEngineRef.current.stop();
+    const engine = soundscapeEngineRef.current;
+        engine.stop();
 
     // Exit zen mode
     if (document.fullscreenElement) {
@@ -532,8 +532,8 @@ export default function Session() {
     const tFn = tRef.current;
 
     // Read current values from refs (synchronous, no closures)
-    let sl = secondsLeftRef.current;
-    let pi = phaseIndexRef.current;
+    const sl = secondsLeftRef.current;
+    const pi = phaseIndexRef.current;
 
     if (sl <= 1) {
       // Phase transition
@@ -754,7 +754,8 @@ export default function Session() {
     onS: () => {
       setSoundscapeType((prev) => {
         if (prev !== "off") {
-          soundscapeEngineRef.current.stop();
+          const engine = soundscapeEngineRef.current;
+        engine.stop();
           return "off";
         }
         // Restore to the settings default
@@ -770,7 +771,8 @@ export default function Session() {
 
   // ─── Mini-Player Sync ───
   // On mount, restore from mini session if running
-  useEffect(() => {
+    useEffect(() => {
+
     if (miniSession?.isActive && miniSession.techniqueId === techniqueId) {
       setTotalElapsed(miniSession.elapsed);
       setPhaseIndex(miniSession.phaseIndex);
@@ -793,7 +795,7 @@ export default function Session() {
       }
       stopMiniSession();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+
   }, []);
 
   // Sync state to mini-player context when navigating away
@@ -826,7 +828,15 @@ export default function Session() {
   const soundscapeTypeRef = useRef(soundscapeType);
   soundscapeTypeRef.current = soundscapeType;
 
+
+
+
+
+
+
+
   useEffect(() => {
+    const engine = soundscapeEngineRef.current;
     return () => {
       if (stateRef.current === "running" || stateRef.current === "paused") {
         // Entering mini mode — keep soundscape alive for restore
@@ -849,10 +859,10 @@ export default function Session() {
         });
       } else {
         // Not entering mini mode — clean up soundscape
-        soundscapeEngineRef.current.stop();
+        engine.stop();
       }
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+
   }, [technique.id, technique.name]);
 
   const elapsedDisplay = `${Math.floor(totalElapsed / 60)}:${String(totalElapsed % 60).padStart(2, "0")}`;
@@ -1130,97 +1140,121 @@ export default function Session() {
           </div>
         )}
 
-        {state === "idle" && (
-          <>
-            <div className="flex gap-2 items-center flex-wrap justify-center">
-              {[2, 3, 5, 10, 15, 20].map((m) => (
-                <button
-                  key={m}
-                  onClick={() => setDurationMin(m)}
-                  className={cn(
-                    "rounded-full px-3 py-1.5 text-xs font-medium transition-colors",
-                    durationMin === m ? "bg-primary text-primary-foreground" : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
-                  )}
-                >
-                  {m} {t("common.min")}
-                </button>
-              ))}
-              <input
-                type="number"
-                min={1}
-                max={60}
-                value={![2, 3, 5, 10, 15, 20].includes(durationMin) ? durationMin : ""}
-                placeholder="+"
-                onChange={(e) => {
-                  const v = Math.max(1, Math.min(60, Number(e.target.value) || 1));
-                  setDurationMin(v);
-                }}
-                className="w-10 h-7 rounded-full text-center text-xs font-medium bg-secondary text-secondary-foreground border-0 focus:ring-1 focus:ring-primary"
-                aria-label={t("session.customDuration")}
-              />
-            </div>
+        {/* Settings Drawer */}
+        {!zenMode && (
+          <Sheet>
+            <SheetTrigger asChild>
+              <Button variant="outline" size="sm" className="gap-2 rounded-full absolute top-4 right-4 z-50">
+                <Settings2 className="h-4 w-4" /> {t("nav.settings")}
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="bottom" className="rounded-t-3xl pb-10 sm:max-w-md sm:mx-auto">
+              <SheetHeader>
+                <SheetTitle className="text-center">{t("nav.settings")}</SheetTitle>
+              </SheetHeader>
 
-            <div className="flex gap-1.5">
-              {VIZ_OPTIONS.map(({ id, icon: Icon, labelKey }) => (
-                <button
-                  key={id}
-                  onClick={() => update({ visualizationType: id })}
-                  className={cn(
-                    "flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-medium transition-colors",
-                    settings.visualizationType === id
-                      ? "bg-primary/20 text-primary ring-1 ring-primary/40"
-                      : "bg-secondary/60 text-muted-foreground hover:text-foreground"
-                  )}
-                  title={t(labelKey)}
-                >
-                  <Icon className="h-3.5 w-3.5" />
-                  <span className="hidden sm:inline">{t(labelKey)}</span>
-                </button>
-              ))}
-            </div>
+              <div className="mt-6 space-y-6">
+                {/* Duration */}
+                {state === "idle" && (
+                  <div className="space-y-3">
+                    <label className="text-sm font-medium">{t("common.min")}</label>
+                    <div className="flex gap-2 items-center flex-wrap justify-start">
+                      {[2, 3, 5, 10, 15, 20].map((m) => (
+                        <button
+                          key={m}
+                          onClick={() => setDurationMin(m)}
+                          className={cn(
+                            "rounded-full px-3 py-1.5 text-xs font-medium transition-colors",
+                            durationMin === m ? "bg-primary text-primary-foreground" : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
+                          )}
+                        >
+                          {m} {t("common.min")}
+                        </button>
+                      ))}
+                      <input
+                        type="number"
+                        min={1}
+                        max={60}
+                        value={![2, 3, 5, 10, 15, 20].includes(durationMin) ? durationMin : ""}
+                        placeholder="+"
+                        onChange={(e) => {
+                          const v = Math.max(1, Math.min(60, Number(e.target.value) || 1));
+                          setDurationMin(v);
+                        }}
+                        className="w-10 h-7 rounded-full text-center text-xs font-medium bg-secondary text-secondary-foreground border-0 focus:ring-1 focus:ring-primary"
+                        aria-label={t("session.customDuration")}
+                      />
+                    </div>
+                  </div>
+                )}
 
-            {/* Soundscape picker (idle only - no volume slider needed) */}
-            <SoundscapePicker
-              value={soundscapeType}
-              onChange={(type) => setSoundscapeType(type)}
-              compact
-            />
-          </>
-        )}
+                {/* Visualization */}
+                <div className="space-y-3">
+                  <label className="text-sm font-medium">Visualization</label>
+                  <div className="flex gap-2 flex-wrap">
+                    {VIZ_OPTIONS.map(({ id, icon: Icon, labelKey }) => (
+                      <button
+                        key={id}
+                        onClick={() => update({ visualizationType: id })}
+                        className={cn(
+                          "flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium transition-colors",
+                          settings.visualizationType === id
+                            ? "bg-primary/20 text-primary ring-1 ring-primary/40"
+                            : "bg-secondary/60 text-muted-foreground hover:text-foreground"
+                        )}
+                        title={t(labelKey)}
+                      >
+                        <Icon className="h-4 w-4" />
+                        <span>{t(labelKey)}</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
 
-        {/* Soundscape controls during active session */}
-        {(state === "running" || state === "paused") && !zenMode && (
-          <div className="flex items-center gap-2">
-            <SoundscapePicker
-              value={soundscapeType}
-              onChange={(type) => {
-                setSoundscapeType(type);
-                soundscapeEngineRef.current.stop();
-                if (type !== "off") {
-                  soundscapeEngineRef.current.start(type, settings.soundscapeVolume ?? 0.5);
-                }
-              }}
-              compact
-            />
-            {soundscapeType !== "off" && (
-              <div className="flex items-center gap-1.5 min-w-[80px]">
-                <Volume2 className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
-                <Slider
-                  min={0}
-                  max={1}
-                  step={0.05}
-                  value={[settings.soundscapeVolume ?? 0.5]}
-                  onValueChange={([v]) => {
-                    soundscapeEngineRef.current.setVolume(v);
-                  }}
-                  onValueCommit={([v]) => {
-                    update({ soundscapeVolume: v });
-                  }}
-                  className="w-16"
-                />
+                {/* Soundscape */}
+                <div className="space-y-3">
+                  <label className="text-sm font-medium">Soundscape</label>
+                  <div className="flex items-center gap-4 flex-wrap">
+                    <SoundscapePicker
+                      value={soundscapeType}
+                      onChange={(type) => {
+                        setSoundscapeType(type);
+                        if (state === "running" || state === "paused") {
+                          const engine = soundscapeEngineRef.current;
+                          engine.stop();
+                          if (type !== "off") {
+                            soundscapeEngineRef.current.start(type, settings.soundscapeVolume ?? 0.5);
+                          }
+                        }
+                      }}
+                      compact={false}
+                    />
+
+                    {soundscapeType !== "off" && (
+                      <div className="flex flex-1 items-center gap-2 min-w-[120px]">
+                        <Volume2 className="h-4 w-4 text-muted-foreground shrink-0" />
+                        <Slider
+                          min={0}
+                          max={1}
+                          step={0.05}
+                          value={[settings.soundscapeVolume ?? 0.5]}
+                          onValueChange={([v]) => {
+                            if (state === "running" || state === "paused") {
+                              soundscapeEngineRef.current.setVolume(v);
+                            }
+                          }}
+                          onValueCommit={([v]) => {
+                            update({ soundscapeVolume: v });
+                          }}
+                          className="flex-1"
+                        />
+                      </div>
+                    )}
+                  </div>
+                </div>
               </div>
-            )}
-          </div>
+            </SheetContent>
+          </Sheet>
         )}
 
         {!zenMode && (

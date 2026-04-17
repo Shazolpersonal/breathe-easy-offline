@@ -1,6 +1,6 @@
 // PWA Install Prompt Manager — captures beforeinstallprompt event
 
-let deferredPrompt: any = null;
+let deferredPrompt: unknown = null;
 let installed = false;
 
 if (typeof window !== "undefined") {
@@ -20,7 +20,7 @@ export function isRunningAsPWA(): boolean {
   if (typeof window === "undefined") return false;
   return (
     window.matchMedia("(display-mode: standalone)").matches ||
-    (window.navigator as any).standalone === true
+    ("standalone" in window.navigator && !!(window.navigator as unknown as { standalone: boolean }).standalone)
   );
 }
 

@@ -2,7 +2,7 @@ import React, { createContext, useContext, useEffect, useState, useCallback } fr
 import { getSettings, updateSettings } from "@/lib/storage";
 
 export type ThemeId = "zen" | "ocean" | "forest" | "nightsky" | "neon";
-export type ThemeMode = "manual" | "auto" | "auto-warm";
+export type ThemeMode = "manual" | "manual-light" | "auto" | "auto-warm";
 
 interface ThemeContextValue {
   theme: ThemeId;
@@ -67,13 +67,13 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const isAutoMode = themeMode === "auto" || themeMode === "auto-warm";
-  const showLight = isAutoMode && isSystemLight;
+  const showLight = (isAutoMode && isSystemLight) || themeMode === "manual-light";
   const isNightWarmth = themeMode === "auto-warm" && isNight;
 
   useEffect(() => {
     const root = document.documentElement;
     root.setAttribute("data-theme", theme);
-    root.setAttribute("data-theme-mode", isAutoMode ? "auto" : "manual");
+    root.setAttribute("data-theme-mode", showLight ? "auto" : "manual");
     root.setAttribute("data-system-light", String(showLight));
     root.setAttribute("data-night-warmth", String(isNightWarmth));
   }, [theme, isAutoMode, showLight, isNightWarmth]);
