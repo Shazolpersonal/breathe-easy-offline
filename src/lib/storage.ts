@@ -362,11 +362,34 @@ export function validateImportData(json: string): ImportValidationResult {
   }
 }
 
+// Security: sanitize imported strings to prevent XSS
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function sanitizeString(str: any): any {
+  if (typeof str !== 'string') return str;
+  return str.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function sanitizeObjectStrings(obj: any): any {
+  if (Array.isArray(obj)) {
+    return obj.map(sanitizeObjectStrings);
+  }
+  if (obj !== null && typeof obj === 'object') {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const newObj: any = {};
+    for (const key in obj) {
+      newObj[key] = sanitizeObjectStrings(obj[key]);
+    }
+    return newObj;
+  }
+  return sanitizeString(obj);
+}
+
 export function importDataSmart(json: string, skipDuplicates: boolean = true): ImportValidationResult {
   const validation = validateImportData(json);
   if (!validation.success) return validation;
 
-  const data = JSON.parse(json);
+  const data = sanitizeObjectStrings(JSON.parse(json));
   const existingSessions = getSessions();
   const existingIds = new Set(existingSessions.map(s => s.id));
 
@@ -426,7 +449,7 @@ export function importDataSmart(json: string, skipDuplicates: boolean = true): I
 }
 
 export function importData(json: string) {
-  const data = JSON.parse(json);
+  const data = sanitizeObjectStrings(JSON.parse(json));
   // Validate sessions array
   if (data.sessions) {
     if (!Array.isArray(data.sessions)) throw new Error("Invalid sessions data");
