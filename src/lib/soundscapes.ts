@@ -60,9 +60,9 @@ export class SoundscapeEngine {
         try {
           if (n instanceof AudioBufferSourceNode || n instanceof OscillatorNode) n.stop();
           n.disconnect();
-        } catch {}
+        } catch { /* empty */ }
       });
-      try { oldCtx?.close(); } catch {}
+      try { oldCtx?.close(); } catch { /* empty */ }
     }, 600);
   }
 

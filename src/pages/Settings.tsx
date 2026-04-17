@@ -164,7 +164,7 @@ export default function Settings() {
           <div className="mt-3">
             <h3 className="mb-2 text-xs font-medium text-muted-foreground">{t("settings.themeMode")}</h3>
             <div className="flex gap-2">
-              {(["manual", "auto", "auto-warm"] as ThemeMode[]).map((mode) => (
+              {(["manual", "manual-light", "auto", "auto-warm"] as ThemeMode[]).map((mode) => (
                 <button
                   key={mode}
                   onClick={() => setThemeMode(mode)}

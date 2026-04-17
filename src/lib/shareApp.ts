@@ -8,7 +8,7 @@ async function nativeShareOrCopy(data: { title: string; text: string; url?: stri
       await navigator.share(data);
       return;
     }
-  } catch (e: any) {
+  } catch (e: unknown) {
     if (e?.name === "AbortError") return; // user cancelled
   }
   // Fallback: copy to clipboard

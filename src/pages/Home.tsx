@@ -167,7 +167,7 @@ export default function Home() {
                     ? t("install.manual.android")
                     : t("install.manual.desktop")}
                 </p>
-                <p className="mt-1 text-[11px] text-primary/70">{t("install.manual.free")}</p>
+                <p className="mt-1 text-sm text-primary/70">{t("install.manual.free")}</p>
               </div>
               <button onClick={handleDismissInstall} className="shrink-0 rounded-full p-1 text-muted-foreground hover:text-foreground">
                 <X className="h-4 w-4" />
@@ -199,7 +199,7 @@ export default function Home() {
           <div className="flex flex-col items-center rounded-2xl border border-border bg-card p-3">
             <Flame className="mb-1 h-5 w-5 text-primary" />
             <span className="text-lg font-bold text-foreground">{streak}</span>
-            <span className="text-[11px] text-muted-foreground">{t("home.dayStreak")}</span>
+            <span className="text-sm text-muted-foreground">{t("home.dayStreak")}</span>
           </div>
           <div className="flex flex-col items-center rounded-2xl border border-border bg-card p-3">
             {/* Daily Goal Progress Ring */}
@@ -218,12 +218,12 @@ export default function Home() {
               <Wind className="absolute h-4 w-4 text-primary" />
             </div>
             <span className="text-lg font-bold text-foreground">{todayMin}<span className="text-xs font-normal text-muted-foreground">/{dailyGoal}</span></span>
-            <span className="text-[11px] text-muted-foreground">{t("home.minToday")}</span>
+            <span className="text-sm text-muted-foreground">{t("home.minToday")}</span>
           </div>
           <div className="flex flex-col items-center rounded-2xl border border-border bg-card p-3">
             <Zap className="mb-1 h-5 w-5 text-primary" />
             <span className="text-lg font-bold text-foreground">Lv.{xpState.level}</span>
-            <span className="text-[11px] text-muted-foreground">{t(`xp.${xpState.title}`)}</span>
+            <span className="text-sm text-muted-foreground">{t(`xp.${xpState.title}`)}</span>
           </div>
         </div>
 
@@ -247,7 +247,7 @@ export default function Home() {
 
         <div className="mb-6 rounded-2xl border border-border bg-card p-4">
           <div className="flex items-center justify-between mb-1">
-            <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">{t("home.dailyChallenges")}</h2>
+            <h2 className="text-sm font-semibold uppercase tracking-widest text-muted-foreground/80">{t("home.dailyChallenges")}</h2>
             {challengeStreak >= 2 && (
               <span className="flex items-center gap-1 text-xs font-medium text-primary">
                 <Trophy className="h-3.5 w-3.5" />
@@ -259,7 +259,7 @@ export default function Home() {
             <span className="text-xs text-muted-foreground">
               {t("challenge.completedCount", { done: completedCount, total: dailyChallenges.length })}
             </span>
-            <span className="text-[10px] text-muted-foreground/70">
+            <span className="text-xs text-muted-foreground/70">
               {t("challenge.resetsIn", { hours: timeUntilReset.hours, minutes: timeUntilReset.minutes })}
             </span>
           </div>
@@ -282,7 +282,7 @@ export default function Home() {
                       <span className={`text-sm ${done ? "text-primary font-medium" : "text-foreground"}`}>
                         {c.emoji} {t(`challenge.${c.title}`)}
                       </span>
-                      <span className={`ml-1.5 text-[10px] uppercase font-medium ${tierColor}`}>
+                      <span className={`ml-1.5 text-xs uppercase font-medium ${tierColor}`}>
                         {t(`challenge.tier.${c.tier}`)}
                       </span>
                     </div>
@@ -306,7 +306,7 @@ export default function Home() {
         {/* Friend Challenges */}
         {activeFriendChallenges.length > 0 && (
           <div className="mb-6 rounded-2xl border border-border bg-card p-4">
-            <h2 className="mb-3 text-sm font-semibold uppercase tracking-wider text-muted-foreground">
+            <h2 className="mb-3 text-sm font-semibold uppercase tracking-widest text-muted-foreground/80">
               {t("challenge.friend.active")}
             </h2>
             <div className="space-y-2.5">
@@ -384,7 +384,7 @@ export default function Home() {
         {/* Quick Start */}
         {favTechniques.length > 0 && (
           <div className="mb-6">
-            <h2 className="mb-3 text-sm font-semibold uppercase tracking-wider text-muted-foreground">{t("home.quickStart")}</h2>
+            <h2 className="mb-3 text-sm font-semibold uppercase tracking-widest text-muted-foreground/80">{t("home.quickStart")}</h2>
             <div className="grid grid-cols-2 gap-2">
               {favTechniques.slice(0, 4).map((tech) => (
                 <TechniqueCard

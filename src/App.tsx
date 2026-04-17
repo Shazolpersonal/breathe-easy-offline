@@ -18,16 +18,17 @@ import KeyboardShortcutsHelp from "@/components/KeyboardShortcutsHelp";
 import BottomNav from "@/components/BottomNav";
 import MiniPlayer from "@/components/MiniPlayer";
 import OfflineIndicator from "@/components/OfflineIndicator";
-import Home from "@/pages/Home";
-import Session from "@/pages/Session";
-import Techniques from "@/pages/Techniques";
-import Stats from "@/pages/Stats";
-import Settings from "@/pages/Settings";
-import Playlists from "@/pages/Playlists";
-import Programs from "@/pages/Programs";
-import NotFound from "@/pages/NotFound";
-import Onboarding from "@/pages/Onboarding";
-import Guide from "@/pages/Guide";
+import { lazy, Suspense } from "react";
+const Home = lazy(() => import("@/pages/Home"));
+const Session = lazy(() => import("@/pages/Session"));
+const Techniques = lazy(() => import("@/pages/Techniques"));
+const Stats = lazy(() => import("@/pages/Stats"));
+const Settings = lazy(() => import("@/pages/Settings"));
+const Playlists = lazy(() => import("@/pages/Playlists"));
+const Programs = lazy(() => import("@/pages/Programs"));
+const NotFound = lazy(() => import("@/pages/NotFound"));
+const Onboarding = lazy(() => import("@/pages/Onboarding"));
+const Guide = lazy(() => import("@/pages/Guide"));
 
 const queryClient = new QueryClient();
 
@@ -77,17 +78,19 @@ function AppInner() {
       <Toaster />
       <Sonner />
       <main id="main-content">
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/session" element={<Session />} />
-          <Route path="/techniques" element={<Techniques />} />
-          <Route path="/stats" element={<Stats />} />
-          <Route path="/settings" element={<Settings />} />
-          <Route path="/playlists" element={<Playlists />} />
-          <Route path="/programs" element={<Programs />} />
-          <Route path="/guide" element={<Guide />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
+        <Suspense fallback={<div className="flex h-screen w-screen items-center justify-center"><div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" /></div>}>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/session" element={<Session />} />
+            <Route path="/techniques" element={<Techniques />} />
+            <Route path="/stats" element={<Stats />} />
+            <Route path="/settings" element={<Settings />} />
+            <Route path="/playlists" element={<Playlists />} />
+            <Route path="/programs" element={<Programs />} />
+            <Route path="/guide" element={<Guide />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </Suspense>
       </main>
       <MiniPlayer />
       <BottomNav />

@@ -30,7 +30,9 @@ export default function Techniques() {
   const [validationErrors, setValidationErrors] = useState<string[]>([]);
 
   // Bug 5: Memoize progressions to avoid per-card localStorage parsing
+
   const progressions = useMemo(() => getAllProgressionsPublic(), [favorites, customTechniques]);
+
   const progressionMap = useMemo(() => {
     const map: Record<string, ReturnType<typeof getProgression>> = {};
     for (const tech of [...PRESET_TECHNIQUES, ...customTechniques]) {
@@ -116,6 +118,7 @@ export default function Techniques() {
 
   // Bug 6: Filtering & search
   const allTechniques = [...PRESET_TECHNIQUES, ...customTechniques];
+
   const filteredTechniques = useMemo(() => {
     let result = allTechniques;
     if (filter === "favorites") {

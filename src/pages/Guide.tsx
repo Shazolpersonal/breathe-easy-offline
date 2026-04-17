@@ -186,11 +186,11 @@ export default function Guide() {
   const [searchQuery, setSearchQuery] = useState("");
 
   // All section IDs for accordion
-  const ALL_SECTIONS = [
+  const ALL_SECTIONS = useMemo(() => [
     "getting-started", "techniques", "sessions", "custom", "playlists",
     "programs", "smart-features", "progress", "shortcuts", "data-backup",
     "privacy", "accessibility", "faq"
-  ];
+  ], []);
 
   // Search filter — if user is searching, auto-expand matching sections
   const filteredSections = useMemo(() => {
@@ -215,7 +215,7 @@ export default function Guide() {
     return ALL_SECTIONS.filter((id) =>
       sectionKeywords[id]?.some((kw) => kw.includes(q) || q.includes(kw))
     );
-  }, [searchQuery]);
+  }, [searchQuery, ALL_SECTIONS]);
 
   const openSections = filteredSections ?? undefined;
 

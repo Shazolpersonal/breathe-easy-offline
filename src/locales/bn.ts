@@ -594,7 +594,8 @@ export const bn: Record<string, string> = {
 
   // Theme Mode
   "settings.themeMode": "থিম মোড",
-  "settings.themeMode.manual": "ম্যানুয়াল",
+  "settings.themeMode.manual": "ডার্ক 모ড",
+  "settings.themeMode.manual-light": "লাইট মোড",
   "settings.themeMode.auto": "অটো",
   "settings.themeMode.autoWarm": "অটো + রাতের উষ্ণতা",
   "settings.themeMode.desc": "অটো সিস্টেমের ডার্ক/লাইট পছন্দের সাথে মেলে",

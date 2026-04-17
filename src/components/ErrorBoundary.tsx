@@ -27,7 +27,7 @@ export default class ErrorBoundary extends Component<Props, State> {
   handleClearData = () => {
     try {
       localStorage.clear();
-    } catch {}
+    } catch { /* empty */ }
     window.location.reload();
   };
 
