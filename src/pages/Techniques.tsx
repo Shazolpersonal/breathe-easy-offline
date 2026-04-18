@@ -122,19 +122,34 @@ export default function Techniques() {
   const filteredTechniques = useMemo(() => {
     let result = allTechniques;
     if (filter === "favorites") {
-      result = result.filter(t => favorites.includes(t.id));
+      result = result.filter(tech => favorites.includes(tech.id));
     } else if (filter !== "all") {
-      result = result.filter(t => t.difficulty === filter);
+      result = result.filter(tech => tech.difficulty === filter);
     }
     if (searchQuery.trim()) {
       const q = searchQuery.toLowerCase();
-      result = result.filter(t => {
-        const name = t.name.toLowerCase();
-        return name.includes(q);
+      result = result.filter(tech => {
+        const name = tech.name.toLowerCase();
+        const translatedName = t(`technique.${tech.id}.name`).toLowerCase();
+
+        const description = tech.description.toLowerCase();
+        const translatedDescription = t(`technique.${tech.id}.description`).toLowerCase();
+
+        const benefits = tech.benefits.map(b => b.toLowerCase());
+        const translatedBenefits = tech.benefits.map((_, i) => t(`technique.${tech.id}.benefits.${i}`).toLowerCase());
+
+        const matchesName = name.includes(q) || (translatedName !== `technique.${tech.id}.name`.toLowerCase() && translatedName.includes(q));
+        const matchesDescription = description.includes(q) || (translatedDescription !== `technique.${tech.id}.description`.toLowerCase() && translatedDescription.includes(q));
+        const matchesBenefits = benefits.some(b => b.includes(q)) || translatedBenefits.some((tb, i) => {
+          const key = `technique.${tech.id}.benefits.${i}`.toLowerCase();
+          return tb !== key && tb.includes(q);
+        });
+
+        return matchesName || matchesDescription || matchesBenefits;
       });
     }
     return result;
-  }, [filter, searchQuery, favorites, customTechniques]);
+  }, [filter, searchQuery, favorites, customTechniques, t]);
 
   return (
     <div className="min-h-screen px-4 pb-24 pt-12">
