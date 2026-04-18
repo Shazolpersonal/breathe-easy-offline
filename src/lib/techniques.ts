@@ -14,6 +14,7 @@ export interface BreathingTechnique {
   rounds?: number;
   isCustom?: boolean;
   pyramid?: PyramidConfig;
+  totalDuration?: number;
 }
 
 export interface BreathingPhase {
@@ -35,6 +36,7 @@ export const PRESET_TECHNIQUES: BreathingTechnique[] = [
       { type: "exhale", duration: 4, label: "Breathe Out" },
       { type: "hold-after-exhale", duration: 4, label: "Hold" },
     ],
+    totalDuration: 16,
   },
   {
     id: "4-7-8",
@@ -47,6 +49,7 @@ export const PRESET_TECHNIQUES: BreathingTechnique[] = [
       { type: "hold", duration: 7, label: "Hold" },
       { type: "exhale", duration: 8, label: "Breathe Out" },
     ],
+    totalDuration: 19,
   },
   {
     id: "calm-breath",
@@ -58,6 +61,7 @@ export const PRESET_TECHNIQUES: BreathingTechnique[] = [
       { type: "inhale", duration: 4, label: "Breathe In" },
       { type: "exhale", duration: 6, label: "Breathe Out" },
     ],
+    totalDuration: 10,
   },
   {
     id: "equal-breathing",
@@ -69,6 +73,7 @@ export const PRESET_TECHNIQUES: BreathingTechnique[] = [
       { type: "inhale", duration: 5, label: "Breathe In" },
       { type: "exhale", duration: 5, label: "Breathe Out" },
     ],
+    totalDuration: 10,
   },
   {
     id: "wim-hof",
@@ -81,6 +86,7 @@ export const PRESET_TECHNIQUES: BreathingTechnique[] = [
       { type: "inhale", duration: 2, label: "Power Inhale" },
       { type: "exhale", duration: 2, label: "Let Go" },
     ],
+    totalDuration: 4,
   },
   {
     id: "physiological-sigh",
@@ -93,6 +99,7 @@ export const PRESET_TECHNIQUES: BreathingTechnique[] = [
       { type: "inhale", duration: 1, label: "Inhale 2" },
       { type: "exhale", duration: 6, label: "Long Exhale" },
     ],
+    totalDuration: 9,
   },
   {
     id: "resonant-breathing",
@@ -104,6 +111,7 @@ export const PRESET_TECHNIQUES: BreathingTechnique[] = [
       { type: "inhale", duration: 5.5, label: "Breathe In" },
       { type: "exhale", duration: 5.5, label: "Breathe Out" },
     ],
+    totalDuration: 11,
   },
   {
     id: "alternate-nostril",
@@ -119,6 +127,7 @@ export const PRESET_TECHNIQUES: BreathingTechnique[] = [
       { type: "hold", duration: 4, label: "Hold" },
       { type: "exhale", duration: 4, label: "Left Nostril Out" },
     ],
+    totalDuration: 24,
   },
   {
     id: "diaphragmatic",
@@ -130,6 +139,7 @@ export const PRESET_TECHNIQUES: BreathingTechnique[] = [
       { type: "inhale", duration: 4, label: "Belly Rise" },
       { type: "exhale", duration: 6, label: "Belly Fall" },
     ],
+    totalDuration: 10,
   },
   {
     id: "pursed-lip",
@@ -141,6 +151,7 @@ export const PRESET_TECHNIQUES: BreathingTechnique[] = [
       { type: "inhale", duration: 2, label: "Nose Inhale" },
       { type: "exhale", duration: 4, label: "Pursed Exhale" },
     ],
+    totalDuration: 6,
   },
   {
     id: "energizing-breath",
@@ -154,6 +165,7 @@ export const PRESET_TECHNIQUES: BreathingTechnique[] = [
       { type: "exhale", duration: 4, label: "Controlled Exhale" },
       { type: "hold-after-exhale", duration: 1, label: "Hold" },
     ],
+    totalDuration: 8,
   },
   {
     id: "4-4-6-2",
@@ -167,6 +179,7 @@ export const PRESET_TECHNIQUES: BreathingTechnique[] = [
       { type: "exhale", duration: 6, label: "Slow Exhale" },
       { type: "hold-after-exhale", duration: 2, label: "Rest" },
     ],
+    totalDuration: 16,
   },
 ];
 
@@ -175,7 +188,10 @@ export function getTechniqueById(id: string, customTechniques: BreathingTechniqu
 }
 
 export function getCycleDuration(technique: BreathingTechnique): number {
-  return technique.phases.reduce((sum, p) => sum + p.duration, 0);
+  if (technique.totalDuration !== undefined) return technique.totalDuration;
+  const duration = technique.phases.reduce((sum, p) => sum + p.duration, 0);
+  technique.totalDuration = duration;
+  return duration;
 }
 
 /**
