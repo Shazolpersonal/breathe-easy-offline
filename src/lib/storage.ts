@@ -366,7 +366,12 @@ export function validateImportData(json: string): ImportValidationResult {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function sanitizeString(str: any): any {
   if (typeof str !== 'string') return str;
-  return str.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
