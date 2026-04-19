@@ -25,11 +25,12 @@ export default function SoundscapePicker({ value, onChange, compact }: Props) {
           key={id}
           onClick={() => onChange(id)}
           className={cn(
-            "flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-medium transition-colors",
+            "flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-medium transition-colors focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-ring focus-visible:ring-offset-2",
             value === id
               ? "bg-primary/20 text-primary ring-1 ring-primary/40"
               : "bg-secondary/60 text-muted-foreground hover:text-foreground"
           )}
+          aria-label={t(labelKey)}
         >
           <span>{emoji}</span>
           <span className={compact ? "hidden sm:inline" : ""}>{t(labelKey)}</span>

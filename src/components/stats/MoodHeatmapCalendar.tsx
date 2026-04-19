@@ -83,11 +83,11 @@ export default function MoodHeatmapCalendar() {
   return (
     <div className="rounded-2xl border border-border bg-card p-4">
       <div className="mb-3 flex items-center justify-between">
-        <button onClick={prevMonth} className="rounded-full p-1 text-muted-foreground hover:text-foreground">
+        <button onClick={prevMonth} className="rounded-full p-1 text-muted-foreground hover:text-foreground focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-ring focus-visible:ring-offset-2" aria-label={t("stats.prevMonth")}>
           <ChevronLeft className="h-4 w-4" />
         </button>
         <h2 className="text-sm font-semibold text-foreground">{monthLabel}</h2>
-        <button onClick={nextMonth} className="rounded-full p-1 text-muted-foreground hover:text-foreground">
+        <button onClick={nextMonth} className="rounded-full p-1 text-muted-foreground hover:text-foreground focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-ring focus-visible:ring-offset-2" aria-label={t("stats.nextMonth")}>
           <ChevronRight className="h-4 w-4" />
         </button>
       </div>
