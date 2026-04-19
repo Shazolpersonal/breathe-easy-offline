@@ -1,73 +1,67 @@
-# Welcome to your Lovable project
+# 🌬️ Muhurto Breath (মুহূর্ত ব্রেথ)
 
-## Project info
+**Muhurto Breath** একটি সম্পূর্ণ অফলাইন-সাপোর্টেড, প্রগ্রেসিভ ওয়েব অ্যাপ (PWA) যা আপনাকে বিভিন্ন ধরনের শ্বাস-প্রশ্বাসের ব্যায়াম (Breathing Exercises) করতে সাহায্য করে। এটি এমনভাবে ডিজাইন করা হয়েছে যেন যেকোনো সময়, যেকোনো স্থানে, এমনকি ইন্টারনেট কানেকশন ছাড়াও আপনি আপনার মানসিক প্রশান্তি ও স্বাস্থ্যের যত্ন নিতে পারেন।
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+![Muhurto Breath Preview](https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/bda52038-bb9d-42a3-a72b-0b315bac74e9/id-preview-1ba515c8--05816b90-8ca3-43ac-bd5c-91514965a524.lovable.app-1772976860389.png)
 
-## How can I edit this code?
+## 🌟 মূল ফিচারসমূহ (Key Features)
 
-There are several ways of editing your application.
+* **সম্পূর্ণ অফলাইন সাপোর্ট:** একবার লোড হওয়ার পর ইন্টারনেট সংযোগের আর কোনো প্রয়োজন নেই। PWA হওয়ার কারণে সরাসরি মোবাইল বা ডেস্কটপে ইনস্টল করে ব্যবহার করা যায়।
+* **ভয়েস গাইডেন্স ও হ্যাপটিক ফিডব্যাক:** চোখ বন্ধ রেখেই ভয়েস ইন্সট্রাকশন এবং ভাইব্রেশন (হ্যাপটিক) এর মাধ্যমে ব্যায়ামগুলো করা সম্ভব।
+* **বিভিন্ন ব্রিদিং টেকনিক:**
+  * Box Breathing (ফোকাস বাড়াতে)
+  * 4-7-8 Relaxation (তাড়াতাড়ি ঘুমাতে সাহায্য করে)
+  * Wim Hof Method (এনার্জি বুস্ট করতে)
+  * এবং আরও অনেক...
+* **স্মার্ট সাজেশন:** আপনার বর্তমান মানসিক অবস্থা বা লক্ষ্যের ওপর ভিত্তি করে অ্যাপটি আপনাকে সঠিক ব্যায়ামের পরামর্শ দেবে।
+* **পরিসংখ্যান (Stats):** প্রতিদিনের সেশন এবং আপনার প্রগ্রেস ট্র্যাক করার সুবিধা।
+* **প্লেলিস্ট এবং প্রোগ্রাম:** আপনার পছন্দের টেকনিকগুলো দিয়ে নিজের প্লেলিস্ট তৈরি করা বা প্রি-সেট প্রোগ্রামগুলো ফলো করা।
+* **থিম কাস্টমাইজেশন:** ডার্ক মোড, লাইট মোড ও কাস্টম থিম সাপোর্ট।
+* **বহুভাষিক সাপোর্ট (Multi-language):** বাংলা এবং ইংরেজি উভয় ভাষায় ব্যবহার করার সুবিধা।
+* **অ্যাক্সেসিবিলিটি (Accessibility):** কীবোর্ড শর্টকাট, স্ক্রিন রিডার সাপোর্ট এবং হাই-কন্ট্রাস্ট মোড অন্তর্ভুক্ত।
 
-**Use Lovable**
+## 🚀 টেকনোলজি স্ট্যাক (Tech Stack)
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
+* **ফ্রন্টএন্ড ফ্রেমওয়ার্ক:** React 18, Vite
+* **ভাষা:** TypeScript
+* **স্টাইলিং:** Tailwind CSS, shadcn-ui, Radix UI
+* **অ্যানিমেশন ও চার্ট:** Framer Motion (বা সমতুল্য), Recharts
+* **স্টেট ম্যানেজমেন্ট ও ডেটা ফেচিং:** React Query, Context API, LocalStorage (অফলাইন ডেটার জন্য)
+* **PWA:** vite-plugin-pwa, Workbox
+* **প্যাকেজ ম্যানেজার:** pnpm (Project strictly mandates pnpm)
 
-Changes made via Lovable will be committed automatically to this repo.
+## 🛠️ কিভাবে ইন্সটল ও রান করবেন (Local Development)
 
-**Use your preferred IDE**
+লোকাল মেশিনে প্রজেক্টটি রান করার জন্য আপনার সিস্টেমে `Node.js` এবং `pnpm` ইনস্টল থাকতে হবে। (বি.দ্র. এই প্রজেক্টে শুধুমাত্র pnpm ব্যবহার করা বাধ্যতামূলক)।
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+```bash
+# 1. রিপোজিটরি ক্লোন করুন
+git clone https://github.com/Shazolpersonal/breathe-easy-offline.git
+cd breathe-easy-offline
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+# 2. ডিপেন্ডেন্সি ইন্সটল করুন
+pnpm install
 
-Follow these steps:
+# 3. লোকাল ডেভেলপমেন্ট সার্ভার চালু করুন
+pnpm dev
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+# 4. প্রোডাকশন বিল্ড তৈরি করতে
+pnpm build
 ```
 
-**Edit a file directly in GitHub**
+লোকাল সার্ভার চালু হলে ব্রাউজারে `http://localhost:8080` (অথবা টার্মিনালে দেখানো পোর্ট) এ গিয়ে অ্যাপটি ব্যবহার করতে পারবেন।
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+## 📁 প্রজেক্ট স্ট্রাকচার (Project Structure)
 
-**Use GitHub Codespaces**
+* `src/components/`: পুনঃব্যবহারযোগ্য UI কম্পোনেন্ট (shadcn-ui এবং কাস্টম)।
+* `src/pages/`: অ্যাপ্লিকেশনের মূল পেইজসমূহ (Home, Session, Stats, Settings ইত্যাদি)।
+* `src/contexts/`: গ্লোবাল স্টেট ম্যানেজমেন্ট (Theme, Settings, Language, Session)।
+* `src/lib/`: ইউটিলিটি ফাংশন এবং হেল্পার (অফলাইন স্টোরেজ, লজিক)।
+* `src/locales/`: বাংলা ও ইংরেজি ভাষার ট্রান্সলেশন ফাইলসমূহ।
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+## 🤝 অবদান রাখা (Contributing)
 
-## What technologies are used for this project?
+যে কেউ এই প্রজেক্টে অবদান রাখতে পারেন। কোনো বাগ পেলে বা নতুন ফিচারের আইডিয়া থাকলে **Issue** তৈরি করুন অথবা সরাসরি **Pull Request** পাঠান। কোড লেখার সময় প্রজেক্টের কোডিং স্টাইল এবং pnpm ব্যবহারের বিষয়টি মাথায় রাখার অনুরোধ রইল।
 
-This project is built with:
-
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+---
+*আপনার মানসিক প্রশান্তি নিশ্চিত করতেই **Muhurto Breath** এর এই ক্ষুদ্র প্রয়াস।*
