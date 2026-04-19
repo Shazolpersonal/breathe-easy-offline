@@ -5,10 +5,11 @@ import { getCustomTechniques } from "./storage";
 const FORMULA_CHARS = ['=', '+', '-', '@', '\t', '\r'];
 
 function escapeCSV(value: string): string {
-  // Strip leading formula-trigger characters to prevent spreadsheet injection
+  // Security: Prepend a single quote to prevent spreadsheet/CSV injection (DDE)
+  // while preserving the original user data
   let sanitized = value;
-  while (sanitized.length > 0 && FORMULA_CHARS.includes(sanitized[0])) {
-    sanitized = sanitized.slice(1);
+  if (sanitized.length > 0 && FORMULA_CHARS.includes(sanitized[0])) {
+    sanitized = "'" + sanitized;
   }
   if (sanitized.includes(",") || sanitized.includes('"') || sanitized.includes("\n")) {
     return `"${sanitized.replace(/"/g, '""')}"`;
