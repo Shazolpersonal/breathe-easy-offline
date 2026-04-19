@@ -32,6 +32,7 @@ export default function Techniques() {
   // Bug 5: Memoize progressions to avoid per-card localStorage parsing
 
   const progressions = useMemo(() => getAllProgressionsPublic(), [favorites, customTechniques]);
+  const totalSessions = useMemo(() => progressions.reduce((sum, p) => sum + p.sessionsCompleted, 0), [progressions]);
 
   const progressionMap = useMemo(() => {
     const map: Record<string, ReturnType<typeof getProgression>> = {};
@@ -288,6 +289,7 @@ export default function Techniques() {
                 isFavorite={favorites.includes(tech.id)}
                 onToggleFavorite={() => handleToggleFav(tech.id)}
                 progression={progressionMap[tech.id]}
+                totalSessions={totalSessions}
               />
               {/* Bug 1: Delete button for custom techniques */}
               {tech.isCustom && (

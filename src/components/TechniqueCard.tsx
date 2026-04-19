@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Heart, HeartOff, Play, Lock, Share2, Eye, EyeOff } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { BreathingTechnique, getCycleDuration } from "@/lib/techniques";
-import { UserProgression, getLevelName, getLevelProgress, isUnlocked, getUnlockRemaining } from "@/lib/progression";
+import { UserProgression, getLevelName, getLevelProgress, isUnlocked, getUnlockRemaining, getProgression } from "@/lib/progression";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
@@ -18,6 +18,7 @@ interface TechniqueCardProps {
   onToggleFavorite: () => void;
   compact?: boolean;
   progression?: UserProgression;
+  totalSessions?: number;
 }
 
 const difficultyColor = {
@@ -26,7 +27,7 @@ const difficultyColor = {
   advanced: "bg-destructive/20 text-destructive",
 };
 
-export default function TechniqueCard({ technique, isFavorite, onToggleFavorite, compact, progression: propProgression }: TechniqueCardProps) {
+export default function TechniqueCard({ technique, isFavorite, onToggleFavorite, compact, progression: propProgression, totalSessions }: TechniqueCardProps) {
   const navigate = useNavigate();
   const { t, language } = useLanguage();
   const { settings } = useSettings();
@@ -37,9 +38,9 @@ export default function TechniqueCard({ technique, isFavorite, onToggleFavorite,
     onToggleFavorite();
   };
   const cycleSec = getCycleDuration(technique);
-  const unlocked = isUnlocked(technique);
+  const unlocked = isUnlocked(technique, totalSessions);
   // Bug 5: Use passed progression prop if available, fallback to direct call only in compact/standalone usage
-  const progression = propProgression || { techniqueId: technique.id, level: 1, sessionsCompleted: 0, totalCycles: 0 };
+  const progression = propProgression || getProgression(technique.id);
 
   const techniqueName = t(`technique.${technique.id}.name`) !== `technique.${technique.id}.name`
     ? t(`technique.${technique.id}.name`)
@@ -80,7 +81,7 @@ export default function TechniqueCard({ technique, isFavorite, onToggleFavorite,
         <div className="min-w-0 flex-1">
           <p className="truncate text-sm font-medium text-foreground">{techniqueName}</p>
           <p className="text-xs text-muted-foreground">
-            {unlocked ? `${cycleSec}s · ${levelLabel}` : t("techniques.moreSessionsToUnlock", { count: getUnlockRemaining(technique) })}
+            {unlocked ? `${cycleSec}s · ${levelLabel}` : t("techniques.moreSessionsToUnlock", { count: getUnlockRemaining(technique, totalSessions) })}
           </p>
         </div>
       </button>
@@ -161,7 +162,7 @@ export default function TechniqueCard({ technique, isFavorite, onToggleFavorite,
       ) : (
         <div className="mt-3 flex w-full items-center justify-center gap-2 rounded-xl bg-muted py-2.5 text-sm font-medium text-muted-foreground">
           <Lock className="h-4 w-4" />
-          {t("techniques.moreSessionsToUnlock", { count: getUnlockRemaining(technique) })}
+          {t("techniques.moreSessionsToUnlock", { count: getUnlockRemaining(technique, totalSessions) })}
         </div>
       )}
     </div>

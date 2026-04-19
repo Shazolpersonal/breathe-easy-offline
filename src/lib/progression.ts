@@ -89,14 +89,16 @@ export function getTotalSessionCount(): number {
   return getAllProgressions().reduce((sum, p) => sum + p.sessionsCompleted, 0);
 }
 
-export function isUnlocked(technique: BreathingTechnique): boolean {
+export function isUnlocked(technique: BreathingTechnique, totalSessions?: number): boolean {
   const threshold = UNLOCK_THRESHOLDS[technique.difficulty] ?? 0;
-  return getTotalSessionCount() >= threshold;
+  const count = totalSessions !== undefined ? totalSessions : getTotalSessionCount();
+  return count >= threshold;
 }
 
-export function getUnlockRemaining(technique: BreathingTechnique): number {
+export function getUnlockRemaining(technique: BreathingTechnique, totalSessions?: number): number {
   const threshold = UNLOCK_THRESHOLDS[technique.difficulty] ?? 0;
-  return Math.max(0, threshold - getTotalSessionCount());
+  const count = totalSessions !== undefined ? totalSessions : getTotalSessionCount();
+  return Math.max(0, threshold - count);
 }
 
 export function getScaledPhases(technique: BreathingTechnique, level: number): BreathingPhase[] {
