@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, memo } from "react";
 
 interface ParticleBackgroundProps {
   phase: "inhale" | "hold" | "exhale" | "hold-after-exhale" | "idle";
@@ -22,7 +22,7 @@ function getComputedHSL(varName: string): string {
   return val ? `hsl(${val})` : "hsl(195 85% 55%)";
 }
 
-export default function ParticleBackground({ phase }: ParticleBackgroundProps) {
+const ParticleBackground = memo(function ParticleBackground({ phase }: ParticleBackgroundProps) {
   // Track theme changes to re-read colors
   const themeAttr = typeof document !== "undefined" ? document.documentElement.getAttribute("data-theme") : null;
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -136,4 +136,6 @@ export default function ParticleBackground({ phase }: ParticleBackgroundProps) {
       style={{ zIndex: 0 }}
     />
   );
-}
+});
+
+export default ParticleBackground;

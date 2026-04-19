@@ -1,9 +1,11 @@
+import { memo } from "react";
+
 interface ScreenColorBreathingProps {
   phase: "inhale" | "hold" | "exhale" | "hold-after-exhale" | "idle";
   phaseDuration: number;
 }
 
-export default function ScreenColorBreathing({ phase, phaseDuration }: ScreenColorBreathingProps) {
+const ScreenColorBreathing = memo(function ScreenColorBreathing({ phase, phaseDuration }: ScreenColorBreathingProps) {
   const bg =
     phase === "inhale"
       ? "radial-gradient(ellipse at center, hsla(30, 80%, 55%, 0.1) 0%, transparent 70%)"
@@ -25,4 +27,6 @@ export default function ScreenColorBreathing({ phase, phaseDuration }: ScreenCol
       }}
     />
   );
-}
+});
+
+export default ScreenColorBreathing;
