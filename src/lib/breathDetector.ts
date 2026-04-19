@@ -100,7 +100,8 @@ export class BreathDetector {
 
       this.loop();
       return true;
-    } catch {
+    } catch (error) {
+      console.error('[BreathDetector] Failed to start:', error);
       return false;
     }
   }
@@ -115,7 +116,9 @@ export class BreathDetector {
     }
 
     if (this.audioContext) {
-      this.audioContext.close().catch(() => {});
+      this.audioContext.close().catch((error) => {
+        console.error('[BreathDetector] Error closing AudioContext:', error);
+      });
       this.audioContext = null;
     }
 
