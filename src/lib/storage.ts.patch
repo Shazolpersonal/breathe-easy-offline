@@ -1,0 +1,8 @@
+<<<<<<< SEARCH
+// Memory: Prevent redundant JSON.parse for large arrays like sessions
+const jsonCache = new Map<string, { raw: string | null; parsed: any }>();
+=======
+// Memory: Prevent redundant JSON.parse for large arrays like sessions
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const jsonCache = new Map<string, { raw: string | null; parsed: any }>();
+>>>>>>> REPLACE

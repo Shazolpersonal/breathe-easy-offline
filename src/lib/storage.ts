@@ -81,17 +81,32 @@ const DEFAULT_SETTINGS: AppSettings = {
   dailyGoalMinutes: 5,
 };
 
+// Memory: Prevent redundant JSON.parse for large arrays like sessions
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const jsonCache = new Map<string, { raw: string | null; parsed: any }>();
+
 function getJSON<T>(key: string, fallback: T): T {
   try {
     const raw = localStorage.getItem(key);
-    return raw ? JSON.parse(raw) : fallback;
+
+    // Return from cache if raw string hasn't changed
+    const cached = jsonCache.get(key);
+    if (cached && cached.raw === raw) {
+      return cached.parsed !== undefined ? cached.parsed : fallback;
+    }
+
+    const parsed = raw ? JSON.parse(raw) : fallback;
+    jsonCache.set(key, { raw, parsed });
+    return parsed;
   } catch {
     return fallback;
   }
 }
 
 function setJSON(key: string, value: unknown) {
-  localStorage.setItem(key, JSON.stringify(value));
+  const raw = JSON.stringify(value);
+  localStorage.setItem(key, raw);
+  jsonCache.set(key, { raw, parsed: value });
 }
 
 // Sessions
