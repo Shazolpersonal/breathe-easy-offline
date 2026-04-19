@@ -5,6 +5,7 @@ import TechniqueCard from "@/components/TechniqueCard";
 import WeeklySummary from "@/components/WeeklySummary";
 import { PRESET_TECHNIQUES, getTechniqueById } from "@/lib/techniques";
 import { getCustomTechniques, getFavorites, toggleFavorite, getCurrentStreak, getTodayMinutes, getLastSessionConfig } from "@/lib/storage";
+import { getAllProgressionsPublic, getProgression } from "@/lib/progression";
 import { useSettings } from "@/contexts/SettingsContext";
 import { getDailyChallenges, getChallengeStreak, saveTodayChallengeProgress, areAllChallengesComplete } from "@/lib/challenges";
 import { getXPState, getWeeklyXP, addXP } from "@/lib/xp";
@@ -33,6 +34,20 @@ export default function Home() {
   const dailyGoal = settings.dailyGoalMinutes;
   const goalProgress = Math.min(100, Math.round((todayMin / dailyGoal) * 100));
   const allTechniques = useMemo(() => [...PRESET_TECHNIQUES, ...getCustomTechniques()], []);
+  const progressions = useMemo(() => getAllProgressionsPublic(), [favorites]);
+  const totalSessions = useMemo(() => progressions.reduce((sum, p) => sum + p.sessionsCompleted, 0), [progressions]);
+
+  const progressionMap = useMemo(() => {
+    const map: Record<string, ReturnType<typeof getProgression>> = {};
+    for (const tech of allTechniques) {
+      if (favorites.includes(tech.id)) {
+        const found = progressions.find(p => p.techniqueId === tech.id);
+        map[tech.id] = found || { techniqueId: tech.id, level: 1, sessionsCompleted: 0, totalCycles: 0 };
+      }
+    }
+    return map;
+  }, [allTechniques, progressions, favorites]);
+
   const favTechniques = useMemo(() => allTechniques.filter((tech) => favorites.includes(tech.id)), [allTechniques, favorites]);
   const xpState = useMemo(() => getXPState(), []);
   const weeklyXP = useMemo(() => getWeeklyXP(), []);
@@ -393,6 +408,8 @@ export default function Home() {
                   isFavorite={true}
                   onToggleFavorite={() => handleToggleFav(tech.id)}
                   compact
+                  progression={progressionMap[tech.id]}
+                  totalSessions={totalSessions}
                 />
               ))}
             </div>
