@@ -1,4 +1,5 @@
 import { getTodaySessions } from "./storage";
+import { sanitizeString } from "./utils";
 
 export interface FriendChallengeParams {
   techniqueId: string;
@@ -17,31 +18,70 @@ export interface FriendChallenge extends FriendChallengeParams {
 const STORAGE_KEY = "breathe_friend_challenges";
 
 export function generateChallengeLink(params: FriendChallengeParams): string {
-  const encoded = btoa(JSON.stringify(params));
+  // Unicode-safe base64 encoding
+  const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(params))));
   return `${window.location.origin}${window.location.pathname}#challenge=${encoded}`;
 }
 
 function isValidChallenge(obj: unknown): obj is FriendChallengeParams {
   if (!obj || typeof obj !== 'object') return false;
   const c = obj as Record<string, unknown>;
+
+  // Strict regex for ID and Date
+  const idRegex = /^[a-zA-Z0-9-]+$/;
+  const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+
   return (
-    typeof c.techniqueId === 'string' && c.techniqueId.length > 0 && c.techniqueId.length <= 50 &&
-    typeof c.techniqueName === 'string' && c.techniqueName.length > 0 && c.techniqueName.length <= 100 &&
-    typeof c.challengerName === 'string' && c.challengerName.length > 0 && c.challengerName.length <= 80 &&
-    typeof c.targetMinutes === 'number' && Number.isFinite(c.targetMinutes) && c.targetMinutes >= 0 && c.targetMinutes <= 120 &&
-    typeof c.targetCycles === 'number' && Number.isFinite(c.targetCycles) && c.targetCycles >= 0 && c.targetCycles <= 500 &&
-    typeof c.date === 'string' && c.date.length <= 20
+    typeof c.techniqueId === 'string' &&
+    c.techniqueId.length > 0 &&
+    c.techniqueId.length <= 50 &&
+    idRegex.test(c.techniqueId) &&
+
+    typeof c.techniqueName === 'string' &&
+    c.techniqueName.length > 0 &&
+    c.techniqueName.length <= 100 &&
+
+    typeof c.challengerName === 'string' &&
+    c.challengerName.length > 0 &&
+    c.challengerName.length <= 80 &&
+
+    typeof c.targetMinutes === 'number' &&
+    Number.isFinite(c.targetMinutes) &&
+    c.targetMinutes >= 0 &&
+    c.targetMinutes <= 120 &&
+
+    typeof c.targetCycles === 'number' &&
+    Number.isFinite(c.targetCycles) &&
+    c.targetCycles >= 0 &&
+    c.targetCycles <= 500 &&
+
+    typeof c.date === 'string' &&
+    c.date.length <= 10 &&
+    dateRegex.test(c.date)
   );
 }
 
 export function parseChallengeFromURL(): FriendChallengeParams | null {
   const hash = window.location.hash;
   if (!hash.startsWith("#challenge=")) return null;
+
+  // Security: limit hash length to prevent DoS/memory issues
+  if (hash.length > 2000) return null;
+
   try {
     const encoded = hash.slice("#challenge=".length);
-    const parsed = JSON.parse(atob(encoded));
+    // Unicode-safe base64 decoding
+    const decoded = decodeURIComponent(escape(atob(encoded)));
+    const parsed = JSON.parse(decoded);
+
     if (!isValidChallenge(parsed)) return null;
-    return parsed;
+
+    // Security: sanitize user-controlled strings to prevent XSS
+    return {
+      ...parsed,
+      techniqueName: sanitizeString(parsed.techniqueName),
+      challengerName: sanitizeString(parsed.challengerName),
+    };
   } catch {
     return null;
   }

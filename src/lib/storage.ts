@@ -1,4 +1,5 @@
 import { BreathingTechnique } from "./techniques";
+import { sanitizeObjectStrings } from "@/lib/utils";
 
 export interface SessionRecord {
   id: string;
@@ -377,33 +378,6 @@ export function validateImportData(json: string): ImportValidationResult {
   }
 }
 
-// Security: sanitize imported strings to prevent XSS
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function sanitizeString(str: any): any {
-  if (typeof str !== 'string') return str;
-  return str
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#039;');
-}
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function sanitizeObjectStrings(obj: any): any {
-  if (Array.isArray(obj)) {
-    return obj.map(sanitizeObjectStrings);
-  }
-  if (obj !== null && typeof obj === 'object') {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const newObj: any = {};
-    for (const key in obj) {
-      newObj[key] = sanitizeObjectStrings(obj[key]);
-    }
-    return newObj;
-  }
-  return sanitizeString(obj);
-}
 
 export function importDataSmart(json: string, skipDuplicates: boolean = true): ImportValidationResult {
   const validation = validateImportData(json);
