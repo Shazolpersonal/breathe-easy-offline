@@ -417,24 +417,38 @@ export function importDataSmart(json: string, skipDuplicates: boolean = true): I
   let newCount = 0;
 
   if (data.sessions && Array.isArray(data.sessions)) {
-    const sessionsToAdd: SessionRecord[] = [];
-
-    for (const s of data.sessions) {
-      if (existingIds.has(s.id)) {
-        duplicateCount++;
-        if (!skipDuplicates) {
-          // Overwrite: remove existing and add new
-          const idx = existingSessions.findIndex(es => es.id === s.id);
-          if (idx >= 0) existingSessions.splice(idx, 1);
+    if (skipDuplicates) {
+      const sessionsToAdd: SessionRecord[] = [];
+      for (const s of data.sessions) {
+        if (existingIds.has(s.id)) {
+          duplicateCount++;
+        } else {
+          newCount++;
           sessionsToAdd.push(s);
         }
-      } else {
-        newCount++;
-        sessionsToAdd.push(s);
       }
+      if (newCount > 0) {
+        setJSON(KEYS.sessions, [...existingSessions, ...sessionsToAdd]);
+      }
+    } else {
+      // Overwrite mode: Use Map to avoid O(N^2) findIndex/splice
+      const sessionsMap = new Map<string, SessionRecord>();
+      for (const s of existingSessions) {
+        sessionsMap.set(s.id, s);
+      }
+      for (const s of data.sessions) {
+        if (sessionsMap.has(s.id)) {
+          duplicateCount++;
+          // Deleting and re-setting moves the item to the end of insertion order,
+          // matching the original splice + push behavior.
+          sessionsMap.delete(s.id);
+        } else {
+          newCount++;
+        }
+        sessionsMap.set(s.id, s);
+      }
+      setJSON(KEYS.sessions, Array.from(sessionsMap.values()));
     }
-
-    setJSON(KEYS.sessions, [...existingSessions, ...sessionsToAdd]);
   }
 
   // Import other data normally
