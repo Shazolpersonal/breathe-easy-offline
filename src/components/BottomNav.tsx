@@ -35,6 +35,7 @@ export default function BottomNav() {
       {moreOpen && (
         <div className="fixed inset-0 z-[60]" onClick={() => setMoreOpen(false)}>
           <div
+            role="menu"
             className="absolute bottom-20 right-3 min-w-[200px] rounded-2xl border border-border/60 bg-card/90 backdrop-blur-xl shadow-2xl shadow-black/20 animate-in fade-in-0 zoom-in-95 slide-in-from-bottom-3 duration-200 overflow-hidden"
             onClick={e => e.stopPropagation()}
           >
@@ -43,9 +44,10 @@ export default function BottomNav() {
               return (
                 <button
                   key={path}
+                  role="menuitem"
                   onClick={() => { navigate(path); setMoreOpen(false); }}
                   className={cn(
-                    "relative flex w-full items-center gap-4 px-5 py-4 text-base transition-colors",
+                    "relative flex w-full items-center gap-4 px-5 py-4 text-base transition-colors focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-ring",
                     idx < MORE_ITEMS.length - 1 && "border-b border-border/30",
                     active
                       ? "bg-primary/10 text-primary font-medium"
@@ -83,7 +85,7 @@ export default function BottomNav() {
                 onClick={() => navigate(path)}
                 aria-current={active ? "page" : undefined}
                 className={cn(
-                  "flex flex-col items-center gap-1 rounded-xl px-4 py-2 text-xs transition-colors",
+                  "flex flex-col items-center gap-1 rounded-xl px-4 py-2 text-xs transition-colors focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-ring",
                   active ? "text-primary" : "text-muted-foreground hover:text-foreground"
                 )}
               >
@@ -94,8 +96,10 @@ export default function BottomNav() {
           })}
           <button
             onClick={() => setMoreOpen(!moreOpen)}
+            aria-haspopup="menu"
+            aria-expanded={moreOpen}
             className={cn(
-              "flex flex-col items-center gap-1 rounded-xl px-4 py-2 text-xs transition-colors",
+              "flex flex-col items-center gap-1 rounded-xl px-4 py-2 text-xs transition-colors focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-ring",
               isMoreActive ? "text-primary" : "text-muted-foreground hover:text-foreground"
             )}
           >

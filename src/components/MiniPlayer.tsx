@@ -62,7 +62,7 @@ export default function MiniPlayer() {
               e.stopPropagation();
               updateMiniSession({ isPaused: !miniSession.isPaused });
             }}
-            className="rounded-full p-1.5 text-foreground hover:bg-secondary transition-colors"
+            className="rounded-full p-1.5 text-foreground hover:bg-secondary transition-colors focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-ring focus-visible:ring-offset-2"
             aria-label={miniSession.isPaused ? t("session.resume") : t("session.pause")}
           >
             {miniSession.isPaused ? <Play className="h-4 w-4" /> : <Pause className="h-4 w-4" />}
@@ -70,7 +70,7 @@ export default function MiniPlayer() {
 
           <button
             onClick={handleStop}
-            className="rounded-full p-1.5 text-muted-foreground hover:text-destructive transition-colors"
+            className="rounded-full p-1.5 text-muted-foreground hover:text-destructive transition-colors focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-ring focus-visible:ring-offset-2"
             aria-label={t("session.stopAndSave")}
           >
             <X className="h-4 w-4" />

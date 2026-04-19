@@ -106,7 +106,7 @@ export default function Home() {
             <div className="flex items-center gap-2">
               <button
                 onClick={() => setShowDonateDialog(true)}
-                className="flex h-8 w-8 items-center justify-center rounded-full border border-border bg-card text-muted-foreground transition-colors hover:text-primary hover:bg-primary/10"
+                className="flex h-8 w-8 items-center justify-center rounded-full border border-border bg-card text-muted-foreground transition-colors hover:text-primary hover:bg-primary/10 focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-ring focus-visible:ring-offset-2"
                 title={t("donate.supportUs")}
               >
                 <Heart className="h-4 w-4" />
@@ -114,13 +114,13 @@ export default function Home() {
             <div className="flex items-center rounded-full border border-border bg-card p-0.5 text-xs font-medium">
               <button
                 onClick={() => setLanguage("en")}
-                className={`rounded-full px-2.5 py-1 transition-colors ${language === "en" ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground"}`}
+                className={`rounded-full px-2.5 py-1 transition-colors focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-ring focus-visible:ring-offset-2 ${language === "en" ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground"}`}
               >
                 EN
               </button>
               <button
                 onClick={() => setLanguage("bn")}
-                className={`rounded-full px-2.5 py-1 transition-colors ${language === "bn" ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground"}`}
+                className={`rounded-full px-2.5 py-1 transition-colors focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-ring focus-visible:ring-offset-2 ${language === "bn" ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground"}`}
               >
                 বাং
               </button>
@@ -144,7 +144,7 @@ export default function Home() {
                   <Download className="h-3.5 w-3.5" /> {t("install.button")}
                 </Button>
               </div>
-              <button onClick={handleDismissInstall} className="shrink-0 rounded-full p-1 text-muted-foreground hover:text-foreground" aria-label={t("common.close")}>
+              <button onClick={handleDismissInstall} className="shrink-0 rounded-full p-1 text-muted-foreground hover:text-foreground focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-ring focus-visible:ring-offset-2" aria-label={t("common.close")}>
                 <X className="h-4 w-4" />
               </button>
             </div>
@@ -169,7 +169,7 @@ export default function Home() {
                 </p>
                 <p className="mt-1 text-sm text-primary/70">{t("install.manual.free")}</p>
               </div>
-              <button onClick={handleDismissInstall} className="shrink-0 rounded-full p-1 text-muted-foreground hover:text-foreground" aria-label={t("common.close")}>
+              <button onClick={handleDismissInstall} className="shrink-0 rounded-full p-1 text-muted-foreground hover:text-foreground focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-ring focus-visible:ring-offset-2" aria-label={t("common.close")}>
                 <X className="h-4 w-4" />
               </button>
             </div>
@@ -186,7 +186,7 @@ export default function Home() {
             </div>
             <button
               onClick={() => shareQuote(dailyQuote.text, dailyQuote.author, language)}
-              className="shrink-0 rounded-full p-1.5 text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors"
+              className="shrink-0 rounded-full p-1.5 text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-ring focus-visible:ring-offset-2"
               title={t("share.quote")}
             >
               <Share2 className="h-4 w-4" />

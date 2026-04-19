@@ -71,7 +71,7 @@ export default function TechniqueCard({ technique, isFavorite, onToggleFavorite,
       <button
         onClick={() => unlocked && navigate(`/session?technique=${technique.id}`)}
         className={cn(
-          "flex items-center gap-3 rounded-xl border border-border bg-card p-3 text-left transition-colors",
+          "flex items-center gap-3 rounded-xl border border-border bg-card p-3 text-left transition-colors focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-ring focus-visible:ring-offset-2",
           unlocked ? "hover:bg-secondary" : "opacity-50 cursor-not-allowed"
         )}
         disabled={!unlocked}
@@ -121,21 +121,21 @@ export default function TechniqueCard({ technique, isFavorite, onToggleFavorite,
           )}
         </div>
         <div className="ml-2 flex flex-col gap-1 shrink-0">
-          <button onClick={handleToggleFavorite} className="p-1 text-muted-foreground hover:text-primary" aria-label={isFavorite ? t("techniques.unfavorite") : t("techniques.favorite")}>
+          <button onClick={handleToggleFavorite} className="p-1 text-muted-foreground hover:text-primary focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-ring focus-visible:ring-offset-2 rounded" aria-label={isFavorite ? t("techniques.unfavorite") : t("techniques.favorite")}>
             {isFavorite ? <Heart className="h-5 w-5 fill-primary text-primary" /> : <HeartOff className="h-5 w-5" />}
           </button>
           {unlocked && (
             <>
               <button
                 onClick={() => setPreviewActive(!previewActive)}
-                className={cn("p-1 transition-colors", previewActive ? "text-primary" : "text-muted-foreground hover:text-primary")}
+                className={cn("p-1 transition-colors focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-ring focus-visible:ring-offset-2 rounded", previewActive ? "text-primary" : "text-muted-foreground hover:text-primary")}
                 title={t("techniques.preview")}
               >
                 {previewActive ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
               </button>
               <button
                 onClick={() => shareTechnique(techniqueName, techniqueDesc, language)}
-                className="p-1 text-muted-foreground hover:text-primary transition-colors"
+                className="p-1 text-muted-foreground hover:text-primary transition-colors focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-ring focus-visible:ring-offset-2 rounded"
                 title={t("share.technique")}
               >
                 <Share2 className="h-4 w-4" />
@@ -153,7 +153,7 @@ export default function TechniqueCard({ technique, isFavorite, onToggleFavorite,
       {unlocked ? (
         <button
           onClick={() => navigate(`/session?technique=${technique.id}`)}
-          className="mt-3 flex w-full items-center justify-center gap-2 rounded-xl bg-primary py-2.5 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
+          className="mt-3 flex w-full items-center justify-center gap-2 rounded-xl bg-primary py-2.5 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90 focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-ring focus-visible:ring-offset-2"
         >
           <Play className="h-4 w-4" />
           {t("techniques.startSession")}
