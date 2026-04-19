@@ -1,0 +1,36 @@
+<<<<<<< SEARCH
+// Mock localStorage for non-browser environments like Bun
+if (typeof global !== "undefined" && typeof global.localStorage === "undefined") {
+  const store: Record<string, string> = {};
+  global.localStorage = {
+    getItem: (key: string) => store[key] || null,
+    setItem: (key: string, value: string) => { store[key] = String(value); },
+    removeItem: (key: string) => { delete store[key]; },
+    clear: () => { Object.keys(store).forEach(key => delete store[key]); },
+    length: Object.keys(store).length,
+    key: (idx: number) => Object.keys(store)[idx] || null,
+  } as Storage;
+}
+=======
+// Mock localStorage for non-browser environments like Bun
+if (typeof global !== "undefined" && typeof global.localStorage === "undefined") {
+  const store: Record<string, string> = {};
+  global.localStorage = {
+    getItem: (key: string) => store[key] || null,
+    setItem: (key: string, value: string) => { store[key] = String(value); },
+    removeItem: (key: string) => { delete store[key]; },
+    clear: () => { Object.keys(store).forEach(key => delete store[key]); },
+    length: Object.keys(store).length,
+    key: (idx: number) => Object.keys(store)[idx] || null,
+  } as any;
+}
+
+if (typeof global !== "undefined" && typeof global.Storage === "undefined") {
+  global.Storage = class {
+    getItem() { return null; }
+    setItem() {}
+    removeItem() {}
+    clear() {}
+  } as any;
+}
+>>>>>>> REPLACE
