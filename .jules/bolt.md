@@ -8,3 +8,7 @@
 ## 2024-05-19 - React.memo() on pure presentation components
 **Learning:** Components like `ScreenColorBreathing` and `ParticleBackground` receive stable primitive props (`phase`, `phaseDuration`) but were rendering on every single tick (1 second) of the parent `Session.tsx` component.
 **Action:** Always wrap pure presentation components in `React.memo()` if they are placed inside a parent that has a rapid and frequent state update loop (like a timer tick) but their own props remain mostly static.
+
+## 2024-05-20 - O(N*M) in Array Filtering inside a Date Loop
+**Learning:** `monthSessions.filter(s => s.date.startsWith(dateStr)).reduce(...)` inside a `for (let d = 1; d <= daysInMonth; d++)` loop evaluates to an O(N*M) time complexity. For heavy users tracking many sessions over a month, this degrades performance noticeably on every render or dependency change.
+**Action:** Always pre-compute a lookup table (e.g. `Record<string, number>`) in a single O(N) pass, then use it for O(1) lookups during the O(M) loop to build chart data, bringing the total cost down to O(N+M).

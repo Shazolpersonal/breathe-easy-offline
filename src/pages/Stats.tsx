@@ -431,12 +431,19 @@ export default function Stats() {
       if (diff === 1) { cur++; mStreak = Math.max(mStreak, cur); } else cur = 1;
     }
 
+    // Optimization: Pre-compute daily minutes in O(N) to avoid O(N * M) filtering
+    const dailyMinutesMap: Record<string, number> = {};
+    monthSessions.forEach((s) => {
+      const dateStr = s.date.substring(0, 10);
+      dailyMinutesMap[dateStr] = (dailyMinutesMap[dateStr] || 0) + s.durationSeconds;
+    });
+
     // Daily minutes for chart
     const daysInMonth = new Date(reportYear, reportMonth + 1, 0).getDate();
     const dailyMinutes: { day: string; minutes: number }[] = [];
     for (let d = 1; d <= daysInMonth; d++) {
       const dateStr = `${reportYear}-${String(reportMonth + 1).padStart(2, "0")}-${String(d).padStart(2, "0")}`;
-      const dayMin = Math.round(monthSessions.filter(s => s.date.startsWith(dateStr)).reduce((sum, s) => sum + s.durationSeconds, 0) / 60);
+      const dayMin = Math.round((dailyMinutesMap[dateStr] || 0) / 60);
       dailyMinutes.push({ day: String(d), minutes: dayMin });
     }
 
