@@ -28,9 +28,11 @@ export function sanitizeObjectStrings<T>(obj: T): T {
     return obj.map(sanitizeObjectStrings) as unknown as T;
   }
   if (obj !== null && typeof obj === "object") {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const newObj = {} as any;
     for (const key in obj) {
       if (Object.prototype.hasOwnProperty.call(obj, key)) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         newObj[key] = sanitizeObjectStrings((obj as any)[key]);
       }
     }

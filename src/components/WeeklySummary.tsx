@@ -32,7 +32,7 @@ export default function WeeklySummary() {
           <Star className="h-5 w-5 text-primary" />
           <h2 className="text-sm font-semibold text-foreground">{t("weekly.title")}</h2>
         </div>
-        <button onClick={dismiss} className="rounded-full p-1 text-muted-foreground hover:text-foreground" aria-label={t("common.close")}>
+        <button onClick={dismiss} className="rounded-full p-1 text-muted-foreground hover:text-foreground focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-ring focus-visible:ring-offset-2" aria-label={t("common.close")}>
           <X className="h-4 w-4" />
         </button>
       </div>
