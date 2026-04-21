@@ -423,7 +423,7 @@ export default function Stats() {
     const scored = monthSessions.filter((s) => s.calmScore != null);
     const avgCalm = scored.length > 0 ? Math.round(scored.reduce((sum, s) => sum + s.calmScore!, 0) / scored.length) : null;
 
-    const dates = [...new Set(monthSessions.map((s) => s.date.split("T")[0]))].sort();
+    const dates = [...new Set(monthSessions.map((s) => s.date.substring(0, 10)))].sort();
     let mStreak = dates.length > 0 ? 1 : 0;
     let cur = 1;
     for (let i = 1; i < dates.length; i++) {
@@ -431,12 +431,19 @@ export default function Stats() {
       if (diff === 1) { cur++; mStreak = Math.max(mStreak, cur); } else cur = 1;
     }
 
-    // Daily minutes for chart
+    // Daily minutes for chart (Optimized: O(N) hash map lookup instead of O(N*M) filter)
+    const dailyMinutesMap: Record<string, number> = {};
+    for (let i = 0; i < monthSessions.length; i++) {
+      const s = monthSessions[i];
+      const dateStr = s.date.substring(0, 10);
+      dailyMinutesMap[dateStr] = (dailyMinutesMap[dateStr] || 0) + s.durationSeconds;
+    }
+
     const daysInMonth = new Date(reportYear, reportMonth + 1, 0).getDate();
     const dailyMinutes: { day: string; minutes: number }[] = [];
     for (let d = 1; d <= daysInMonth; d++) {
       const dateStr = `${reportYear}-${String(reportMonth + 1).padStart(2, "0")}-${String(d).padStart(2, "0")}`;
-      const dayMin = Math.round(monthSessions.filter(s => s.date.startsWith(dateStr)).reduce((sum, s) => sum + s.durationSeconds, 0) / 60);
+      const dayMin = Math.round((dailyMinutesMap[dateStr] || 0) / 60);
       dailyMinutes.push({ day: String(d), minutes: dayMin });
     }
 
