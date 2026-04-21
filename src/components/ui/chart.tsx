@@ -76,6 +76,7 @@ ${prefix} [data-chart=${safeId}] {
 ${colorConfig
   .map(([key, itemConfig]) => {
     const color = itemConfig.theme?.[theme as keyof typeof itemConfig.theme] || itemConfig.color;
+    // Security: sanitize identifier and color to prevent XSS/context breakout
     const safeKey = key.replace(/[^a-zA-Z0-9-_]/g, "");
     const safeColor = color?.replace(/[^\w\s#(),.%/-]/g, "");
     return color ? `  --color-${safeKey}: ${safeColor};` : null;
