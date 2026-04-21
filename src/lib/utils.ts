@@ -28,10 +28,10 @@ export function sanitizeObjectStrings<T>(obj: T): T {
     return obj.map(sanitizeObjectStrings) as unknown as T;
   }
   if (obj !== null && typeof obj === "object") {
-    const newObj = {} as any;
+    const newObj = {} as Record<string, unknown>;
     for (const key in obj) {
       if (Object.prototype.hasOwnProperty.call(obj, key)) {
-        newObj[key] = sanitizeObjectStrings((obj as any)[key]);
+        newObj[key] = sanitizeObjectStrings((obj as Record<string, unknown>)[key]);
       }
     }
     return newObj as T;
