@@ -78,7 +78,7 @@ function hashDate(dateStr: string): number {
 }
 
 export function getDailyQuote(language: "en" | "bn" = "en"): BreathingQuote {
-  const today = new Date().toISOString().split("T")[0];
+  const today = new Date().toISOString().substring(0, 10);
   const quotes = language === "bn" ? QUOTES_BN : QUOTES_EN;
   const idx = hashDate(today) % quotes.length;
   return quotes[idx];

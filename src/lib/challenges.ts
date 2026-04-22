@@ -41,13 +41,13 @@ function get7DayAverage(key: "sessions" | "minutes" | "cycles"): number {
   const now = new Date();
   const weekAgo = new Date(now);
   weekAgo.setDate(weekAgo.getDate() - 7);
-  const weekAgoStr = weekAgo.toISOString().split("T")[0];
+  const weekAgoStr = weekAgo.toISOString().substring(0, 10);
   const recent = sessions.filter((s) => s.date >= weekAgoStr);
 
   if (recent.length === 0) return 0;
 
   // Count unique days
-  const uniqueDays = new Set(recent.map((s) => s.date.split("T")[0])).size;
+  const uniqueDays = new Set(recent.map((s) => s.date.substring(0, 10))).size;
   const daysActive = Math.max(1, uniqueDays);
 
   switch (key) {
@@ -270,7 +270,7 @@ const CHALLENGE_POOL: ChallengeTemplate[] = [
     category: "exploration",
     getProgress: () => {
       const allSessions = getSessions();
-      const today = new Date().toISOString().split("T")[0];
+      const today = new Date().toISOString().substring(0, 10);
       const todaySessions = allSessions.filter((s) => s.date.startsWith(today));
       const historicalIds = new Set(
         allSessions.filter((s) => !s.date.startsWith(today)).map((s) => s.techniqueId)
@@ -348,7 +348,7 @@ function getTierForSlot(slot: 0 | 1 | 2): ChallengeTier {
 // --- Main daily challenge picker ---
 
 export function getDailyChallenges(): DailyChallenge[] {
-  const today = new Date().toISOString().split("T")[0];
+  const today = new Date().toISOString().substring(0, 10);
   const seed = hashDate(today);
   const picked: DailyChallenge[] = [];
   const usedCategories = new Set<ChallengeCategory>();
@@ -412,13 +412,13 @@ function saveHistory(history: ChallengeHistoryEntry[]) {
   // Keep last 90 days
   const cutoff = new Date();
   cutoff.setDate(cutoff.getDate() - 90);
-  const cutoffStr = cutoff.toISOString().split("T")[0];
+  const cutoffStr = cutoff.toISOString().substring(0, 10);
   const trimmed = history.filter((e) => e.date >= cutoffStr);
   localStorage.setItem(HISTORY_KEY, JSON.stringify(trimmed));
 }
 
 export function saveTodayChallengeProgress() {
-  const today = new Date().toISOString().split("T")[0];
+  const today = new Date().toISOString().substring(0, 10);
   const completed = getCompletedChallengeCount();
   const history = getHistory();
   const existing = history.findIndex((e) => e.date === today);
@@ -446,7 +446,7 @@ export function getChallengeStreak(): number {
   );
 
   const today = new Date();
-  const todayStr = today.toISOString().split("T")[0];
+  const todayStr = today.toISOString().substring(0, 10);
 
   // Allow starting from today or yesterday
   let startOffset = 0;
@@ -455,7 +455,7 @@ export function getChallengeStreak(): number {
   } else {
     const yesterday = new Date(today);
     yesterday.setDate(yesterday.getDate() - 1);
-    const yesterdayStr = yesterday.toISOString().split("T")[0];
+    const yesterdayStr = yesterday.toISOString().substring(0, 10);
     if (completeDays.has(yesterdayStr)) {
       startOffset = 1;
     } else {
@@ -467,7 +467,7 @@ export function getChallengeStreak(): number {
   for (let i = 0; i < 365; i++) {
     const d = new Date(today);
     d.setDate(d.getDate() - i - startOffset);
-    const dateStr = d.toISOString().split("T")[0];
+    const dateStr = d.toISOString().substring(0, 10);
     if (completeDays.has(dateStr)) {
       streak++;
     } else {
@@ -482,7 +482,7 @@ export function getMonthlyCompletionRate(): number {
   const now = new Date();
   const monthAgo = new Date(now);
   monthAgo.setDate(monthAgo.getDate() - 30);
-  const monthAgoStr = monthAgo.toISOString().split("T")[0];
+  const monthAgoStr = monthAgo.toISOString().substring(0, 10);
 
   const recent = history.filter((e) => e.date >= monthAgoStr);
   if (recent.length === 0) return 0;

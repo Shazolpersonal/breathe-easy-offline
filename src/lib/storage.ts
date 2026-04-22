@@ -122,7 +122,7 @@ export function addSession(session: SessionRecord) {
 }
 
 export function getTodaySessions(): SessionRecord[] {
-  const today = new Date().toISOString().split("T")[0];
+  const today = new Date().toISOString().substring(0, 10);
   return getSessions().filter((s) => s.date.startsWith(today));
 }
 
@@ -134,7 +134,7 @@ export function getCurrentStreak(): number {
   const sessions = getSessions();
   if (sessions.length === 0) return 0;
 
-  const dates = [...new Set(sessions.map((s) => s.date.split("T")[0]))].sort().reverse();
+  const dates = [...new Set(sessions.map((s) => s.date.substring(0, 10)))].sort().reverse();
   const today = new Date();
   const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
   
@@ -171,7 +171,7 @@ export function getLongestStreak(): number {
   const sessions = getSessions();
   if (sessions.length === 0) return 0;
 
-  const dates = [...new Set(sessions.map((s) => s.date.split("T")[0]))].sort();
+  const dates = [...new Set(sessions.map((s) => s.date.substring(0, 10)))].sort();
   let longest = 1;
   let current = 1;
 

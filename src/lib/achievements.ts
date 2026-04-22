@@ -33,7 +33,7 @@ function markBadgesSeen(ids: string[]) {
 }
 
 function getStreakFromSessions(sessions: SessionRecord[]): number {
-  const dates = [...new Set(sessions.map(r => r.date.split("T")[0]))].sort();
+  const dates = [...new Set(sessions.map(r => r.date.substring(0, 10)))].sort();
   let streak = dates.length > 0 ? 1 : 0;
   let cur = 1;
   for (let i = 1; i < dates.length; i++) {
@@ -50,7 +50,7 @@ function getStreakFromSessions(sessions: SessionRecord[]): number {
 }
 
 function getLongestStreakFromSessions(sessions: SessionRecord[]): number {
-  const dates = [...new Set(sessions.map(r => r.date.split("T")[0]))].sort();
+  const dates = [...new Set(sessions.map(r => r.date.substring(0, 10)))].sort();
   let streak = dates.length > 0 ? 1 : 0;
   let cur = 1;
   for (let i = 1; i < dates.length; i++) {
@@ -194,7 +194,7 @@ export const BADGES: Badge[] = [
       const sessions = s ?? getSessions();
       const dayMinutes: Record<string, number> = {};
       sessions.forEach((r) => {
-        const day = r.date.split("T")[0];
+        const day = r.date.substring(0, 10);
         dayMinutes[day] = (dayMinutes[day] || 0) + r.durationSeconds / 60;
       });
       const days = Object.entries(dayMinutes)
@@ -218,7 +218,7 @@ export const BADGES: Badge[] = [
       const sessions = s ?? getSessions();
       const dayMinutes: Record<string, number> = {};
       sessions.forEach((r) => {
-        const day = r.date.split("T")[0];
+        const day = r.date.substring(0, 10);
         dayMinutes[day] = (dayMinutes[day] || 0) + r.durationSeconds / 60;
       });
       const days = Object.entries(dayMinutes)

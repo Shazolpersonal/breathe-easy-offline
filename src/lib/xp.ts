@@ -70,7 +70,7 @@ function saveStore(store: XPStore) {
   // Trim history to last 90 days
   const cutoff = new Date();
   cutoff.setDate(cutoff.getDate() - 90);
-  const cutoffStr = cutoff.toISOString().split("T")[0];
+  const cutoffStr = cutoff.toISOString().substring(0, 10);
   store.history = store.history.filter((e) => e.date >= cutoffStr);
   localStorage.setItem(XP_KEY, JSON.stringify(store));
 }
@@ -112,7 +112,7 @@ const DIFFICULTY_MULTIPLIER: Record<string, number> = {
 
 function getTodayXPEarned(): number {
   const store = getStore();
-  const today = new Date().toISOString().split("T")[0];
+  const today = new Date().toISOString().substring(0, 10);
   return store.history
     .filter((e) => e.date === today)
     .reduce((sum, e) => sum + e.amount, 0);
@@ -182,7 +182,7 @@ export function addXP(amount: number, source: string = "session"): { previousLev
   const prevInfo = getLevelInfo(store.totalXP);
   store.totalXP += amount;
   store.history.push({
-    date: new Date().toISOString().split("T")[0],
+    date: new Date().toISOString().substring(0, 10),
     amount,
     source,
   });
@@ -196,7 +196,7 @@ export function getWeeklyXP(): number {
   const now = new Date();
   const weekAgo = new Date(now);
   weekAgo.setDate(weekAgo.getDate() - 7);
-  const weekAgoStr = weekAgo.toISOString().split("T")[0];
+  const weekAgoStr = weekAgo.toISOString().substring(0, 10);
   return store.history
     .filter((e) => e.date >= weekAgoStr)
     .reduce((sum, e) => sum + e.amount, 0);

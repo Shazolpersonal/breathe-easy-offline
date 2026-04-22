@@ -21,7 +21,7 @@ export function getConsistencyScore(): ConsistencyResult {
   for (let i = 0; i < 7; i++) {
     const d = new Date(now);
     d.setDate(d.getDate() - i);
-    const key = d.toISOString().split("T")[0];
+    const key = d.toISOString().substring(0, 10);
     const hasSessions = sessions.some((s) => s.date.startsWith(key));
     if (hasSessions) weekDates.add(key);
   }
@@ -31,7 +31,7 @@ export function getConsistencyScore(): ConsistencyResult {
 
   // Completion (30%): avg completion rate using user's default duration
   const weekSessions = sessions.filter((s) => {
-    const sDate = s.date.split("T")[0];
+    const sDate = s.date.substring(0, 10);
     const daysDiff = Math.floor((now.getTime() - new Date(sDate).getTime()) / 86400000);
     return daysDiff < 7;
   });
