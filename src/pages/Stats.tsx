@@ -46,7 +46,7 @@ export default function Stats() {
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const longestStreak = useMemo(() => getLongestStreak(), [sessionsKey]);
-  const totalMinutes = Math.round(sessions.reduce((s, r) => s + r.durationSeconds, 0) / 60);
+  const totalMinutes = useMemo(() => Math.round(sessions.reduce((s, r) => s + r.durationSeconds, 0) / 60), [sessions]);
 
   const now = new Date();
   const [reportMonth, setReportMonth] = useState(now.getMonth());
@@ -107,9 +107,21 @@ export default function Stats() {
 
 
   const lifetimeStats = useMemo(() => {
-    const uniqueDays = new Set(sessions.map(s => s.date.split("T")[0])).size;
-    const totalHours = Math.round(sessions.reduce((s, r) => s + r.durationSeconds, 0) / 3600 * 10) / 10;
-    const firstSession = sessions.length > 0 ? sessions.reduce((earliest, s) => s.date < earliest ? s.date : earliest, sessions[0].date) : null;
+    const daysSet = new Set<string>();
+    let totalSeconds = 0;
+    let firstSession: string | null = sessions.length > 0 ? sessions[0].date : null;
+
+    for (const s of sessions) {
+      daysSet.add(s.date.substring(0, 10));
+      totalSeconds += s.durationSeconds;
+      if (firstSession && s.date < firstSession) {
+        firstSession = s.date;
+      }
+    }
+
+    const uniqueDays = daysSet.size;
+    const totalHours = Math.round((totalSeconds / 3600) * 10) / 10;
+
     return { uniqueDays, totalHours, firstSession, totalXP: xpState.totalXP };
   }, [sessions, xpState]);
 
@@ -164,10 +176,10 @@ export default function Stats() {
       for (let i = rangeDays - 1; i >= 0; i--) {
         const d = new Date(today);
         d.setDate(d.getDate() - i);
-        days[d.toISOString().split("T")[0]] = 0;
+        days[d.toISOString().substring(0, 10)] = 0;
       }
       sessions.forEach((s) => {
-        const day = s.date.split("T")[0];
+        const day = s.date.substring(0, 10);
         if (day in days) days[day] += Math.round(s.durationSeconds / 60);
       });
       return Object.entries(days).map(([date, minutes]) => ({
@@ -184,13 +196,13 @@ export default function Stats() {
         const weekStart = new Date(weekEnd);
         weekStart.setDate(weekStart.getDate() - 6);
         weeks.push({
-          start: weekStart.toISOString().split("T")[0],
-          end: weekEnd.toISOString().split("T")[0],
+          start: weekStart.toISOString().substring(0, 10),
+          end: weekEnd.toISOString().substring(0, 10),
           minutes: 0,
         });
       }
       sessions.forEach((s) => {
-        const day = s.date.split("T")[0];
+        const day = s.date.substring(0, 10);
         for (const week of weeks) {
           if (day >= week.start && day <= week.end) {
             week.minutes += Math.round(s.durationSeconds / 60);
@@ -263,7 +275,7 @@ export default function Stats() {
     if (records.length < 2) return [];
     const dayMap: Record<string, { total: number; count: number }> = {};
     records.forEach(r => {
-      const day = r.date.split("T")[0];
+      const day = r.date.substring(0, 10);
       if (!dayMap[day]) dayMap[day] = { total: 0, count: 0 };
       dayMap[day].total += r.moodAfter!;
       dayMap[day].count++;
@@ -306,7 +318,7 @@ export default function Stats() {
       for (let i = 29; i >= 0; i--) {
         const d = new Date(today);
         d.setDate(d.getDate() - i);
-        dayMap[d.toISOString().split("T")[0]] = 0;
+        dayMap[d.toISOString().substring(0, 10)] = 0;
       }
       store.history.forEach((e: { date: string; amount: number }) => {
         if (e.date in dayMap) dayMap[e.date] += e.amount;
@@ -423,7 +435,7 @@ export default function Stats() {
     const scored = monthSessions.filter((s) => s.calmScore != null);
     const avgCalm = scored.length > 0 ? Math.round(scored.reduce((sum, s) => sum + s.calmScore!, 0) / scored.length) : null;
 
-    const dates = [...new Set(monthSessions.map((s) => s.date.split("T")[0]))].sort();
+    const dates = [...new Set(monthSessions.map((s) => s.date.substring(0, 10)))].sort();
     let mStreak = dates.length > 0 ? 1 : 0;
     let cur = 1;
     for (let i = 1; i < dates.length; i++) {

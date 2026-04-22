@@ -34,7 +34,7 @@ export function getWeeklySummary(): WeeklySummaryData {
     if (raw) {
       const store = JSON.parse(raw);
       if (store.history) {
-        const weekAgoDate = weekAgo.toISOString().split("T")[0];
+        const weekAgoDate = weekAgo.toISOString().substring(0, 10);
         xpEarned = store.history
           .filter((e: { date: string; amount: number }) => e.date >= weekAgoDate)
           .reduce((sum: number, e: { amount: number }) => sum + e.amount, 0);

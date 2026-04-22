@@ -41,7 +41,7 @@ export function CreateChallengeDialog({ open, onOpenChange }: CreateChallengeDia
       targetMinutes,
       targetCycles,
       challengerName: challengerName.trim(),
-      date: new Date().toISOString().split("T")[0],
+      date: new Date().toISOString().substring(0, 10),
     };
 
     const link = generateChallengeLink(params);

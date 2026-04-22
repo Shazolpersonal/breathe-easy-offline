@@ -67,7 +67,7 @@ export default function Home() {
     saveTodayChallengeProgress();
     if (areAllChallengesComplete() && !allCompleteToastShown.current) {
       allCompleteToastShown.current = true;
-      const bonusKey = `breathe_challenge_bonus_${new Date().toISOString().split("T")[0]}`;
+      const bonusKey = `breathe_challenge_bonus_${new Date().toISOString().substring(0, 10)}`;
       if (!localStorage.getItem(bonusKey)) {
         addXP(25, "challenge_bonus");
         localStorage.setItem(bonusKey, "1");

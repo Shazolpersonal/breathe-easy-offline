@@ -12,3 +12,9 @@
 ## 2024-05-20 - O(N*M) in Array Filtering inside a Date Loop
 **Learning:** `monthSessions.filter(s => s.date.startsWith(dateStr)).reduce(...)` inside a `for (let d = 1; d <= daysInMonth; d++)` loop evaluates to an O(N*M) time complexity. For heavy users tracking many sessions over a month, this degrades performance noticeably on every render or dependency change.
 **Action:** Always pre-compute a lookup table (e.g. `Record<string, number>`) in a single O(N) pass, then use it for O(1) lookups during the O(M) loop to build chart data, bringing the total cost down to O(N+M).
+## 2024-05-21 - Avoiding Multiple Passes over Large Data Arrays
+**Learning:** Chaining array methods like `.map().size` and `.reduce()` multiple times sequentially over large sets (e.g., historical user sessions) triggers multiple full sweeps through the dataset. This results in (3N)$ or higher runtime execution in React component render cycles, which degrades performance as the user's history grows.
+**Action:** Replace sequential passes with a single (N)$ loop (using a basic `for...of` construct). Inside this single pass, perform all calculations (e.g., adding to a Set for unique counting, summing values for totals, or finding extremums). This scales much more reliably.
+## 2024-05-22 - Performant String Substring for ISO Dates
+**Learning:** Extracting dates from an ISO string using `.split("T")[0]` creates intermediate arrays and forces the Javascript engine to scan the entire string. When iterated over thousands of items in a map or filter callback, the overhead from this garbage-collection and allocation degrades performance.
+**Action:** Use `.substring(0, 10)` to extract the `YYYY-MM-DD` portion directly. It avoids array allocations and executes significantly faster, acting as an easy micro-optimization when parsing arrays of dates.
