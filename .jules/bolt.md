@@ -18,3 +18,6 @@
 ## 2024-05-22 - Performant String Substring for ISO Dates
 **Learning:** Extracting dates from an ISO string using `.split("T")[0]` creates intermediate arrays and forces the Javascript engine to scan the entire string. When iterated over thousands of items in a map or filter callback, the overhead from this garbage-collection and allocation degrades performance.
 **Action:** Use `.substring(0, 10)` to extract the `YYYY-MM-DD` portion directly. It avoids array allocations and executes significantly faster, acting as an easy micro-optimization when parsing arrays of dates.
+## 2024-04-23 - Simultaneous O(N) Aggregation over Chained Methods
+**Learning:** In a heavily analytics-focused page (`Stats.tsx`), React `useMemo` hooks frequently re-evaluate operations over large lists (like `sessions`). Chaining array methods (`.filter().map().reduce()`) creates implicit O(N * M) complexities and excessive garbage collection from intermediate arrays.
+**Action:** When computing multiple aggregates (e.g., total duration, unique days, calm score averages, and technique counts) for a single time period, use a single O(N) `for` loop to compute all of them simultaneously.
