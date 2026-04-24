@@ -580,8 +580,9 @@ export default function Stats() {
                   {shareable && (
                     <button
                       onClick={() => shareStreak(value as number, language)}
-                      className="absolute top-2 right-2 rounded-full p-1 text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors"
+                      className="absolute top-2 right-2 rounded-full p-1 text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-ring focus-visible:ring-offset-2"
                       title={t("share.streak")}
+                      aria-label={t("share.streak")}
                     >
                       <Share2 className="h-3.5 w-3.5" />
                     </button>
@@ -826,8 +827,9 @@ export default function Stats() {
                       <div key={b.id} className="relative flex flex-col items-center gap-1.5 rounded-2xl border border-primary/20 bg-primary/5 p-3">
                         <button
                           onClick={() => shareBadge(badgeName !== `badge.${b.id}.name` ? badgeName : b.name, b.emoji, language)}
-                          className="absolute top-1.5 right-1.5 rounded-full p-1 text-muted-foreground/60 hover:text-primary hover:bg-primary/10 transition-colors"
+                          className="absolute top-1.5 right-1.5 rounded-full p-1 text-muted-foreground/60 hover:text-primary hover:bg-primary/10 transition-colors focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-ring focus-visible:ring-offset-2"
                           title={t("share.badge")}
+                          aria-label={t("share.badge")}
                         >
                           <Share2 className="h-3 w-3" />
                         </button>
