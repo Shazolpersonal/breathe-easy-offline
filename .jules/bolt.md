@@ -18,3 +18,7 @@
 ## 2024-05-22 - Performant String Substring for ISO Dates
 **Learning:** Extracting dates from an ISO string using `.split("T")[0]` creates intermediate arrays and forces the Javascript engine to scan the entire string. When iterated over thousands of items in a map or filter callback, the overhead from this garbage-collection and allocation degrades performance.
 **Action:** Use `.substring(0, 10)` to extract the `YYYY-MM-DD` portion directly. It avoids array allocations and executes significantly faster, acting as an easy micro-optimization when parsing arrays of dates.
+
+## 2024-04-25 - Avoid new Date() in Array Loops for ISO Strings
+**Learning:** In frontend data processing (like Stats page aggregations), allocating `new Date(string)` inside `.filter()` and `.sort()` callbacks on large arrays of sessions causes a massive performance bottleneck. ISO 8601 string formatting natively supports chronological sorting and substring matching.
+**Action:** Always use string comparisons (`b.date > a.date ? 1 : -1`) and `String.prototype.startsWith()` (or `.substring`) for ISO dates instead of parsing them into Date objects during hot loops.

@@ -398,7 +398,8 @@ export default function Stats() {
 
 
   const journalSessions = useMemo(() => {
-    return sessions.filter((s) => s.journal).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+    // Optimization: Sort ISO strings lexicographically to avoid expensive `new Date()` allocations
+    return sessions.filter((s) => s.journal).sort((a, b) => b.date > a.date ? 1 : b.date < a.date ? -1 : 0);
   }, [sessions]);
 
   // Report data with daily chart
@@ -421,10 +422,9 @@ export default function Stats() {
 
 
   const reportData = useMemo(() => {
-    const monthSessions = sessions.filter((s) => {
-      const d = new Date(s.date);
-      return d.getMonth() === reportMonth && d.getFullYear() === reportYear;
-    });
+    // Optimization: Use `startsWith` on ISO date strings instead of `new Date(s.date).getMonth()` for O(1) matching vs object allocation
+    const targetPrefix = `${reportYear}-${String(reportMonth + 1).padStart(2, "0")}-`;
+    const monthSessions = sessions.filter((s) => s.date.startsWith(targetPrefix));
     const totalMin = Math.round(monthSessions.reduce((sum, s) => sum + s.durationSeconds, 0) / 60);
     const techniqueCount: Record<string, { name: string; count: number }> = {};
     monthSessions.forEach((s) => {
@@ -739,7 +739,8 @@ export default function Stats() {
                   const q = historySearch.toLowerCase();
                   return s.techniqueName.toLowerCase().includes(q) || s.date.includes(q);
                 })
-                .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+                // Optimization: Lexicographical sort is significantly faster than parsing Date objects in a loop
+                .sort((a, b) => b.date > a.date ? 1 : b.date < a.date ? -1 : 0)
                 .map((s) => {
                   const d = new Date(s.date);
                   return (
