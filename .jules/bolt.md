@@ -18,3 +18,6 @@
 ## 2024-05-22 - Performant String Substring for ISO Dates
 **Learning:** Extracting dates from an ISO string using `.split("T")[0]` creates intermediate arrays and forces the Javascript engine to scan the entire string. When iterated over thousands of items in a map or filter callback, the overhead from this garbage-collection and allocation degrades performance.
 **Action:** Use `.substring(0, 10)` to extract the `YYYY-MM-DD` portion directly. It avoids array allocations and executes significantly faster, acting as an easy micro-optimization when parsing arrays of dates.
+## 2024-05-23 - Single-pass stats aggregation over historical datasets
+**Learning:** In complex analytical components like `Stats.tsx`, calculating multiple reporting metrics (total minutes, technique counts, distinct days, calm averages) by chaining multiple `.filter()`, `.map()`, `.reduce()` over `sessions` leads to $O(k \times N)$ time complexity and unnecessary object allocations (like instantiating thousands of `Date` objects).
+**Action:** Consolidate multiple metrics calculations into a single `for...of` loop ($O(N)$). Use fast string prefix matching (`date.substring(0, 7) === prefix`) instead of full `Date` parsing for monthly filtering, and construct tracking structures (like maps and sets) inline to minimize garbage collection overhead.
