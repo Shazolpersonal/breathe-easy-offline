@@ -18,3 +18,6 @@
 ## 2024-05-22 - Performant String Substring for ISO Dates
 **Learning:** Extracting dates from an ISO string using `.split("T")[0]` creates intermediate arrays and forces the Javascript engine to scan the entire string. When iterated over thousands of items in a map or filter callback, the overhead from this garbage-collection and allocation degrades performance.
 **Action:** Use `.substring(0, 10)` to extract the `YYYY-MM-DD` portion directly. It avoids array allocations and executes significantly faster, acting as an easy micro-optimization when parsing arrays of dates.
+## 2025-02-28 - Optimize Consistency Score Calculation
+**Learning:** In the Muhurto Breath application, the `sessions` array is generally chronological, but data imports (`importData`) can disrupt this order. When iterating over sessions, optimizations that rely on early-breaking or backward iteration based on date are unsafe. Moreover, multiple `filter()` calls with `new Date(string)` parsing are extremely slow.
+**Action:** Use a single, full `O(N)` pass combined with pre-computed `Set` or `Map` structures for `O(1)` string prefix lookups (e.g., `date.substring(0, 10)`), avoiding slow object instantiations and maintaining robustness regardless of array order.
