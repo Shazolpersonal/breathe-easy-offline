@@ -17,24 +17,29 @@ export function getConsistencyScore(): ConsistencyResult {
   const now = new Date();
 
   // Last 7 days
-  const weekDates = new Set<string>();
+  const last7DaysStr = new Set<string>();
   for (let i = 0; i < 7; i++) {
     const d = new Date(now);
     d.setDate(d.getDate() - i);
-    const key = d.toISOString().substring(0, 10);
-    const hasSessions = sessions.some((s) => s.date.startsWith(key));
-    if (hasSessions) weekDates.add(key);
+    last7DaysStr.add(d.toISOString().substring(0, 10));
+  }
+
+  const weekDates = new Set<string>();
+  const weekSessions = [];
+
+  for (let i = 0; i < sessions.length; i++) {
+    const s = sessions[i];
+    const sDate = s.date.substring(0, 10);
+    if (last7DaysStr.has(sDate)) {
+      weekDates.add(sDate);
+      weekSessions.push(s);
+    }
   }
 
   // Regularity (40%): days with sessions / 7
   const regularity = Math.round((weekDates.size / 7) * 100);
 
   // Completion (30%): avg completion rate using user's default duration
-  const weekSessions = sessions.filter((s) => {
-    const sDate = s.date.substring(0, 10);
-    const daysDiff = Math.floor((now.getTime() - new Date(sDate).getTime()) / 86400000);
-    return daysDiff < 7;
-  });
 
   let completion = 0;
   if (weekSessions.length > 0) {
