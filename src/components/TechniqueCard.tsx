@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Heart, HeartOff, Play, Lock, Share2, Eye, EyeOff } from "lucide-react";
+import { Heart, HeartOff, Play, Lock, Share2, Eye, EyeOff, Trash2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { BreathingTechnique, getCycleDuration } from "@/lib/techniques";
 import { UserProgression, getLevelName, getLevelProgress, isUnlocked, getUnlockRemaining, getProgression } from "@/lib/progression";
@@ -19,6 +19,7 @@ interface TechniqueCardProps {
   compact?: boolean;
   progression?: UserProgression;
   totalSessions?: number;
+  onDelete?: () => void;
 }
 
 const difficultyColor = {
@@ -27,7 +28,7 @@ const difficultyColor = {
   advanced: "bg-destructive/20 text-destructive",
 };
 
-export default function TechniqueCard({ technique, isFavorite, onToggleFavorite, compact, progression: propProgression, totalSessions }: TechniqueCardProps) {
+export default function TechniqueCard({ technique, isFavorite, onToggleFavorite, compact, progression: propProgression, totalSessions, onDelete }: TechniqueCardProps) {
   const navigate = useNavigate();
   const { t, language } = useLanguage();
   const { settings } = useSettings();
@@ -142,6 +143,16 @@ export default function TechniqueCard({ technique, isFavorite, onToggleFavorite,
                 <Share2 className="h-4 w-4" />
               </button>
             </>
+          )}
+          {technique.isCustom && onDelete && (
+            <button
+              onClick={onDelete}
+              className="p-1 text-muted-foreground hover:text-destructive transition-colors focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-ring focus-visible:ring-offset-2 rounded"
+              aria-label={t("techniques.delete")}
+              title={t("techniques.delete")}
+            >
+              <Trash2 className="h-4 w-4" />
+            </button>
           )}
         </div>
       </div>

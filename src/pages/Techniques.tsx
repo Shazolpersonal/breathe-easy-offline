@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { Plus, Search, Filter, Trash2 } from "lucide-react";
+import { Plus, Search, Filter } from "lucide-react";
 import TechniqueCard from "@/components/TechniqueCard";
 import { PRESET_TECHNIQUES, BreathingTechnique, PyramidConfig } from "@/lib/techniques";
 import { getCustomTechniques, getFavorites, toggleFavorite, saveCustomTechnique, deleteCustomTechnique } from "@/lib/storage";
@@ -283,25 +283,15 @@ export default function Techniques() {
             </div>
           )}
           {filteredTechniques.map((tech) => (
-            <div key={tech.id} className="relative">
-              <TechniqueCard
-                technique={tech}
-                isFavorite={favorites.includes(tech.id)}
-                onToggleFavorite={() => handleToggleFav(tech.id)}
-                progression={progressionMap[tech.id]}
-                totalSessions={totalSessions}
-              />
-              {/* Bug 1: Delete button for custom techniques */}
-              {tech.isCustom && (
-                <button
-                  onClick={() => setDeleteTarget(tech.id)}
-                  className="absolute right-3 top-3 rounded-full p-1.5 text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors"
-                  aria-label={t("techniques.delete")}
-                >
-                  <Trash2 className="h-4 w-4" />
-                </button>
-              )}
-            </div>
+            <TechniqueCard
+              key={tech.id}
+              technique={tech}
+              isFavorite={favorites.includes(tech.id)}
+              onToggleFavorite={() => handleToggleFav(tech.id)}
+              progression={progressionMap[tech.id]}
+              totalSessions={totalSessions}
+              onDelete={tech.isCustom ? () => setDeleteTarget(tech.id) : undefined}
+            />
           ))}
         </div>
       </div>
