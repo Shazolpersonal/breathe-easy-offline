@@ -507,8 +507,8 @@ export default function Stats() {
               key={tabKey}
               onClick={() => setTab(tabKey)}
               className={cn(
-                "flex-1 rounded-lg py-2 text-sm font-medium transition-colors",
-                tab === tabKey ? "bg-card text-foreground shadow-sm" : "text-muted-foreground"
+                "flex-1 rounded-lg py-2 text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-ring focus-visible:ring-offset-2",
+                tab === tabKey ? "bg-card text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"
               )}
             >
               {tabLabels[tabKey]}
@@ -580,8 +580,9 @@ export default function Stats() {
                   {shareable && (
                     <button
                       onClick={() => shareStreak(value as number, language)}
-                      className="absolute top-2 right-2 rounded-full p-1 text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors"
+                      className="absolute top-2 right-2 rounded-full p-1 text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-ring focus-visible:ring-offset-2"
                       title={t("share.streak")}
+                      aria-label={t("share.streak")}
                     >
                       <Share2 className="h-3.5 w-3.5" />
                     </button>
@@ -600,8 +601,8 @@ export default function Stats() {
                       key={r}
                       onClick={() => setTimeRange(r)}
                       className={cn(
-                        "rounded-md px-2 py-1 text-sm font-medium transition-colors",
-                        timeRange === r ? "bg-card text-foreground shadow-sm" : "text-muted-foreground"
+                        "rounded-md px-2 py-1 text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-ring focus-visible:ring-offset-2",
+                        timeRange === r ? "bg-card text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"
                       )}
                     >
                       {t(`stats.range.${r}`)}
@@ -778,7 +779,7 @@ export default function Stats() {
                           ) : (
                             <button
                               onClick={() => setDeleteConfirm(s.id)}
-                              className="rounded-full p-1 text-muted-foreground/40 hover:text-destructive transition-colors"
+                              className="rounded-full p-1 text-muted-foreground/40 hover:text-destructive transition-colors focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-ring focus-visible:ring-offset-2"
                               aria-label={t("common.delete")}
                             >
                               <Trash2 className="h-3.5 w-3.5" />
@@ -826,8 +827,9 @@ export default function Stats() {
                       <div key={b.id} className="relative flex flex-col items-center gap-1.5 rounded-2xl border border-primary/20 bg-primary/5 p-3">
                         <button
                           onClick={() => shareBadge(badgeName !== `badge.${b.id}.name` ? badgeName : b.name, b.emoji, language)}
-                          className="absolute top-1.5 right-1.5 rounded-full p-1 text-muted-foreground/60 hover:text-primary hover:bg-primary/10 transition-colors"
+                          className="absolute top-1.5 right-1.5 rounded-full p-1 text-muted-foreground/60 hover:text-primary hover:bg-primary/10 transition-colors focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-ring focus-visible:ring-offset-2"
                           title={t("share.badge")}
+                          aria-label={t("share.badge")}
                         >
                           <Share2 className="h-3 w-3" />
                         </button>
@@ -911,11 +913,11 @@ export default function Stats() {
         {tab === "reports" && (
           <div className="space-y-4">
             <div className="flex items-center justify-between rounded-2xl border border-border bg-card px-4 py-3">
-              <button onClick={prevMonth} className="rounded-full p-1 text-muted-foreground hover:text-foreground" aria-label={t("stats.prevMonth")}>
+              <button onClick={prevMonth} className="rounded-full p-1 text-muted-foreground hover:text-foreground focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-ring focus-visible:ring-offset-2" aria-label={t("stats.prevMonth")}>
                 <ChevronLeft className="h-5 w-5" />
               </button>
               <span className="text-sm font-semibold text-foreground">{monthLabel}</span>
-              <button onClick={nextMonth} className="rounded-full p-1 text-muted-foreground hover:text-foreground" aria-label={t("stats.nextMonth")}>
+              <button onClick={nextMonth} className="rounded-full p-1 text-muted-foreground hover:text-foreground focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-ring focus-visible:ring-offset-2" aria-label={t("stats.nextMonth")}>
                 <ChevronRight className="h-5 w-5" />
               </button>
             </div>
