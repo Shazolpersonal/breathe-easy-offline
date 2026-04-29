@@ -13,6 +13,7 @@ import { useSettings } from "@/contexts/SettingsContext";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useSessionContext } from "@/contexts/SessionContext";
 import { useKeyboardShortcuts } from "@/hooks/useKeyboardShortcuts";
+import { useBodyClass } from "@/hooks/useBodyClass";
 import { speak, stopSpeaking, speakSessionStart, speakSessionEnd, speakCycleMilestone, speakCountdown, speakEncouragement, type SpeakOptions } from "@/lib/voice";
 import { vibratePhaseChange, vibrateDone, vibrateSuccess, vibrateButton } from "@/lib/haptics";
 import SessionRecoveryDialog, { RecoverableSession } from "@/components/SessionRecoveryDialog";
@@ -705,12 +706,7 @@ export default function Session() {
   }, []);
 
   // Soundscape cleanup is handled in the mini-mode unmount handler below
-
-  // Add/remove zen-mode class on body for BottomNav hiding
-  useEffect(() => {
-    document.body.classList.toggle("zen-mode", zenMode);
-    return () => { document.body.classList.remove("zen-mode"); };
-  }, [zenMode]);
+  useBodyClass("zen-mode", zenMode);
 
   useEffect(() => {
     if (state === "running") {
