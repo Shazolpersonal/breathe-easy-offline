@@ -123,6 +123,7 @@ export default function Home() {
                 onClick={() => setShowDonateDialog(true)}
                 className="flex h-8 w-8 items-center justify-center rounded-full border border-border bg-card text-muted-foreground transition-colors hover:text-primary hover:bg-primary/10 focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-ring focus-visible:ring-offset-2"
                 title={t("donate.supportUs")}
+                aria-label={t("donate.supportUs")}
               >
                 <Heart className="h-4 w-4" />
               </button>
@@ -203,6 +204,7 @@ export default function Home() {
               onClick={() => shareQuote(dailyQuote.text, dailyQuote.author, language)}
               className="shrink-0 rounded-full p-1.5 text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-ring focus-visible:ring-offset-2"
               title={t("share.quote")}
+              aria-label={t("share.quote")}
             >
               <Share2 className="h-4 w-4" />
             </button>

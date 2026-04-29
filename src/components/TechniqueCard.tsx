@@ -132,6 +132,8 @@ export default function TechniqueCard({ technique, isFavorite, onToggleFavorite,
                 onClick={() => setPreviewActive(!previewActive)}
                 className={cn("p-1 transition-colors focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-ring focus-visible:ring-offset-2 rounded", previewActive ? "text-primary" : "text-muted-foreground hover:text-primary")}
                 title={t("techniques.preview")}
+                aria-label={t("techniques.preview")}
+                aria-pressed={previewActive}
               >
                 {previewActive ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
               </button>
@@ -139,6 +141,7 @@ export default function TechniqueCard({ technique, isFavorite, onToggleFavorite,
                 onClick={() => shareTechnique(techniqueName, techniqueDesc, language)}
                 className="p-1 text-muted-foreground hover:text-primary transition-colors focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-ring focus-visible:ring-offset-2 rounded"
                 title={t("share.technique")}
+                aria-label={t("share.technique")}
               >
                 <Share2 className="h-4 w-4" />
               </button>
