@@ -398,7 +398,7 @@ export default function Stats() {
 
 
   const journalSessions = useMemo(() => {
-    return sessions.filter((s) => s.journal).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+    return sessions.filter((s) => s.journal).sort((a, b) => b.date.localeCompare(a.date));
   }, [sessions]);
 
   // Report data with daily chart
@@ -421,10 +421,8 @@ export default function Stats() {
 
 
   const reportData = useMemo(() => {
-    const monthSessions = sessions.filter((s) => {
-      const d = new Date(s.date);
-      return d.getMonth() === reportMonth && d.getFullYear() === reportYear;
-    });
+    const reportMonthStr = `${reportYear}-${String(reportMonth + 1).padStart(2, '0')}`;
+    const monthSessions = sessions.filter((s) => s.date.startsWith(reportMonthStr));
     const totalMin = Math.round(monthSessions.reduce((sum, s) => sum + s.durationSeconds, 0) / 60);
     const techniqueCount: Record<string, { name: string; count: number }> = {};
     monthSessions.forEach((s) => {
@@ -740,7 +738,7 @@ export default function Stats() {
                   const q = historySearch.toLowerCase();
                   return s.techniqueName.toLowerCase().includes(q) || s.date.includes(q);
                 })
-                .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+                .sort((a, b) => b.date.localeCompare(a.date))
                 .map((s) => {
                   const d = new Date(s.date);
                   return (
