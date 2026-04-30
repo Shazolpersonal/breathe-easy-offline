@@ -21,3 +21,6 @@
 ## 2025-02-28 - Optimize Consistency Score Calculation
 **Learning:** In the Muhurto Breath application, the `sessions` array is generally chronological, but data imports (`importData`) can disrupt this order. When iterating over sessions, optimizations that rely on early-breaking or backward iteration based on date are unsafe. Moreover, multiple `filter()` calls with `new Date(string)` parsing are extremely slow.
 **Action:** Use a single, full `O(N)` pass combined with pre-computed `Set` or `Map` structures for `O(1)` string prefix lookups (e.g., `date.substring(0, 10)`), avoiding slow object instantiations and maintaining robustness regardless of array order.
+## 2024-05-23 - Date Parsing Overhead in Array Sorts and Filters
+**Learning:** Using `new Date(string).getTime()` or `new Date(string).getMonth()` inside array operations like `.sort()` and `.filter()` over large datasets (like `sessions`) creates significant garbage collection and execution overhead, as new `Date` objects are instantiated repeatedly.
+**Action:** Always prefer string comparisons (`b.date.localeCompare(a.date)`) for sorting ISO 8601 strings, and string prefix matching (`date.startsWith(YYYY-MM)`) for filtering by month. This simple micro-optimization avoids expensive object allocation and improves performance for heavy users.
