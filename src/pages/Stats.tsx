@@ -422,31 +422,47 @@ export default function Stats() {
 
   const reportData = useMemo(() => {
     const reportMonthStr = `${reportYear}-${String(reportMonth + 1).padStart(2, '0')}`;
-    const monthSessions = sessions.filter((s) => s.date.startsWith(reportMonthStr));
-    const totalMin = Math.round(monthSessions.reduce((sum, s) => sum + s.durationSeconds, 0) / 60);
+
+    // Optimization: Single O(N) pass over sessions to calculate all aggregates simultaneously
+    // instead of multiple .filter(), .reduce(), .forEach(), and .map() passes.
+    let sessionCount = 0;
+    let totalSeconds = 0;
     const techniqueCount: Record<string, { name: string; count: number }> = {};
-    monthSessions.forEach((s) => {
+    let totalCalm = 0;
+    let calmCount = 0;
+    const datesSet = new Set<string>();
+    const dailyMinutesMap: Record<string, number> = {};
+
+    for (const s of sessions) {
+      if (!s.date.startsWith(reportMonthStr)) continue;
+
+      sessionCount++;
+      totalSeconds += s.durationSeconds;
+
       if (!techniqueCount[s.techniqueId]) techniqueCount[s.techniqueId] = { name: s.techniqueName, count: 0 };
       techniqueCount[s.techniqueId].count++;
-    });
-    const topTechnique = Object.values(techniqueCount).sort((a, b) => b.count - a.count)[0] || null;
-    const scored = monthSessions.filter((s) => s.calmScore != null);
-    const avgCalm = scored.length > 0 ? Math.round(scored.reduce((sum, s) => sum + s.calmScore!, 0) / scored.length) : null;
 
-    const dates = [...new Set(monthSessions.map((s) => s.date.substring(0, 10)))].sort();
+      if (s.calmScore != null) {
+        totalCalm += s.calmScore;
+        calmCount++;
+      }
+
+      const dateStr = s.date.substring(0, 10);
+      datesSet.add(dateStr);
+      dailyMinutesMap[dateStr] = (dailyMinutesMap[dateStr] || 0) + s.durationSeconds;
+    }
+
+    const totalMin = Math.round(totalSeconds / 60);
+    const topTechnique = Object.values(techniqueCount).sort((a, b) => b.count - a.count)[0] || null;
+    const avgCalm = calmCount > 0 ? Math.round(totalCalm / calmCount) : null;
+
+    const dates = [...datesSet].sort();
     let mStreak = dates.length > 0 ? 1 : 0;
     let cur = 1;
     for (let i = 1; i < dates.length; i++) {
       const diff = (new Date(dates[i]).getTime() - new Date(dates[i - 1]).getTime()) / 86400000;
       if (diff === 1) { cur++; mStreak = Math.max(mStreak, cur); } else cur = 1;
     }
-
-    // Optimization: Pre-compute daily minutes in O(N) to avoid O(N * M) filtering
-    const dailyMinutesMap: Record<string, number> = {};
-    monthSessions.forEach((s) => {
-      const dateStr = s.date.substring(0, 10);
-      dailyMinutesMap[dateStr] = (dailyMinutesMap[dateStr] || 0) + s.durationSeconds;
-    });
 
     // Daily minutes for chart
     const daysInMonth = new Date(reportYear, reportMonth + 1, 0).getDate();
@@ -457,7 +473,7 @@ export default function Stats() {
       dailyMinutes.push({ day: String(d), minutes: dayMin });
     }
 
-    return { sessions: monthSessions.length, totalMin, topTechnique, avgCalm, streak: mStreak, dailyMinutes };
+    return { sessions: sessionCount, totalMin, topTechnique, avgCalm, streak: mStreak, dailyMinutes };
   }, [sessions, reportMonth, reportYear]);
 
 
