@@ -31,6 +31,7 @@ export default function SoundscapePicker({ value, onChange, compact }: Props) {
               : "bg-secondary/60 text-muted-foreground hover:text-foreground"
           )}
           aria-label={t(labelKey)}
+          aria-pressed={value === id}
         >
           <span>{emoji}</span>
           <span className={compact ? "hidden sm:inline" : ""}>{t(labelKey)}</span>
