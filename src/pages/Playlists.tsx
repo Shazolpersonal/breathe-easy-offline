@@ -101,10 +101,10 @@ export default function Playlists() {
                 <div className="flex items-center justify-between mb-2">
                   <h3 className="font-semibold text-foreground">{p.name}</h3>
                   <div className="flex items-center gap-1">
-                    <Button size="icon" variant="ghost" className="h-8 w-8" onClick={() => startPlaylist(p.id)}>
+                    <Button size="icon" variant="ghost" className="h-8 w-8" onClick={() => startPlaylist(p.id)} aria-label={t("session.start")}>
                       <Play className="h-4 w-4 text-primary" />
                     </Button>
-                    <Button size="icon" variant="ghost" className="h-8 w-8" onClick={() => handleDelete(p.id)}>
+                    <Button size="icon" variant="ghost" className="h-8 w-8" onClick={() => handleDelete(p.id)} aria-label={t("common.delete")}>
                       <Trash2 className="h-4 w-4 text-muted-foreground" />
                     </Button>
                   </div>
@@ -165,7 +165,7 @@ export default function Playlists() {
                         <span className="text-xs text-muted-foreground">{t("common.min")}</span>
                       </div>
                     </div>
-                    <Button size="icon" variant="ghost" className="h-7 w-7 shrink-0" onClick={() => removeStep(i)} disabled={steps.length <= 1}>
+                    <Button size="icon" variant="ghost" className="h-7 w-7 shrink-0" onClick={() => removeStep(i)} disabled={steps.length <= 1} aria-label={t("common.delete")}>
                       <Trash2 className="h-3.5 w-3.5" />
                     </Button>
                   </div>

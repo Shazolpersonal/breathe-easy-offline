@@ -2,3 +2,6 @@
 ## 2024-05-18 - Accessibility: Missing Focus States on Statistics Page
 **Learning:** Keyboard navigation (tabbing) was severely degraded on the statistics view (`Stats.tsx`) due to various icon-only buttons and tab filters missing explicitly defined `focus-visible` Tailwind classes. Additionally, buttons that relied purely on visual context (e.g. sharing icons) were lacking ARIA labels, creating a poor experience for screen reader users.
 **Action:** When implementing custom icon buttons or tab bars without standard UI library components, systematically add `focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-ring focus-visible:ring-offset-2` for focus feedback and `aria-label` for semantic meaning.
+## 2026-05-03 - [Playlist Action Button Accessibility]
+**Learning:** Found that some icon-only action buttons (like Delete and Play) in the Playlists and Programs views were missing aria-labels, which makes them inaccessible for screen readers.
+**Action:** Always include an `aria-label` on icon-only `Button` components, even if they are using a standard UI library component.

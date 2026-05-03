@@ -122,6 +122,7 @@ export default function Programs() {
                         variant="ghost"
                         className="h-8 w-8 shrink-0"
                         onClick={() => startDay(program.id, day.day, day.techniqueId, day.durationMinutes)}
+                        aria-label={t("session.start")}
                       >
                         <Play className="h-4 w-4 text-primary" />
                       </Button>
