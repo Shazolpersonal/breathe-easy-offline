@@ -24,3 +24,7 @@
 ## 2024-05-23 - Date Parsing Overhead in Array Sorts and Filters
 **Learning:** Using `new Date(string).getTime()` or `new Date(string).getMonth()` inside array operations like `.sort()` and `.filter()` over large datasets (like `sessions`) creates significant garbage collection and execution overhead, as new `Date` objects are instantiated repeatedly.
 **Action:** Always prefer string comparisons (`b.date.localeCompare(a.date)`) for sorting ISO 8601 strings, and string prefix matching (`date.startsWith(YYYY-MM)`) for filtering by month. This simple micro-optimization avoids expensive object allocation and improves performance for heavy users.
+
+## 2024-05-25 - Avoid O(N * M) performance hits when calculating monthly chart data
+**Learning:** `monthSessions.filter(s => s.date.startsWith(dateStr)).reduce(...)` inside a `for (let d = 1; d <= daysInMonth; d++)` loop is extremely slow and degrades heavily with lots of sessions. Moreover, processing an array multiple times across various `filter`, `reduce`, and `map` operations in the same block creates massive overhead.
+**Action:** Replace multiple sequential array iterations over historical data structures with a single `O(N)` pass using a `for` loop to accumulate all required statistics in plain variables and hash maps, then loop over the dates.
