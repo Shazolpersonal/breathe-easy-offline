@@ -120,6 +120,11 @@ export default function MoodHeatmapCalendar() {
                 cell.dateKey === selectedDay ? "ring-2 ring-primary" : ""
               } ${isToday ? "font-bold" : ""}`}
               style={{ background: getMoodColor(cell.avgMood, cell.sessionCount > 0) }}
+              aria-label={
+                `${new Date(cell.dateKey).toLocaleDateString(locale, { weekday: 'long', month: 'short', day: 'numeric' })}` +
+                (cell.sessionCount > 0 ? `, ${cell.sessionCount} ${t("common.sessions")}` : "") +
+                (cell.avgMood !== null ? `, ${t("stats.heatmap.avgMood")}: ${Math.round(cell.avgMood)}/5` : "")
+              }
             >
               <span className={cell.sessionCount > 0 ? "text-white" : "text-muted-foreground"}>
                 {cell.day}

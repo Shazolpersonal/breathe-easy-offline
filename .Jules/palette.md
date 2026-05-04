@@ -2,3 +2,6 @@
 ## 2024-05-18 - Accessibility: Missing Focus States on Statistics Page
 **Learning:** Keyboard navigation (tabbing) was severely degraded on the statistics view (`Stats.tsx`) due to various icon-only buttons and tab filters missing explicitly defined `focus-visible` Tailwind classes. Additionally, buttons that relied purely on visual context (e.g. sharing icons) were lacking ARIA labels, creating a poor experience for screen reader users.
 **Action:** When implementing custom icon buttons or tab bars without standard UI library components, systematically add `focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-ring focus-visible:ring-offset-2` for focus feedback and `aria-label` for semantic meaning.
+## 2026-05-04 - Accessibility: Missing ARIA Labels on Heatmap Calendar Days
+**Learning:** The mood heatmap calendar grid uses `button` elements to represent individual days. While visually the days are differentiated by color indicating mood and a number representing the date, screen reader users had no way of knowing what data was associated with the day or even its semantic meaning without an `aria-label`.
+**Action:** When creating custom calendar grids or data visualizations that use interactive elements, always construct a comprehensive `aria-label` that translates the visual data (like session counts and mood averages) into descriptive text.
