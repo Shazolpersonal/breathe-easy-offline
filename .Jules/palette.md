@@ -2,3 +2,7 @@
 ## 2024-05-18 - Accessibility: Missing Focus States on Statistics Page
 **Learning:** Keyboard navigation (tabbing) was severely degraded on the statistics view (`Stats.tsx`) due to various icon-only buttons and tab filters missing explicitly defined `focus-visible` Tailwind classes. Additionally, buttons that relied purely on visual context (e.g. sharing icons) were lacking ARIA labels, creating a poor experience for screen reader users.
 **Action:** When implementing custom icon buttons or tab bars without standard UI library components, systematically add `focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-ring focus-visible:ring-offset-2` for focus feedback and `aria-label` for semantic meaning.
+
+## 2024-11-20 - [Focus States on Interactive Custom Elements]
+**Learning:** Keyboard navigation depends on visible focus indicators. I found interactive `button` elements disguised as cards, list items, or selection grids that lacked the expected outline when focused via keyboard tabbing.
+**Action:** Consistently append `focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-ring focus-visible:ring-offset-2` to all interactive custom elements (like `MoodPicker` buttons, list items in `Playlists` and `Programs`, and selection cards in `Onboarding`) to ensure they receive standard keyboard focus visual cues.
