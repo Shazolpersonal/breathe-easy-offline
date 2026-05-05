@@ -129,7 +129,7 @@ function StepLanguage({
             language === "en"
               ? "border-primary bg-primary/10 shadow-lg shadow-primary/10"
               : "border-border bg-card hover:border-muted-foreground/30"
-          } focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-ring focus-visible:ring-offset-2`}
+          }`}
         >
           <span className="text-2xl block mb-2">🇺🇸</span>
           <span className="text-sm font-semibold text-foreground">English</span>
@@ -140,7 +140,7 @@ function StepLanguage({
             language === "bn"
               ? "border-primary bg-primary/10 shadow-lg shadow-primary/10"
               : "border-border bg-card hover:border-muted-foreground/30"
-          } focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-ring focus-visible:ring-offset-2`}
+          }`}
         >
           <span className="text-2xl block mb-2">🇧🇩</span>
           <span className="text-sm font-semibold text-foreground">বাংলা</span>
@@ -218,7 +218,7 @@ function StepPersonalize({
             onClick={() => setTheme(id)}
             className={`flex flex-col items-center gap-1.5 rounded-xl p-3 transition-all ${
               theme === id ? "bg-primary/10 ring-2 ring-primary" : "hover:bg-card"
-            } focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-ring focus-visible:ring-offset-2`}
+            }`}
           >
             <div
               className="h-10 w-10 rounded-full border-2 transition-transform"

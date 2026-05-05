@@ -120,7 +120,7 @@ export default function Playlists() {
                   ))}
                 </div>
                 <p className="mt-2 text-xs text-muted-foreground">{t("playlists.totalMin", { min: totalMin(p), steps: p.steps.length })}</p>
-                <button onClick={() => openEdit(p)} className="mt-1 text-xs text-primary hover:underline">{t("playlists.edit")}</button>
+                <button onClick={() => openEdit(p)} className="mt-1 text-xs text-primary hover:underline focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-ring focus-visible:ring-offset-2 rounded-sm">{t("playlists.edit")}</button>
               </div>
             ))}
           </div>
