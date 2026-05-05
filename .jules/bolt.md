@@ -24,3 +24,7 @@
 ## 2024-05-23 - Date Parsing Overhead in Array Sorts and Filters
 **Learning:** Using `new Date(string).getTime()` or `new Date(string).getMonth()` inside array operations like `.sort()` and `.filter()` over large datasets (like `sessions`) creates significant garbage collection and execution overhead, as new `Date` objects are instantiated repeatedly.
 **Action:** Always prefer string comparisons (`b.date.localeCompare(a.date)`) for sorting ISO 8601 strings, and string prefix matching (`date.startsWith(YYYY-MM)`) for filtering by month. This simple micro-optimization avoids expensive object allocation and improves performance for heavy users.
+
+## 2026-05-05 - Optimizing Chained Array Hooks
+**Learning:** Chaining array methods like `.filter()`, `.reduce()`, and `.forEach()` inside `useMemo` on large datasets triggers multiple full O(N) passes through the array. This creates a hidden performance penalty inside React component renders as user history grows.
+**Action:** Replaced chained higher-order array methods with single `for...of` loops in `src/pages/Stats.tsx` (e.g., `reportData` and `avgCalmScore`), collecting aggregates and metrics simultaneously in a single O(N) pass, avoiding intermediate array allocations.
