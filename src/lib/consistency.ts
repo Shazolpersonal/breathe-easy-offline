@@ -44,8 +44,12 @@ export function getConsistencyScore(): ConsistencyResult {
   let completion = 0;
   if (weekSessions.length > 0) {
     const targetSeconds = (settings.defaultDurationMinutes || 5) * 60;
-    const rates = weekSessions.map((s) => Math.min(s.durationSeconds / targetSeconds, 1));
-    completion = Math.round((rates.reduce((a, b) => a + b, 0) / rates.length) * 100);
+    // Optimization: Avoid chained map and reduce passes that create intermediate arrays.
+    let totalRate = 0;
+    for (const s of weekSessions) {
+      totalRate += Math.min(s.durationSeconds / targetSeconds, 1);
+    }
+    completion = Math.round((totalRate / weekSessions.length) * 100);
   }
 
   // Streak (30%): current streak / 7, capped at 100%
