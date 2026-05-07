@@ -463,12 +463,17 @@ export default function Stats() {
     const topTechnique = Object.values(techniqueCount).sort((a, b) => b.count - a.count)[0] || null;
     const avgCalm = scoredCalmCount > 0 ? Math.round(scoredCalmTotal / scoredCalmCount) : null;
 
-    const dates = [...datesSet].sort();
+    const dates = Array.from(datesSet).sort();
     let mStreak = dates.length > 0 ? 1 : 0;
     let cur = 1;
-    for (let i = 1; i < dates.length; i++) {
-      const diff = (new Date(dates[i]).getTime() - new Date(dates[i - 1]).getTime()) / 86400000;
-      if (diff === 1) { cur++; mStreak = Math.max(mStreak, cur); } else cur = 1;
+    if (dates.length > 0) {
+      let prevTime = Date.parse(dates[0]);
+      for (let i = 1; i < dates.length; i++) {
+        const currTime = Date.parse(dates[i]);
+        const diff = (currTime - prevTime) / 86400000;
+        if (diff === 1) { cur++; mStreak = Math.max(mStreak, cur); } else if (diff > 1) cur = 1;
+        prevTime = currTime;
+      }
     }
 
     // Daily minutes for chart
