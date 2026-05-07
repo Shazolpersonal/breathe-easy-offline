@@ -134,32 +134,43 @@ export function getCurrentStreak(): number {
   const sessions = getSessions();
   if (sessions.length === 0) return 0;
 
-  const dates = [...new Set(sessions.map((s) => s.date.substring(0, 10)))].sort().reverse();
+  // Optimization: Avoid chained map and substring by iterating once
+  const dateSet = new Set<string>();
+  for (let i = 0; i < sessions.length; i++) {
+    dateSet.add(sessions[i].date.substring(0, 10));
+  }
+  const dates = Array.from(dateSet).sort().reverse();
   const today = new Date();
   const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
   
   let streak = 0;
   // Allow starting from today or yesterday (user hasn't done today's session yet)
-  let startOffset = 0;
+
+  // Set time to noon to avoid DST boundary issues when subtracting 24h intervals
+  today.setHours(12, 0, 0, 0);
+  let expectedTime = today.getTime();
+
   if (dates[0] === todayStr) {
-    startOffset = 0;
+    // Start expected from today
   } else {
     const yesterday = new Date(today);
     yesterday.setDate(yesterday.getDate() - 1);
     const yesterdayStr = `${yesterday.getFullYear()}-${String(yesterday.getMonth() + 1).padStart(2, "0")}-${String(yesterday.getDate()).padStart(2, "0")}`;
     if (dates[0] === yesterdayStr) {
-      startOffset = 1;
+      expectedTime -= 86400000; // Subtract 1 day
     } else {
       return 0;
     }
   }
 
+  // Optimization: Reduce string allocations by mutating expected time directly and comparing formatted string
+  let currentExpectedStr = "";
   for (let i = 0; i < dates.length; i++) {
-    const expected = new Date(today);
-    expected.setDate(expected.getDate() - i - startOffset);
-    const expectedStr = `${expected.getFullYear()}-${String(expected.getMonth() + 1).padStart(2, "0")}-${String(expected.getDate()).padStart(2, "0")}`;
-    if (dates[i] === expectedStr) {
+    const d = new Date(expectedTime);
+    currentExpectedStr = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+    if (dates[i] === currentExpectedStr) {
       streak++;
+      expectedTime -= 86400000;
     } else {
       break;
     }
@@ -171,19 +182,28 @@ export function getLongestStreak(): number {
   const sessions = getSessions();
   if (sessions.length === 0) return 0;
 
-  const dates = [...new Set(sessions.map((s) => s.date.substring(0, 10)))].sort();
+  // Optimization: Avoid chained map and substring
+  const dateSet = new Set<string>();
+  for (let i = 0; i < sessions.length; i++) {
+    dateSet.add(sessions[i].date.substring(0, 10));
+  }
+  const dates = Array.from(dateSet).sort();
   let longest = 1;
   let current = 1;
 
-  for (let i = 1; i < dates.length; i++) {
-    const prev = new Date(dates[i - 1]);
-    const curr = new Date(dates[i]);
-    const diff = (curr.getTime() - prev.getTime()) / (1000 * 60 * 60 * 24);
-    if (diff === 1) {
-      current++;
-      longest = Math.max(longest, current);
-    } else {
-      current = 1;
+  if (dates.length > 0) {
+    // Optimization: Avoid `new Date()` allocation loop by caching `Date.parse()` timestamp
+    let prevTime = Date.parse(dates[0]);
+    for (let i = 1; i < dates.length; i++) {
+      const currTime = Date.parse(dates[i]);
+      const diff = (currTime - prevTime) / 86400000;
+      if (diff === 1) {
+        current++;
+        longest = Math.max(longest, current);
+      } else if (diff > 1) {
+        current = 1;
+      }
+      prevTime = currTime;
     }
   }
   return longest;
