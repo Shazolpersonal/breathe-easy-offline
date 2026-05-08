@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { Wind, Flame, Zap, TrendingUp, CheckCircle2, Circle, Swords, Quote, Download, X, Trophy, Share2, Heart, Play } from "lucide-react";
+import { Wind, Flame, Zap, TrendingUp, CheckCircle2, Circle, Swords, Quote, Trophy, Share2, Heart, Play } from "lucide-react";
 import SmartSuggestion from "@/components/SmartSuggestion";
 import TechniqueCard from "@/components/TechniqueCard";
 import WeeklySummary from "@/components/WeeklySummary";
@@ -11,7 +11,6 @@ import { getDailyChallenges, getChallengeStreak, saveTodayChallengeProgress, are
 import { getXPState, getWeeklyXP, addXP } from "@/lib/xp";
 import { getDailyQuote } from "@/lib/quotes";
 import { getActiveChallenges, getChallengeProgress } from "@/lib/friendChallenge";
-import { canInstall, promptInstall, isDismissed, dismissInstallBanner, isRunningAsPWA, canShowManualInstallHint, getInstallPlatform } from "@/lib/installPrompt";
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
 import { useState, useMemo, useEffect, useRef } from "react";
@@ -28,7 +27,6 @@ export default function Home() {
   const [favorites, setFavorites] = useState(getFavorites);
   const [showChallengeDialog, setShowChallengeDialog] = useState(false);
   const [showDonateDialog, setShowDonateDialog] = useState(false);
-  const [installDismissed, setInstallDismissed] = useState(isDismissed);
   const streak = useMemo(() => getCurrentStreak(), []);
   const todayMin = useMemo(() => getTodayMinutes(), []);
   const dailyGoal = settings.dailyGoalMinutes;
@@ -55,10 +53,6 @@ export default function Home() {
   const challengeStreak = useMemo(() => getChallengeStreak(), []);
   const dailyQuote = useMemo(() => getDailyQuote(language), [language]);
   const activeFriendChallenges = useMemo(() => getActiveChallenges(), []);
-  const isPWA = useMemo(() => isRunningAsPWA(), []);
-  const showNativeInstall = canInstall() && !installDismissed;
-  const showManualInstall = !isPWA && canShowManualInstallHint() && !installDismissed;
-  const installPlatform = useMemo(() => getInstallPlatform(), []);
   const allCompleteToastShown = useRef(false);
   const lastSession = useMemo(() => getLastSessionConfig(), []);
 
@@ -96,16 +90,6 @@ export default function Home() {
   const handleToggleFav = (id: string) => {
     toggleFavorite(id);
     setFavorites(getFavorites());
-  };
-
-  const handleInstall = async () => {
-    await promptInstall();
-    setInstallDismissed(true);
-  };
-
-  const handleDismissInstall = () => {
-    dismissInstallBanner();
-    setInstallDismissed(true);
   };
 
   return (
@@ -146,51 +130,6 @@ export default function Home() {
           <p className="mt-1 text-sm text-muted-foreground">{greeting} {t("home.subtitle")}</p>
         </div>
 
-        {/* PWA Native Install Banner (Chrome/Edge) */}
-        {showNativeInstall && (
-          <div className="mb-6 rounded-2xl border border-primary/30 bg-primary/5 p-4">
-            <div className="flex items-start gap-3">
-              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary/15">
-                <Download className="h-5 w-5 text-primary" />
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium text-foreground">{t("install.title")}</p>
-                <p className="text-xs text-muted-foreground">{t("install.desc")}</p>
-                <Button size="sm" className="mt-2 gap-1" onClick={handleInstall}>
-                  <Download className="h-3.5 w-3.5" /> {t("install.button")}
-                </Button>
-              </div>
-              <button onClick={handleDismissInstall} className="shrink-0 rounded-full p-1 text-muted-foreground hover:text-foreground focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-ring focus-visible:ring-offset-2" aria-label={t("common.close")}>
-                <X className="h-4 w-4" />
-              </button>
-            </div>
-          </div>
-        )}
-
-        {/* PWA Manual Install Hint (Safari/iOS/Firefox) */}
-        {showManualInstall && (
-          <div className="mb-6 rounded-2xl border border-primary/30 bg-primary/5 p-4">
-            <div className="flex items-start gap-3">
-              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary/15">
-                <Download className="h-5 w-5 text-primary" />
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium text-foreground">{t("install.manual.title")}</p>
-                <p className="text-xs text-muted-foreground">
-                  {installPlatform === "ios"
-                    ? t("install.manual.ios")
-                    : installPlatform === "android"
-                    ? t("install.manual.android")
-                    : t("install.manual.desktop")}
-                </p>
-                <p className="mt-1 text-sm text-primary/70">{t("install.manual.free")}</p>
-              </div>
-              <button onClick={handleDismissInstall} className="shrink-0 rounded-full p-1 text-muted-foreground hover:text-foreground focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-ring focus-visible:ring-offset-2" aria-label={t("common.close")}>
-                <X className="h-4 w-4" />
-              </button>
-            </div>
-          </div>
-        )}
 
         {/* Daily Quote */}
         <div className="mb-6 rounded-2xl border border-border bg-card p-4">
@@ -198,7 +137,7 @@ export default function Home() {
             <Quote className="mt-0.5 h-4 w-4 shrink-0 text-primary/60" />
             <div className="flex-1 min-w-0">
               <p className="text-sm italic text-foreground/80 leading-relaxed">"{dailyQuote.text}"</p>
-              <p className="mt-1.5 text-xs text-muted-foreground">— {dailyQuote.author}</p>
+              <p className="mt-1 text-xs text-muted-foreground">— {dailyQuote.author}</p>
             </div>
             <button
               onClick={() => shareQuote(dailyQuote.text, dailyQuote.author, language)}
@@ -213,18 +152,19 @@ export default function Home() {
 
         {/* Stats Row with Daily Goal Ring */}
         <div className="mb-6 grid grid-cols-3 gap-3">
-          <div className="flex flex-col items-center rounded-2xl border border-border bg-card p-3">
-            <Flame className="mb-1 h-5 w-5 text-primary" />
-            <span className="text-lg font-bold text-foreground">{streak}</span>
-            <span className="text-sm text-muted-foreground">{t("home.dayStreak")}</span>
+          <div className="flex flex-col items-center justify-center gap-1 rounded-2xl border border-border bg-card p-3">
+            <Flame className="h-5 w-5 text-primary" />
+            <span className="text-xl font-bold text-foreground">{streak}</span>
+            <span className="text-[10px] text-muted-foreground">{t("home.dayStreak")}</span>
           </div>
-          <div className="flex flex-col items-center rounded-2xl border border-border bg-card p-3">
-            {/* Daily Goal Progress Ring */}
-            <div className="relative flex h-10 w-10 items-center justify-center mb-0.5">
-              <svg className="h-10 w-10 -rotate-90" viewBox="0 0 40 40">
-                <circle cx="20" cy="20" r="16" fill="none" stroke="hsl(var(--muted))" strokeWidth="3" />
+
+          {/* Daily Goal Progress Ring */}
+          <div className="flex flex-col items-center justify-center gap-1 rounded-2xl border border-border bg-card p-3">
+            <div className="relative h-12 w-12">
+              <svg viewBox="0 0 36 36" className="h-full w-full -rotate-90">
+                <circle cx="18" cy="18" r="16" fill="none" stroke="hsl(var(--muted))" strokeWidth="3" />
                 <circle
-                  cx="20" cy="20" r="16" fill="none"
+                  cx="18" cy="18" r="16" fill="none"
                   stroke={goalProgress >= 100 ? "hsl(var(--primary))" : "hsl(var(--primary) / 0.7)"}
                   strokeWidth="3"
                   strokeDasharray={`${(goalProgress / 100) * 100.5} 100.5`}
@@ -232,53 +172,49 @@ export default function Home() {
                   className="transition-all duration-700"
                 />
               </svg>
-              <Wind className="absolute h-4 w-4 text-primary" />
+              <Wind className="absolute inset-0 m-auto h-5 w-5 text-primary" />
             </div>
-            <span className="text-lg font-bold text-foreground">{todayMin}<span className="text-xs font-normal text-muted-foreground">/{dailyGoal}</span></span>
-            <span className="text-sm text-muted-foreground">{t("home.minToday")}</span>
+            <span className="text-[10px] text-muted-foreground">{todayMin}/{dailyGoal}{t("home.minToday")}</span>
           </div>
-          <div className="flex flex-col items-center rounded-2xl border border-border bg-card p-3">
-            <Zap className="mb-1 h-5 w-5 text-primary" />
-            <span className="text-lg font-bold text-foreground">Lv.{xpState.level}</span>
-            <span className="text-sm text-muted-foreground">{t(`xp.${xpState.title}`)}</span>
+
+          <div className="flex flex-col items-center justify-center gap-1 rounded-2xl border border-border bg-card p-3">
+            <Zap className="h-5 w-5 text-primary" />
+            <span className="text-xl font-bold text-foreground">Lv.{xpState.level}</span>
+            <span className="text-[10px] text-muted-foreground">{t(`xp.${xpState.title}`)}</span>
           </div>
         </div>
 
         {/* XP Progress */}
-        <div className="mb-6 rounded-2xl border border-border bg-card p-3">
-          <div className="flex items-center justify-between mb-1.5">
-            <span className="text-xs font-medium text-muted-foreground">{xpState.totalXP} XP</span>
+        <div className="mb-6 rounded-2xl border border-border bg-card p-4">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-xs text-muted-foreground">{xpState.totalXP} XP</span>
             <div className="flex items-center gap-2">
               {weeklyXP > 0 && (
-                <span className="text-xs text-primary font-medium">
-                  {t("xp.weeklyXP", { xp: weeklyXP })}
-                </span>
+                <span className="text-xs text-primary font-medium">{t("xp.weeklyXP", { xp: weeklyXP })}</span>
               )}
               {xpState.xpToNext > 0 && (
                 <span className="text-xs text-muted-foreground">{t("home.xpToNext", { xp: xpState.xpToNext })}</span>
               )}
             </div>
           </div>
-          <Progress value={xpState.progressToNext} className="h-2" />
+          <Progress value={xpState.xpProgress} className="h-1.5" />
         </div>
 
+        {/* Daily Challenges */}
         <div className="mb-6 rounded-2xl border border-border bg-card p-4">
-          <div className="flex items-center justify-between mb-1">
-            <h2 className="text-sm font-semibold uppercase tracking-widest text-muted-foreground/80">{t("home.dailyChallenges")}</h2>
-            {challengeStreak >= 2 && (
-              <span className="flex items-center gap-1 text-xs font-medium text-primary">
-                <Trophy className="h-3.5 w-3.5" />
-                {t("challenge.streak", { days: challengeStreak })}
-              </span>
-            )}
-          </div>
           <div className="flex items-center justify-between mb-3">
-            <span className="text-xs text-muted-foreground">
-              {t("challenge.completedCount", { done: completedCount, total: dailyChallenges.length })}
-            </span>
-            <span className="text-xs text-muted-foreground/70">
-              {t("challenge.resetsIn", { hours: timeUntilReset.hours, minutes: timeUntilReset.minutes })}
-            </span>
+            <div>
+              <h2 className="text-sm font-semibold text-foreground">{t("home.dailyChallenges")}</h2>
+              {challengeStreak >= 2 && (
+                <p className="text-xs text-primary font-medium mt-0.5">
+                  {t("challenge.streak", { days: challengeStreak })}
+                </p>
+              )}
+            </div>
+            <div className="text-right">
+              <p className="text-xs text-muted-foreground">{t("challenge.completedCount", { done: completedCount, total: dailyChallenges.length })}</p>
+              <p className="text-xs text-muted-foreground">{t("challenge.resetsIn", { hours: timeUntilReset.hours, minutes: timeUntilReset.minutes })}</p>
+            </div>
           </div>
           <div className="space-y-3">
             {dailyChallenges.map((c) => {
@@ -288,31 +224,26 @@ export default function Home() {
               const tierColor = c.tier === "hard" ? "text-destructive" : c.tier === "medium" ? "text-primary" : "text-muted-foreground";
               const barColor = done ? "bg-primary" : c.tier === "hard" ? "bg-destructive/60" : c.tier === "medium" ? "bg-primary/60" : "bg-muted-foreground/40";
               return (
-                <div key={c.id} className={`rounded-xl p-2.5 transition-all duration-300 ${done ? "bg-primary/5 border border-primary/20" : "bg-secondary/30"}`}>
-                  <div className="flex items-center gap-3 mb-1.5">
+                <div key={c.id} className="space-y-1.5">
+                  <div className="flex items-center gap-2">
                     {done ? (
-                      <CheckCircle2 className="h-5 w-5 shrink-0 text-primary animate-in zoom-in-50 duration-300" />
+                      <CheckCircle2 className="h-4 w-4 shrink-0 text-primary" />
                     ) : (
-                      <Circle className="h-5 w-5 shrink-0 text-muted-foreground/40" />
+                      <Circle className="h-4 w-4 shrink-0 text-muted-foreground/40" />
                     )}
-                    <div className="flex-1 min-w-0">
-                      <span className={`text-sm ${done ? "text-primary font-medium" : "text-foreground"}`}>
+                    <div className="flex-1 min-w-0 flex items-center gap-2">
+                      <p className={`text-xs font-medium truncate ${done ? "text-primary" : "text-foreground"}`}>
                         {c.emoji} {t(`challenge.${c.title}`)}
-                      </span>
-                      <span className={`ml-1.5 text-xs uppercase font-medium ${tierColor}`}>
-                        {t(`challenge.tier.${c.tier}`)}
-                      </span>
+                      </p>
+                      <span className={`text-[10px] font-medium shrink-0 ${tierColor}`}>{t(`challenge.tier.${c.tier}`)}</span>
                     </div>
-                    <span className="text-xs tabular-nums text-muted-foreground font-medium">
+                    <span className="text-[10px] text-muted-foreground shrink-0">
                       {Math.min(progress, c.target)}/{c.target}{c.unit ? ` ${t(`challenge.unit.${c.unit}`)}` : ""}
                     </span>
                   </div>
                   {/* Progress bar */}
-                  <div className="ml-8 h-1.5 rounded-full bg-muted overflow-hidden">
-                    <div
-                      className={`h-full rounded-full transition-all duration-500 ${barColor}`}
-                      style={{ width: `${pct}%` }}
-                    />
+                  <div className="ml-6 h-1 rounded-full bg-muted overflow-hidden">
+                    <div className={`h-full rounded-full transition-all duration-500 ${barColor}`} style={{ width: `${pct}%` }} />
                   </div>
                 </div>
               );
@@ -323,28 +254,22 @@ export default function Home() {
         {/* Friend Challenges */}
         {activeFriendChallenges.length > 0 && (
           <div className="mb-6 rounded-2xl border border-border bg-card p-4">
-            <h2 className="mb-3 text-sm font-semibold uppercase tracking-widest text-muted-foreground/80">
-              {t("challenge.friend.active")}
-            </h2>
-            <div className="space-y-2.5">
+            <h2 className="text-sm font-semibold text-foreground mb-3">{t("challenge.friend.active")}</h2>
+            <div className="space-y-3">
               {activeFriendChallenges.map((fc) => {
                 const progress = getChallengeProgress(fc);
                 return (
                   <div key={fc.id} className="flex items-center gap-3">
                     {progress.isComplete ? (
-                      <CheckCircle2 className="h-5 w-5 shrink-0 text-primary" />
+                      <Trophy className="h-4 w-4 shrink-0 text-primary" />
                     ) : (
-                      <Swords className="h-5 w-5 shrink-0 text-muted-foreground/60" />
+                      <Swords className="h-4 w-4 shrink-0 text-muted-foreground" />
                     )}
                     <div className="flex-1 min-w-0">
-                      <span className={`text-sm ${progress.isComplete ? "text-primary font-medium line-through" : "text-foreground"}`}>
-                        {fc.techniqueName}
-                      </span>
-                      <span className="text-xs text-muted-foreground ml-1">
-                        {t("challenge.friend.from", { name: fc.challengerName })}
-                      </span>
+                      <p className="text-xs font-medium text-foreground truncate">{fc.techniqueName}</p>
+                      <p className="text-[10px] text-muted-foreground">{t("challenge.friend.from", { name: fc.challengerName })}</p>
                     </div>
-                    <span className="text-xs tabular-nums text-muted-foreground">
+                    <span className="text-[10px] text-muted-foreground shrink-0">
                       {fc.targetMinutes > 0 && `${progress.minutesDone}/${fc.targetMinutes}m`}
                       {fc.targetMinutes > 0 && fc.targetCycles > 0 && " · "}
                       {fc.targetCycles > 0 && `${progress.cyclesDone}/${fc.targetCycles}c`}
@@ -362,10 +287,10 @@ export default function Home() {
             onClick={() => setShowChallengeDialog(true)}
             className="flex w-full items-center gap-3 rounded-2xl border border-border bg-card p-4 transition-colors hover:bg-secondary/50"
           >
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary/15">
               <Swords className="h-5 w-5 text-primary" />
             </div>
-            <div className="text-left">
+            <div className="flex-1 text-left">
               <p className="text-sm font-medium text-foreground">{t("challenge.friend.title")}</p>
               <p className="text-xs text-muted-foreground">{t("challenge.friend.subtitle")}</p>
             </div>
@@ -376,9 +301,7 @@ export default function Home() {
         <WeeklySummary />
 
         {/* Smart Suggestion */}
-        <div className="mb-6">
-          <SmartSuggestion />
-        </div>
+        <SmartSuggestion />
 
         {/* Quick Resume */}
         {lastSession && (
@@ -387,10 +310,10 @@ export default function Home() {
               onClick={() => navigate(`/session?technique=${lastSession.techniqueId}&duration=${lastSession.durationMinutes}`)}
               className="flex w-full items-center gap-3 rounded-2xl border border-primary/20 bg-primary/5 p-4 transition-colors hover:bg-primary/10"
             >
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/15">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary/15">
                 <Play className="h-5 w-5 text-primary" />
               </div>
-              <div className="text-left flex-1">
+              <div className="flex-1 text-left">
                 <p className="text-sm font-medium text-foreground">{t("home.quickResume")}</p>
                 <p className="text-xs text-muted-foreground">{lastSession.techniqueName} · {lastSession.durationMinutes} {t("common.min")}</p>
               </div>
@@ -401,14 +324,13 @@ export default function Home() {
         {/* Quick Start */}
         {favTechniques.length > 0 && (
           <div className="mb-6">
-            <h2 className="mb-3 text-sm font-semibold uppercase tracking-widest text-muted-foreground/80">{t("home.quickStart")}</h2>
-            <div className="grid grid-cols-2 gap-2">
+            <h2 className="mb-3 text-sm font-semibold text-foreground">{t("home.quickStart")}</h2>
+            <div className="space-y-3">
               {favTechniques.slice(0, 4).map((tech) => (
                 <TechniqueCard
                   key={tech.id}
                   technique={tech}
-                  isFavorite={true}
-                  onToggleFavorite={() => handleToggleFav(tech.id)}
+                  onToggleFav={() => handleToggleFav(tech.id)}
                   compact
                   progression={progressionMap[tech.id]}
                   totalSessions={totalSessions}
@@ -429,11 +351,17 @@ export default function Home() {
         >
           <Wind className="h-8 w-8 text-primary-foreground" />
         </button>
-        <p className="mt-2 text-center text-xs text-muted-foreground">{t("home.tapToBreathe")}</p>
+        <p className="mt-3 text-center text-xs text-muted-foreground">{t("home.tapToBreathe")}</p>
       </div>
 
-      <CreateChallengeDialog open={showChallengeDialog} onOpenChange={setShowChallengeDialog} />
-      <DonateDialog open={showDonateDialog} onOpenChange={setShowDonateDialog} />
+      <CreateChallengeDialog
+        open={showChallengeDialog}
+        onOpenChange={setShowChallengeDialog}
+      />
+      <DonateDialog
+        open={showDonateDialog}
+        onOpenChange={setShowDonateDialog}
+      />
     </div>
   );
 }

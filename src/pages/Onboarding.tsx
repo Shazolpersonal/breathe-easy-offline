@@ -1,11 +1,10 @@
-import { useState, useMemo, useCallback } from "react";
-import { Wind, Brain, BarChart3, WifiOff, ChevronRight, ChevronLeft, Download, Smartphone } from "lucide-react";
+import { useState, useCallback } from "react";
+import { Wind, Brain, BarChart3, WifiOff, ChevronRight, ChevronLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { useLanguage, Language } from "@/contexts/LanguageContext";
 import { useTheme, THEMES, ThemeId } from "@/contexts/ThemeContext";
 import { useSettings } from "@/contexts/SettingsContext";
-import { canInstall, promptInstall, isRunningAsPWA, canShowManualInstallHint, getInstallPlatform } from "@/lib/installPrompt";
 
 interface OnboardingProps {
   onComplete: () => void;
@@ -17,8 +16,7 @@ export default function Onboarding({ onComplete }: OnboardingProps) {
   const { settings, update } = useSettings();
   const [step, setStep] = useState(0);
 
-  const showInstallStep = useMemo(() => !isRunningAsPWA(), []);
-  const totalSteps = showInstallStep ? 4 : 3;
+  const totalSteps = 3;
 
   const next = useCallback(() => {
     if (step >= totalSteps - 1) {
@@ -30,11 +28,6 @@ export default function Onboarding({ onComplete }: OnboardingProps) {
   }, [step, totalSteps, onComplete]);
 
   const back = useCallback(() => setStep((s) => Math.max(0, s - 1)), []);
-
-  const handleInstall = async () => {
-    await promptInstall();
-    next();
-  };
 
   return (
     <div className="fixed inset-0 z-50 flex flex-col bg-background">
@@ -54,7 +47,6 @@ export default function Onboarding({ onComplete }: OnboardingProps) {
               onToggleVibration={(v) => update({ vibrationEnabled: v })}
             />
           )}
-          {step === 3 && showInstallStep && <StepInstall t={t} onInstall={handleInstall} />}
         </div>
       </div>
 
@@ -249,44 +241,6 @@ function StepPersonalize({
           <Switch checked={vibrationEnabled} onCheckedChange={onToggleVibration} />
         </div>
       </div>
-    </div>
-  );
-}
-
-/* ─── Step 4: Install ─── */
-function StepInstall({ t, onInstall }: { t: (k: string) => string; onInstall: () => void }) {
-  const nativeAvailable = canInstall();
-  const manualHint = canShowManualInstallHint();
-  const platform = getInstallPlatform();
-
-  return (
-    <div className="text-center">
-      <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-3xl bg-primary/15">
-        <Smartphone className="h-10 w-10 text-primary" />
-      </div>
-      <h2 className="text-2xl font-bold text-foreground mb-2">{t("onboarding.installTitle")}</h2>
-      <p className="text-sm text-muted-foreground mb-4">{t("onboarding.installDesc")}</p>
-      <p className="text-xs text-primary font-medium mb-8">You can skip this and install later.</p>
-
-      {nativeAvailable && (
-        <Button onClick={onInstall} size="lg" className="gap-2 w-full mb-3">
-          <Download className="h-5 w-5" /> {t("onboarding.installButton")}
-        </Button>
-      )}
-
-      {manualHint && !nativeAvailable && (
-        <div className="rounded-2xl border border-primary/30 bg-primary/5 p-5 mb-3 text-left">
-          <p className="text-sm text-foreground font-medium mb-1">{t("install.manual.title")}</p>
-          <p className="text-xs text-muted-foreground">
-            {platform === "ios"
-              ? t("install.manual.ios")
-              : platform === "android"
-              ? t("install.manual.android")
-              : t("install.manual.desktop")}
-          </p>
-          <p className="mt-2 text-[11px] text-primary/70">{t("install.manual.free")}</p>
-        </div>
-      )}
     </div>
   );
 }
