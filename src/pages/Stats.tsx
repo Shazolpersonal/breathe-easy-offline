@@ -208,15 +208,25 @@ export default function Stats() {
           minutes: 0,
         });
       }
-      sessions.forEach((s) => {
-        const day = s.date.substring(0, 10);
-        for (const week of weeks) {
-          if (day >= week.start && day <= week.end) {
-            week.minutes += Math.round(s.durationSeconds / 60);
-            break;
+      // Pre-compute daily aggregates in O(N) to avoid O(N × W) inner loop
+      const dailyMinutes: Record<string, number> = {};
+      for (let i = 0; i < sessions.length; i++) {
+        const day = sessions[i].date.substring(0, 10);
+        dailyMinutes[day] = (dailyMinutes[day] || 0) + Math.round(sessions[i].durationSeconds / 60);
+      }
+
+      // Distribute into weeks using O(W × 7) lookups
+      for (const week of weeks) {
+        const current = new Date(week.start);
+        const end = new Date(week.end);
+        while (current <= end) {
+          const day = current.toISOString().substring(0, 10);
+          if (dailyMinutes[day]) {
+            week.minutes += dailyMinutes[day];
           }
+          current.setUTCDate(current.getUTCDate() + 1);
         }
-      });
+      }
       return weeks.map((w) => ({
         label: new Date(w.start).toLocaleDateString(locale, { month: "short", day: "numeric" }),
         minutes: w.minutes,
