@@ -28,6 +28,7 @@ import { completeDay } from "@/lib/programs";
 import { shareOrDownloadCard } from "@/lib/shareCard";
 import DonateDialog from "@/components/DonateDialog";
 import { BreathDetector, RhythmUpdate } from "@/lib/breathDetector";
+import { KeepAwake } from "@capacitor-community/keep-awake";
 import { getSoundscapeEngine, SoundscapeType } from "@/lib/soundscapes";
 import SoundscapePicker from "@/components/SoundscapePicker";
 import { Slider } from "@/components/ui/slider";
@@ -302,6 +303,19 @@ export default function Session() {
     
     return () => clearInterval(interval);
   }, [state, technique.id, techniqueName, totalElapsed, completedCycles, durationMin, moodBefore, phaseIndex, secondsLeft, currentRound, voiceOn, soundscapeType]);
+
+  // ─── Screen Keep Awake (Capacitor) ───
+  useEffect(() => {
+    if (state === "running") {
+      KeepAwake.keepAwake().catch(console.error);
+    } else {
+      KeepAwake.allowSleep().catch(console.error);
+    }
+
+    return () => {
+      KeepAwake.allowSleep().catch(console.error);
+    };
+  }, [state]);
 
   // ─── Clear Recovery State When Session Completes ───
   useEffect(() => {

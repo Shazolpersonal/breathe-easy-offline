@@ -1,4 +1,6 @@
 // ─── World-Class Voice Engine (Web Speech API — Zero Cost, Offline Forever) ───
+import { TextToSpeech } from '@capacitor-community/text-to-speech';
+import { Capacitor } from '@capacitor/core';
 
 let synth: SpeechSynthesis | null = null;
 let voicesLoaded = false;
@@ -99,22 +101,38 @@ export interface SpeakOptions {
   lang?: string;
 }
 
-export function speak(text: string, options: SpeakOptions = {}): void {
-  const s = getSynth();
-  if (!s) return;
-  s.cancel();
-
-  const utterance = new SpeechSynthesisUtterance(text);
-  utterance.rate = options.rate ?? 0.9;
-  utterance.pitch = options.pitch ?? 0.95;
-  utterance.volume = options.volume ?? 0.8;
-
+export async function speak(text: string, options: SpeakOptions = {}): Promise<void> {
   const lang = options.lang ?? "en";
-  const voice = resolveVoice(options.voiceName ?? null, lang);
-  if (voice) utterance.voice = voice;
-  utterance.lang = lang === "bn" ? "bn-BD" : "en-US";
+  const locale = lang === "bn" ? "bn-BD" : "en-US";
 
-  s.speak(utterance);
+  if (Capacitor.isNativePlatform()) {
+    try {
+      await TextToSpeech.speak({
+        text: text,
+        lang: locale,
+        rate: options.rate ?? 0.9,
+        pitch: options.pitch ?? 0.95,
+        volume: options.volume ?? 0.8,
+      });
+    } catch (e) {
+      console.error("TTS Error:", e);
+    }
+  } else {
+    const s = getSynth();
+    if (!s) return;
+    s.cancel();
+
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.rate = options.rate ?? 0.9;
+    utterance.pitch = options.pitch ?? 0.95;
+    utterance.volume = options.volume ?? 0.8;
+
+    const voice = resolveVoice(options.voiceName ?? null, lang);
+    if (voice) utterance.voice = voice;
+    utterance.lang = locale;
+
+    s.speak(utterance);
+  }
 }
 
 /** Legacy speak function for backward compatibility */
@@ -122,8 +140,16 @@ export function speakLegacy(text: string, rate = 0.9, lang: string = "en"): void
   speak(text, { rate, lang });
 }
 
-export function stopSpeaking(): void {
-  getSynth()?.cancel();
+export async function stopSpeaking(): Promise<void> {
+  if (Capacitor.isNativePlatform()) {
+    try {
+      await TextToSpeech.stop();
+    } catch (e) {
+      console.error("TTS Stop Error:", e);
+    }
+  } else {
+    getSynth()?.cancel();
+  }
 }
 
 /** Preview a voice with a sample phrase */
