@@ -32,21 +32,24 @@ export default function Home() {
   const dailyGoal = settings.dailyGoalMinutes;
   const goalProgress = Math.min(100, Math.round((todayMin / dailyGoal) * 100));
   const allTechniques = useMemo(() => [...PRESET_TECHNIQUES, ...getCustomTechniques()], []);
-  const progressions = useMemo(() => getAllProgressionsPublic(), [favorites]);
+  const favoritesSet = useMemo(() => new Set(favorites), [favorites]);
+  const progressions = useMemo(() => getAllProgressionsPublic(), []);
   const totalSessions = useMemo(() => progressions.reduce((sum, p) => sum + p.sessionsCompleted, 0), [progressions]);
 
   const progressionMap = useMemo(() => {
     const map: Record<string, ReturnType<typeof getProgression>> = {};
+    const pLookup: Record<string, ReturnType<typeof getProgression>> = {};
+    for (const p of progressions) pLookup[p.techniqueId] = p;
+
     for (const tech of allTechniques) {
-      if (favorites.includes(tech.id)) {
-        const found = progressions.find(p => p.techniqueId === tech.id);
-        map[tech.id] = found || { techniqueId: tech.id, level: 1, sessionsCompleted: 0, totalCycles: 0 };
+      if (favoritesSet.has(tech.id)) {
+        map[tech.id] = pLookup[tech.id] || { techniqueId: tech.id, level: 1, sessionsCompleted: 0, totalCycles: 0 };
       }
     }
     return map;
-  }, [allTechniques, progressions, favorites]);
+  }, [allTechniques, progressions, favoritesSet]);
 
-  const favTechniques = useMemo(() => allTechniques.filter((tech) => favorites.includes(tech.id)), [allTechniques, favorites]);
+  const favTechniques = useMemo(() => allTechniques.filter((tech) => favoritesSet.has(tech.id)), [allTechniques, favoritesSet]);
   const xpState = useMemo(() => getXPState(), []);
   const weeklyXP = useMemo(() => getWeeklyXP(), []);
   const dailyChallenges = useMemo(() => getDailyChallenges(), []);

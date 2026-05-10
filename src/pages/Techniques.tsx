@@ -31,14 +31,17 @@ export default function Techniques() {
 
   // Bug 5: Memoize progressions to avoid per-card localStorage parsing
 
-  const progressions = useMemo(() => getAllProgressionsPublic(), [favorites, customTechniques]);
+  const favoritesSet = useMemo(() => new Set(favorites), [favorites]);
+  const progressions = useMemo(() => getAllProgressionsPublic(), []);
   const totalSessions = useMemo(() => progressions.reduce((sum, p) => sum + p.sessionsCompleted, 0), [progressions]);
 
   const progressionMap = useMemo(() => {
     const map: Record<string, ReturnType<typeof getProgression>> = {};
+    const pLookup: Record<string, ReturnType<typeof getProgression>> = {};
+    for (const p of progressions) pLookup[p.techniqueId] = p;
+
     for (const tech of [...PRESET_TECHNIQUES, ...customTechniques]) {
-      const found = progressions.find(p => p.techniqueId === tech.id);
-      map[tech.id] = found || { techniqueId: tech.id, level: 1, sessionsCompleted: 0, totalCycles: 0 };
+      map[tech.id] = pLookup[tech.id] || { techniqueId: tech.id, level: 1, sessionsCompleted: 0, totalCycles: 0 };
     }
     return map;
   }, [progressions, customTechniques]);
@@ -118,12 +121,12 @@ export default function Techniques() {
     : [];
 
   // Bug 6: Filtering & search
-  const allTechniques = [...PRESET_TECHNIQUES, ...customTechniques];
+  const allTechniques = useMemo(() => [...PRESET_TECHNIQUES, ...customTechniques], [customTechniques]);
 
   const filteredTechniques = useMemo(() => {
     let result = allTechniques;
     if (filter === "favorites") {
-      result = result.filter(tech => favorites.includes(tech.id));
+      result = result.filter(tech => favoritesSet.has(tech.id));
     } else if (filter !== "all") {
       result = result.filter(tech => tech.difficulty === filter);
     }
@@ -150,7 +153,7 @@ export default function Techniques() {
       });
     }
     return result;
-  }, [filter, searchQuery, favorites, customTechniques, t]);
+  }, [filter, searchQuery, allTechniques, favoritesSet, t]);
 
   return (
     <div className="min-h-screen px-4 pb-24 pt-12">
@@ -286,7 +289,7 @@ export default function Techniques() {
             <TechniqueCard
               key={tech.id}
               technique={tech}
-              isFavorite={favorites.includes(tech.id)}
+              isFavorite={favoritesSet.has(tech.id)}
               onToggleFavorite={() => handleToggleFav(tech.id)}
               progression={progressionMap[tech.id]}
               totalSessions={totalSessions}
