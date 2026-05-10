@@ -38,3 +38,14 @@ export function sanitizeObjectStrings<T>(obj: T): T {
   }
   return sanitizeString(obj) as unknown as T;
 }
+
+/**
+ * Security: Sanitize strings for logging to prevent log injection and XSS in log viewers.
+ * Truncates to 200 chars to prevent DoS.
+ */
+export function sanitizeForLog(str: unknown): string {
+  if (typeof str !== "string") return String(str);
+  return sanitizeString(str)
+    .replace(/\r?\n|\r/g, " ")
+    .slice(0, 200);
+}
