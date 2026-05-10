@@ -6,3 +6,6 @@
 ## 2024-11-20 - [Focus States on Interactive Custom Elements]
 **Learning:** Keyboard navigation depends on visible focus indicators. I found interactive `button` elements disguised as cards, list items, or selection grids that lacked the expected outline when focused via keyboard tabbing.
 **Action:** Consistently append `focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-ring focus-visible:ring-offset-2` to all interactive custom elements (like `MoodPicker` buttons, list items in `Playlists` and `Programs`, and selection cards in `Onboarding`) to ensure they receive standard keyboard focus visual cues.
+## 2024-05-24 - [aria-pressed on Toggle Chips]
+**Learning:** We use `button` elements to visually represent toggle pills or chips (e.g., duration, soundscape, or visualization selection). Screen readers cannot infer the "selected" state of these visual chips unless `aria-pressed` or `aria-checked` is explicitly bound to their selected condition.
+**Action:** When creating or auditing custom toggle buttons or chips (e.g., inside `.map()` loops), always include the `aria-pressed={condition}` attribute alongside active styling to accurately convey their selected state to screen readers.

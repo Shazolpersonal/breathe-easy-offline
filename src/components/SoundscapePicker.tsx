@@ -24,6 +24,7 @@ export default function SoundscapePicker({ value, onChange, compact }: Props) {
         <button
           key={id}
           onClick={() => onChange(id)}
+          aria-pressed={value === id}
           className={cn(
             "flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-medium transition-colors focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-ring focus-visible:ring-offset-2",
             value === id
