@@ -34,14 +34,22 @@ export default function Techniques() {
   const progressions = useMemo(() => getAllProgressionsPublic(), [favorites, customTechniques]);
   const totalSessions = useMemo(() => progressions.reduce((sum, p) => sum + p.sessionsCompleted, 0), [progressions]);
 
+  // Memoize all techniques to avoid recreating the array and satisfy lint warnings
+  const allTechniques = useMemo(() => [...PRESET_TECHNIQUES, ...customTechniques], [customTechniques]);
+
   const progressionMap = useMemo(() => {
+    // Optimization: Create an O(1) lookup dictionary to avoid O(N x P) .find calls
+    const progLookup: Record<string, ReturnType<typeof getProgression>> = {};
+    for (const p of progressions) {
+      progLookup[p.techniqueId] = p;
+    }
+
     const map: Record<string, ReturnType<typeof getProgression>> = {};
-    for (const tech of [...PRESET_TECHNIQUES, ...customTechniques]) {
-      const found = progressions.find(p => p.techniqueId === tech.id);
-      map[tech.id] = found || { techniqueId: tech.id, level: 1, sessionsCompleted: 0, totalCycles: 0 };
+    for (const tech of allTechniques) {
+      map[tech.id] = progLookup[tech.id] || { techniqueId: tech.id, level: 1, sessionsCompleted: 0, totalCycles: 0 };
     }
     return map;
-  }, [progressions, customTechniques]);
+  }, [progressions, allTechniques]);
 
   const handleToggleFav = (id: string) => {
     toggleFavorite(id);
@@ -118,12 +126,13 @@ export default function Techniques() {
     : [];
 
   // Bug 6: Filtering & search
-  const allTechniques = [...PRESET_TECHNIQUES, ...customTechniques];
 
   const filteredTechniques = useMemo(() => {
     let result = allTechniques;
     if (filter === "favorites") {
-      result = result.filter(tech => favorites.includes(tech.id));
+      // Optimization: use O(1) Set lookup instead of array .includes()
+      const favSet = new Set(favorites);
+      result = result.filter(tech => favSet.has(tech.id));
     } else if (filter !== "all") {
       result = result.filter(tech => tech.difficulty === filter);
     }
@@ -150,7 +159,7 @@ export default function Techniques() {
       });
     }
     return result;
-  }, [filter, searchQuery, favorites, customTechniques, t]);
+  }, [allTechniques, filter, searchQuery, favorites, t]);
 
   return (
     <div className="min-h-screen px-4 pb-24 pt-12">
