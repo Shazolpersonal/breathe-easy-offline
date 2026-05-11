@@ -21,15 +21,6 @@ export function sanitizeString(str: unknown): unknown {
 }
 
 /**
- * Security: Sanitize a string for safe logging (escapes HTML, removes newlines, limits length).
- */
-export function sanitizeForLog(str: string): string {
-  if (!str) return "";
-  const sanitized = sanitizeString(str) as string;
-  return sanitized.replace(/[\r\n]+/g, "").substring(0, 200);
-}
-
-/**
  * Security: Recursively sanitize all strings within an object or array.
  */
 export function sanitizeObjectStrings<T>(obj: T): T {
@@ -54,7 +45,8 @@ export function sanitizeObjectStrings<T>(obj: T): T {
  */
 export function sanitizeForLog(str: unknown): string {
   if (typeof str !== "string") return String(str);
-  return sanitizeString(str)
+  const sanitized = sanitizeString(str) as string;
+  return sanitized
     .replace(/\r?\n|\r/g, " ")
-    .slice(0, 200);
+    .substring(0, 200);
 }
