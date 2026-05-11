@@ -10,3 +10,8 @@
 **Vulnerability:** The sidebar state cookie was being set without explicitly defining a `SameSite` attribute.
 **Learning:** While modern browsers default to `SameSite=Lax`, explicitly setting it provides a defense-in-depth approach and clearer security posture against Cross-Site Request Forgery (CSRF) and cross-site tracking risks.
 **Prevention:** Whenever manually setting cookies via `document.cookie`, always append at least `SameSite=Lax` (or `Strict` if cross-site usage is definitively not needed) to the cookie string.
+
+## 2026-05-11 - [TypeScript Type Guards and Safe Method Invocations on `unknown` Types]
+**Vulnerability:** A duplicate `sanitizeForLog` implementation exported a type signature taking `unknown` and calling `.replace()` through a type assertion that caused TypeScript compile-time collisions and possible runtime errors if the input wasn't properly checked.
+**Learning:** When creating utility functions that accept `unknown` data (like logging formatters), strict type checking (`typeof str !== "string"`) followed by explicit casting is necessary before invoking string methods to prevent unhandled TypeErrors and crashes.
+**Prevention:** Combine overloaded functionality logically, perform early returns for non-string types, and use explicit casting or string conversion (`String(str)`) safely before applying sanitization logic like `.replace()`.
