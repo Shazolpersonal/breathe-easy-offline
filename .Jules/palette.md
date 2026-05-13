@@ -9,3 +9,7 @@
 ## 2024-05-24 - [aria-pressed on Toggle Chips]
 **Learning:** We use `button` elements to visually represent toggle pills or chips (e.g., duration, soundscape, or visualization selection). Screen readers cannot infer the "selected" state of these visual chips unless `aria-pressed` or `aria-checked` is explicitly bound to their selected condition.
 **Action:** When creating or auditing custom toggle buttons or chips (e.g., inside `.map()` loops), always include the `aria-pressed={condition}` attribute alongside active styling to accurately convey their selected state to screen readers.
+
+## 2024-06-25 - Form Labels without htmlFor
+**Learning:** Radix/Shadcn forms using standard `Label`, `Input` and `SelectTrigger` primitives do not automatically link the label to the control unless `id` and `htmlFor` are explicitly passed, breaking screen-reader accessibility and click-to-focus behavior.
+**Action:** Always provide an explicit `id` to `Input`/`SelectTrigger` elements and match it with an `htmlFor` property on the `Label` when implementing dialogs or forms.

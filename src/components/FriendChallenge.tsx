@@ -94,8 +94,9 @@ export function CreateChallengeDialog({ open, onOpenChange }: CreateChallengeDia
         {!generatedLink ? (
           <div className="space-y-4">
             <div>
-              <Label>{t("challenge.friend.yourName")}</Label>
+              <Label htmlFor="challengerName">{t("challenge.friend.yourName")}</Label>
               <Input
+                id="challengerName"
                 value={challengerName}
                 onChange={(e) => setChallengerName(e.target.value)}
                 placeholder={t("challenge.friend.namePlaceholder")}
@@ -104,9 +105,9 @@ export function CreateChallengeDialog({ open, onOpenChange }: CreateChallengeDia
             </div>
 
             <div>
-              <Label>{t("challenge.friend.technique")}</Label>
+              <Label htmlFor="techniqueId">{t("challenge.friend.technique")}</Label>
               <Select value={techniqueId} onValueChange={setTechniqueId}>
-                <SelectTrigger className="mt-1">
+                <SelectTrigger id="techniqueId" className="mt-1">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -121,8 +122,9 @@ export function CreateChallengeDialog({ open, onOpenChange }: CreateChallengeDia
 
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <Label>{t("challenge.friend.targetMin")}</Label>
+                <Label htmlFor="targetMinutes">{t("challenge.friend.targetMin")}</Label>
                 <Input
+                  id="targetMinutes"
                   type="number"
                   min={0}
                   max={60}
@@ -132,8 +134,9 @@ export function CreateChallengeDialog({ open, onOpenChange }: CreateChallengeDia
                 />
               </div>
               <div>
-                <Label>{t("challenge.friend.targetCycles")}</Label>
+                <Label htmlFor="targetCycles">{t("challenge.friend.targetCycles")}</Label>
                 <Input
+                  id="targetCycles"
                   type="number"
                   min={0}
                   max={100}
