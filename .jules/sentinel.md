@@ -15,3 +15,7 @@
 **Vulnerability:** A duplicate `sanitizeForLog` implementation exported a type signature taking `unknown` and calling `.replace()` through a type assertion that caused TypeScript compile-time collisions and possible runtime errors if the input wasn't properly checked.
 **Learning:** When creating utility functions that accept `unknown` data (like logging formatters), strict type checking (`typeof str !== "string"`) followed by explicit casting is necessary before invoking string methods to prevent unhandled TypeErrors and crashes.
 **Prevention:** Combine overloaded functionality logically, perform early returns for non-string types, and use explicit casting or string conversion (`String(str)`) safely before applying sanitization logic like `.replace()`.
+## 2024-05-24 - Prototype Pollution in Recursive Sanitization
+**Vulnerability:** Prototype pollution vector in the `sanitizeObjectStrings` utility via unprotected recursive copying.
+**Learning:** `JSON.parse` creates objects that own keys like `__proto__`, `constructor`, and `prototype`. A standard `hasOwnProperty` check is insufficient during recursive assignment because it evaluates to true for these parsed keys, leading to unintended prototype mutation when assigning them to a newly instantiated object.
+**Prevention:** To prevent prototype pollution vulnerabilities when recursively cloning or sanitizing objects parsed from JSON (e.g., in `sanitizeObjectStrings`), explicitly skip `__proto__`, `constructor`, and `prototype` keys during `for...in` iteration.
