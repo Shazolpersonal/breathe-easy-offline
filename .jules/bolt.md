@@ -4,3 +4,6 @@
 ## 2025-05-09 - UTC Strictness with ISO Date Strings in Time Range Chart
 **Learning:** Instantiating `new Date(YYYY-MM-DD)` defaults to UTC midnight. Mixing local time setters like `.setDate(current.getDate() + 1)` causes critical timezone offsets, leading to skipped days or duplicate string exports across Daylight Saving Time boundaries, which caused the code review failure. The initial `O(N x M)` string bounds check logic (`day >= week.start`) was actually safer and more precise, though slower.
 **Action:** When working with ISO date-only strings and building intervals manually, use strictly `.getUTCDate()` and `.setUTCDate()` to avoid corrupting bounds and double counting data.
+## 2023-10-27 - Inline Loop Refactoring Risks
+**Learning:** When flattening multiple loops into a single O(N) pass, it's tempting to inline small helper functions (like mapping hours to time buckets) to save function calls. However, this creates a severe regression risk if the boundary logic is duplicated rather than referenced, breaking the single source of truth.
+**Action:** Always call existing helper utilities (`getTimeBucket()`) inside the optimized loop instead of redefining their internal logic, even if it adds a microsecond of overhead. Safety over micro-optimizations.

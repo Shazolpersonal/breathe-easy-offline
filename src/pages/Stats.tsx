@@ -46,7 +46,6 @@ export default function Stats() {
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const longestStreak = useMemo(() => getLongestStreak(), [sessionsKey]);
-  const totalMinutes = useMemo(() => Math.round(sessions.reduce((s, r) => s + r.durationSeconds, 0) / 60), [sessions]);
 
   const now = new Date();
   const [reportMonth, setReportMonth] = useState(now.getMonth());
@@ -71,66 +70,89 @@ export default function Stats() {
 
 
 
-  const avgCalmScore = useMemo(() => {
-    let totalScore = 0;
-    let scoredCount = 0;
-    for (const s of sessions) {
-      if (s.calmScore != null) {
-        totalScore += s.calmScore;
-        scoredCount++;
-      }
-    }
-    if (scoredCount === 0) return null;
-    return Math.round(totalScore / scoredCount);
-  }, [sessions]);
-
-
-
-
-
-
-
-
-
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const xpState = useMemo(() => getXPState(), [sessionsKey]);
 
-  // Lifetime stats
+  const aggregates = useMemo(() => {
+    let totalScore = 0;
+    let scoredCount = 0;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  const lifetimeStats = useMemo(() => {
-    const daysSet = new Set<string>();
     let totalSeconds = 0;
     let firstSession: string | null = sessions.length > 0 ? sessions[0].date : null;
+    const daysSet = new Set<string>();
 
-    for (const s of sessions) {
-      daysSet.add(s.date.substring(0, 10));
+    const dailyMinutesMap: Record<string, number> = {};
+
+    const techniqueMap: Record<string, { name: string; sessions: number; totalCalm: number; calmCount: number }> = {};
+    const timeOfDayBuckets: Record<string, number> = { night: 0, morning: 0, midday: 0, afternoon: 0, evening: 0 };
+
+    const scoredSessions = [];
+    const journalSess = [];
+
+    // SINGLE PASS LOOP
+    for (let i = 0; i < sessions.length; i++) {
+      const s = sessions[i];
+
+      // avgCalmScore
+      if (s.calmScore != null) {
+        totalScore += s.calmScore;
+        scoredCount++;
+        scoredSessions.push(s);
+      }
+
+      // lifetimeStats
+      const day = s.date.substring(0, 10);
+      daysSet.add(day);
       totalSeconds += s.durationSeconds;
       if (firstSession && s.date < firstSession) {
         firstSession = s.date;
       }
+
+      // timeRangeData daily cache
+      dailyMinutesMap[day] = (dailyMinutesMap[day] || 0) + Math.round(s.durationSeconds / 60);
+
+      // techniqueBreakdown
+      if (!techniqueMap[s.techniqueId]) techniqueMap[s.techniqueId] = { name: s.techniqueName, sessions: 0, totalCalm: 0, calmCount: 0 };
+      techniqueMap[s.techniqueId].sessions++;
+      if (s.calmScore != null) {
+        techniqueMap[s.techniqueId].totalCalm += s.calmScore;
+        techniqueMap[s.techniqueId].calmCount++;
+      }
+
+      // timeOfDayData
+      const hour = new Date(s.date).getHours();
+      const bucket = getTimeBucket(hour);
+      timeOfDayBuckets[bucket]++;
+
+      // journalSessions
+      if (s.journal) {
+        journalSess.push(s);
+      }
     }
 
-    const uniqueDays = daysSet.size;
-    const totalHours = Math.round((totalSeconds / 3600) * 10) / 10;
+    return {
+      avgCalmScore: scoredCount === 0 ? null : Math.round(totalScore / scoredCount),
+      totalMinutes: Math.round(totalSeconds / 60),
+      lifetimeStats: {
+        uniqueDays: daysSet.size,
+        totalHours: Math.round((totalSeconds / 3600) * 10) / 10,
+        firstSession,
+      },
+      dailyMinutesMap,
+      techniqueMap,
+      timeOfDayBuckets,
+      scoredSessions,
+      journalSessions: journalSess.sort((a, b) => b.date.localeCompare(a.date))
+    };
+  }, [sessions]);
 
-    return { uniqueDays, totalHours, firstSession, totalXP: xpState.totalXP };
-  }, [sessions, xpState]);
+  const totalMinutes = aggregates.totalMinutes;
+  const avgCalmScore = aggregates.avgCalmScore;
+
+  // Lifetime stats
+  const lifetimeStats = useMemo(() => {
+    return { ...aggregates.lifetimeStats, totalXP: xpState.totalXP };
+  }, [aggregates, xpState]);
 
 
   const TIME_BUCKET_KEYS = useMemo(() => [
@@ -208,12 +230,8 @@ export default function Stats() {
           minutes: 0,
         });
       }
-      // Pre-compute daily aggregates in O(N) to avoid O(N × W) inner loop
-      const dailyMinutes: Record<string, number> = {};
-      for (let i = 0; i < sessions.length; i++) {
-        const day = sessions[i].date.substring(0, 10);
-        dailyMinutes[day] = (dailyMinutes[day] || 0) + Math.round(sessions[i].durationSeconds / 60);
-      }
+      // Pre-compute daily aggregates using our single pass map
+      const dailyMinutes = aggregates.dailyMinutesMap;
 
       // Distribute into weeks using O(W × 7) lookups
       for (const week of weeks) {
@@ -232,41 +250,15 @@ export default function Stats() {
         minutes: w.minutes,
       }));
     }
-  }, [sessions, timeRange, locale]);
+  }, [sessions, timeRange, locale, aggregates.dailyMinutesMap]);
 
   // Technique breakdown
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   const techniqueBreakdown = useMemo(() => {
-    const map: Record<string, { name: string; sessions: number; totalCalm: number; calmCount: number }> = {};
-    sessions.forEach((s) => {
-      if (!map[s.techniqueId]) map[s.techniqueId] = { name: s.techniqueName, sessions: 0, totalCalm: 0, calmCount: 0 };
-      map[s.techniqueId].sessions++;
-      if (s.calmScore != null) {
-        map[s.techniqueId].totalCalm += s.calmScore;
-        map[s.techniqueId].calmCount++;
-      }
-    });
-    return Object.values(map)
+    return Object.values(aggregates.techniqueMap)
       .map(t => ({ name: t.name, sessions: t.sessions, avgCalm: t.calmCount > 0 ? Math.round(t.totalCalm / t.calmCount) : null }))
       .sort((a, b) => b.sessions - a.sessions)
       .slice(0, 6);
-  }, [sessions]);
+  }, [aggregates]);
 
   // Mood trend (30-day rolling)
 
@@ -366,9 +358,8 @@ export default function Stats() {
 
 
   const calmTrendData = useMemo(() => {
-    const scored = sessions.filter((s) => s.calmScore != null).slice(-14);
-    return scored.map((s, i) => ({ session: i + 1, score: s.calmScore! }));
-  }, [sessions]);
+    return aggregates.scoredSessions.slice(-14).map((s, i) => ({ session: i + 1, score: s.calmScore! }));
+  }, [aggregates]);
 
 
 
@@ -388,13 +379,8 @@ export default function Stats() {
 
 
   const timeOfDayData = useMemo(() => {
-    const buckets: Record<string, number> = { night: 0, morning: 0, midday: 0, afternoon: 0, evening: 0 };
-    sessions.forEach((s) => {
-      const hour = new Date(s.date).getHours();
-      buckets[getTimeBucket(hour)]++;
-    });
-    return TIME_BUCKET_KEYS.map((b) => ({ name: t(b.labelKey), sessions: buckets[b.key] }));
-  }, [sessions, t, TIME_BUCKET_KEYS]);
+    return TIME_BUCKET_KEYS.map((b) => ({ name: t(b.labelKey), sessions: aggregates.timeOfDayBuckets[b.key] }));
+  }, [aggregates, t, TIME_BUCKET_KEYS]);
 
 
 
@@ -414,9 +400,7 @@ export default function Stats() {
 
 
 
-  const journalSessions = useMemo(() => {
-    return sessions.filter((s) => s.journal).sort((a, b) => b.date.localeCompare(a.date));
-  }, [sessions]);
+  const journalSessions = aggregates.journalSessions;
 
   // Report data with daily chart
 
