@@ -11,6 +11,7 @@ import { shareTechnique } from "@/lib/shareApp";
 import BreathingPreview from "@/components/BreathingPreview";
 import { vibrateFavorite } from "@/lib/haptics";
 import { useSettings } from "@/contexts/SettingsContext";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 interface TechniqueCardProps {
   technique: BreathingTechnique;
@@ -122,42 +123,61 @@ export default function TechniqueCard({ technique, isFavorite, onToggleFavorite,
             </div>
           )}
         </div>
-        <div className="ml-2 flex flex-col gap-1 shrink-0">
-          <button onClick={handleToggleFavorite} className="p-1 text-muted-foreground hover:text-primary focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-ring focus-visible:ring-offset-2 rounded" aria-label={isFavorite ? t("techniques.unfavorite") : t("techniques.favorite")}>
-            {isFavorite ? <Heart className="h-5 w-5 fill-primary text-primary" /> : <HeartOff className="h-5 w-5" />}
-          </button>
-          {unlocked && (
-            <>
-              <button
-                onClick={() => setPreviewActive(!previewActive)}
-                className={cn("p-1 transition-colors focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-ring focus-visible:ring-offset-2 rounded", previewActive ? "text-primary" : "text-muted-foreground hover:text-primary")}
-                title={t("techniques.preview")}
-                aria-label={t("techniques.preview")}
-                aria-pressed={previewActive}
-              >
-                {previewActive ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-              </button>
-              <button
-                onClick={() => shareTechnique(techniqueName, techniqueDesc, language)}
-                className="p-1 text-muted-foreground hover:text-primary transition-colors focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-ring focus-visible:ring-offset-2 rounded"
-                title={t("share.technique")}
-                aria-label={t("share.technique")}
-              >
-                <Share2 className="h-4 w-4" />
-              </button>
-            </>
-          )}
-          {technique.isCustom && onDelete && (
-            <button
-              onClick={onDelete}
-              className="p-1 text-muted-foreground hover:text-destructive transition-colors focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-ring focus-visible:ring-offset-2 rounded"
-              aria-label={t("techniques.delete")}
-              title={t("techniques.delete")}
-            >
-              <Trash2 className="h-4 w-4" />
-            </button>
-          )}
-        </div>
+        <TooltipProvider>
+          <div className="ml-2 flex flex-col gap-1 shrink-0">
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button onClick={handleToggleFavorite} className="p-1 text-muted-foreground hover:text-primary focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-ring focus-visible:ring-offset-2 rounded" aria-label={isFavorite ? t("techniques.unfavorite") : t("techniques.favorite")}>
+                  {isFavorite ? <Heart className="h-5 w-5 fill-primary text-primary" /> : <HeartOff className="h-5 w-5" />}
+                </button>
+              </TooltipTrigger>
+              <TooltipContent>{isFavorite ? t("techniques.unfavorite") : t("techniques.favorite")}</TooltipContent>
+            </Tooltip>
+            {unlocked && (
+              <>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <button
+                      onClick={() => setPreviewActive(!previewActive)}
+                      className={cn("p-1 transition-colors focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-ring focus-visible:ring-offset-2 rounded", previewActive ? "text-primary" : "text-muted-foreground hover:text-primary")}
+                      aria-label={t("techniques.preview")}
+                      aria-pressed={previewActive}
+                    >
+                      {previewActive ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                    </button>
+                  </TooltipTrigger>
+                  <TooltipContent>{t("techniques.preview")}</TooltipContent>
+                </Tooltip>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <button
+                      onClick={() => shareTechnique(techniqueName, techniqueDesc, language)}
+                      className="p-1 text-muted-foreground hover:text-primary transition-colors focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-ring focus-visible:ring-offset-2 rounded"
+                      aria-label={t("share.technique")}
+                    >
+                      <Share2 className="h-4 w-4" />
+                    </button>
+                  </TooltipTrigger>
+                  <TooltipContent>{t("share.technique")}</TooltipContent>
+                </Tooltip>
+              </>
+            )}
+            {technique.isCustom && onDelete && (
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <button
+                    onClick={onDelete}
+                    className="p-1 text-muted-foreground hover:text-destructive transition-colors focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-ring focus-visible:ring-offset-2 rounded"
+                    aria-label={t("techniques.delete")}
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent>{t("techniques.delete")}</TooltipContent>
+              </Tooltip>
+            )}
+          </div>
+        </TooltipProvider>
       </div>
       {/* Breathing Preview */}
       {previewActive && unlocked && (

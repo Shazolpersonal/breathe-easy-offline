@@ -9,3 +9,6 @@
 ## 2024-05-24 - [aria-pressed on Toggle Chips]
 **Learning:** We use `button` elements to visually represent toggle pills or chips (e.g., duration, soundscape, or visualization selection). Screen readers cannot infer the "selected" state of these visual chips unless `aria-pressed` or `aria-checked` is explicitly bound to their selected condition.
 **Action:** When creating or auditing custom toggle buttons or chips (e.g., inside `.map()` loops), always include the `aria-pressed={condition}` attribute alongside active styling to accurately convey their selected state to screen readers.
+## 2024-05-24 - Custom Tooltips for Icon-Only Buttons
+**Learning:** Native `title` attributes on icon-only buttons create inconsistent and sometimes unreadable tooltips that don't match the design system. The shadcn/ui Tooltip component provides a much more accessible and visually consistent alternative.
+**Action:** Use the custom `Tooltip` component (wrapping `TooltipTrigger` and `TooltipContent`) instead of native `title` attributes for all icon-only interactive elements to ensure consistent UI and better accessibility.
