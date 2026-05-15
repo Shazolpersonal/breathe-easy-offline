@@ -30,6 +30,7 @@ export function sanitizeObjectStrings<T>(obj: T): T {
   if (obj !== null && typeof obj === "object") {
     const newObj = {} as Record<string, unknown>;
     for (const key in obj) {
+      if (key === "__proto__" || key === "constructor" || key === "prototype") continue;
       if (Object.prototype.hasOwnProperty.call(obj, key)) {
         newObj[key] = sanitizeObjectStrings((obj as Record<string, unknown>)[key]);
       }
