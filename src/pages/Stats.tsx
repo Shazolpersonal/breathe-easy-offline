@@ -88,6 +88,7 @@ export default function Stats() {
 
     const scoredSessions = [];
     const journalSess = [];
+    const sessionsByMonth: Record<string, SessionRecord[]> = {};
 
     // SINGLE PASS LOOP
     for (let i = 0; i < sessions.length; i++) {
@@ -128,6 +129,11 @@ export default function Stats() {
       if (s.journal) {
         journalSess.push(s);
       }
+
+      // group by month
+      const month = day.substring(0, 7);
+      if (!sessionsByMonth[month]) sessionsByMonth[month] = [];
+      sessionsByMonth[month].push(s);
     }
 
     return {
@@ -142,7 +148,8 @@ export default function Stats() {
       techniqueMap,
       timeOfDayBuckets,
       scoredSessions,
-      journalSessions: journalSess.sort((a, b) => b.date.localeCompare(a.date))
+      journalSessions: journalSess.sort((a, b) => b.date.localeCompare(a.date)),
+      sessionsByMonth
     };
   }, [sessions]);
 
@@ -406,6 +413,15 @@ export default function Stats() {
 
   const journalSessions = aggregates.journalSessions;
 
+  const filteredHistory = useMemo(() => {
+    let result = sessions;
+    if (historySearch.trim()) {
+      const q = historySearch.toLowerCase();
+      result = result.filter(s => s.techniqueName.toLowerCase().includes(q) || s.date.includes(q));
+    }
+    return [...result].sort((a, b) => b.date.localeCompare(a.date));
+  }, [sessions, historySearch]);
+
   // Report data with daily chart
 
 
@@ -436,25 +452,25 @@ export default function Stats() {
     const datesSet = new Set<string>();
     const dailyMinutesMap: Record<string, number> = {};
 
-    for (const s of sessions) {
-      if (s.date.startsWith(reportMonthStr)) {
-        monthSessionsCount++;
-        totalSeconds += s.durationSeconds;
+    const monthSessions = aggregates.sessionsByMonth[reportMonthStr] || [];
 
-        if (!techniqueCount[s.techniqueId]) {
-          techniqueCount[s.techniqueId] = { name: s.techniqueName, count: 0 };
-        }
-        techniqueCount[s.techniqueId].count++;
+    for (const s of monthSessions) {
+      monthSessionsCount++;
+      totalSeconds += s.durationSeconds;
 
-        if (s.calmScore != null) {
-          scoredCalmTotal += s.calmScore;
-          scoredCalmCount++;
-        }
-
-        const dateStr = s.date.substring(0, 10);
-        datesSet.add(dateStr);
-        dailyMinutesMap[dateStr] = (dailyMinutesMap[dateStr] || 0) + s.durationSeconds;
+      if (!techniqueCount[s.techniqueId]) {
+        techniqueCount[s.techniqueId] = { name: s.techniqueName, count: 0 };
       }
+      techniqueCount[s.techniqueId].count++;
+
+      if (s.calmScore != null) {
+        scoredCalmTotal += s.calmScore;
+        scoredCalmCount++;
+      }
+
+      const dateStr = s.date.substring(0, 10);
+      datesSet.add(dateStr);
+      dailyMinutesMap[dateStr] = (dailyMinutesMap[dateStr] || 0) + s.durationSeconds;
     }
 
     const totalMin = Math.round(totalSeconds / 60);
@@ -484,7 +500,7 @@ export default function Stats() {
     }
 
     return { sessions: monthSessionsCount, totalMin, topTechnique, avgCalm, streak: mStreak, dailyMinutes };
-  }, [sessions, reportMonth, reportYear]);
+  }, [aggregates.sessionsByMonth, reportMonth, reportYear]);
 
 
 
@@ -758,14 +774,7 @@ export default function Stats() {
                 <p className="text-sm text-muted-foreground">{t("stats.emptyDesc")}</p>
               </div>
             ) : (
-              [...sessions]
-                .filter(s => {
-                  if (!historySearch.trim()) return true;
-                  const q = historySearch.toLowerCase();
-                  return s.techniqueName.toLowerCase().includes(q) || s.date.includes(q);
-                })
-                .sort((a, b) => b.date.localeCompare(a.date))
-                .map((s) => {
+              filteredHistory.map((s) => {
                   const d = new Date(s.date);
                   return (
                     <div key={s.id} className="rounded-2xl border border-border bg-card p-3">
