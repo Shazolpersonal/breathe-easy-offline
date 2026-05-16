@@ -7,3 +7,7 @@
 ## 2023-10-27 - Inline Loop Refactoring Risks
 **Learning:** When flattening multiple loops into a single O(N) pass, it's tempting to inline small helper functions (like mapping hours to time buckets) to save function calls. However, this creates a severe regression risk if the boundary logic is duplicated rather than referenced, breaking the single source of truth.
 **Action:** Always call existing helper utilities (`getTimeBucket()`) inside the optimized loop instead of redefining their internal logic, even if it adds a microsecond of overhead. Safety over micro-optimizations.
+
+## 2026-05-15 - Map Lookup in timeRangeData
+**Learning:** Avoid chained/repeated passes on large datasets in useMemo by leveraging already computed hash maps (e.g., `aggregates.dailyMinutesMap`) for fast O(1) lookups. Iterating over the full `sessions` array in `timeRangeData` to calculate the daily view values takes an O(N) pass, which can be avoided entirely since those daily aggregates are already built in a single O(N) pass map earlier in the file.
+**Action:** Replace `sessions.forEach` loops with O(1) precomputed map lookups inside `useMemo` hooks for calculating range-specific analytics when precomputed data is available.

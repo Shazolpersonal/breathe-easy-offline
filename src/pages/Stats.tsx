@@ -207,10 +207,14 @@ export default function Stats() {
         d.setDate(d.getDate() - i);
         days[d.toISOString().substring(0, 10)] = 0;
       }
-      sessions.forEach((s) => {
-        const day = s.date.substring(0, 10);
-        if (day in days) days[day] += Math.round(s.durationSeconds / 60);
-      });
+
+      const dailyMinutes = aggregates.dailyMinutesMap;
+      for (const day in days) {
+        if (dailyMinutes[day]) {
+          days[day] = dailyMinutes[day];
+        }
+      }
+
       return Object.entries(days).map(([date, minutes]) => ({
         label: new Date(date).toLocaleDateString(locale, { weekday: "short" }),
         minutes,
@@ -250,7 +254,7 @@ export default function Stats() {
         minutes: w.minutes,
       }));
     }
-  }, [sessions, timeRange, locale, aggregates.dailyMinutesMap]);
+  }, [timeRange, locale, aggregates.dailyMinutesMap]);
 
   // Technique breakdown
   const techniqueBreakdown = useMemo(() => {
