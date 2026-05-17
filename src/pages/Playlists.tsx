@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { PRESET_TECHNIQUES } from "@/lib/techniques";
 import { getCustomTechniques } from "@/lib/storage";
@@ -19,6 +21,7 @@ export default function Playlists() {
   const [editId, setEditId] = useState<string | null>(null);
   const [name, setName] = useState("");
   const [steps, setSteps] = useState<PlaylistStep[]>([]);
+  const [deleteTarget, setDeleteTarget] = useState<string | null>(null);
 
   const allTechniques = [...PRESET_TECHNIQUES, ...getCustomTechniques()];
 
@@ -70,6 +73,7 @@ export default function Playlists() {
   const handleDelete = (id: string) => {
     deletePlaylist(id);
     setPlaylists(getPlaylists());
+    setDeleteTarget(null);
   };
 
   const startPlaylist = (id: string) => {
@@ -100,14 +104,26 @@ export default function Playlists() {
               <div key={p.id} className="rounded-2xl border border-border bg-card p-4">
                 <div className="flex items-center justify-between mb-2">
                   <h3 className="font-semibold text-foreground">{p.name}</h3>
-                  <div className="flex items-center gap-1">
-                    <Button size="icon" variant="ghost" className="h-8 w-8" onClick={() => startPlaylist(p.id)}>
-                      <Play className="h-4 w-4 text-primary" />
-                    </Button>
-                    <Button size="icon" variant="ghost" className="h-8 w-8" onClick={() => handleDelete(p.id)}>
-                      <Trash2 className="h-4 w-4 text-muted-foreground" />
-                    </Button>
-                  </div>
+                  <TooltipProvider>
+                    <div className="flex items-center gap-1">
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Button size="icon" variant="ghost" className="h-8 w-8 focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none" aria-label={t("playlists.play")} onClick={() => startPlaylist(p.id)}>
+                            <Play className="h-4 w-4 text-primary" />
+                          </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>{t("playlists.play")}</TooltipContent>
+                      </Tooltip>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Button size="icon" variant="ghost" className="h-8 w-8 focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none" aria-label={t("playlists.delete")} onClick={() => setDeleteTarget(p.id)}>
+                            <Trash2 className="h-4 w-4 text-muted-foreground" />
+                          </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>{t("playlists.delete")}</TooltipContent>
+                      </Tooltip>
+                    </div>
+                  </TooltipProvider>
                 </div>
                 <div className="space-y-1">
                   {p.steps.map((s, i) => (
@@ -181,6 +197,22 @@ export default function Playlists() {
             </div>
           </DialogContent>
         </Dialog>
+
+        {/* Delete confirmation dialog */}
+        <AlertDialog open={!!deleteTarget} onOpenChange={(open) => !open && setDeleteTarget(null)}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>{t("playlists.deleteConfirmTitle")}</AlertDialogTitle>
+              <AlertDialogDescription>{t("playlists.deleteConfirmDesc")}</AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>{t("common.cancel")}</AlertDialogCancel>
+              <AlertDialogAction onClick={() => deleteTarget && handleDelete(deleteTarget)} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+                {t("playlists.delete")}
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </div>
     </div>
   );

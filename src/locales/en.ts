@@ -329,6 +329,10 @@ export const en: Record<string, string> = {
   "playlists.addStep": "Add Step",
   "playlists.saveChanges": "Save Changes",
   "playlists.createPlaylist": "Create Playlist",
+  "playlists.play": "Play",
+  "playlists.delete": "Delete",
+  "playlists.deleteConfirmTitle": "Delete playlist?",
+  "playlists.deleteConfirmDesc": "This playlist will be permanently removed. This action cannot be undone.",
 
   // Programs
   "programs.title": "Guided Programs",
