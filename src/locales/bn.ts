@@ -329,6 +329,10 @@ export const bn: Record<string, string> = {
   "playlists.addStep": "ধাপ যোগ করুন",
   "playlists.saveChanges": "পরিবর্তন সংরক্ষণ",
   "playlists.createPlaylist": "প্লেলিস্ট তৈরি",
+  "playlists.play": "শুরু করুন",
+  "playlists.delete": "মুছে ফেলুন",
+  "playlists.deleteConfirmTitle": "প্লেলিস্ট মুছবেন?",
+  "playlists.deleteConfirmDesc": "এই প্লেলিস্টটি স্থায়ীভাবে মুছে ফেলা হবে। এই কাজ বাতিল করা যাবে না।",
 
   // Programs
   "programs.title": "গাইডেড প্রোগ্রাম",
