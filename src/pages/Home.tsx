@@ -19,6 +19,7 @@ import { CreateChallengeDialog } from "@/components/FriendChallenge";
 import { toast } from "sonner";
 import { shareQuote } from "@/lib/shareApp";
 import DonateDialog from "@/components/DonateDialog";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 export default function Home() {
   const navigate = useNavigate();
@@ -103,15 +104,21 @@ export default function Home() {
               <h1 className="text-2xl font-bold text-foreground">{t("home.appName")}</h1>
             </div>
             <div className="flex items-center gap-2">
-              <button
-                onClick={() => setShowDonateDialog(true)}
-                className="flex h-8 w-8 items-center justify-center rounded-full border border-border bg-card text-muted-foreground transition-colors hover:text-primary hover:bg-primary/10 focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-ring focus-visible:ring-offset-2"
-                title={t("donate.supportUs")}
-                aria-label={t("donate.supportUs")}
-              >
-                <Heart className="h-4 w-4" />
-              </button>
-            <div className="flex items-center rounded-full border border-border bg-card p-0.5 text-xs font-medium">
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <button
+                      onClick={() => setShowDonateDialog(true)}
+                      className="flex h-8 w-8 items-center justify-center rounded-full border border-border bg-card text-muted-foreground transition-colors hover:text-primary hover:bg-primary/10 focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-ring focus-visible:ring-offset-2"
+                      aria-label={t("donate.supportUs")}
+                    >
+                      <Heart className="h-4 w-4" />
+                    </button>
+                  </TooltipTrigger>
+                  <TooltipContent>{t("donate.supportUs")}</TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+              <div className="flex items-center rounded-full border border-border bg-card p-0.5 text-xs font-medium">
               <button
                 onClick={() => setLanguage("en")}
                 className={`rounded-full px-2.5 py-1 transition-colors focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-ring focus-visible:ring-offset-2 ${language === "en" ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground"}`}
@@ -139,14 +146,20 @@ export default function Home() {
               <p className="text-sm italic text-foreground/80 leading-relaxed">"{dailyQuote.text}"</p>
               <p className="mt-1 text-xs text-muted-foreground">— {dailyQuote.author}</p>
             </div>
-            <button
-              onClick={() => shareQuote(dailyQuote.text, dailyQuote.author, language)}
-              className="shrink-0 rounded-full p-1.5 text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-ring focus-visible:ring-offset-2"
-              title={t("share.quote")}
-              aria-label={t("share.quote")}
-            >
-              <Share2 className="h-4 w-4" />
-            </button>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <button
+                    onClick={() => shareQuote(dailyQuote.text, dailyQuote.author, language)}
+                    className="shrink-0 rounded-full p-1.5 text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-ring focus-visible:ring-offset-2"
+                    aria-label={t("share.quote")}
+                  >
+                    <Share2 className="h-4 w-4" />
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent>{t("share.quote")}</TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
           </div>
         </div>
 

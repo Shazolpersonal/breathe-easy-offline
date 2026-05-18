@@ -1,14 +1,7 @@
-## 2024-04-22 - [Keyboard Nav in Session View]\n**Learning:** The session view relies heavily on custom interactive elements (mute toggles, mode toggles, duration chips) disguised as standard buttons. These lacked the `focus-visible:ring-2` styles required for keyboard navigators to identify their focused state.\n**Action:** When adding or auditing custom buttons or toggle chips within interactive views like the Session page, always ensure the `focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-ring focus-visible:ring-offset-2` Tailwind classes are explicitly added.
-## 2024-05-18 - Accessibility: Missing Focus States on Statistics Page
-**Learning:** Keyboard navigation (tabbing) was severely degraded on the statistics view (`Stats.tsx`) due to various icon-only buttons and tab filters missing explicitly defined `focus-visible` Tailwind classes. Additionally, buttons that relied purely on visual context (e.g. sharing icons) were lacking ARIA labels, creating a poor experience for screen reader users.
-**Action:** When implementing custom icon buttons or tab bars without standard UI library components, systematically add `focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-ring focus-visible:ring-offset-2` for focus feedback and `aria-label` for semantic meaning.
+## 2024-05-18 - Missing Tooltip on Icon Buttons
+**Learning:** Icon-only buttons without tooltips lack clear intent for visual users, even if they have `aria-label` for screen readers. Using Shadcn/Radix Tooltips provides a consistent, accessible way to reveal functionality on hover/focus.
+**Action:** When auditing icon-only buttons (like share or donate buttons), wrap them in `Tooltip`, `TooltipTrigger` and `TooltipContent` instead of relying on native `title` attributes.
 
-## 2024-11-20 - [Focus States on Interactive Custom Elements]
-**Learning:** Keyboard navigation depends on visible focus indicators. I found interactive `button` elements disguised as cards, list items, or selection grids that lacked the expected outline when focused via keyboard tabbing.
-**Action:** Consistently append `focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-ring focus-visible:ring-offset-2` to all interactive custom elements (like `MoodPicker` buttons, list items in `Playlists` and `Programs`, and selection cards in `Onboarding`) to ensure they receive standard keyboard focus visual cues.
-## 2024-05-24 - [aria-pressed on Toggle Chips]
-**Learning:** We use `button` elements to visually represent toggle pills or chips (e.g., duration, soundscape, or visualization selection). Screen readers cannot infer the "selected" state of these visual chips unless `aria-pressed` or `aria-checked` is explicitly bound to their selected condition.
-**Action:** When creating or auditing custom toggle buttons or chips (e.g., inside `.map()` loops), always include the `aria-pressed={condition}` attribute alongside active styling to accurately convey their selected state to screen readers.
-## 2024-05-24 - Custom Tooltips for Icon-Only Buttons
-**Learning:** Native `title` attributes on icon-only buttons create inconsistent and sometimes unreadable tooltips that don't match the design system. The shadcn/ui Tooltip component provides a much more accessible and visually consistent alternative.
-**Action:** Use the custom `Tooltip` component (wrapping `TooltipTrigger` and `TooltipContent`) instead of native `title` attributes for all icon-only interactive elements to ensure consistent UI and better accessibility.
+## 2024-05-18 - Missing Tooltip on Icon Buttons
+**Learning:** Icon-only buttons without tooltips lack clear intent for visual users, even if they have `aria-label` for screen readers. Using Shadcn/Radix Tooltips provides a consistent, accessible way to reveal functionality on hover/focus.
+**Action:** When auditing icon-only buttons (like share or donate buttons), wrap them in `Tooltip`, `TooltipTrigger` and `TooltipContent` instead of relying on native `title` attributes.
