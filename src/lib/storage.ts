@@ -140,35 +140,29 @@ export function getCurrentStreak(): number {
     dateSet.add(sessions[i].date.substring(0, 10));
   }
   const dates = Array.from(dateSet).sort().reverse();
+
   const today = new Date();
   const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
   
   let streak = 0;
+  // Date.parse('YYYY-MM-DD') returns UTC midnight timestamp
+  let expectedTime = Date.parse(todayStr);
+
+  const firstDateParsed = Date.parse(dates[0]);
+
   // Allow starting from today or yesterday (user hasn't done today's session yet)
-
-  // Set time to noon to avoid DST boundary issues when subtracting 24h intervals
-  today.setHours(12, 0, 0, 0);
-  let expectedTime = today.getTime();
-
-  if (dates[0] === todayStr) {
-    // Start expected from today
+  if (firstDateParsed === expectedTime) {
+    // Started today
+  } else if (firstDateParsed === expectedTime - 86400000) {
+    expectedTime -= 86400000; // Subtract 1 day
   } else {
-    const yesterday = new Date(today);
-    yesterday.setDate(yesterday.getDate() - 1);
-    const yesterdayStr = `${yesterday.getFullYear()}-${String(yesterday.getMonth() + 1).padStart(2, "0")}-${String(yesterday.getDate()).padStart(2, "0")}`;
-    if (dates[0] === yesterdayStr) {
-      expectedTime -= 86400000; // Subtract 1 day
-    } else {
-      return 0;
-    }
+    return 0;
   }
 
-  // Optimization: Reduce string allocations by mutating expected time directly and comparing formatted string
-  let currentExpectedStr = "";
+  // Optimization: Bypass `new Date()` and string allocations by directly matching UTC milliseconds
+  // since `Date.parse` on ISO strings returns deterministic interval values
   for (let i = 0; i < dates.length; i++) {
-    const d = new Date(expectedTime);
-    currentExpectedStr = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
-    if (dates[i] === currentExpectedStr) {
+    if (Date.parse(dates[i]) === expectedTime) {
       streak++;
       expectedTime -= 86400000;
     } else {
@@ -199,7 +193,7 @@ export function getLongestStreak(): number {
       const diff = (currTime - prevTime) / 86400000;
       if (diff === 1) {
         current++;
-        longest = Math.max(longest, current);
+        if (current > longest) longest = current;
       } else if (diff > 1) {
         current = 1;
       }
