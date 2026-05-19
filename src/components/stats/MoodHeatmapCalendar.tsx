@@ -112,20 +112,28 @@ export default function MoodHeatmapCalendar() {
             return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
           })();
           const isToday = cell.dateKey === todayLocal;
+
+          // Bug fix: Parsing YYYY-MM-DD directly creates a UTC midnight date.
+          // Appending "T12:00:00" ensures it parses to local noon, preventing timezone offsets from shifting it to the previous day.
+          const localNoonDate = new Date(`${cell.dateKey}T12:00:00`);
+          const ariaLabelStr = `${localNoonDate.toLocaleDateString(locale, { weekday: "long", month: "short", day: "numeric" })}, ${cell.sessionCount} ${t("common.sessions")}${cell.avgMood !== null ? `, ${t("stats.heatmap.avgMood")}: ${cell.avgMood.toFixed(1)}` : ""}`;
+
           return (
             <button
               key={cell.day}
               onClick={() => setSelectedDay(cell.dateKey === selectedDay ? null : cell.dateKey)}
-              className={`relative flex h-9 w-full flex-col items-center justify-center rounded-lg text-xs transition-all ${
+              className={`relative flex h-9 w-full flex-col items-center justify-center rounded-lg text-xs transition-all focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-ring focus-visible:ring-offset-2 ${
                 cell.dateKey === selectedDay ? "ring-2 ring-primary" : ""
               } ${isToday ? "font-bold" : ""}`}
               style={{ background: getMoodColor(cell.avgMood, cell.sessionCount > 0) }}
+              aria-pressed={cell.dateKey === selectedDay}
+              aria-label={ariaLabelStr}
             >
-              <span className={cell.sessionCount > 0 ? "text-white" : "text-muted-foreground"}>
+              <span className={cell.sessionCount > 0 ? "text-white" : "text-muted-foreground"} aria-hidden="true">
                 {cell.day}
               </span>
               {cell.sessionCount > 0 && (
-                <div className="absolute bottom-0.5 flex gap-0.5">
+                <div className="absolute bottom-0.5 flex gap-0.5" aria-hidden="true">
                   {Array.from({ length: Math.min(cell.sessionCount, 3) }).map((_, i) => (
                     <div key={i} className="h-1 w-1 rounded-full bg-white/70" />
                   ))}
@@ -140,7 +148,7 @@ export default function MoodHeatmapCalendar() {
       {selectedData && selectedData.sessionCount > 0 && (
         <div className="mt-3 rounded-xl border border-border bg-secondary/50 p-3 space-y-1.5">
           <div className="text-xs font-semibold text-foreground">
-            {new Date(selectedData.dateKey).toLocaleDateString(locale, { weekday: "long", month: "short", day: "numeric" })}
+            {new Date(`${selectedData.dateKey}T12:00:00`).toLocaleDateString(locale, { weekday: "long", month: "short", day: "numeric" })}
           </div>
           <div className="text-xs text-muted-foreground">
             {selectedData.sessionCount} {t("common.sessions")} · {Math.round(selectedData.sessions.reduce((s, r) => s + r.durationSeconds, 0) / 60)} {t("common.min")}
