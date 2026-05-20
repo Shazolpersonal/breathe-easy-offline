@@ -296,6 +296,7 @@ export default function Settings() {
                     variant="outline"
                     className="h-9 w-9 shrink-0"
                     onClick={() => previewVoice(settings.voiceNameEn || "", "en", settings.voicePitch, settings.voiceSpeed, settings.voiceVolume)}
+                    aria-label={t("settings.previewVoice")}
                   >
                     <Volume2 className="h-3.5 w-3.5" />
                   </Button>
@@ -333,6 +334,7 @@ export default function Settings() {
                     variant="outline"
                     className="h-9 w-9 shrink-0"
                     onClick={() => previewVoice(settings.voiceNameBn || "", "bn", settings.voicePitch, settings.voiceSpeed, settings.voiceVolume)}
+                    aria-label={t("settings.previewVoice")}
                   >
                     <Volume2 className="h-3.5 w-3.5" />
                   </Button>
@@ -502,7 +504,7 @@ export default function Settings() {
                         checked={r.enabled}
                         onCheckedChange={v => handleUpdateReminder(r.id, { enabled: v })}
                       />
-                      <Button size="icon" variant="ghost" className="h-7 w-7" onClick={() => handleDeleteReminder(r.id)}>
+                      <Button size="icon" variant="ghost" className="h-7 w-7" aria-label={t("common.delete")} onClick={() => handleDeleteReminder(r.id)}>
                         <Trash2 className="h-3.5 w-3.5 text-muted-foreground" />
                       </Button>
                     </div>
