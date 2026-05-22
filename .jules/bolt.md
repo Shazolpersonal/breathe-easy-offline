@@ -14,3 +14,6 @@
 ## 2025-05-18 - Avoid repeated O(N) filtering in inline React rendering
 **Learning:** Performing `[...array].filter().sort()` directly in JSX rendering creates severe performance bottlenecks on every keystroke when arrays are large (like historical session logs). Additionally, repeatedly iterating over the entire dataset in a `useMemo` hook (like `reportData`) when a sub-group is needed is an anti-pattern when we already have an existing single-pass loop (`aggregates`) that can build a grouped lookup map.
 **Action:** Extract inline array processing into a dedicated `useMemo` hook. For multi-view reporting, aggregate data into Maps or Record dictionaries (like `sessionsByMonth`) during an initial single O(N) pass, so subsequent views can perform O(1) lookups instead of redundant full-array passes.
+## 2025-05-22 - Optimize O(N^2) lookups in Home.tsx
+**Learning:** Using `.includes()` on arrays and `.find()` inside `useMemo` loops can result in $O(N \times (F+P))$ complexity, especially when correlating multiple arrays. This is an anti-pattern.
+**Action:** Replace `Array.includes` with `Set` lookups and `Array.find` with pre-computed hash maps (e.g. `Map(array.map(item => [item.id, item]))`) before the iteration for O(1) lookups.
