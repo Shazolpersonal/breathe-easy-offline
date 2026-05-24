@@ -11,15 +11,20 @@ export function getWeeklyInsights(locale: string = "en"): Insight[] {
   const now = new Date();
   const insights: Insight[] = [];
 
-  const thisWeek = sessions.filter((s) => {
-    const diff = (now.getTime() - new Date(s.date).getTime()) / 86400000;
-    return diff < 7;
-  });
+  // Optimization: use a single pass and Date.parse to avoid allocations
+  const thisWeek = [];
+  const lastWeek = [];
+  const nowMs = now.getTime();
 
-  const lastWeek = sessions.filter((s) => {
-    const diff = (now.getTime() - new Date(s.date).getTime()) / 86400000;
-    return diff >= 7 && diff < 14;
-  });
+  for (let i = 0; i < sessions.length; i++) {
+    const s = sessions[i];
+    const diff = (nowMs - Date.parse(s.date)) / 86400000;
+    if (diff < 7) {
+      thisWeek.push(s);
+    } else if (diff >= 7 && diff < 14) {
+      lastWeek.push(s);
+    }
+  }
 
   if (thisWeek.length < 3) {
     if (thisWeek.length === 0) {
@@ -57,8 +62,9 @@ export function getWeeklyInsights(locale: string = "en"): Insight[] {
   // Technique comparison via mood records
   const moodRecords = getMoodRecords();
   const weekMoodRecords = moodRecords.filter((r) => {
-    const diff = (now.getTime() - new Date(r.date).getTime()) / 86400000;
-    return diff < 7 && r.moodAfter !== null;
+    if (r.moodAfter === null) return false;
+    const diff = (nowMs - Date.parse(r.date)) / 86400000;
+    return diff < 7;
   });
   
   if (weekMoodRecords.length >= 2) {

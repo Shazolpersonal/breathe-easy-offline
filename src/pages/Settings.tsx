@@ -545,7 +545,8 @@ export default function Settings() {
           {(() => {
             const summary = getDataSummary();
             const lastBackup = getLastBackupDate();
-            const daysSinceBackup = lastBackup ? Math.floor((Date.now() - new Date(lastBackup).getTime()) / 86400000) : null;
+            // Optimization: Use Date.parse to avoid instantiating new Date objects unnecessarily.
+            const daysSinceBackup = lastBackup ? Math.floor((Date.now() - Date.parse(lastBackup)) / 86400000) : null;
             const needsBackup = daysSinceBackup === null || daysSinceBackup >= 30;
             return (
               <div className={`rounded-xl p-3 space-y-2 ${needsBackup ? "bg-destructive/10 border border-destructive/20" : "bg-secondary/50"}`}>
