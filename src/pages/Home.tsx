@@ -32,21 +32,28 @@ export default function Home() {
   const dailyGoal = settings.dailyGoalMinutes;
   const goalProgress = Math.min(100, Math.round((todayMin / dailyGoal) * 100));
   const allTechniques = useMemo(() => [...PRESET_TECHNIQUES, ...getCustomTechniques()], []);
-  const progressions = useMemo(() => getAllProgressionsPublic(), [favorites]);
+  const progressions = useMemo(() => getAllProgressionsPublic(), []);
   const totalSessions = useMemo(() => progressions.reduce((sum, p) => sum + p.sessionsCompleted, 0), [progressions]);
 
   const progressionMap = useMemo(() => {
     const map: Record<string, ReturnType<typeof getProgression>> = {};
+    // Performance Optimization: Use O(1) Set and Map lookups instead of O(N) array .includes and .find to avoid O(N²) complexity inside the loop
+    const favSet = new Set(favorites);
+    const progMap = new Map(progressions.map(p => [p.techniqueId, p]));
     for (const tech of allTechniques) {
-      if (favorites.includes(tech.id)) {
-        const found = progressions.find(p => p.techniqueId === tech.id);
+      if (favSet.has(tech.id)) {
+        const found = progMap.get(tech.id);
         map[tech.id] = found || { techniqueId: tech.id, level: 1, sessionsCompleted: 0, totalCycles: 0 };
       }
     }
     return map;
   }, [allTechniques, progressions, favorites]);
 
-  const favTechniques = useMemo(() => allTechniques.filter((tech) => favorites.includes(tech.id)), [allTechniques, favorites]);
+  const favTechniques = useMemo(() => {
+    // Performance Optimization: Use O(1) Set lookup instead of O(N) array .includes
+    const favSet = new Set(favorites);
+    return allTechniques.filter((tech) => favSet.has(tech.id));
+  }, [allTechniques, favorites]);
   const xpState = useMemo(() => getXPState(), []);
   const weeklyXP = useMemo(() => getWeeklyXP(), []);
   const dailyChallenges = useMemo(() => getDailyChallenges(), []);
