@@ -1042,7 +1042,7 @@ export default function Session() {
 
             <button
               onClick={() => setShowDonateDialog(true)}
-              className="text-xs text-muted-foreground hover:text-primary transition-colors"
+              className="text-xs text-muted-foreground hover:text-primary transition-colors focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-ring focus-visible:ring-offset-2 rounded-sm px-2 py-1"
             >
               {t("donate.sessionSupport")}
             </button>
