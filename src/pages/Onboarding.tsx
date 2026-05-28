@@ -117,6 +117,7 @@ function StepLanguage({
       <div className="grid grid-cols-2 gap-3">
         <button
           onClick={() => setLanguage("en")}
+          aria-pressed={language === "en"}
           className={`rounded-2xl border-2 p-5 transition-all ${
             language === "en"
               ? "border-primary bg-primary/10 shadow-lg shadow-primary/10"
@@ -128,6 +129,7 @@ function StepLanguage({
         </button>
         <button
           onClick={() => setLanguage("bn")}
+          aria-pressed={language === "bn"}
           className={`rounded-2xl border-2 p-5 transition-all ${
             language === "bn"
               ? "border-primary bg-primary/10 shadow-lg shadow-primary/10"
@@ -208,6 +210,7 @@ function StepPersonalize({
           <button
             key={id}
             onClick={() => setTheme(id)}
+            aria-pressed={theme === id}
             className={`flex flex-col items-center gap-1.5 rounded-xl p-3 transition-all ${
               theme === id ? "bg-primary/10 ring-2 ring-primary" : "hover:bg-card"
             } focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-ring focus-visible:ring-offset-2`}

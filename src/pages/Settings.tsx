@@ -131,6 +131,7 @@ export default function Settings() {
               <button
                 key={lang}
                 onClick={() => setLanguage(lang)}
+                aria-pressed={language === lang}
                 className={cn(
                   "flex-1 rounded-xl py-2.5 text-sm font-medium transition-colors",
                   language === lang ? "bg-primary/20 ring-2 ring-primary text-primary" : "bg-secondary text-muted-foreground hover:bg-secondary/80"
@@ -150,6 +151,7 @@ export default function Settings() {
               <button
                 key={id}
                 onClick={() => setTheme(id)}
+                aria-pressed={theme === id}
                 className={cn(
                   "flex flex-col items-center gap-1 rounded-xl p-2 text-xs transition-colors",
                   theme === id ? "bg-primary/20 ring-2 ring-primary" : "hover:bg-secondary"
@@ -167,6 +169,7 @@ export default function Settings() {
                 <button
                   key={mode}
                   onClick={() => setThemeMode(mode)}
+                  aria-pressed={themeMode === mode}
                   className={cn(
                     "flex-1 rounded-xl py-2 text-xs font-medium transition-colors",
                     themeMode === mode ? "bg-primary/20 ring-2 ring-primary text-primary" : "bg-secondary text-muted-foreground hover:bg-secondary/80"
@@ -443,6 +446,7 @@ export default function Settings() {
               <button
                 key={id}
                 onClick={() => update({ visualizationType: id })}
+                aria-pressed={settings.visualizationType === id}
                 className={cn(
                   "flex flex-col items-center gap-1.5 rounded-xl p-3 text-xs transition-colors",
                   settings.visualizationType === id ? "bg-primary/20 ring-2 ring-primary" : "hover:bg-secondary"
@@ -512,6 +516,7 @@ export default function Settings() {
                       <button
                         key={dk}
                         onClick={() => toggleReminderDay(r.id, i)}
+                        aria-pressed={r.days.includes(i)}
                         className={cn(
                           "flex-1 rounded-md py-1 text-[10px] font-medium transition-colors",
                           r.days.includes(i) ? "bg-primary/20 text-primary" : "bg-secondary text-muted-foreground"

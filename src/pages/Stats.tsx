@@ -546,6 +546,7 @@ export default function Stats() {
             <button
               key={tabKey}
               onClick={() => setTab(tabKey)}
+              aria-pressed={tab === tabKey}
               className={cn(
                 "flex-1 rounded-lg py-2 text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-ring focus-visible:ring-offset-2",
                 tab === tabKey ? "bg-card text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"
@@ -640,6 +641,7 @@ export default function Stats() {
                     <button
                       key={r}
                       onClick={() => setTimeRange(r)}
+                      aria-pressed={timeRange === r}
                       className={cn(
                         "rounded-md px-2 py-1 text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-ring focus-visible:ring-offset-2",
                         timeRange === r ? "bg-card text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"
