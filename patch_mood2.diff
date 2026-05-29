@@ -1,0 +1,34 @@
+<<<<<<< SEARCH
+export function getBestTechniqueForMood(currentMood: number): string | null {
+  const records = getMoodRecords().filter(
+    (r) => r.moodBefore === currentMood && r.moodAfter !== null
+  );
+
+  if (records.length < 3) return null;
+
+  // Group by techniqueId → average improvement
+  const groups: Record<string, { total: number; count: number }> = {};
+  for (const r of records) {
+    if (!groups[r.techniqueId]) groups[r.techniqueId] = { total: 0, count: 0 };
+    groups[r.techniqueId].total += (r.moodAfter! - r.moodBefore);
+    groups[r.techniqueId].count++;
+  }
+=======
+export function getBestTechniqueForMood(currentMood: number): string | null {
+  const records = getMoodRecords();
+  let validRecordsCount = 0;
+
+  // Group by techniqueId → average improvement
+  const groups: Record<string, { total: number; count: number }> = {};
+  for (let i = 0; i < records.length; i++) {
+    const r = records[i];
+    if (r.moodBefore === currentMood && r.moodAfter !== null) {
+      validRecordsCount++;
+      if (!groups[r.techniqueId]) groups[r.techniqueId] = { total: 0, count: 0 };
+      groups[r.techniqueId].total += (r.moodAfter - r.moodBefore);
+      groups[r.techniqueId].count++;
+    }
+  }
+
+  if (validRecordsCount < 3) return null;
+>>>>>>> REPLACE

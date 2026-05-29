@@ -291,15 +291,20 @@ export default function Stats() {
 
 
   const moodTrendData = useMemo(() => {
-    const records = getMoodRecords().filter(r => r.moodAfter != null);
-    if (records.length < 2) return [];
+    const records = getMoodRecords();
+    let validRecordsCount = 0;
     const dayMap: Record<string, { total: number; count: number }> = {};
-    records.forEach(r => {
-      const day = r.date.substring(0, 10);
-      if (!dayMap[day]) dayMap[day] = { total: 0, count: 0 };
-      dayMap[day].total += r.moodAfter!;
-      dayMap[day].count++;
-    });
+    for (let i = 0; i < records.length; i++) {
+        const r = records[i];
+        if (r.moodAfter != null) {
+            validRecordsCount++;
+            const day = r.date.substring(0, 10);
+            if (!dayMap[day]) dayMap[day] = { total: 0, count: 0 };
+            dayMap[day].total += r.moodAfter;
+            dayMap[day].count++;
+        }
+    }
+    if (validRecordsCount < 2) return [];
     const days = Object.entries(dayMap)
       .map(([date, { total, count }]) => ({ date, avg: Math.round((total / count) * 10) / 10 }))
       .sort((a, b) => a.date.localeCompare(b.date))

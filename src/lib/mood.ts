@@ -1,5 +1,5 @@
 import { PRESET_TECHNIQUES } from "./techniques";
-import { getCustomTechniques } from "./storage";
+import { getCustomTechniques, getJSON, setJSON } from "./storage";
 
 export interface MoodOption {
   value: number;
@@ -31,12 +31,7 @@ export interface MoodRecord {
 const MOOD_KEY = "breathe_mood_records";
 
 export function getMoodRecords(): MoodRecord[] {
-  try {
-    const raw = localStorage.getItem(MOOD_KEY);
-    return raw ? JSON.parse(raw) : [];
-  } catch {
-    return [];
-  }
+  return getJSON<MoodRecord[]>(MOOD_KEY, []);
 }
 
 export function saveMoodRecord(record: MoodRecord) {
@@ -44,7 +39,7 @@ export function saveMoodRecord(record: MoodRecord) {
   const idx = records.findIndex((r) => r.sessionId === record.sessionId);
   if (idx >= 0) records[idx] = record;
   else records.push(record);
-  localStorage.setItem(MOOD_KEY, JSON.stringify(records));
+  setJSON(MOOD_KEY, records);
 }
 
 export function getMoodLabel(value: number): string {
@@ -61,19 +56,22 @@ export function getMoodEmoji(value: number): string {
  * records exist for that mood level.
  */
 export function getBestTechniqueForMood(currentMood: number): string | null {
-  const records = getMoodRecords().filter(
-    (r) => r.moodBefore === currentMood && r.moodAfter !== null
-  );
-
-  if (records.length < 3) return null;
+  const records = getMoodRecords();
+  let validRecordsCount = 0;
 
   // Group by techniqueId → average improvement
   const groups: Record<string, { total: number; count: number }> = {};
-  for (const r of records) {
-    if (!groups[r.techniqueId]) groups[r.techniqueId] = { total: 0, count: 0 };
-    groups[r.techniqueId].total += (r.moodAfter! - r.moodBefore);
-    groups[r.techniqueId].count++;
+  for (let i = 0; i < records.length; i++) {
+    const r = records[i];
+    if (r.moodBefore === currentMood && r.moodAfter !== null) {
+      validRecordsCount++;
+      if (!groups[r.techniqueId]) groups[r.techniqueId] = { total: 0, count: 0 };
+      groups[r.techniqueId].total += (r.moodAfter - r.moodBefore);
+      groups[r.techniqueId].count++;
+    }
   }
+
+  if (validRecordsCount < 3) return null;
 
   let bestId: string | null = null;
   let bestAvg = -Infinity;

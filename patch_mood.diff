@@ -1,0 +1,30 @@
+<<<<<<< SEARCH
+export function getMoodRecords(): MoodRecord[] {
+  try {
+    const raw = localStorage.getItem(MOOD_KEY);
+    return raw ? JSON.parse(raw) : [];
+  } catch {
+    return [];
+  }
+}
+
+export function saveMoodRecord(record: MoodRecord) {
+  const records = getMoodRecords();
+  const idx = records.findIndex((r) => r.sessionId === record.sessionId);
+  if (idx >= 0) records[idx] = record;
+  else records.push(record);
+  localStorage.setItem(MOOD_KEY, JSON.stringify(records));
+}
+=======
+export function getMoodRecords(): MoodRecord[] {
+  return getJSON<MoodRecord[]>(MOOD_KEY, []);
+}
+
+export function saveMoodRecord(record: MoodRecord) {
+  const records = getMoodRecords();
+  const idx = records.findIndex((r) => r.sessionId === record.sessionId);
+  if (idx >= 0) records[idx] = record;
+  else records.push(record);
+  setJSON(MOOD_KEY, records);
+}
+>>>>>>> REPLACE

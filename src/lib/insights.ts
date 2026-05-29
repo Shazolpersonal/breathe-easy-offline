@@ -56,21 +56,26 @@ export function getWeeklyInsights(locale: string = "en"): Insight[] {
 
   // Technique comparison via mood records
   const moodRecords = getMoodRecords();
-  const weekMoodRecords = moodRecords.filter((r) => {
-    const diff = (now.getTime() - new Date(r.date).getTime()) / 86400000;
-    return diff < 7 && r.moodAfter !== null;
-  });
+  let validWeekMoodRecordsCount = 0;
+  const techMood: Record<string, { total: number; count: number; name: string }> = {};
   
-  if (weekMoodRecords.length >= 2) {
-    const techMood: Record<string, { total: number; count: number; name: string }> = {};
-    weekMoodRecords.forEach((r) => {
-      if (!techMood[r.techniqueId]) {
-        const session = thisWeek.find((s) => s.techniqueId === r.techniqueId);
-        techMood[r.techniqueId] = { total: 0, count: 0, name: session?.techniqueName || r.techniqueId };
-      }
-      techMood[r.techniqueId].total += (r.moodAfter! - r.moodBefore);
-      techMood[r.techniqueId].count++;
-    });
+  for (let i = 0; i < moodRecords.length; i++) {
+    const r = moodRecords[i];
+    if (r.moodAfter !== null) {
+        const diff = (now.getTime() - new Date(r.date).getTime()) / 86400000;
+        if (diff < 7) {
+            validWeekMoodRecordsCount++;
+            if (!techMood[r.techniqueId]) {
+                const session = thisWeek.find((s) => s.techniqueId === r.techniqueId);
+                techMood[r.techniqueId] = { total: 0, count: 0, name: session?.techniqueName || r.techniqueId };
+            }
+            techMood[r.techniqueId].total += (r.moodAfter - r.moodBefore);
+            techMood[r.techniqueId].count++;
+        }
+    }
+  }
+
+  if (validWeekMoodRecordsCount >= 2) {
 
     const sorted = Object.values(techMood)
       .filter((t) => t.count >= 1)
