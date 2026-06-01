@@ -773,6 +773,11 @@ export default function Stats() {
                 <Clock className="h-10 w-10 text-muted-foreground/40" />
                 <p className="text-sm text-muted-foreground">{t("stats.emptyDesc")}</p>
               </div>
+            ) : filteredHistory.length === 0 ? (
+              <div className="rounded-2xl border border-border bg-card p-8 text-center mt-4">
+                <Search className="mx-auto h-8 w-8 text-muted-foreground/50 mb-2" />
+                <p className="text-sm text-muted-foreground">{t("techniques.noResults")}</p>
+              </div>
             ) : (
               filteredHistory.map((s) => {
                   const d = new Date(s.date);
