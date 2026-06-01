@@ -220,14 +220,17 @@ export const BADGES: Badge[] = [
         .map(([d]) => d)
         .sort();
       let streak = 1;
-      for (let i = 1; i < days.length; i++) {
-        const prev = new Date(days[i - 1]);
-        const curr = new Date(days[i]);
-        if ((curr.getTime() - prev.getTime()) / 86400000 === 1) {
-          streak++;
-          if (streak >= 7) return true;
-        } else {
-          streak = 1;
+      if (days.length > 0) {
+        let prevTime = Date.parse(days[0]);
+        for (let i = 1; i < days.length; i++) {
+          const currTime = Date.parse(days[i]);
+          if ((currTime - prevTime) / 86400000 === 1) {
+            streak++;
+            if (streak >= 7) return true;
+          } else if ((currTime - prevTime) / 86400000 > 1) {
+            streak = 1;
+          }
+          prevTime = currTime;
         }
       }
       return streak >= 7;
@@ -245,14 +248,17 @@ export const BADGES: Badge[] = [
         .sort();
       let maxStreak = days.length > 0 ? 1 : 0;
       let cur = 1;
-      for (let i = 1; i < days.length; i++) {
-        const prev = new Date(days[i - 1]);
-        const curr = new Date(days[i]);
-        if ((curr.getTime() - prev.getTime()) / 86400000 === 1) {
-          cur++;
-          maxStreak = Math.max(maxStreak, cur);
-        } else {
-          cur = 1;
+      if (days.length > 0) {
+        let prevTime = Date.parse(days[0]);
+        for (let i = 1; i < days.length; i++) {
+          const currTime = Date.parse(days[i]);
+          if ((currTime - prevTime) / 86400000 === 1) {
+            cur++;
+            maxStreak = Math.max(maxStreak, cur);
+          } else if ((currTime - prevTime) / 86400000 > 1) {
+            cur = 1;
+          }
+          prevTime = currTime;
         }
       }
       return { current: Math.min(maxStreak, 7), target: 7 };
