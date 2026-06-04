@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { Plus, Play, Trash2, GripVertical } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -23,13 +23,21 @@ export default function Playlists() {
   const [steps, setSteps] = useState<PlaylistStep[]>([]);
   const [deleteTarget, setDeleteTarget] = useState<string | null>(null);
 
-  const allTechniques = [...PRESET_TECHNIQUES, ...getCustomTechniques()];
+  // Performance: Memoize to prevent synchronous I/O and array spreading on every render
+  const allTechniques = useMemo(() => [...PRESET_TECHNIQUES, ...getCustomTechniques()], []);
+
+  // Performance: O(1) map lookup instead of O(N) find in loops
+  const techniqueMap = useMemo(() => {
+    const map = new Map();
+    allTechniques.forEach(tech => map.set(tech.id, tech));
+    return map;
+  }, [allTechniques]);
 
   const getTechniqueName = (id: string) => {
     const key = `technique.${id}.name`;
     const translated = t(key);
     if (translated !== key) return translated;
-    return allTechniques.find(tech => tech.id === id)?.name || id;
+    return techniqueMap.get(id)?.name || id;
   };
 
   const openCreate = () => {

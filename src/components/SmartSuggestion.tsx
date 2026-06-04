@@ -7,6 +7,7 @@ import { getAdaptiveSession } from "@/lib/adaptive";
 import { PRESET_TECHNIQUES } from "@/lib/techniques";
 import { getCustomTechniques } from "@/lib/storage";
 import MoodPicker from "@/components/MoodPicker";
+import { useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/contexts/LanguageContext";
 
@@ -22,12 +23,21 @@ export default function SmartSuggestion() {
   const fallbackTechnique = getSuggestionTechnique(fallback);
 
   const techniqueId = adaptive ? adaptive.techniqueId : fallbackTechnique.id;
-  const allTechniques = [...PRESET_TECHNIQUES, ...getCustomTechniques()];
-  const technique = allTechniques.find((tech) => tech.id === techniqueId) || PRESET_TECHNIQUES[0];
+  // Performance: Memoize to prevent synchronous I/O and array spreading on every render
+  const allTechniques = useMemo(() => [...PRESET_TECHNIQUES, ...getCustomTechniques()], []);
+
+  // Performance: O(1) map lookup instead of O(N) find in loops
+  const techniqueMap = useMemo(() => {
+    const map = new Map();
+    allTechniques.forEach(tech => map.set(tech.id, tech));
+    return map;
+  }, [allTechniques]);
+
+  const technique = techniqueMap.get(techniqueId) || PRESET_TECHNIQUES[0];
 
   // Auto-adaptive technique (separate from mood-based)
   const autoTechnique = autoAdaptive
-    ? allTechniques.find((tech) => tech.id === autoAdaptive.techniqueId) || null
+    ? techniqueMap.get(autoAdaptive.techniqueId) || null
     : null;
 
   // Build translated message
