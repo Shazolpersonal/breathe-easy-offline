@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -24,7 +24,17 @@ interface CreateChallengeDialogProps {
 
 export function CreateChallengeDialog({ open, onOpenChange }: CreateChallengeDialogProps) {
   const { t } = useLanguage();
-  const allTechniques = [...PRESET_TECHNIQUES, ...getCustomTechniques()];
+
+  // Performance: Memoize to prevent synchronous I/O and array spreading on every render
+  const allTechniques = useMemo(() => [...PRESET_TECHNIQUES, ...getCustomTechniques()], []);
+
+  // Performance: O(1) map lookup instead of O(N) find in loops
+  const techniqueMap = useMemo(() => {
+    const map = new Map();
+    allTechniques.forEach(tech => map.set(tech.id, tech));
+    return map;
+  }, [allTechniques]);
+
   const [techniqueId, setTechniqueId] = useState(allTechniques[0]?.id || "");
   const [targetMinutes, setTargetMinutes] = useState(5);
   const [targetCycles, setTargetCycles] = useState(0);
@@ -32,7 +42,7 @@ export function CreateChallengeDialog({ open, onOpenChange }: CreateChallengeDia
   const [generatedLink, setGeneratedLink] = useState("");
 
   const handleGenerate = () => {
-    const technique = allTechniques.find((t) => t.id === techniqueId);
+    const technique = techniqueMap.get(techniqueId);
     if (!technique || !challengerName.trim()) return;
 
     const params: FriendChallengeParams = {
