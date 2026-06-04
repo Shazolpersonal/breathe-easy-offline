@@ -18,6 +18,7 @@ import { useRef, useState, useEffect } from "react";
 import { VisualizationType } from "@/components/BreathingVisualizer";
 import { getReminders, addReminder, updateReminder, deleteReminder, requestNotificationPermission, getNotificationPermission, Reminder } from "@/lib/reminders";
 import { getAvailableVoices, hasBengaliVoice, previewVoice, type VoiceInfo } from "@/lib/voice";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import DonateDialog from "@/components/DonateDialog";
 
 export default function Settings() {
@@ -291,14 +292,22 @@ export default function Settings() {
                       ))}
                     </SelectContent>
                   </Select>
-                  <Button
-                    size="icon"
-                    variant="outline"
-                    className="h-9 w-9 shrink-0"
-                    onClick={() => previewVoice(settings.voiceNameEn || "", "en", settings.voicePitch, settings.voiceSpeed, settings.voiceVolume)}
-                  >
-                    <Volume2 className="h-3.5 w-3.5" />
-                  </Button>
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button
+                          size="icon"
+                          variant="outline"
+                          className="h-9 w-9 shrink-0"
+                          aria-label={t("settings.voicePreview")}
+                          onClick={() => previewVoice(settings.voiceNameEn || "", "en", settings.voicePitch, settings.voiceSpeed, settings.voiceVolume)}
+                        >
+                          <Volume2 className="h-3.5 w-3.5" />
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent>{t("settings.voicePreview")}</TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
                 </div>
               </div>
 
@@ -328,14 +337,22 @@ export default function Settings() {
                       ))}
                     </SelectContent>
                   </Select>
-                  <Button
-                    size="icon"
-                    variant="outline"
-                    className="h-9 w-9 shrink-0"
-                    onClick={() => previewVoice(settings.voiceNameBn || "", "bn", settings.voicePitch, settings.voiceSpeed, settings.voiceVolume)}
-                  >
-                    <Volume2 className="h-3.5 w-3.5" />
-                  </Button>
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button
+                          size="icon"
+                          variant="outline"
+                          className="h-9 w-9 shrink-0"
+                          aria-label={t("settings.voicePreview")}
+                          onClick={() => previewVoice(settings.voiceNameBn || "", "bn", settings.voicePitch, settings.voiceSpeed, settings.voiceVolume)}
+                        >
+                          <Volume2 className="h-3.5 w-3.5" />
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent>{t("settings.voicePreview")}</TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
                 </div>
               </div>
 
@@ -502,9 +519,16 @@ export default function Settings() {
                         checked={r.enabled}
                         onCheckedChange={v => handleUpdateReminder(r.id, { enabled: v })}
                       />
-                      <Button size="icon" variant="ghost" className="h-7 w-7" onClick={() => handleDeleteReminder(r.id)}>
-                        <Trash2 className="h-3.5 w-3.5 text-muted-foreground" />
-                      </Button>
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Button size="icon" variant="ghost" className="h-7 w-7" aria-label={t("common.delete")} onClick={() => handleDeleteReminder(r.id)}>
+                              <Trash2 className="h-3.5 w-3.5 text-muted-foreground" />
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent>{t("common.delete")}</TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
                     </div>
                   </div>
                   <div className="flex gap-1">

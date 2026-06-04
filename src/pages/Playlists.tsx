@@ -181,9 +181,16 @@ export default function Playlists() {
                         <span className="text-xs text-muted-foreground">{t("common.min")}</span>
                       </div>
                     </div>
-                    <Button size="icon" variant="ghost" className="h-7 w-7 shrink-0" onClick={() => removeStep(i)} disabled={steps.length <= 1}>
-                      <Trash2 className="h-3.5 w-3.5" />
-                    </Button>
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Button size="icon" variant="ghost" className="h-7 w-7 shrink-0" aria-label={t("common.delete")} onClick={() => removeStep(i)} disabled={steps.length <= 1}>
+                            <Trash2 className="h-3.5 w-3.5" />
+                          </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>{t("common.delete")}</TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
                   </div>
                 ))}
                 <Button size="sm" variant="secondary" className="w-full gap-1" onClick={addStep}>
