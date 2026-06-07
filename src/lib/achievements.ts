@@ -126,7 +126,7 @@ export const BADGES: Badge[] = [
     description: "Single session ≥ 10 minutes",
     check: (s) => (s ?? getSessions()).some((r) => r.durationSeconds >= 600),
     progress: (s) => {
-      const best = Math.max(0, ...(s ?? getSessions()).map(r => r.durationSeconds));
+      const best = (s ?? getSessions()).reduce((max, r) => Math.max(max, r.durationSeconds), 0);
       return { current: Math.min(Math.round(best / 60), 10), target: 10 };
     },
   },
@@ -145,7 +145,7 @@ export const BADGES: Badge[] = [
     description: "Reach Level 5 on any technique",
     check: () => getAllProgressionsPublic().some((p) => p.level >= 5),
     progress: () => {
-      const maxLevel = Math.max(0, ...getAllProgressionsPublic().map(p => p.level));
+      const maxLevel = getAllProgressionsPublic().reduce((max, p) => Math.max(max, p.level), 0);
       return { current: Math.min(maxLevel, 5), target: 5 };
     },
   },
@@ -156,7 +156,7 @@ export const BADGES: Badge[] = [
     description: "Achieve a calm score ≥ 90",
     check: (s) => (s ?? getSessions()).some((r) => (r.calmScore ?? 0) >= 90),
     progress: (s) => {
-      const best = Math.max(0, ...(s ?? getSessions()).map(r => r.calmScore ?? 0));
+      const best = (s ?? getSessions()).reduce((max, r) => Math.max(max, r.calmScore ?? 0), 0);
       return { current: Math.min(best, 90), target: 90 };
     },
   },
@@ -191,7 +191,12 @@ export const BADGES: Badge[] = [
     description: "Improve mood by +3 in one session",
     check: (s) => (s ?? getSessions()).some((r) => r.moodBefore != null && r.moodAfter != null && (r.moodAfter - r.moodBefore) >= 3),
     progress: (s) => {
-      const best = Math.max(0, ...(s ?? getSessions()).filter(r => r.moodBefore != null && r.moodAfter != null).map(r => r.moodAfter! - r.moodBefore!));
+      const best = (s ?? getSessions()).reduce((max, r) => {
+        if (r.moodBefore != null && r.moodAfter != null) {
+          return Math.max(max, r.moodAfter - r.moodBefore);
+        }
+        return max;
+      }, 0);
       return { current: Math.min(best, 3), target: 3 };
     },
   },
