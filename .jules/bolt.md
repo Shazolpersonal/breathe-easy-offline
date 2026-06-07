@@ -14,3 +14,8 @@
 ## 2025-05-18 - Avoid repeated O(N) filtering in inline React rendering
 **Learning:** Performing `[...array].filter().sort()` directly in JSX rendering creates severe performance bottlenecks on every keystroke when arrays are large (like historical session logs). Additionally, repeatedly iterating over the entire dataset in a `useMemo` hook (like `reportData`) when a sub-group is needed is an anti-pattern when we already have an existing single-pass loop (`aggregates`) that can build a grouped lookup map.
 **Action:** Extract inline array processing into a dedicated `useMemo` hook. For multi-view reporting, aggregate data into Maps or Record dictionaries (like `sessionsByMonth`) during an initial single O(N) pass, so subsequent views can perform O(1) lookups instead of redundant full-array passes.
+
+
+## 2025-03-02 - Avoid Math.max with spread operator on Large Datasets
+**Learning:** Using `Math.max` combined with the spread operator (e.g. `Math.max(0, ...array.map(...))`) on potentially large datasets (like `sessions` records) can cause a `RangeError: Maximum call stack size exceeded`. Additionally, mapping to intermediate arrays first creates unnecessary memory allocations.
+**Action:** Always extract `Math.max` and `Math.min` operations involving dynamically growing collections into an array `.reduce()` to compute the result safely, avoid overflows, and eliminate intermediate array allocations.
