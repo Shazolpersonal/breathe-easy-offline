@@ -47,7 +47,7 @@ export default function BottomNav() {
                   role="menuitem"
                   onClick={() => { navigate(path); setMoreOpen(false); }}
                   className={cn(
-                    "relative flex w-full items-center gap-4 px-5 py-4 text-base transition-colors focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-ring",
+                    "relative flex w-full items-center gap-4 px-5 py-4 text-base transition-colors focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-ring focus-visible:ring-offset-2",
                     idx < MORE_ITEMS.length - 1 && "border-b border-border/30",
                     active
                       ? "bg-primary/10 text-primary font-medium"
@@ -85,7 +85,7 @@ export default function BottomNav() {
                 onClick={() => navigate(path)}
                 aria-current={active ? "page" : undefined}
                 className={cn(
-                  "flex flex-col items-center gap-1 rounded-xl px-4 py-2 text-xs transition-colors focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-ring",
+                  "flex flex-col items-center gap-1 rounded-xl px-4 py-2 text-xs transition-colors focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-ring focus-visible:ring-offset-2",
                   active ? "text-primary" : "text-muted-foreground hover:text-foreground"
                 )}
               >
@@ -99,7 +99,7 @@ export default function BottomNav() {
             aria-haspopup="menu"
             aria-expanded={moreOpen}
             className={cn(
-              "flex flex-col items-center gap-1 rounded-xl px-4 py-2 text-xs transition-colors focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-ring",
+              "flex flex-col items-center gap-1 rounded-xl px-4 py-2 text-xs transition-colors focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-ring focus-visible:ring-offset-2",
               isMoreActive ? "text-primary" : "text-muted-foreground hover:text-foreground"
             )}
           >
