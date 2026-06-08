@@ -292,6 +292,15 @@ export function exportData(): string {
 }
 
 // Delete a single session
+export function updateSession(id: string, partial: Partial<SessionRecord>) {
+  const sessions = getSessions();
+  const idx = sessions.findIndex(s => s.id === id);
+  if (idx >= 0) {
+    sessions[idx] = { ...sessions[idx], ...partial };
+    setJSON(KEYS.sessions, sessions);
+  }
+}
+
 export function deleteSession(id: string) {
   const sessions = getSessions().filter(s => s.id !== id);
   setJSON(KEYS.sessions, sessions);

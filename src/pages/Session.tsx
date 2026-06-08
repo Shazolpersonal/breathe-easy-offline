@@ -8,7 +8,7 @@ import MoodPicker from "@/components/MoodPicker";
 import BreathingFeedback from "@/components/BreathingFeedback";
 import HeartRateMonitorOverlay from "@/components/HeartRateMonitor";
 import { PRESET_TECHNIQUES, getTechniqueById, BreathingPhase, getPyramidPhasesForRound } from "@/lib/techniques";
-import { getCustomTechniques, addSession, getSessions, saveLastSessionConfig } from "@/lib/storage";
+import { getCustomTechniques, addSession, getSessions, saveLastSessionConfig, updateSession } from "@/lib/storage";
 import { useSettings } from "@/contexts/SettingsContext";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useSessionContext } from "@/contexts/SessionContext";
@@ -377,12 +377,7 @@ export default function Session() {
 
   const saveJournal = useCallback(() => {
     if (journalNote.trim()) {
-      const allSessions = getSessions();
-      const idx = allSessions.findIndex(s => s.id === sessionIdRef.current);
-      if (idx >= 0) {
-        allSessions[idx].journal = journalNote.trim();
-        localStorage.setItem("breathe_sessions", JSON.stringify(allSessions));
-      }
+      updateSession(sessionIdRef.current, { journal: journalNote.trim() });
     }
   }, [journalNote]);
 
@@ -679,12 +674,7 @@ export default function Session() {
       date: new Date().toISOString(),
     });
     // Also update the session record with moodAfter
-    const allSessions = getSessions();
-    const idx = allSessions.findIndex(s => s.id === sessionIdRef.current);
-    if (idx >= 0) {
-      allSessions[idx].moodAfter = mood;
-      localStorage.setItem("breathe_sessions", JSON.stringify(allSessions));
-    }
+    updateSession(sessionIdRef.current, { moodAfter: mood });
     setMoodSaved(true);
   };
 

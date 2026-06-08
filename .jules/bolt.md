@@ -14,3 +14,6 @@
 ## 2025-05-18 - Avoid repeated O(N) filtering in inline React rendering
 **Learning:** Performing `[...array].filter().sort()` directly in JSX rendering creates severe performance bottlenecks on every keystroke when arrays are large (like historical session logs). Additionally, repeatedly iterating over the entire dataset in a `useMemo` hook (like `reportData`) when a sub-group is needed is an anti-pattern when we already have an existing single-pass loop (`aggregates`) that can build a grouped lookup map.
 **Action:** Extract inline array processing into a dedicated `useMemo` hook. For multi-view reporting, aggregate data into Maps or Record dictionaries (like `sessionsByMonth`) during an initial single O(N) pass, so subsequent views can perform O(1) lookups instead of redundant full-array passes.
+## 2024-05-19 - Efficient Updates with updateSession
+**Learning:** Directly modifying localStorage (using `localStorage.setItem` alongside `getSessions`) bypasses the `jsonCache` caching mechanism and triggers unnecessary expensive `JSON.parse` operations on subsequent reads.
+**Action:** Use the centralized `updateSession` utility, which leverages `setJSON`, to mutate and merge objects. This maintains cache integrity and skips redundant string parsing overhead on the main thread.
