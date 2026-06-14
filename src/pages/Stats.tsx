@@ -14,6 +14,7 @@ import InsightsTab from "@/components/stats/InsightsTab";
 import { getXPState } from "@/lib/xp";
 import { getMoodRecords } from "@/lib/mood";
 import { shareStreak, shareBadge } from "@/lib/shareApp";
+import { Tooltip as RadixTooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 type Tab = "stats" | "history" | "insights" | "badges" | "journal" | "reports";
 type TimeRange = "7d" | "30d" | "90d";
@@ -618,14 +619,18 @@ export default function Stats() {
                   </span>
                   <span className="text-sm text-muted-foreground">{label}</span>
                   {shareable && (
-                    <button
-                      onClick={() => shareStreak(value as number, language)}
-                      className="absolute top-2 right-2 rounded-full p-1 text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-ring focus-visible:ring-offset-2"
-                      title={t("share.streak")}
-                      aria-label={t("share.streak")}
-                    >
-                      <Share2 className="h-3.5 w-3.5" />
-                    </button>
+                    <RadixTooltip>
+                      <TooltipTrigger asChild>
+                        <button
+                          onClick={() => shareStreak(value as number, language)}
+                          className="absolute top-2 right-2 rounded-full p-1 text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-ring focus-visible:ring-offset-2"
+                          aria-label={t("share.streak")}
+                        >
+                          <Share2 className="h-3.5 w-3.5" />
+                        </button>
+                      </TooltipTrigger>
+                      <TooltipContent>{t("share.streak")}</TooltipContent>
+                    </RadixTooltip>
                   )}
                 </div>
               ))}
@@ -810,13 +815,18 @@ export default function Stats() {
                               </Button>
                             </div>
                           ) : (
-                            <button
-                              onClick={() => setDeleteConfirm(s.id)}
-                              className="rounded-full p-1 text-muted-foreground/40 hover:text-destructive transition-colors focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-ring focus-visible:ring-offset-2"
-                              aria-label={t("common.delete")}
-                            >
-                              <Trash2 className="h-3.5 w-3.5" />
-                            </button>
+                            <RadixTooltip>
+                              <TooltipTrigger asChild>
+                                <button
+                                  onClick={() => setDeleteConfirm(s.id)}
+                                  className="rounded-full p-1 text-muted-foreground/40 hover:text-destructive transition-colors focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-ring focus-visible:ring-offset-2"
+                                  aria-label={t("common.delete")}
+                                >
+                                  <Trash2 className="h-3.5 w-3.5" />
+                                </button>
+                              </TooltipTrigger>
+                              <TooltipContent>{t("common.delete")}</TooltipContent>
+                            </RadixTooltip>
                           )}
                         </div>
                       </div>
@@ -858,14 +868,18 @@ export default function Stats() {
                     const badgeDesc = t(`badge.${b.id}.description`);
                     return (
                       <div key={b.id} className="relative flex flex-col items-center gap-1.5 rounded-2xl border border-primary/20 bg-primary/5 p-3">
-                        <button
-                          onClick={() => shareBadge(badgeName !== `badge.${b.id}.name` ? badgeName : b.name, b.emoji, language)}
-                          className="absolute top-1.5 right-1.5 rounded-full p-1 text-muted-foreground/60 hover:text-primary hover:bg-primary/10 transition-colors focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-ring focus-visible:ring-offset-2"
-                          title={t("share.badge")}
-                          aria-label={t("share.badge")}
-                        >
-                          <Share2 className="h-3 w-3" />
-                        </button>
+                        <RadixTooltip>
+                          <TooltipTrigger asChild>
+                            <button
+                              onClick={() => shareBadge(badgeName !== `badge.${b.id}.name` ? badgeName : b.name, b.emoji, language)}
+                              className="absolute top-1.5 right-1.5 rounded-full p-1 text-muted-foreground/60 hover:text-primary hover:bg-primary/10 transition-colors focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-ring focus-visible:ring-offset-2"
+                              aria-label={t("share.badge")}
+                            >
+                              <Share2 className="h-3 w-3" />
+                            </button>
+                          </TooltipTrigger>
+                          <TooltipContent>{t("share.badge")}</TooltipContent>
+                        </RadixTooltip>
                         <span className="text-3xl">{b.emoji}</span>
                         <span className="text-sm font-semibold text-foreground text-center leading-tight">{badgeName !== `badge.${b.id}.name` ? badgeName : b.name}</span>
                         <span className="text-sm text-muted-foreground text-center leading-tight">{badgeDesc !== `badge.${b.id}.description` ? badgeDesc : b.description}</span>
@@ -946,13 +960,23 @@ export default function Stats() {
         {tab === "reports" && (
           <div className="space-y-4">
             <div className="flex items-center justify-between rounded-2xl border border-border bg-card px-4 py-3">
-              <button onClick={prevMonth} className="rounded-full p-1 text-muted-foreground hover:text-foreground focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-ring focus-visible:ring-offset-2" aria-label={t("stats.prevMonth")}>
-                <ChevronLeft className="h-5 w-5" />
-              </button>
+              <RadixTooltip>
+                <TooltipTrigger asChild>
+                  <button onClick={prevMonth} className="rounded-full p-1 text-muted-foreground hover:text-foreground focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-ring focus-visible:ring-offset-2" aria-label={t("stats.prevMonth")}>
+                    <ChevronLeft className="h-5 w-5" />
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent>{t("stats.prevMonth")}</TooltipContent>
+              </RadixTooltip>
               <span className="text-sm font-semibold text-foreground">{monthLabel}</span>
-              <button onClick={nextMonth} className="rounded-full p-1 text-muted-foreground hover:text-foreground focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-ring focus-visible:ring-offset-2" aria-label={t("stats.nextMonth")}>
-                <ChevronRight className="h-5 w-5" />
-              </button>
+              <RadixTooltip>
+                <TooltipTrigger asChild>
+                  <button onClick={nextMonth} className="rounded-full p-1 text-muted-foreground hover:text-foreground focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-ring focus-visible:ring-offset-2" aria-label={t("stats.nextMonth")}>
+                    <ChevronRight className="h-5 w-5" />
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent>{t("stats.nextMonth")}</TooltipContent>
+              </RadixTooltip>
             </div>
 
             {reportData.sessions === 0 ? (
