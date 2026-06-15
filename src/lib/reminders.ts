@@ -1,3 +1,4 @@
+import { getJSON, setJSON } from "./storage";
 export interface Reminder {
   id: string;
   time: string; // HH:MM
@@ -10,13 +11,12 @@ const STORAGE_KEY = "breathe_reminders";
 
 export function getReminders(): Reminder[] {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    return raw ? JSON.parse(raw) : [];
+    return getJSON(STORAGE_KEY, []);
   } catch { return []; }
 }
 
 export function saveReminders(reminders: Reminder[]) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(reminders));
+  setJSON(STORAGE_KEY, reminders);
 }
 
 export function addReminder(reminder: Reminder) {

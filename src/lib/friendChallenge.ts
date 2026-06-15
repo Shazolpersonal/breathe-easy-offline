@@ -1,4 +1,4 @@
-import { getTodaySessions } from "./storage";
+import { getJSON, getTodaySessions, setJSON } from "./storage";
 import { sanitizeString } from "./utils";
 
 export interface FriendChallengeParams {
@@ -99,22 +99,17 @@ export function saveFriendChallenge(params: FriendChallengeParams): FriendChalle
     acceptedAt: new Date().toISOString(),
   };
   challenges.push(challenge);
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(challenges));
+  setJSON(STORAGE_KEY, challenges);
   return challenge;
 }
 
 export function getFriendChallenges(): FriendChallenge[] {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    return raw ? JSON.parse(raw) : [];
-  } catch {
-    return [];
-  }
+  return getJSON(STORAGE_KEY, []);
 }
 
 export function removeFriendChallenge(id: string): void {
   const challenges = getFriendChallenges().filter((c) => c.id !== id);
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(challenges));
+  setJSON(STORAGE_KEY, challenges);
 }
 
 export function getChallengeProgress(challenge: FriendChallenge): {

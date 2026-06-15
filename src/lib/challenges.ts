@@ -1,4 +1,4 @@
-import { getTodaySessions, getTodayMinutes, getSessions } from "./storage";
+import { getJSON, getSessions, getTodayMinutes, getTodaySessions, setJSON } from "./storage";
 import { getXPState } from "./xp";
 
 export type ChallengeTier = "easy" | "medium" | "hard";
@@ -400,12 +400,7 @@ export function areAllChallengesComplete(): boolean {
 // --- Challenge History ---
 
 function getHistory(): ChallengeHistoryEntry[] {
-  try {
-    const raw = localStorage.getItem(HISTORY_KEY);
-    return raw ? JSON.parse(raw) : [];
-  } catch {
-    return [];
-  }
+  return getJSON(HISTORY_KEY, []);
 }
 
 function saveHistory(history: ChallengeHistoryEntry[]) {
@@ -414,7 +409,7 @@ function saveHistory(history: ChallengeHistoryEntry[]) {
   cutoff.setDate(cutoff.getDate() - 90);
   const cutoffStr = cutoff.toISOString().substring(0, 10);
   const trimmed = history.filter((e) => e.date >= cutoffStr);
-  localStorage.setItem(HISTORY_KEY, JSON.stringify(trimmed));
+  setJSON(HISTORY_KEY, trimmed);
 }
 
 export function saveTodayChallengeProgress() {

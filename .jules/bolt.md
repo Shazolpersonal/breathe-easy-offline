@@ -14,3 +14,6 @@
 ## 2025-05-18 - Avoid repeated O(N) filtering in inline React rendering
 **Learning:** Performing `[...array].filter().sort()` directly in JSX rendering creates severe performance bottlenecks on every keystroke when arrays are large (like historical session logs). Additionally, repeatedly iterating over the entire dataset in a `useMemo` hook (like `reportData`) when a sub-group is needed is an anti-pattern when we already have an existing single-pass loop (`aggregates`) that can build a grouped lookup map.
 **Action:** Extract inline array processing into a dedicated `useMemo` hook. For multi-view reporting, aggregate data into Maps or Record dictionaries (like `sessionsByMonth`) during an initial single O(N) pass, so subsequent views can perform O(1) lookups instead of redundant full-array passes.
+## 2024-06-15 - Caching `localStorage` parsing
+**Learning:** Frequent raw access to `localStorage.getItem` coupled with `JSON.parse` blocks the main thread heavily and triggers garbage collection overhead, particularly when component mounts or rerenders check values.
+**Action:** Always prefer the cached `getJSON` wrapper from `src/lib/storage.ts` when retrieving JSON datasets, especially those frequently read and mutated like histories or mood records.

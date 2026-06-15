@@ -86,7 +86,7 @@ const DEFAULT_SETTINGS: AppSettings = {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const jsonCache = new Map<string, { raw: string | null; parsed: any }>();
 
-function getJSON<T>(key: string, fallback: T): T {
+export function getJSON<T>(key: string, fallback: T): T {
   try {
     const raw = localStorage.getItem(key);
 
@@ -104,7 +104,7 @@ function getJSON<T>(key: string, fallback: T): T {
   }
 }
 
-function setJSON(key: string, value: unknown) {
+export function setJSON(key: string, value: unknown) {
   const raw = JSON.stringify(value);
   localStorage.setItem(key, raw);
   jsonCache.set(key, { raw, parsed: value });
@@ -263,10 +263,9 @@ function setLastBackupDate() {
 export function getDataSummary(): { sessions: number; journals: number; moodRecords: number; xpTotal: number } {
   const sessions = getSessions();
   const journals = sessions.filter(s => s.journal).length;
-  const moodRaw = localStorage.getItem("breathe_mood_records");
-  const moodRecords = moodRaw ? JSON.parse(moodRaw).length : 0;
-  const xpRaw = localStorage.getItem("breathe_xp");
-  const xpTotal = xpRaw ? JSON.parse(xpRaw).totalXP || 0 : 0;
+  const moodRecords = getJSON<unknown[]>("breathe_mood_records", []).length;
+  const xpStore = getJSON<{totalXP: number}>("breathe_xp", { totalXP: 0 });
+  const xpTotal = xpStore.totalXP || 0;
   return { sessions: sessions.length, journals, moodRecords, xpTotal };
 }
 

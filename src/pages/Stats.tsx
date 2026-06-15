@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, LineChart, Line } from "recharts";
-import { getSessions, getCurrentStreak, getLongestStreak, deleteSession } from "@/lib/storage";
+import { getJSON, getSessions, getCurrentStreak, getLongestStreak, deleteSession } from "@/lib/storage";
 import { Flame, Clock, Target, Trophy, Brain, BookOpen, ChevronLeft, ChevronRight, Star, Calendar, Zap, TrendingUp, Share2, Search, Trash2 } from "lucide-react";
 import { checkAllBadges } from "@/lib/achievements";
 import { cn } from "@/lib/utils";
@@ -329,9 +329,7 @@ export default function Stats() {
 
   const xpChartData = useMemo(() => {
     try {
-      const raw = localStorage.getItem("breathe_xp");
-      if (!raw) return [];
-      const store = JSON.parse(raw);
+      const store = getJSON<{history: {date: string; amount: number}[]}>("breathe_xp", { history: [] });
       if (!store.history || store.history.length === 0) return [];
       const dayMap: Record<string, number> = {};
       const today = new Date();
