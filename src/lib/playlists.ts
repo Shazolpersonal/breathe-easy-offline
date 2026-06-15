@@ -13,8 +13,7 @@ const STORAGE_KEY = "breathe_playlists";
 
 export function getPlaylists(): Playlist[] {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    return raw ? JSON.parse(raw) : [];
+    return getJSON(STORAGE_KEY, []);
   } catch { return []; }
 }
 
@@ -23,9 +22,9 @@ export function savePlaylist(playlist: Playlist) {
   const idx = all.findIndex(p => p.id === playlist.id);
   if (idx >= 0) all[idx] = playlist;
   else all.push(playlist);
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(all));
+  setJSON(STORAGE_KEY, all);
 }
 
 export function deletePlaylist(id: string) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(getPlaylists().filter(p => p.id !== id)));
+  setJSON(STORAGE_KEY, getPlaylists().filter(p => p.id !== id));
 }

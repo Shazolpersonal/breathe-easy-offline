@@ -81,8 +81,7 @@ export const PROGRAMS: Program[] = [
 
 export function getEnrollments(): ProgramEnrollment[] {
   try {
-    const raw = localStorage.getItem(ENROLLMENT_KEY);
-    return raw ? JSON.parse(raw) : [];
+    return getJSON(ENROLLMENT_KEY, []);
   } catch { return []; }
 }
 
@@ -91,7 +90,7 @@ export function enrollInProgram(programId: string) {
   const existing = enrollments.find(e => e.programId === programId);
   if (existing) return; // already enrolled
   enrollments.push({ programId, startDate: new Date().toISOString(), completedDays: [] });
-  localStorage.setItem(ENROLLMENT_KEY, JSON.stringify(enrollments));
+  setJSON(ENROLLMENT_KEY, enrollments);
 }
 
 export function completeDay(programId: string, day: number) {
@@ -100,12 +99,12 @@ export function completeDay(programId: string, day: number) {
   if (!enrollment) return;
   if (!enrollment.completedDays.includes(day)) {
     enrollment.completedDays.push(day);
-    localStorage.setItem(ENROLLMENT_KEY, JSON.stringify(enrollments));
+    setJSON(ENROLLMENT_KEY, enrollments);
   }
 }
 
 export function unenrollFromProgram(programId: string) {
-  localStorage.setItem(ENROLLMENT_KEY, JSON.stringify(getEnrollments().filter(e => e.programId !== programId)));
+  setJSON(ENROLLMENT_KEY, getEnrollments().filter(e => e.programId !== programId));
 }
 
 export function getProgramById(id: string): Program | undefined {

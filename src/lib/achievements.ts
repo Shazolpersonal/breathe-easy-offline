@@ -1,6 +1,5 @@
-import { getSessions, getCustomTechniques, SessionRecord } from "./storage";
+import { SessionRecord, getCurrentStreak, getCustomTechniques, getJSON, getSessions, setJSON } from "./storage";
 import { getAllProgressionsPublic } from "./progression";
-import { getCurrentStreak } from "./storage";
 
 export interface BadgeProgress {
   current: number;
@@ -19,17 +18,12 @@ export interface Badge {
 const SEEN_KEY = "breathe_badges_seen";
 
 function getSeenBadges(): string[] {
-  try {
-    const raw = localStorage.getItem(SEEN_KEY);
-    return raw ? JSON.parse(raw) : [];
-  } catch {
-    return [];
-  }
+  return getJSON(SEEN_KEY, []);
 }
 
 function markBadgesSeen(ids: string[]) {
   const seen = [...new Set([...getSeenBadges(), ...ids])];
-  localStorage.setItem(SEEN_KEY, JSON.stringify(seen));
+  setJSON(SEEN_KEY, seen);
 }
 
 function getStreakFromSessions(sessions: SessionRecord[]): number {

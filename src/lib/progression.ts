@@ -1,3 +1,4 @@
+import { getJSON, setJSON } from "./storage";
 import { BreathingTechnique, BreathingPhase } from "./techniques";
 
 export interface UserProgression {
@@ -22,16 +23,11 @@ export function getAllProgressionsPublic(): UserProgression[] {
 }
 
 function getAllProgressions(): UserProgression[] {
-  try {
-    const raw = localStorage.getItem(PROGRESSION_KEY);
-    return raw ? JSON.parse(raw) : [];
-  } catch {
-    return [];
-  }
+  return getJSON(PROGRESSION_KEY, []);
 }
 
 function saveAllProgressions(data: UserProgression[]) {
-  localStorage.setItem(PROGRESSION_KEY, JSON.stringify(data));
+  setJSON(PROGRESSION_KEY, data);
 }
 
 export function getProgression(techniqueId: string): UserProgression {
