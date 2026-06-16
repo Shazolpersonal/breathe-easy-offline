@@ -5,3 +5,7 @@
 ## 2024-06-25 - Prevent Accidental Deletion with AlertDialog & Enhance ARIA on Icon-Only Buttons
 **Learning:** Icon-only buttons mapping to destructive actions (like delete) on cards/lists frequently lack `aria-label` tags, causing poor screen reader experiences. Simultaneously, the lack of delete confirmations leads to inadvertent data loss.
 **Action:** When auditing or building user lists/cards with icon actions, ensure all buttons are wrapped in tooltips that provide explicit `aria-label`s. Always safeguard destructive actions using an `AlertDialog` (or similar confirmation patterns) linked to an intermediate state variable (e.g., `deleteTarget`), confirming user intent before executing the deletion logic.
+
+## 2024-08-01 - Explicitly Link Radix/Shadcn Labels to Inputs
+**Learning:** When using Radix UI or Shadcn UI form components outside of the `<Form>` wrapper context, screen readers may fail to associate `<Label>` elements with their corresponding inputs (like `<Input>` or `<SelectTrigger>`) if explicit ID bindings are missing. This results in inaccessible form fields for visually impaired users.
+**Action:** When building forms without the wrapper or mapping through custom inputs, explicitly provide an `id` attribute to the input element (e.g., `<Input id="my-field">`) and correctly map the corresponding `<Label>` using the `htmlFor` attribute (e.g., `<Label htmlFor="my-field">`). This guarantees that screen readers announce the label upon focus and allows clicking the label to focus the input.
