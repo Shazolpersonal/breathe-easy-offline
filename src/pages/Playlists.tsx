@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { PRESET_TECHNIQUES } from "@/lib/techniques";
 import { getCustomTechniques } from "@/lib/storage";
@@ -104,26 +104,24 @@ export default function Playlists() {
               <div key={p.id} className="rounded-2xl border border-border bg-card p-4">
                 <div className="flex items-center justify-between mb-2">
                   <h3 className="font-semibold text-foreground">{p.name}</h3>
-                  <TooltipProvider>
-                    <div className="flex items-center gap-1">
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <Button size="icon" variant="ghost" className="h-8 w-8 focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none" aria-label={t("playlists.play")} onClick={() => startPlaylist(p.id)}>
-                            <Play className="h-4 w-4 text-primary" />
-                          </Button>
-                        </TooltipTrigger>
-                        <TooltipContent>{t("playlists.play")}</TooltipContent>
-                      </Tooltip>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <Button size="icon" variant="ghost" className="h-8 w-8 focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none" aria-label={t("playlists.delete")} onClick={() => setDeleteTarget(p.id)}>
-                            <Trash2 className="h-4 w-4 text-muted-foreground" />
-                          </Button>
-                        </TooltipTrigger>
-                        <TooltipContent>{t("playlists.delete")}</TooltipContent>
-                      </Tooltip>
-                    </div>
-                  </TooltipProvider>
+                  <div className="flex items-center gap-1 opacity-0 transition-opacity focus-within:opacity-100 group-hover:opacity-100">
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button size="icon" variant="ghost" className="h-8 w-8 focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none" aria-label={t("playlists.play")} onClick={() => startPlaylist(p.id)}>
+                          <Play className="h-4 w-4 text-primary" />
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent>{t("playlists.play")}</TooltipContent>
+                    </Tooltip>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button size="icon" variant="ghost" className="h-8 w-8 focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none" aria-label={t("playlists.delete")} onClick={() => setDeleteTarget(p.id)}>
+                          <Trash2 className="h-4 w-4 text-muted-foreground" />
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent>{t("playlists.delete")}</TooltipContent>
+                    </Tooltip>
+                  </div>
                 </div>
                 <div className="space-y-1">
                   {p.steps.map((s, i) => (
@@ -181,9 +179,14 @@ export default function Playlists() {
                         <span className="text-xs text-muted-foreground">{t("common.min")}</span>
                       </div>
                     </div>
-                    <Button size="icon" variant="ghost" className="h-7 w-7 shrink-0" onClick={() => removeStep(i)} disabled={steps.length <= 1}>
-                      <Trash2 className="h-3.5 w-3.5" />
-                    </Button>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button aria-label={t("common.delete")} size="icon" variant="ghost" className="h-7 w-7 shrink-0 focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none" onClick={() => removeStep(i)} disabled={steps.length <= 1}>
+                          <Trash2 className="h-3.5 w-3.5" />
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent>{t("common.delete")}</TooltipContent>
+                    </Tooltip>
                   </div>
                 ))}
                 <Button size="sm" variant="secondary" className="w-full gap-1" onClick={addStep}>
