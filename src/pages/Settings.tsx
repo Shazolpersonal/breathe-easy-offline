@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { exportData, importDataSmart, getLastBackupDate, getDataSummary, exportDataCompact, importDataFromCompact, validateImportData } from "@/lib/storage";
 import { exportSessionsCSV } from "@/lib/csvExport";
 import { Download, Upload, Circle, Waves, BarChart3, Flower2, Plus, Trash2, Bell, BellOff, Accessibility, Mic, Heart, Music, FileSpreadsheet, AlertTriangle, Database, Volume2, Info, HeartHandshake, Clipboard, ClipboardPaste, Target } from "lucide-react";
@@ -502,9 +503,14 @@ export default function Settings() {
                         checked={r.enabled}
                         onCheckedChange={v => handleUpdateReminder(r.id, { enabled: v })}
                       />
-                      <Button size="icon" variant="ghost" className="h-7 w-7" onClick={() => handleDeleteReminder(r.id)}>
-                        <Trash2 className="h-3.5 w-3.5 text-muted-foreground" />
-                      </Button>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Button aria-label={t("common.delete")} size="icon" variant="ghost" className="h-7 w-7 focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none" onClick={() => handleDeleteReminder(r.id)}>
+                            <Trash2 className="h-3.5 w-3.5 text-muted-foreground" />
+                          </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>{t("common.delete")}</TooltipContent>
+                      </Tooltip>
                     </div>
                   </div>
                   <div className="flex gap-1">
