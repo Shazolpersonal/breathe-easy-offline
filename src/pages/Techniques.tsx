@@ -179,62 +179,62 @@ export default function Techniques() {
               </DialogHeader>
               <div className="space-y-4 pt-2">
                 <div>
-                  <Label>{t("techniques.name")}</Label>
-                  <Input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value.slice(0, 50) })} placeholder={t("techniques.namePlaceholder")} maxLength={50} />
+                  <Label htmlFor="custom-name">{t("techniques.name")}</Label>
+                  <Input id="custom-name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value.slice(0, 50) })} placeholder={t("techniques.namePlaceholder")} maxLength={50} />
                 </div>
 
                 {/* Bug 9: Editable description */}
                 <div>
-                  <Label>{t("techniques.description")}</Label>
-                  <Textarea value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value.slice(0, 200) })} placeholder={t("techniques.descriptionPlaceholder")} maxLength={200} className="h-16 resize-none" />
+                  <Label htmlFor="custom-desc">{t("techniques.description")}</Label>
+                  <Textarea id="custom-desc" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value.slice(0, 200) })} placeholder={t("techniques.descriptionPlaceholder")} maxLength={200} className="h-16 resize-none" />
                 </div>
                 <div>
-                  <Label>{t("techniques.benefitLabel")}</Label>
-                  <Input value={form.benefit} onChange={(e) => setForm({ ...form, benefit: e.target.value.slice(0, 50) })} placeholder={t("techniques.benefitPlaceholder")} maxLength={50} />
+                  <Label htmlFor="custom-benefit">{t("techniques.benefitLabel")}</Label>
+                  <Input id="custom-benefit" value={form.benefit} onChange={(e) => setForm({ ...form, benefit: e.target.value.slice(0, 50) })} placeholder={t("techniques.benefitPlaceholder")} maxLength={50} />
                 </div>
 
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <Label>{t("techniques.inhale")}</Label>
-                    <Input type="number" min={1} max={30} value={form.inhale} onChange={(e) => setForm({ ...form, inhale: Math.max(1, Math.min(30, +e.target.value || 1)) })} />
+                    <Label htmlFor="custom-inhale">{t("techniques.inhale")}</Label>
+                    <Input id="custom-inhale" type="number" min={1} max={30} value={form.inhale} onChange={(e) => setForm({ ...form, inhale: Math.max(1, Math.min(30, +e.target.value || 1)) })} />
                   </div>
                   <div>
-                    <Label>{t("techniques.hold")}</Label>
-                    <Input type="number" min={0} max={30} value={form.hold1} onChange={(e) => setForm({ ...form, hold1: Math.max(0, Math.min(30, +e.target.value || 0)) })} />
+                    <Label htmlFor="custom-hold1">{t("techniques.hold")}</Label>
+                    <Input id="custom-hold1" type="number" min={0} max={30} value={form.hold1} onChange={(e) => setForm({ ...form, hold1: Math.max(0, Math.min(30, +e.target.value || 0)) })} />
                   </div>
                   <div>
-                    <Label>{t("techniques.exhale")}</Label>
-                    <Input type="number" min={1} max={30} value={form.exhale} onChange={(e) => setForm({ ...form, exhale: Math.max(1, Math.min(30, +e.target.value || 1)) })} />
+                    <Label htmlFor="custom-exhale">{t("techniques.exhale")}</Label>
+                    <Input id="custom-exhale" type="number" min={1} max={30} value={form.exhale} onChange={(e) => setForm({ ...form, exhale: Math.max(1, Math.min(30, +e.target.value || 1)) })} />
                   </div>
                   <div>
-                    <Label>{t("techniques.hold2")}</Label>
-                    <Input type="number" min={0} max={30} value={form.hold2} onChange={(e) => setForm({ ...form, hold2: Math.max(0, Math.min(30, +e.target.value || 0)) })} />
+                    <Label htmlFor="custom-hold2">{t("techniques.hold2")}</Label>
+                    <Input id="custom-hold2" type="number" min={0} max={30} value={form.hold2} onChange={(e) => setForm({ ...form, hold2: Math.max(0, Math.min(30, +e.target.value || 0)) })} />
                   </div>
                 </div>
 
                 {/* Pyramid Mode */}
                 <div className="rounded-xl border border-border bg-secondary/30 p-3 space-y-3">
                   <div className="flex items-center justify-between">
-                    <Label className="text-sm">{t("techniques.pyramidMode")}</Label>
-                    <Switch checked={pyramidEnabled} onCheckedChange={setPyramidEnabled} />
+                    <Label htmlFor="custom-pyramid-switch" className="text-sm">{t("techniques.pyramidMode")}</Label>
+                    <Switch id="custom-pyramid-switch" checked={pyramidEnabled} onCheckedChange={setPyramidEnabled} />
                   </div>
                   {pyramidEnabled && (
                     <>
                       <p className="text-xs text-muted-foreground">{t("techniques.pyramidDesc")}</p>
                       <div className="grid grid-cols-3 gap-2">
                         <div>
-                          <Label className="text-xs">{t("techniques.pyramidStart")}</Label>
-                          <Input type="number" min={0.5} max={3} step={0.1} value={pyramidConfig.startMultiplier}
+                          <Label htmlFor="custom-pyramid-start" className="text-xs">{t("techniques.pyramidStart")}</Label>
+                          <Input id="custom-pyramid-start" type="number" min={0.5} max={3} step={0.1} value={pyramidConfig.startMultiplier}
                             onChange={e => setPyramidConfig({ ...pyramidConfig, startMultiplier: Math.max(0.5, Math.min(3, +e.target.value || 0.5)) })} className="h-8 text-xs" />
                         </div>
                         <div>
-                          <Label className="text-xs">{t("techniques.pyramidPeak")}</Label>
-                          <Input type="number" min={0.5} max={3} step={0.1} value={pyramidConfig.peakMultiplier}
+                          <Label htmlFor="custom-pyramid-peak" className="text-xs">{t("techniques.pyramidPeak")}</Label>
+                          <Input id="custom-pyramid-peak" type="number" min={0.5} max={3} step={0.1} value={pyramidConfig.peakMultiplier}
                             onChange={e => setPyramidConfig({ ...pyramidConfig, peakMultiplier: Math.max(0.5, Math.min(3, +e.target.value || 0.5)) })} className="h-8 text-xs" />
                         </div>
                         <div>
-                          <Label className="text-xs">{t("techniques.pyramidSteps")}</Label>
-                          <Input type="number" min={2} max={10} value={pyramidConfig.steps}
+                          <Label htmlFor="custom-pyramid-steps" className="text-xs">{t("techniques.pyramidSteps")}</Label>
+                          <Input id="custom-pyramid-steps" type="number" min={2} max={10} value={pyramidConfig.steps}
                             onChange={e => setPyramidConfig({ ...pyramidConfig, steps: Math.max(2, Math.min(10, +e.target.value || 2)) })} className="h-8 text-xs" />
                         </div>
                       </div>
