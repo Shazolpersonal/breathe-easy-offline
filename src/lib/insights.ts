@@ -11,15 +11,17 @@ export function getWeeklyInsights(locale: string = "en"): Insight[] {
   const now = new Date();
   const insights: Insight[] = [];
 
-  const thisWeek = sessions.filter((s) => {
-    const diff = (now.getTime() - new Date(s.date).getTime()) / 86400000;
-    return diff < 7;
-  });
+  // Pre-calculate ISO strings for O(1) string comparisons
+  const weekAgo = new Date(now);
+  weekAgo.setDate(weekAgo.getDate() - 7);
+  const weekAgoStr = weekAgo.toISOString().substring(0, 10);
 
-  const lastWeek = sessions.filter((s) => {
-    const diff = (now.getTime() - new Date(s.date).getTime()) / 86400000;
-    return diff >= 7 && diff < 14;
-  });
+  const twoWeeksAgo = new Date(now);
+  twoWeeksAgo.setDate(twoWeeksAgo.getDate() - 14);
+  const twoWeeksAgoStr = twoWeeksAgo.toISOString().substring(0, 10);
+
+  const thisWeek = sessions.filter((s) => s.date >= weekAgoStr);
+  const lastWeek = sessions.filter((s) => s.date >= twoWeeksAgoStr && s.date < weekAgoStr);
 
   if (thisWeek.length < 3) {
     if (thisWeek.length === 0) {
@@ -56,10 +58,7 @@ export function getWeeklyInsights(locale: string = "en"): Insight[] {
 
   // Technique comparison via mood records
   const moodRecords = getMoodRecords();
-  const weekMoodRecords = moodRecords.filter((r) => {
-    const diff = (now.getTime() - new Date(r.date).getTime()) / 86400000;
-    return diff < 7 && r.moodAfter !== null;
-  });
+  const weekMoodRecords = moodRecords.filter((r) => r.date >= weekAgoStr && r.moodAfter !== null);
   
   if (weekMoodRecords.length >= 2) {
     const techMood: Record<string, { total: number; count: number; name: string }> = {};
