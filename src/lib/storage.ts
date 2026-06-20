@@ -1,5 +1,5 @@
 import { BreathingTechnique } from "./techniques";
-import { sanitizeObjectStrings } from "@/lib/utils";
+import { sanitizeObjectStrings, secureJsonReviver } from "@/lib/utils";
 
 export interface SessionRecord {
   id: string;
@@ -352,7 +352,7 @@ export function validateImportData(json: string): ImportValidationResult {
   const warnings: string[] = [];
 
   try {
-    const data = JSON.parse(json);
+    const data = JSON.parse(json, secureJsonReviver);
 
     // Validate sessions
     if (data.sessions !== undefined) {
@@ -403,7 +403,7 @@ export function importDataSmart(json: string, skipDuplicates: boolean = true): I
   const validation = validateImportData(json);
   if (!validation.success) return validation;
 
-  const data = sanitizeObjectStrings(JSON.parse(json));
+  const data = sanitizeObjectStrings(JSON.parse(json, secureJsonReviver));
   const existingSessions = getSessions();
   const existingIds = new Set(existingSessions.map(s => s.id));
 
@@ -477,7 +477,7 @@ export function importDataSmart(json: string, skipDuplicates: boolean = true): I
 }
 
 export function importData(json: string) {
-  const data = sanitizeObjectStrings(JSON.parse(json));
+  const data = sanitizeObjectStrings(JSON.parse(json, secureJsonReviver));
   // Validate sessions array
   if (data.sessions) {
     if (!Array.isArray(data.sessions)) throw new Error("Invalid sessions data");
