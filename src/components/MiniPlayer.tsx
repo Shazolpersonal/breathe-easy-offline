@@ -5,9 +5,15 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { addSession } from "@/lib/storage";
 import { updateProgression } from "@/lib/progression";
 import { toast } from "sonner";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 export default function MiniPlayer() {
-  const { miniSession, updateMiniSession, stopMiniSession } = useSessionContext();
+  const { miniSession, updateMiniSession, stopMiniSession } =
+    useSessionContext();
   const navigate = useNavigate();
   const location = useLocation();
   const { t } = useLanguage();
@@ -46,35 +52,60 @@ export default function MiniPlayer() {
     >
       <div className="mx-auto max-w-md px-2">
         <div className="flex items-center gap-3 rounded-t-2xl border border-b-0 border-border bg-card/95 px-4 py-2.5 backdrop-blur-md shadow-lg cursor-pointer">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/15" aria-hidden="true">
+          <div
+            className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/15"
+            aria-hidden="true"
+          >
             <Wind className="h-4 w-4 text-primary" />
           </div>
 
           <div className="flex-1 min-w-0">
-            <p className="truncate text-sm font-medium text-foreground">{miniSession.techniqueName}</p>
+            <p className="truncate text-sm font-medium text-foreground">
+              {miniSession.techniqueName}
+            </p>
             <p className="text-xs text-muted-foreground" aria-live="polite">
               {t(`phase.${miniSession.currentPhase}`)} · {display} / {total}
             </p>
           </div>
 
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              updateMiniSession({ isPaused: !miniSession.isPaused });
-            }}
-            className="rounded-full p-1.5 text-foreground hover:bg-secondary transition-colors focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-ring focus-visible:ring-offset-2"
-            aria-label={miniSession.isPaused ? t("session.resume") : t("session.pause")}
-          >
-            {miniSession.isPaused ? <Play className="h-4 w-4" /> : <Pause className="h-4 w-4" />}
-          </button>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  updateMiniSession({ isPaused: !miniSession.isPaused });
+                }}
+                className="rounded-full p-1.5 text-foreground hover:bg-secondary transition-colors focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-ring focus-visible:ring-offset-2"
+                aria-label={
+                  miniSession.isPaused
+                    ? t("session.resume")
+                    : t("session.pause")
+                }
+              >
+                {miniSession.isPaused ? (
+                  <Play className="h-4 w-4" />
+                ) : (
+                  <Pause className="h-4 w-4" />
+                )}
+              </button>
+            </TooltipTrigger>
+            <TooltipContent>
+              {miniSession.isPaused ? t("session.resume") : t("session.pause")}
+            </TooltipContent>
+          </Tooltip>
 
-          <button
-            onClick={handleStop}
-            className="rounded-full p-1.5 text-muted-foreground hover:text-destructive transition-colors focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-ring focus-visible:ring-offset-2"
-            aria-label={t("session.stopAndSave")}
-          >
-            <X className="h-4 w-4" />
-          </button>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <button
+                onClick={handleStop}
+                className="rounded-full p-1.5 text-muted-foreground hover:text-destructive transition-colors focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-ring focus-visible:ring-offset-2"
+                aria-label={t("session.stopAndSave")}
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </TooltipTrigger>
+            <TooltipContent>{t("session.stopAndSave")}</TooltipContent>
+          </Tooltip>
         </div>
       </div>
     </div>
