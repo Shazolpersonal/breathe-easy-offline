@@ -1,7 +1,7 @@
 export interface RhythmUpdate {
-  volume: number;       // 0-1 normalized
+  volume: number; // 0-1 normalized
   isBreathing: boolean; // true = sound detected above threshold
-  accuracy: number;     // 0-100 rhythm accuracy
+  accuracy: number; // 0-100 rhythm accuracy
   phase: "inhale" | "exhale" | "quiet";
 }
 
@@ -36,15 +36,22 @@ export class BreathDetector {
   private phaseStartTime = 0;
   private accuracySamples: number[] = [];
 
-  private readonly THRESHOLD = 0.08;        // Volume threshold for breath detection
-  private readonly SMOOTHING = 0.3;          // EMA smoothing factor
-  private readonly HISTORY_SIZE = 60;        // ~1 second at 60fps
+  private readonly THRESHOLD = 0.08; // Volume threshold for breath detection
+  private readonly SMOOTHING = 0.3; // EMA smoothing factor
+  private readonly HISTORY_SIZE = 60; // ~1 second at 60fps
 
-  get currentVolume() { return this._volume; }
-  get isBreathing() { return this._isBreathing; }
+  get currentVolume() {
+    return this._volume;
+  }
+  get isBreathing() {
+    return this._isBreathing;
+  }
   get rhythmAccuracy() {
     if (this.accuracySamples.length === 0) return 0;
-    return Math.round(this.accuracySamples.reduce((a, b) => a + b, 0) / this.accuracySamples.length);
+    return Math.round(
+      this.accuracySamples.reduce((a, b) => a + b, 0) /
+        this.accuracySamples.length,
+    );
   }
 
   onRhythmUpdate(callback: RhythmCallback) {
@@ -71,8 +78,11 @@ export class BreathDetector {
     const now = Date.now();
     if (this.phaseStartTime > 0) {
       const actualDuration = (now - this.phaseStartTime) / 1000;
-      const expected = this.expectedPhaseDurations[this.currentExpectedIndex % this.expectedPhaseDurations.length];
-      
+      const expected =
+        this.expectedPhaseDurations[
+          this.currentExpectedIndex % this.expectedPhaseDurations.length
+        ];
+
       if (expected > 0) {
         // Accuracy = how close actual breathing aligns with expected timing
         const deviation = Math.abs(actualDuration - expected) / expected;
@@ -101,7 +111,7 @@ export class BreathDetector {
       this.loop();
       return true;
     } catch (error) {
-      console.error('[BreathDetector] Failed to start:', error);
+      console.error("[BreathDetector] Failed to start:", error);
       return false;
     }
   }
@@ -111,13 +121,13 @@ export class BreathDetector {
     this.rafId = null;
 
     if (this.stream) {
-      this.stream.getTracks().forEach(t => t.stop());
+      this.stream.getTracks().forEach((t) => t.stop());
       this.stream = null;
     }
 
     if (this.audioContext) {
       this.audioContext.close().catch((error) => {
-        console.error('[BreathDetector] Error closing AudioContext:', error);
+        console.error("[BreathDetector] Error closing AudioContext:", error);
       });
       this.audioContext = null;
     }
@@ -150,7 +160,8 @@ export class BreathDetector {
 
     // Track volume history
     this.volumeHistory.push(this._volume);
-    if (this.volumeHistory.length > this.HISTORY_SIZE) this.volumeHistory.shift();
+    if (this.volumeHistory.length > this.HISTORY_SIZE)
+      this.volumeHistory.shift();
 
     // Detect breathing state
     const isAbove = this._volume > this.THRESHOLD;
@@ -168,17 +179,19 @@ export class BreathDetector {
       // Loud → quiet = exhale end or hold
       this._phase = "quiet";
       this.lastTransitionTime = now;
-    } else if (isAbove && (now - this.lastTransitionTime) > 500) {
+    } else if (isAbove && now - this.lastTransitionTime > 500) {
       // Sustained sound = could be exhale
-      const recentAvg = this.volumeHistory.length > 10
-        ? this.volumeHistory.slice(-10).reduce((a, b) => a + b, 0) / 10
-        : this._volume;
-      
+      const recentAvg =
+        this.volumeHistory.length > 10
+          ? this.volumeHistory.slice(-10).reduce((a, b) => a + b, 0) / 10
+          : this._volume;
+
       // If volume is declining, likely exhale
-      const oldAvg = this.volumeHistory.length > 20
-        ? this.volumeHistory.slice(-20, -10).reduce((a, b) => a + b, 0) / 10
-        : recentAvg;
-      
+      const oldAvg =
+        this.volumeHistory.length > 20
+          ? this.volumeHistory.slice(-20, -10).reduce((a, b) => a + b, 0) / 10
+          : recentAvg;
+
       this._phase = recentAvg < oldAvg ? "exhale" : "inhale";
     }
 
@@ -186,13 +199,21 @@ export class BreathDetector {
 
     // Calculate real-time accuracy based on volume pattern matching
     let accuracy = this.rhythmAccuracy;
-    if (this.transitionTimes.length >= 3 && this.expectedPhaseDurations.length > 0) {
+    if (
+      this.transitionTimes.length >= 3 &&
+      this.expectedPhaseDurations.length > 0
+    ) {
       const intervals: number[] = [];
       for (let i = 1; i < this.transitionTimes.length; i++) {
-        intervals.push((this.transitionTimes[i] - this.transitionTimes[i - 1]) / 1000);
+        intervals.push(
+          (this.transitionTimes[i] - this.transitionTimes[i - 1]) / 1000,
+        );
       }
-      const avgInterval = intervals.reduce((a, b) => a + b, 0) / intervals.length;
-      const expectedCycle = this.expectedPhaseDurations.reduce((a, b) => a + b, 0) / (this.expectedPhaseDurations.length / 2);
+      const avgInterval =
+        intervals.reduce((a, b) => a + b, 0) / intervals.length;
+      const expectedCycle =
+        this.expectedPhaseDurations.reduce((a, b) => a + b, 0) /
+        (this.expectedPhaseDurations.length / 2);
       const deviation = Math.abs(avgInterval - expectedCycle) / expectedCycle;
       accuracy = Math.max(0, Math.min(100, Math.round(100 * (1 - deviation))));
     }

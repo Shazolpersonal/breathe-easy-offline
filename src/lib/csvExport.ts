@@ -2,7 +2,7 @@ import { getSessions } from "./storage";
 import { PRESET_TECHNIQUES } from "./techniques";
 import { getCustomTechniques } from "./storage";
 
-const FORMULA_CHARS = ['=', '+', '-', '@', '\t', '\r'];
+const FORMULA_CHARS = ["=", "+", "-", "@", "\t", "\r"];
 
 function escapeCSV(value: string): string {
   // Security: Prepend a single quote to prevent spreadsheet/CSV injection (DDE)
@@ -11,7 +11,11 @@ function escapeCSV(value: string): string {
   if (sanitized.length > 0 && FORMULA_CHARS.includes(sanitized[0])) {
     sanitized = "'" + sanitized;
   }
-  if (sanitized.includes(",") || sanitized.includes('"') || sanitized.includes("\n")) {
+  if (
+    sanitized.includes(",") ||
+    sanitized.includes('"') ||
+    sanitized.includes("\n")
+  ) {
     return `"${sanitized.replace(/"/g, '""')}"`;
   }
   return sanitized;

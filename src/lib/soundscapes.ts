@@ -18,19 +18,28 @@ export class SoundscapeEngine {
     this.ctx = new AudioContext();
     this.masterGain = this.ctx.createGain();
     this.masterGain.gain.setValueAtTime(0, this.ctx.currentTime);
-    this.masterGain.gain.linearRampToValueAtTime(volume, this.ctx.currentTime + 1);
+    this.masterGain.gain.linearRampToValueAtTime(
+      volume,
+      this.ctx.currentTime + 1,
+    );
     this.masterGain.connect(this.ctx.destination);
 
     switch (type) {
-      case "rain": this.createRain(); break;
-      case "ocean": this.createOcean(); break;
-      case "wind": this.createWind(); break;
+      case "rain":
+        this.createRain();
+        break;
+      case "ocean":
+        this.createOcean();
+        break;
+      case "wind":
+        this.createWind();
+        break;
     }
   }
 
   stop() {
     // Clear all scheduled timeouts immediately
-    this.timeoutIds.forEach(id => clearTimeout(id));
+    this.timeoutIds.forEach((id) => clearTimeout(id));
     this.timeoutIds = [];
 
     if (this.animFrameId) {
@@ -52,24 +61,38 @@ export class SoundscapeEngine {
 
     // Fade out and clean up old resources
     if (oldGain && oldCtx) {
-      try { oldGain.gain.linearRampToValueAtTime(0, oldCtx.currentTime + 0.5); } catch { /* ignore */ }
+      try {
+        oldGain.gain.linearRampToValueAtTime(0, oldCtx.currentTime + 0.5);
+      } catch {
+        /* ignore */
+      }
     }
 
     setTimeout(() => {
-      oldNodes.forEach(n => {
+      oldNodes.forEach((n) => {
         try {
-          if (n instanceof AudioBufferSourceNode || n instanceof OscillatorNode) n.stop();
+          if (n instanceof AudioBufferSourceNode || n instanceof OscillatorNode)
+            n.stop();
           n.disconnect();
-        } catch { /* empty */ }
+        } catch {
+          /* empty */
+        }
       });
-      try { oldCtx?.close(); } catch { /* empty */ }
+      try {
+        oldCtx?.close();
+      } catch {
+        /* empty */
+      }
     }, 600);
   }
 
   setVolume(v: number) {
     this.targetVolume = v;
     if (this.masterGain && this.ctx) {
-      this.masterGain.gain.linearRampToValueAtTime(v, this.ctx.currentTime + 0.1);
+      this.masterGain.gain.linearRampToValueAtTime(
+        v,
+        this.ctx.currentTime + 0.1,
+      );
     }
   }
 
@@ -89,7 +112,9 @@ export class SoundscapeEngine {
     }
   }
 
-  getType() { return this.currentType; }
+  getType() {
+    return this.currentType;
+  }
 
   private scheduleTimeout(fn: () => void, delay: number) {
     const id = setTimeout(() => {
@@ -102,7 +127,9 @@ export class SoundscapeEngine {
     return id;
   }
 
-  private createNoiseBuffer(type: "white" | "brown" | "pink"): AudioBufferSourceNode {
+  private createNoiseBuffer(
+    type: "white" | "brown" | "pink",
+  ): AudioBufferSourceNode {
     const ctx = this.ctx!;
     const bufferSize = ctx.sampleRate * 4;
     const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
@@ -118,15 +145,21 @@ export class SoundscapeEngine {
         last = data[i];
       }
     } else {
-      let b0 = 0, b1 = 0, b2 = 0, b3 = 0, b4 = 0, b5 = 0, b6 = 0;
+      let b0 = 0,
+        b1 = 0,
+        b2 = 0,
+        b3 = 0,
+        b4 = 0,
+        b5 = 0,
+        b6 = 0;
       for (let i = 0; i < bufferSize; i++) {
         const w = Math.random() * 2 - 1;
         b0 = 0.99886 * b0 + w * 0.0555179;
         b1 = 0.99332 * b1 + w * 0.0750759;
-        b2 = 0.96900 * b2 + w * 0.1538520;
-        b3 = 0.86650 * b3 + w * 0.3104856;
-        b4 = 0.55000 * b4 + w * 0.5329522;
-        b5 = -0.7616 * b5 - w * 0.0168980;
+        b2 = 0.969 * b2 + w * 0.153852;
+        b3 = 0.8665 * b3 + w * 0.3104856;
+        b4 = 0.55 * b4 + w * 0.5329522;
+        b5 = -0.7616 * b5 - w * 0.016898;
         data[i] = (b0 + b1 + b2 + b3 + b4 + b5 + b6 + w * 0.5362) * 0.11;
         b6 = w * 0.115926;
       }
@@ -167,7 +200,10 @@ export class SoundscapeEngine {
         osc.frequency.value = 2000 + Math.random() * 3000;
         const env = ctx.createGain();
         env.gain.setValueAtTime(0, now + delay);
-        env.gain.linearRampToValueAtTime(0.03 + Math.random() * 0.04, now + delay + 0.005);
+        env.gain.linearRampToValueAtTime(
+          0.03 + Math.random() * 0.04,
+          now + delay + 0.005,
+        );
         env.gain.exponentialRampToValueAtTime(0.001, now + delay + 0.08);
         osc.connect(env).connect(gain);
         osc.start(now + delay);
@@ -245,7 +281,10 @@ export class SoundscapeEngine {
     const modulateCutoff = () => {
       if (!this.ctx || this.currentType !== "wind") return;
       const target = 300 + Math.random() * 800;
-      lp.frequency.linearRampToValueAtTime(target, ctx.currentTime + 3 + Math.random() * 4);
+      lp.frequency.linearRampToValueAtTime(
+        target,
+        ctx.currentTime + 3 + Math.random() * 4,
+      );
       this.scheduleTimeout(modulateCutoff, 3000 + Math.random() * 4000);
     };
     modulateCutoff();
@@ -254,8 +293,14 @@ export class SoundscapeEngine {
       if (!this.ctx || this.currentType !== "wind") return;
       const now = ctx.currentTime;
       const delay = 4 + Math.random() * 8;
-      windGain.gain.linearRampToValueAtTime(0.9 + Math.random() * 0.3, now + delay);
-      windGain.gain.linearRampToValueAtTime(0.7, now + delay + 2 + Math.random() * 2);
+      windGain.gain.linearRampToValueAtTime(
+        0.9 + Math.random() * 0.3,
+        now + delay,
+      );
+      windGain.gain.linearRampToValueAtTime(
+        0.7,
+        now + delay + 2 + Math.random() * 2,
+      );
       this.scheduleTimeout(scheduleGust, (delay + 4) * 1000);
     };
     scheduleGust();

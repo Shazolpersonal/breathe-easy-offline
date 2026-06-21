@@ -10,11 +10,17 @@ export interface ShareCardData {
 }
 
 function getComputedHSL(varName: string): string {
-  const val = getComputedStyle(document.documentElement).getPropertyValue(varName).trim();
+  const val = getComputedStyle(document.documentElement)
+    .getPropertyValue(varName)
+    .trim();
   return val ? `hsl(${val})` : "#888";
 }
 
-function tCard(key: string, lang: string, params?: Record<string, string | number>): string {
+function tCard(
+  key: string,
+  lang: string,
+  params?: Record<string, string | number>,
+): string {
   const map = lang === "bn" ? bn : en;
   let str = map[key] ?? en[key] ?? key;
   if (params) {
@@ -25,8 +31,12 @@ function tCard(key: string, lang: string, params?: Record<string, string | numbe
   return str;
 }
 
-export async function generateSessionCard(data: ShareCardData, lang: string = "en"): Promise<Blob> {
-  const W = 1080, H = 1080;
+export async function generateSessionCard(
+  data: ShareCardData,
+  lang: string = "en",
+): Promise<Blob> {
+  const W = 1080,
+    H = 1080;
   const canvas = document.createElement("canvas");
   canvas.width = W;
   canvas.height = H;
@@ -65,21 +75,35 @@ export async function generateSessionCard(data: ShareCardData, lang: string = "e
 
   ctx.font = "bold 64px system-ui, -apple-system, sans-serif";
   ctx.fillStyle = getComputedHSL("--foreground");
-  ctx.fillText(`${data.durationMinutes} ${tCard("common.min", lang)}`, W / 2, 560);
+  ctx.fillText(
+    `${data.durationMinutes} ${tCard("common.min", lang)}`,
+    W / 2,
+    560,
+  );
 
   ctx.font = "28px system-ui, -apple-system, sans-serif";
   ctx.fillStyle = getComputedHSL("--muted-foreground");
-  ctx.fillText(tCard("share.cyclesCompleted", lang, { cycles: data.cycles }), W / 2, 610);
+  ctx.fillText(
+    tCard("share.cyclesCompleted", lang, { cycles: data.cycles }),
+    W / 2,
+    610,
+  );
 
   if (data.calmScore != null) {
     ctx.font = "bold 36px system-ui, -apple-system, sans-serif";
     ctx.fillStyle = primary;
-    ctx.fillText(tCard("share.calmScore", lang, { score: data.calmScore }), W / 2, 680);
+    ctx.fillText(
+      tCard("share.calmScore", lang, { score: data.calmScore }),
+      W / 2,
+      680,
+    );
   }
 
   const locale = lang === "bn" ? "bn" : "en";
   const dateStr = new Date(data.date).toLocaleDateString(locale, {
-    month: "long", day: "numeric", year: "numeric",
+    month: "long",
+    day: "numeric",
+    year: "numeric",
   });
   ctx.font = "24px system-ui, -apple-system, sans-serif";
   ctx.fillStyle = getComputedHSL("--muted-foreground");
@@ -96,7 +120,10 @@ export async function generateSessionCard(data: ShareCardData, lang: string = "e
   });
 }
 
-export async function shareOrDownloadCard(data: ShareCardData, lang: string = "en") {
+export async function shareOrDownloadCard(
+  data: ShareCardData,
+  lang: string = "en",
+) {
   const blob = await generateSessionCard(data, lang);
   const file = new File([blob], "muhurto-session.png", { type: "image/png" });
 
@@ -104,11 +131,16 @@ export async function shareOrDownloadCard(data: ShareCardData, lang: string = "e
     try {
       await navigator.share({
         title: tCard("share.shareTitle", lang),
-        text: tCard("share.shareText", lang, { min: data.durationMinutes, technique: data.techniqueName }),
+        text: tCard("share.shareText", lang, {
+          min: data.durationMinutes,
+          technique: data.techniqueName,
+        }),
         files: [file],
       });
       return;
-    } catch { /* user cancelled */ }
+    } catch {
+      /* user cancelled */
+    }
   }
 
   const url = URL.createObjectURL(blob);

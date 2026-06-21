@@ -1,6 +1,6 @@
 // ─── World-Class Voice Engine (Web Speech API — Zero Cost, Offline Forever) ───
-import { TextToSpeech } from '@capacitor-community/text-to-speech';
-import { Capacitor } from '@capacitor/core';
+import { TextToSpeech } from "@capacitor-community/text-to-speech";
+import { Capacitor } from "@capacitor/core";
 
 let synth: SpeechSynthesis | null = null;
 let voicesLoaded = false;
@@ -39,14 +39,22 @@ export interface VoiceInfo {
 }
 
 /** Get all available voices grouped for display */
-export function getAvailableVoices(): { en: VoiceInfo[]; bn: VoiceInfo[]; other: VoiceInfo[] } {
+export function getAvailableVoices(): {
+  en: VoiceInfo[];
+  bn: VoiceInfo[];
+  other: VoiceInfo[];
+} {
   const voices = loadVoices();
   const en: VoiceInfo[] = [];
   const bn: VoiceInfo[] = [];
   const other: VoiceInfo[] = [];
 
   for (const v of voices) {
-    const info: VoiceInfo = { name: v.name, lang: v.lang, label: `${v.name} (${v.lang})` };
+    const info: VoiceInfo = {
+      name: v.name,
+      lang: v.lang,
+      label: `${v.name} (${v.lang})`,
+    };
     if (v.lang.startsWith("en")) en.push(info);
     else if (v.lang.startsWith("bn")) bn.push(info);
     else other.push(info);
@@ -57,11 +65,14 @@ export function getAvailableVoices(): { en: VoiceInfo[]; bn: VoiceInfo[]; other:
 /** Check if any Bengali voice is available on the device */
 export function hasBengaliVoice(): boolean {
   const voices = loadVoices();
-  return voices.some(v => v.lang.startsWith("bn"));
+  return voices.some((v) => v.lang.startsWith("bn"));
 }
 
 /** Resolve a voice by saved name, with smart fallback */
-function resolveVoice(voiceName: string | null, lang: string): SpeechSynthesisVoice | null {
+function resolveVoice(
+  voiceName: string | null,
+  lang: string,
+): SpeechSynthesisVoice | null {
   const voices = loadVoices();
   if (voices.length === 0) return null;
 
@@ -69,22 +80,23 @@ function resolveVoice(voiceName: string | null, lang: string): SpeechSynthesisVo
 
   // 1. Try exact name match
   if (voiceName) {
-    const exact = voices.find(v => v.name === voiceName);
+    const exact = voices.find((v) => v.name === voiceName);
     if (exact) return exact;
   }
 
   // 2. Try language match with "female" preference (calming voice)
   const femaleMatch = voices.find(
-    v => v.lang.startsWith(langPrefix) && v.name.toLowerCase().includes("female")
+    (v) =>
+      v.lang.startsWith(langPrefix) && v.name.toLowerCase().includes("female"),
   );
   if (femaleMatch) return femaleMatch;
 
   // 3. Any voice in the target language
-  const langMatch = voices.find(v => v.lang.startsWith(langPrefix));
+  const langMatch = voices.find((v) => v.lang.startsWith(langPrefix));
   if (langMatch) return langMatch;
 
   // 4. Fallback to any English voice
-  const enFallback = voices.find(v => v.lang.startsWith("en"));
+  const enFallback = voices.find((v) => v.lang.startsWith("en"));
   if (enFallback) return enFallback;
 
   // 5. Last resort
@@ -101,7 +113,10 @@ export interface SpeakOptions {
   lang?: string;
 }
 
-export async function speak(text: string, options: SpeakOptions = {}): Promise<void> {
+export async function speak(
+  text: string,
+  options: SpeakOptions = {},
+): Promise<void> {
   const lang = options.lang ?? "en";
   const locale = lang === "bn" ? "bn-BD" : "en-US";
 
@@ -136,7 +151,11 @@ export async function speak(text: string, options: SpeakOptions = {}): Promise<v
 }
 
 /** Legacy speak function for backward compatibility */
-export function speakLegacy(text: string, rate = 0.9, lang: string = "en"): void {
+export function speakLegacy(
+  text: string,
+  rate = 0.9,
+  lang: string = "en",
+): void {
   speak(text, { rate, lang });
 }
 
@@ -153,7 +172,13 @@ export async function stopSpeaking(): Promise<void> {
 }
 
 /** Preview a voice with a sample phrase */
-export function previewVoice(voiceName: string, lang: string, pitch: number, rate: number, volume: number): void {
+export function previewVoice(
+  voiceName: string,
+  lang: string,
+  pitch: number,
+  rate: number,
+  volume: number,
+): void {
   const sampleEn = "Take a deep breath and relax.";
   const sampleBn = "গভীর শ্বাস নিন এবং শিথিল হন।";
   speak(lang.startsWith("bn") ? sampleBn : sampleEn, {
@@ -168,27 +193,40 @@ export function previewVoice(voiceName: string, lang: string, pitch: number, rat
 // ─── Session Voice Cues ───
 
 export function speakSessionStart(lang: string, options: SpeakOptions): void {
-  const text = lang === "bn"
-    ? "শুরু করা যাক। আরামদায়ক অবস্থানে বসুন।"
-    : "Let's begin. Find a comfortable position.";
+  const text =
+    lang === "bn"
+      ? "শুরু করা যাক। আরামদায়ক অবস্থানে বসুন।"
+      : "Let's begin. Find a comfortable position.";
   speak(text, { ...options, lang });
 }
 
-export function speakSessionEnd(durationMin: number, lang: string, options: SpeakOptions): void {
-  const text = lang === "bn"
-    ? `সাবাশ! আপনি ${durationMin} মিনিটের শ্বাস-প্রশ্বাস সম্পন্ন করেছেন।`
-    : `Well done. You completed ${durationMin} minutes of breathing.`;
+export function speakSessionEnd(
+  durationMin: number,
+  lang: string,
+  options: SpeakOptions,
+): void {
+  const text =
+    lang === "bn"
+      ? `সাবাশ! আপনি ${durationMin} মিনিটের শ্বাস-প্রশ্বাস সম্পন্ন করেছেন।`
+      : `Well done. You completed ${durationMin} minutes of breathing.`;
   speak(text, { ...options, lang });
 }
 
-export function speakCycleMilestone(cycle: number, lang: string, options: SpeakOptions): void {
-  const text = lang === "bn"
-    ? `${cycle} চক্র সম্পন্ন।`
-    : `Cycle ${cycle} complete.`;
+export function speakCycleMilestone(
+  cycle: number,
+  lang: string,
+  options: SpeakOptions,
+): void {
+  const text =
+    lang === "bn" ? `${cycle} চক্র সম্পন্ন।` : `Cycle ${cycle} complete.`;
   speak(text, { ...options, lang });
 }
 
-export function speakCountdown(count: number, lang: string, options: SpeakOptions): void {
+export function speakCountdown(
+  count: number,
+  lang: string,
+  options: SpeakOptions,
+): void {
   // Use Bengali digits for bn
   const numText = lang === "bn" ? toBengaliDigits(count) : String(count);
   speak(numText, { ...options, lang, rate: (options.rate ?? 0.9) * 1.1 });
@@ -196,7 +234,10 @@ export function speakCountdown(count: number, lang: string, options: SpeakOption
 
 function toBengaliDigits(n: number): string {
   const bnDigits = ["০", "১", "২", "৩", "৪", "৫", "৬", "৭", "৮", "৯"];
-  return String(n).split("").map(d => bnDigits[parseInt(d)] ?? d).join("");
+  return String(n)
+    .split("")
+    .map((d) => bnDigits[parseInt(d)] ?? d)
+    .join("");
 }
 
 // ─── Encouragement Phrases ───

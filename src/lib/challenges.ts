@@ -1,8 +1,15 @@
 import { getTodaySessions, getTodayMinutes, getSessions } from "./storage";
 import { getXPState } from "./xp";
+import { secureJsonReviver } from "@/lib/utils";
 
 export type ChallengeTier = "easy" | "medium" | "hard";
-export type ChallengeCategory = "duration" | "sessions" | "quality" | "timing" | "exploration" | "endurance";
+export type ChallengeCategory =
+  | "duration"
+  | "sessions"
+  | "quality"
+  | "timing"
+  | "exploration"
+  | "endurance";
 
 export interface DailyChallenge {
   id: string;
@@ -54,7 +61,9 @@ function get7DayAverage(key: "sessions" | "minutes" | "cycles"): number {
     case "sessions":
       return recent.length / daysActive;
     case "minutes":
-      return recent.reduce((sum, s) => sum + s.durationSeconds, 0) / 60 / daysActive;
+      return (
+        recent.reduce((sum, s) => sum + s.durationSeconds, 0) / 60 / daysActive
+      );
     case "cycles":
       return recent.reduce((sum, s) => sum + s.completedCycles, 0) / daysActive;
   }
@@ -103,7 +112,8 @@ const CHALLENGE_POOL: ChallengeTemplate[] = [
     tier: "easy",
     category: "endurance",
     adaptiveKey: "cycles",
-    getProgress: () => getTodaySessions().reduce((sum, s) => sum + s.completedCycles, 0),
+    getProgress: () =>
+      getTodaySessions().reduce((sum, s) => sum + s.completedCycles, 0),
   },
   {
     title: "Session before noon",
@@ -112,7 +122,8 @@ const CHALLENGE_POOL: ChallengeTemplate[] = [
     unit: "",
     tier: "easy",
     category: "timing",
-    getProgress: () => getTodaySessions().some((s) => new Date(s.date).getHours() < 12) ? 1 : 0,
+    getProgress: () =>
+      getTodaySessions().some((s) => new Date(s.date).getHours() < 12) ? 1 : 0,
   },
   {
     title: "Calm score > 50",
@@ -121,7 +132,8 @@ const CHALLENGE_POOL: ChallengeTemplate[] = [
     unit: "",
     tier: "easy",
     category: "quality",
-    getProgress: () => getTodaySessions().some((s) => (s.calmScore ?? 0) > 50) ? 1 : 0,
+    getProgress: () =>
+      getTodaySessions().some((s) => (s.calmScore ?? 0) > 50) ? 1 : 0,
   },
   {
     title: "Session longer than 2 min",
@@ -130,7 +142,8 @@ const CHALLENGE_POOL: ChallengeTemplate[] = [
     unit: "",
     tier: "easy",
     category: "duration",
-    getProgress: () => getTodaySessions().some((s) => s.durationSeconds >= 120) ? 1 : 0,
+    getProgress: () =>
+      getTodaySessions().some((s) => s.durationSeconds >= 120) ? 1 : 0,
   },
   {
     title: "Breathe for 5 minutes",
@@ -171,7 +184,8 @@ const CHALLENGE_POOL: ChallengeTemplate[] = [
     unit: "",
     tier: "medium",
     category: "quality",
-    getProgress: () => getTodaySessions().some((s) => (s.calmScore ?? 0) > 70) ? 1 : 0,
+    getProgress: () =>
+      getTodaySessions().some((s) => (s.calmScore ?? 0) > 70) ? 1 : 0,
   },
   {
     title: "Complete 10 cycles",
@@ -181,7 +195,8 @@ const CHALLENGE_POOL: ChallengeTemplate[] = [
     tier: "medium",
     category: "endurance",
     adaptiveKey: "cycles",
-    getProgress: () => getTodaySessions().reduce((sum, s) => sum + s.completedCycles, 0),
+    getProgress: () =>
+      getTodaySessions().reduce((sum, s) => sum + s.completedCycles, 0),
   },
   {
     title: "Session before 8 AM",
@@ -190,7 +205,8 @@ const CHALLENGE_POOL: ChallengeTemplate[] = [
     unit: "",
     tier: "medium",
     category: "timing",
-    getProgress: () => getTodaySessions().some((s) => new Date(s.date).getHours() < 8) ? 1 : 0,
+    getProgress: () =>
+      getTodaySessions().some((s) => new Date(s.date).getHours() < 8) ? 1 : 0,
   },
   {
     title: "Try 2 different techniques",
@@ -199,7 +215,8 @@ const CHALLENGE_POOL: ChallengeTemplate[] = [
     unit: "techniques",
     tier: "medium",
     category: "exploration",
-    getProgress: () => new Set(getTodaySessions().map((s) => s.techniqueId)).size,
+    getProgress: () =>
+      new Set(getTodaySessions().map((s) => s.techniqueId)).size,
   },
   {
     title: "Improve mood in a session",
@@ -209,7 +226,14 @@ const CHALLENGE_POOL: ChallengeTemplate[] = [
     tier: "medium",
     category: "quality",
     getProgress: () =>
-      getTodaySessions().some((s) => s.moodBefore != null && s.moodAfter != null && s.moodAfter > s.moodBefore) ? 1 : 0,
+      getTodaySessions().some(
+        (s) =>
+          s.moodBefore != null &&
+          s.moodAfter != null &&
+          s.moodAfter > s.moodBefore,
+      )
+        ? 1
+        : 0,
   },
   {
     title: "Session longer than 5 min",
@@ -218,7 +242,8 @@ const CHALLENGE_POOL: ChallengeTemplate[] = [
     unit: "",
     tier: "medium",
     category: "duration",
-    getProgress: () => getTodaySessions().some((s) => s.durationSeconds >= 300) ? 1 : 0,
+    getProgress: () =>
+      getTodaySessions().some((s) => s.durationSeconds >= 300) ? 1 : 0,
   },
 
   // === HARD ===
@@ -239,7 +264,8 @@ const CHALLENGE_POOL: ChallengeTemplate[] = [
     unit: "",
     tier: "hard",
     category: "quality",
-    getProgress: () => getTodaySessions().some((s) => (s.calmScore ?? 0) > 85) ? 1 : 0,
+    getProgress: () =>
+      getTodaySessions().some((s) => (s.calmScore ?? 0) > 85) ? 1 : 0,
   },
   {
     title: "Complete 20 cycles",
@@ -249,7 +275,8 @@ const CHALLENGE_POOL: ChallengeTemplate[] = [
     tier: "hard",
     category: "endurance",
     adaptiveKey: "cycles",
-    getProgress: () => getTodaySessions().reduce((sum, s) => sum + s.completedCycles, 0),
+    getProgress: () =>
+      getTodaySessions().reduce((sum, s) => sum + s.completedCycles, 0),
   },
   {
     title: "Complete 5 sessions",
@@ -273,9 +300,13 @@ const CHALLENGE_POOL: ChallengeTemplate[] = [
       const today = new Date().toISOString().substring(0, 10);
       const todaySessions = allSessions.filter((s) => s.date.startsWith(today));
       const historicalIds = new Set(
-        allSessions.filter((s) => !s.date.startsWith(today)).map((s) => s.techniqueId)
+        allSessions
+          .filter((s) => !s.date.startsWith(today))
+          .map((s) => s.techniqueId),
       );
-      return todaySessions.some((s) => !historicalIds.has(s.techniqueId)) ? 1 : 0;
+      return todaySessions.some((s) => !historicalIds.has(s.techniqueId))
+        ? 1
+        : 0;
     },
   },
   {
@@ -285,7 +316,8 @@ const CHALLENGE_POOL: ChallengeTemplate[] = [
     unit: "",
     tier: "hard",
     category: "endurance",
-    getProgress: () => getTodaySessions().some((s) => s.completedCycles >= 15) ? 1 : 0,
+    getProgress: () =>
+      getTodaySessions().some((s) => s.completedCycles >= 15) ? 1 : 0,
   },
   {
     title: "Mood boost of +2 or more",
@@ -296,7 +328,10 @@ const CHALLENGE_POOL: ChallengeTemplate[] = [
     category: "quality",
     getProgress: () =>
       getTodaySessions().some(
-        (s) => s.moodBefore != null && s.moodAfter != null && s.moodAfter - s.moodBefore >= 2
+        (s) =>
+          s.moodBefore != null &&
+          s.moodAfter != null &&
+          s.moodAfter - s.moodBefore >= 2,
       )
         ? 1
         : 0,
@@ -308,7 +343,8 @@ const CHALLENGE_POOL: ChallengeTemplate[] = [
     unit: "",
     tier: "hard",
     category: "timing",
-    getProgress: () => getTodaySessions().some((s) => new Date(s.date).getHours() < 6) ? 1 : 0,
+    getProgress: () =>
+      getTodaySessions().some((s) => new Date(s.date).getHours() < 6) ? 1 : 0,
   },
 ];
 
@@ -357,13 +393,14 @@ export function getDailyChallenges(): DailyChallenge[] {
     const tier = getTierForSlot(slot as 0 | 1 | 2);
     // Filter pool by tier, excluding used categories
     const available = CHALLENGE_POOL.filter(
-      (c) => c.tier === tier && !usedCategories.has(c.category)
+      (c) => c.tier === tier && !usedCategories.has(c.category),
     );
 
     // Fallback: if no challenges available with unique category, relax constraint
-    const pool = available.length > 0
-      ? available
-      : CHALLENGE_POOL.filter((c) => c.tier === tier);
+    const pool =
+      available.length > 0
+        ? available
+        : CHALLENGE_POOL.filter((c) => c.tier === tier);
 
     if (pool.length === 0) continue;
 
@@ -394,7 +431,10 @@ export function getCompletedChallengeCount(): number {
 
 export function areAllChallengesComplete(): boolean {
   const challenges = getDailyChallenges();
-  return challenges.length > 0 && challenges.every((c) => c.getProgress() >= c.target);
+  return (
+    challenges.length > 0 &&
+    challenges.every((c) => c.getProgress() >= c.target)
+  );
 }
 
 // --- Challenge History ---
@@ -402,7 +442,7 @@ export function areAllChallengesComplete(): boolean {
 function getHistory(): ChallengeHistoryEntry[] {
   try {
     const raw = localStorage.getItem(HISTORY_KEY);
-    return raw ? JSON.parse(raw) : [];
+    return raw ? JSON.parse(raw, secureJsonReviver) : [];
   } catch {
     return [];
   }
@@ -442,7 +482,7 @@ export function getChallengeStreak(): number {
   if (history.length === 0) return 0;
 
   const completeDays = new Set(
-    history.filter((e) => e.completed >= e.total).map((e) => e.date)
+    history.filter((e) => e.completed >= e.total).map((e) => e.date),
   );
 
   const today = new Date();

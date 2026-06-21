@@ -1,3 +1,4 @@
+import { secureJsonReviver } from "@/lib/utils";
 export interface Reminder {
   id: string;
   time: string; // HH:MM
@@ -11,8 +12,10 @@ const STORAGE_KEY = "breathe_reminders";
 export function getReminders(): Reminder[] {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
-    return raw ? JSON.parse(raw) : [];
-  } catch { return []; }
+    return raw ? JSON.parse(raw, secureJsonReviver) : [];
+  } catch {
+    return [];
+  }
 }
 
 export function saveReminders(reminders: Reminder[]) {
@@ -27,13 +30,13 @@ export function addReminder(reminder: Reminder) {
 
 export function updateReminder(id: string, partial: Partial<Reminder>) {
   const all = getReminders();
-  const idx = all.findIndex(r => r.id === id);
+  const idx = all.findIndex((r) => r.id === id);
   if (idx >= 0) all[idx] = { ...all[idx], ...partial };
   saveReminders(all);
 }
 
 export function deleteReminder(id: string) {
-  saveReminders(getReminders().filter(r => r.id !== id));
+  saveReminders(getReminders().filter((r) => r.id !== id));
 }
 
 export async function requestNotificationPermission(): Promise<boolean> {
@@ -44,13 +47,16 @@ export async function requestNotificationPermission(): Promise<boolean> {
   return result === "granted";
 }
 
-export function getNotificationPermission(): NotificationPermission | "unsupported" {
+export function getNotificationPermission():
+  | NotificationPermission
+  | "unsupported" {
   if (!("Notification" in window)) return "unsupported";
   return Notification.permission;
 }
 
 export function sendNotification(title: string, body: string) {
-  if (!("Notification" in window) || Notification.permission !== "granted") return;
+  if (!("Notification" in window) || Notification.permission !== "granted")
+    return;
   new Notification(title, {
     body,
     icon: "/logo.png",
@@ -67,7 +73,9 @@ export function startReminderChecker() {
   // Reset fired set at midnight
   const resetAtMidnight = () => {
     const now = new Date();
-    const msToMidnight = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1).getTime() - now.getTime();
+    const msToMidnight =
+      new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1).getTime() -
+      now.getTime();
     setTimeout(() => {
       firedToday.clear();
       resetAtMidnight();
@@ -81,7 +89,7 @@ export function startReminderChecker() {
     const currentDay = now.getDay();
 
     const reminders = getReminders();
-    reminders.forEach(r => {
+    reminders.forEach((r) => {
       if (!r.enabled) return;
       if (!r.days.includes(currentDay)) return;
       if (r.time !== currentTime) return;

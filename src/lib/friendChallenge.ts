@@ -1,5 +1,5 @@
 import { getTodaySessions } from "./storage";
-import { sanitizeString } from "./utils";
+import { sanitizeString, secureJsonReviver } from "./utils";
 
 export interface FriendChallengeParams {
   techniqueId: string;
@@ -24,7 +24,7 @@ export function generateChallengeLink(params: FriendChallengeParams): string {
 }
 
 function isValidChallenge(obj: unknown): obj is FriendChallengeParams {
-  if (!obj || typeof obj !== 'object') return false;
+  if (!obj || typeof obj !== "object") return false;
   const c = obj as Record<string, unknown>;
 
   // Strict regex for ID and Date
@@ -32,30 +32,25 @@ function isValidChallenge(obj: unknown): obj is FriendChallengeParams {
   const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
 
   return (
-    typeof c.techniqueId === 'string' &&
+    typeof c.techniqueId === "string" &&
     c.techniqueId.length > 0 &&
     c.techniqueId.length <= 50 &&
     idRegex.test(c.techniqueId) &&
-
-    typeof c.techniqueName === 'string' &&
+    typeof c.techniqueName === "string" &&
     c.techniqueName.length > 0 &&
     c.techniqueName.length <= 100 &&
-
-    typeof c.challengerName === 'string' &&
+    typeof c.challengerName === "string" &&
     c.challengerName.length > 0 &&
     c.challengerName.length <= 80 &&
-
-    typeof c.targetMinutes === 'number' &&
+    typeof c.targetMinutes === "number" &&
     Number.isFinite(c.targetMinutes) &&
     c.targetMinutes >= 0 &&
     c.targetMinutes <= 120 &&
-
-    typeof c.targetCycles === 'number' &&
+    typeof c.targetCycles === "number" &&
     Number.isFinite(c.targetCycles) &&
     c.targetCycles >= 0 &&
     c.targetCycles <= 500 &&
-
-    typeof c.date === 'string' &&
+    typeof c.date === "string" &&
     c.date.length <= 10 &&
     dateRegex.test(c.date)
   );
@@ -72,7 +67,7 @@ export function parseChallengeFromURL(): FriendChallengeParams | null {
     const encoded = hash.slice("#challenge=".length);
     // Unicode-safe base64 decoding
     const decoded = decodeURIComponent(escape(atob(encoded)));
-    const parsed = JSON.parse(decoded);
+    const parsed = JSON.parse(decoded, secureJsonReviver);
 
     if (!isValidChallenge(parsed)) return null;
 
@@ -88,10 +83,16 @@ export function parseChallengeFromURL(): FriendChallengeParams | null {
 }
 
 export function clearChallengeHash(): void {
-  history.replaceState(null, "", window.location.pathname + window.location.search);
+  history.replaceState(
+    null,
+    "",
+    window.location.pathname + window.location.search,
+  );
 }
 
-export function saveFriendChallenge(params: FriendChallengeParams): FriendChallenge {
+export function saveFriendChallenge(
+  params: FriendChallengeParams,
+): FriendChallenge {
   const challenges = getFriendChallenges();
   const challenge: FriendChallenge = {
     ...params,
@@ -106,7 +107,7 @@ export function saveFriendChallenge(params: FriendChallengeParams): FriendChalle
 export function getFriendChallenges(): FriendChallenge[] {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
-    return raw ? JSON.parse(raw) : [];
+    return raw ? JSON.parse(raw, secureJsonReviver) : [];
   } catch {
     return [];
   }
@@ -125,15 +126,20 @@ export function getChallengeProgress(challenge: FriendChallenge): {
   isComplete: boolean;
 } {
   const todaySessions = getTodaySessions().filter(
-    (s) => s.techniqueId === challenge.techniqueId
+    (s) => s.techniqueId === challenge.techniqueId,
   );
   const minutesDone = Math.round(
-    todaySessions.reduce((sum, s) => sum + s.durationSeconds, 0) / 60
+    todaySessions.reduce((sum, s) => sum + s.durationSeconds, 0) / 60,
   );
-  const cyclesDone = todaySessions.reduce((sum, s) => sum + s.completedCycles, 0);
+  const cyclesDone = todaySessions.reduce(
+    (sum, s) => sum + s.completedCycles,
+    0,
+  );
 
-  const minutesComplete = challenge.targetMinutes > 0 ? minutesDone >= challenge.targetMinutes : true;
-  const cyclesComplete = challenge.targetCycles > 0 ? cyclesDone >= challenge.targetCycles : true;
+  const minutesComplete =
+    challenge.targetMinutes > 0 ? minutesDone >= challenge.targetMinutes : true;
+  const cyclesComplete =
+    challenge.targetCycles > 0 ? cyclesDone >= challenge.targetCycles : true;
 
   return {
     minutesDone,
@@ -149,7 +155,9 @@ export function getActiveChallenges(): FriendChallenge[] {
   return getFriendChallenges().filter((c) => {
     // Active if accepted within the last 7 days (not just creation date)
     const acceptedDate = new Date(c.acceptedAt);
-    const daysSinceAccepted = Math.floor((today.getTime() - acceptedDate.getTime()) / 86400000);
+    const daysSinceAccepted = Math.floor(
+      (today.getTime() - acceptedDate.getTime()) / 86400000,
+    );
     return daysSinceAccepted < 7;
   });
 }

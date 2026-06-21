@@ -13,16 +13,29 @@ export function getSmartSuggestion(): Suggestion {
 
   if (hour >= 5 && hour < 12) {
     if (todayMin === 0) {
-      return { messageKey: "suggestion.morning.noSession", techniqueId: "equal-breathing" };
+      return {
+        messageKey: "suggestion.morning.noSession",
+        techniqueId: "equal-breathing",
+      };
     }
-    return { messageKey: "suggestion.morning.hasSession", techniqueId: "box-breathing" };
+    return {
+      messageKey: "suggestion.morning.hasSession",
+      techniqueId: "box-breathing",
+    };
   }
 
   if (hour >= 12 && hour < 17) {
     if (todayMin === 0) {
-      return { messageKey: "suggestion.afternoon.noSession", techniqueId: "box-breathing" };
+      return {
+        messageKey: "suggestion.afternoon.noSession",
+        techniqueId: "box-breathing",
+      };
     }
-    return { messageKey: "suggestion.afternoon.hasSession", messageParams: { min: todayMin }, techniqueId: "calm-breath" };
+    return {
+      messageKey: "suggestion.afternoon.hasSession",
+      messageParams: { min: todayMin },
+      techniqueId: "calm-breath",
+    };
   }
 
   if (hour >= 17 && hour < 22) {
@@ -32,6 +45,11 @@ export function getSmartSuggestion(): Suggestion {
   return { messageKey: "suggestion.night", techniqueId: "4-7-8" };
 }
 
-export function getSuggestionTechnique(suggestion: Suggestion): BreathingTechnique {
-  return PRESET_TECHNIQUES.find((t) => t.id === suggestion.techniqueId) || PRESET_TECHNIQUES[0];
+export function getSuggestionTechnique(
+  suggestion: Suggestion,
+): BreathingTechnique {
+  return (
+    PRESET_TECHNIQUES.find((t) => t.id === suggestion.techniqueId) ||
+    PRESET_TECHNIQUES[0]
+  );
 }

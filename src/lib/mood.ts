@@ -1,5 +1,6 @@
 import { PRESET_TECHNIQUES } from "./techniques";
 import { getCustomTechniques } from "./storage";
+import { secureJsonReviver } from "@/lib/utils";
 
 export interface MoodOption {
   value: number;
@@ -33,7 +34,7 @@ const MOOD_KEY = "breathe_mood_records";
 export function getMoodRecords(): MoodRecord[] {
   try {
     const raw = localStorage.getItem(MOOD_KEY);
-    return raw ? JSON.parse(raw) : [];
+    return raw ? JSON.parse(raw, secureJsonReviver) : [];
   } catch {
     return [];
   }
@@ -62,7 +63,7 @@ export function getMoodEmoji(value: number): string {
  */
 export function getBestTechniqueForMood(currentMood: number): string | null {
   const records = getMoodRecords().filter(
-    (r) => r.moodBefore === currentMood && r.moodAfter !== null
+    (r) => r.moodBefore === currentMood && r.moodAfter !== null,
   );
 
   if (records.length < 3) return null;
@@ -71,7 +72,7 @@ export function getBestTechniqueForMood(currentMood: number): string | null {
   const groups: Record<string, { total: number; count: number }> = {};
   for (const r of records) {
     if (!groups[r.techniqueId]) groups[r.techniqueId] = { total: 0, count: 0 };
-    groups[r.techniqueId].total += (r.moodAfter! - r.moodBefore);
+    groups[r.techniqueId].total += r.moodAfter! - r.moodBefore;
     groups[r.techniqueId].count++;
   }
 

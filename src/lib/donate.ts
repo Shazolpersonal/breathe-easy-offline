@@ -13,8 +13,11 @@ export interface DonateOptions {
 }
 
 function buildDonationUrl(opts: DonateOptions): string {
-  const name = opts.productName ??
-    (opts.language === "bn" ? "মুহূর্ত ব্রেথ সহায়তা" : "Muhurto Breath Donation");
+  const name =
+    opts.productName ??
+    (opts.language === "bn"
+      ? "মুহূর্ত ব্রেথ সহায়তা"
+      : "Muhurto Breath Donation");
 
   const params = new URLSearchParams({
     merchant: MERCHANT_CODE,
