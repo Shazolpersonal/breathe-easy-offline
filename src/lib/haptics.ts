@@ -1,5 +1,5 @@
-import { Haptics, ImpactStyle, NotificationType } from '@capacitor/haptics';
-import { Capacitor } from '@capacitor/core';
+import { Haptics, ImpactStyle, NotificationType } from "@capacitor/haptics";
+import { Capacitor } from "@capacitor/core";
 
 export async function vibrate(pattern: number | number[] = 50) {
   if (Capacitor.isNativePlatform()) {

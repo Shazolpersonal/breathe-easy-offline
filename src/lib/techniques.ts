@@ -1,7 +1,7 @@
 export interface PyramidConfig {
-  startMultiplier: number;  // e.g. 1.0
-  peakMultiplier: number;   // e.g. 1.5
-  steps: number;            // e.g. 5 (rounds up then down)
+  startMultiplier: number; // e.g. 1.0
+  peakMultiplier: number; // e.g. 1.5
+  steps: number; // e.g. 5 (rounds up then down)
 }
 
 export interface BreathingTechnique {
@@ -27,7 +27,8 @@ export const PRESET_TECHNIQUES: BreathingTechnique[] = [
   {
     id: "box-breathing",
     name: "Box Breathing",
-    description: "Equal timing for all four phases. Used by Navy SEALs to stay calm under pressure.",
+    description:
+      "Equal timing for all four phases. Used by Navy SEALs to stay calm under pressure.",
     benefits: ["Reduces stress", "Improves focus", "Calms nervous system"],
     difficulty: "beginner",
     phases: [
@@ -41,7 +42,8 @@ export const PRESET_TECHNIQUES: BreathingTechnique[] = [
   {
     id: "4-7-8",
     name: "4-7-8 Relaxation",
-    description: "Dr. Andrew Weil's technique. A natural tranquilizer for the nervous system.",
+    description:
+      "Dr. Andrew Weil's technique. A natural tranquilizer for the nervous system.",
     benefits: ["Promotes sleep", "Reduces anxiety", "Lowers heart rate"],
     difficulty: "beginner",
     phases: [
@@ -54,7 +56,8 @@ export const PRESET_TECHNIQUES: BreathingTechnique[] = [
   {
     id: "calm-breath",
     name: "Calm Breath",
-    description: "Simple 4-6 breathing pattern. Longer exhale activates the parasympathetic system.",
+    description:
+      "Simple 4-6 breathing pattern. Longer exhale activates the parasympathetic system.",
     benefits: ["Quick calm down", "Easy to learn", "Reduces tension"],
     difficulty: "beginner",
     phases: [
@@ -66,7 +69,8 @@ export const PRESET_TECHNIQUES: BreathingTechnique[] = [
   {
     id: "equal-breathing",
     name: "Equal Breathing",
-    description: "Sama Vritti — balance inhale and exhale for equilibrium and presence.",
+    description:
+      "Sama Vritti — balance inhale and exhale for equilibrium and presence.",
     benefits: ["Balances mind", "Improves concentration", "Grounds energy"],
     difficulty: "beginner",
     phases: [
@@ -78,7 +82,8 @@ export const PRESET_TECHNIQUES: BreathingTechnique[] = [
   {
     id: "wim-hof",
     name: "Wim Hof Method",
-    description: "Power breathing followed by a long retention. Energizing and invigorating.",
+    description:
+      "Power breathing followed by a long retention. Energizing and invigorating.",
     benefits: ["Boosts energy", "Strengthens immunity", "Increases willpower"],
     difficulty: "advanced",
     rounds: 3,
@@ -91,7 +96,8 @@ export const PRESET_TECHNIQUES: BreathingTechnique[] = [
   {
     id: "physiological-sigh",
     name: "Physiological Sigh",
-    description: "Stanford-researched double inhale followed by a long exhale. The fastest way to calm down in real-time.",
+    description:
+      "Stanford-researched double inhale followed by a long exhale. The fastest way to calm down in real-time.",
     benefits: ["Instant calm", "Reduces CO₂", "Science-backed"],
     difficulty: "beginner",
     phases: [
@@ -104,7 +110,8 @@ export const PRESET_TECHNIQUES: BreathingTechnique[] = [
   {
     id: "resonant-breathing",
     name: "Resonant Breathing",
-    description: "5.5 breaths per minute — the ideal rate for heart rate variability and nervous system balance.",
+    description:
+      "5.5 breaths per minute — the ideal rate for heart rate variability and nervous system balance.",
     benefits: ["Maximizes HRV", "Deep relaxation", "Emotional balance"],
     difficulty: "intermediate",
     phases: [
@@ -116,7 +123,8 @@ export const PRESET_TECHNIQUES: BreathingTechnique[] = [
   {
     id: "alternate-nostril",
     name: "Alternate Nostril (Nadi Shodhana)",
-    description: "Ancient yogic technique. Balances left and right brain hemispheres for mental clarity.",
+    description:
+      "Ancient yogic technique. Balances left and right brain hemispheres for mental clarity.",
     benefits: ["Balances hemispheres", "Reduces anxiety", "Enhances focus"],
     difficulty: "intermediate",
     phases: [
@@ -132,8 +140,13 @@ export const PRESET_TECHNIQUES: BreathingTechnique[] = [
   {
     id: "diaphragmatic",
     name: "Diaphragmatic Breathing",
-    description: "Deep belly breathing that strengthens the diaphragm. Foundation of all breathing practices.",
-    benefits: ["Strengthens diaphragm", "Lowers blood pressure", "Improves core stability"],
+    description:
+      "Deep belly breathing that strengthens the diaphragm. Foundation of all breathing practices.",
+    benefits: [
+      "Strengthens diaphragm",
+      "Lowers blood pressure",
+      "Improves core stability",
+    ],
     difficulty: "beginner",
     phases: [
       { type: "inhale", duration: 4, label: "Belly Rise" },
@@ -144,7 +157,8 @@ export const PRESET_TECHNIQUES: BreathingTechnique[] = [
   {
     id: "pursed-lip",
     name: "Pursed Lip Breathing",
-    description: "Medical-grade technique for COPD and asthma patients. Slows breathing rate and improves ventilation.",
+    description:
+      "Medical-grade technique for COPD and asthma patients. Slows breathing rate and improves ventilation.",
     benefits: ["Opens airways", "Reduces breathlessness", "Medical-grade"],
     difficulty: "beginner",
     phases: [
@@ -156,7 +170,8 @@ export const PRESET_TECHNIQUES: BreathingTechnique[] = [
   {
     id: "energizing-breath",
     name: "Energizing Breath (2-1-4-1)",
-    description: "Quick inhale, short hold, longer exhale pattern. Activates the sympathetic system for alertness.",
+    description:
+      "Quick inhale, short hold, longer exhale pattern. Activates the sympathetic system for alertness.",
     benefits: ["Increases alertness", "Morning energizer", "Sharpens mind"],
     difficulty: "intermediate",
     phases: [
@@ -170,8 +185,13 @@ export const PRESET_TECHNIQUES: BreathingTechnique[] = [
   {
     id: "4-4-6-2",
     name: "Sleep Breath (4-4-6-2)",
-    description: "Optimized for falling asleep. Extended exhale with brief pause creates a gentle lulling rhythm.",
-    benefits: ["Promotes deep sleep", "Reduces racing thoughts", "Gentle rhythm"],
+    description:
+      "Optimized for falling asleep. Extended exhale with brief pause creates a gentle lulling rhythm.",
+    benefits: [
+      "Promotes deep sleep",
+      "Reduces racing thoughts",
+      "Gentle rhythm",
+    ],
     difficulty: "beginner",
     phases: [
       { type: "inhale", duration: 4, label: "Breathe In" },
@@ -183,7 +203,10 @@ export const PRESET_TECHNIQUES: BreathingTechnique[] = [
   },
 ];
 
-export function getTechniqueById(id: string, customTechniques: BreathingTechnique[] = []): BreathingTechnique | undefined {
+export function getTechniqueById(
+  id: string,
+  customTechniques: BreathingTechnique[] = [],
+): BreathingTechnique | undefined {
   return [...PRESET_TECHNIQUES, ...customTechniques].find((t) => t.id === id);
 }
 
@@ -198,7 +221,10 @@ export function getCycleDuration(technique: BreathingTechnique): number {
  * For pyramid breathing: returns scaled phases for a given round.
  * Round 0..steps-1 ramps up, then mirrors back down.
  */
-export function getPyramidPhasesForRound(technique: BreathingTechnique, round: number): BreathingPhase[] {
+export function getPyramidPhasesForRound(
+  technique: BreathingTechnique,
+  round: number,
+): BreathingPhase[] {
   if (!technique.pyramid) return technique.phases;
   const { startMultiplier, peakMultiplier, steps } = technique.pyramid;
   // Create a triangle pattern: 0,1,...,steps-1,steps-2,...,0
@@ -208,7 +234,7 @@ export function getPyramidPhasesForRound(technique: BreathingTechnique, round: n
   const t = steps > 1 ? mirroredPos / (steps - 1) : 0;
   const multiplier = startMultiplier + t * (peakMultiplier - startMultiplier);
 
-  return technique.phases.map(p => ({
+  return technique.phases.map((p) => ({
     ...p,
     duration: Math.round(p.duration * multiplier),
   }));

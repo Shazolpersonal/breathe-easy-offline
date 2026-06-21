@@ -1,5 +1,9 @@
 import { SessionRecord, getSessions, getSettings } from "./storage";
-import { PRESET_TECHNIQUES, BreathingTechnique, getCycleDuration } from "./techniques";
+import {
+  PRESET_TECHNIQUES,
+  BreathingTechnique,
+  getCycleDuration,
+} from "./techniques";
 import { getCustomTechniques } from "./storage";
 import { getBestTechniqueForMood } from "./mood";
 
@@ -28,7 +32,9 @@ export interface AdaptiveResult {
  * Analyzes session history to recommend the optimal technique and duration.
  * Returns null if insufficient data (<5 sessions).
  */
-export function getAdaptiveSession(currentMood?: number | null): AdaptiveResult | null {
+export function getAdaptiveSession(
+  currentMood?: number | null,
+): AdaptiveResult | null {
   const sessions = getSessions();
   if (sessions.length < 5) return null;
 
@@ -40,7 +46,7 @@ export function getAdaptiveSession(currentMood?: number | null): AdaptiveResult 
   if (currentMood !== null && currentMood !== undefined) {
     const moodBest = getBestTechniqueForMood(currentMood);
     if (moodBest) {
-      const tech = allTechniques.find(t => t.id === moodBest);
+      const tech = allTechniques.find((t) => t.id === moodBest);
       if (tech) {
         const duration = getOptimalDuration(sessions, moodBest, currentBucket);
         return {
@@ -53,8 +59,10 @@ export function getAdaptiveSession(currentMood?: number | null): AdaptiveResult 
   }
 
   // 2. Time-of-day analysis: find technique with highest avg calm score for this bucket
-  const bucketSessions = sessions.filter(s => getSessionBucket(s) === currentBucket);
-  
+  const bucketSessions = sessions.filter(
+    (s) => getSessionBucket(s) === currentBucket,
+  );
+
   if (bucketSessions.length >= 3) {
     const best = findBestByCalm(bucketSessions, allTechniques);
     if (best) {
@@ -89,16 +97,25 @@ export function getAdaptiveSession(currentMood?: number | null): AdaptiveResult 
 export function shouldSuggestIncrease(techniqueId: string): number | null {
   const sessions = getSessions();
   const techSessions = sessions
-    .filter(s => s.techniqueId === techniqueId && s.calmScore != null && s.durationSeconds > 30)
+    .filter(
+      (s) =>
+        s.techniqueId === techniqueId &&
+        s.calmScore != null &&
+        s.durationSeconds > 30,
+    )
     .slice(-5);
 
   if (techSessions.length < 5) return null;
 
-  const avgCalm = techSessions.reduce((sum, s) => sum + s.calmScore!, 0) / techSessions.length;
+  const avgCalm =
+    techSessions.reduce((sum, s) => sum + s.calmScore!, 0) /
+    techSessions.length;
   if (avgCalm < 75) return null;
 
   // Suggest 1 minute more than their average
-  const avgDuration = techSessions.reduce((sum, s) => sum + s.durationSeconds, 0) / techSessions.length;
+  const avgDuration =
+    techSessions.reduce((sum, s) => sum + s.durationSeconds, 0) /
+    techSessions.length;
   const currentMin = Math.round(avgDuration / 60);
   const suggested = currentMin + 1;
 
@@ -118,14 +135,29 @@ export function dismissSuggestion(techniqueId: string, suggestedMin: number) {
 
 function findBestByCalm(
   sessions: SessionRecord[],
-  allTechniques: BreathingTechnique[]
+  allTechniques: BreathingTechnique[],
 ): BreathingTechnique | null {
-  const groups: Record<string, { totalCalm: number; count: number; completionRate: number; completed: number; total: number }> = {};
+  const groups: Record<
+    string,
+    {
+      totalCalm: number;
+      count: number;
+      completionRate: number;
+      completed: number;
+      total: number;
+    }
+  > = {};
   const defaultDuration = getSettings().defaultDurationMinutes * 60;
 
   for (const s of sessions) {
     if (!groups[s.techniqueId]) {
-      groups[s.techniqueId] = { totalCalm: 0, count: 0, completionRate: 0, completed: 0, total: 0 };
+      groups[s.techniqueId] = {
+        totalCalm: 0,
+        count: 0,
+        completionRate: 0,
+        completed: 0,
+        total: 0,
+      };
     }
     const g = groups[s.techniqueId];
     g.total++;
@@ -158,22 +190,32 @@ function findBestByCalm(
   }
 
   if (!bestId) return null;
-  return allTechniques.find(t => t.id === bestId) || null;
+  return allTechniques.find((t) => t.id === bestId) || null;
 }
 
-function getOptimalDuration(sessions: SessionRecord[], techniqueId: string, bucket: TimeBucket): number {
+function getOptimalDuration(
+  sessions: SessionRecord[],
+  techniqueId: string,
+  bucket: TimeBucket,
+): number {
   const relevant = sessions.filter(
-    s => s.techniqueId === techniqueId && getSessionBucket(s) === bucket && s.durationSeconds > 30
+    (s) =>
+      s.techniqueId === techniqueId &&
+      getSessionBucket(s) === bucket &&
+      s.durationSeconds > 30,
   );
 
   if (relevant.length < 2) {
     // Fall back to all sessions with this technique
-    const all = sessions.filter(s => s.techniqueId === techniqueId && s.durationSeconds > 30);
+    const all = sessions.filter(
+      (s) => s.techniqueId === techniqueId && s.durationSeconds > 30,
+    );
     if (all.length < 2) return getSettings().defaultDurationMinutes;
     const avg = all.reduce((sum, s) => sum + s.durationSeconds, 0) / all.length;
     return Math.max(1, Math.round(avg / 60));
   }
 
-  const avg = relevant.reduce((sum, s) => sum + s.durationSeconds, 0) / relevant.length;
+  const avg =
+    relevant.reduce((sum, s) => sum + s.durationSeconds, 0) / relevant.length;
   return Math.max(1, Math.round(avg / 60));
 }

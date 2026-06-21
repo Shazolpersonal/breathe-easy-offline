@@ -1,5 +1,5 @@
 import { BreathingTechnique } from "./techniques";
-import { sanitizeObjectStrings } from "@/lib/utils";
+import { sanitizeObjectStrings, secureJsonReviver } from "@/lib/utils";
 
 export interface SessionRecord {
   id: string;
@@ -96,7 +96,7 @@ function getJSON<T>(key: string, fallback: T): T {
       return cached.parsed !== undefined ? cached.parsed : fallback;
     }
 
-    const parsed = raw ? JSON.parse(raw) : fallback;
+    const parsed = raw ? JSON.parse(raw, secureJsonReviver) : fallback;
     jsonCache.set(key, { raw, parsed });
     return parsed;
   } catch {
@@ -127,7 +127,9 @@ export function getTodaySessions(): SessionRecord[] {
 }
 
 export function getTodayMinutes(): number {
-  return Math.round(getTodaySessions().reduce((sum, s) => sum + s.durationSeconds, 0) / 60);
+  return Math.round(
+    getTodaySessions().reduce((sum, s) => sum + s.durationSeconds, 0) / 60,
+  );
 }
 
 export function getCurrentStreak(): number {
@@ -142,7 +144,7 @@ export function getCurrentStreak(): number {
   const dates = Array.from(dateSet).sort().reverse();
   const today = new Date();
   const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
-  
+
   let streak = 0;
   // Allow starting from today or yesterday (user hasn't done today's session yet)
 
@@ -211,7 +213,10 @@ export function getLongestStreak(): number {
 
 // Settings
 export function getSettings(): AppSettings {
-  return { ...DEFAULT_SETTINGS, ...getJSON<Partial<AppSettings>>(KEYS.settings, {}) };
+  return {
+    ...DEFAULT_SETTINGS,
+    ...getJSON<Partial<AppSettings>>(KEYS.settings, {}),
+  };
 }
 
 export function updateSettings(partial: Partial<AppSettings>) {
@@ -233,7 +238,10 @@ export function saveCustomTechnique(technique: BreathingTechnique) {
 }
 
 export function deleteCustomTechnique(id: string) {
-  setJSON(KEYS.customTechniques, getCustomTechniques().filter((t) => t.id !== id));
+  setJSON(
+    KEYS.customTechniques,
+    getCustomTechniques().filter((t) => t.id !== id),
+  );
 }
 
 // Favorites
@@ -260,13 +268,20 @@ function setLastBackupDate() {
   localStorage.setItem(BACKUP_KEY, new Date().toISOString());
 }
 
-export function getDataSummary(): { sessions: number; journals: number; moodRecords: number; xpTotal: number } {
+export function getDataSummary(): {
+  sessions: number;
+  journals: number;
+  moodRecords: number;
+  xpTotal: number;
+} {
   const sessions = getSessions();
-  const journals = sessions.filter(s => s.journal).length;
+  const journals = sessions.filter((s) => s.journal).length;
   const moodRaw = localStorage.getItem("breathe_mood_records");
-  const moodRecords = moodRaw ? JSON.parse(moodRaw).length : 0;
+  const moodRecords = moodRaw
+    ? JSON.parse(moodRaw, secureJsonReviver).length
+    : 0;
   const xpRaw = localStorage.getItem("breathe_xp");
-  const xpTotal = xpRaw ? JSON.parse(xpRaw).totalXP || 0 : 0;
+  const xpTotal = xpRaw ? JSON.parse(xpRaw, secureJsonReviver).totalXP || 0 : 0;
   return { sessions: sessions.length, journals, moodRecords, xpTotal };
 }
 
@@ -280,11 +295,21 @@ export function exportData(): string {
     favorites: getFavorites(),
   };
   // Include additional localStorage keys for complete backup
-  const extraKeys = ["breathe_xp", "breathe_mood_records", "breathe_challenge_history", "breathe_progression", "breathe_badges_seen"];
+  const extraKeys = [
+    "breathe_xp",
+    "breathe_mood_records",
+    "breathe_challenge_history",
+    "breathe_progression",
+    "breathe_badges_seen",
+  ];
   for (const key of extraKeys) {
     const raw = localStorage.getItem(key);
     if (raw) {
-      try { data[key] = JSON.parse(raw); } catch { data[key] = raw; }
+      try {
+        data[key] = JSON.parse(raw, secureJsonReviver);
+      } catch {
+        data[key] = raw;
+      }
     }
   }
   data._backupDate = new Date().toISOString();
@@ -293,7 +318,7 @@ export function exportData(): string {
 
 // Delete a single session
 export function deleteSession(id: string) {
-  const sessions = getSessions().filter(s => s.id !== id);
+  const sessions = getSessions().filter((s) => s.id !== id);
   setJSON(KEYS.sessions, sessions);
 }
 
@@ -352,7 +377,7 @@ export function validateImportData(json: string): ImportValidationResult {
   const warnings: string[] = [];
 
   try {
-    const data = JSON.parse(json);
+    const data = JSON.parse(json, secureJsonReviver);
 
     // Validate sessions
     if (data.sessions !== undefined) {
@@ -361,10 +386,14 @@ export function validateImportData(json: string): ImportValidationResult {
       } else {
         for (let i = 0; i < data.sessions.length; i++) {
           const s = data.sessions[i];
-          if (typeof s.id !== "string") errors.push(`import.error.sessionMissingId`);
-          if (typeof s.techniqueId !== "string") errors.push(`import.error.sessionMissingTechnique`);
-          if (typeof s.date !== "string") errors.push(`import.error.sessionMissingDate`);
-          if (typeof s.durationSeconds !== "number") errors.push(`import.error.sessionMissingDuration`);
+          if (typeof s.id !== "string")
+            errors.push(`import.error.sessionMissingId`);
+          if (typeof s.techniqueId !== "string")
+            errors.push(`import.error.sessionMissingTechnique`);
+          if (typeof s.date !== "string")
+            errors.push(`import.error.sessionMissingDate`);
+          if (typeof s.durationSeconds !== "number")
+            errors.push(`import.error.sessionMissingDuration`);
           if (errors.length > 3) {
             errors.push("import.error.tooManyErrors");
             break;
@@ -379,7 +408,10 @@ export function validateImportData(json: string): ImportValidationResult {
     }
 
     // Validate custom techniques
-    if (data.customTechniques !== undefined && !Array.isArray(data.customTechniques)) {
+    if (
+      data.customTechniques !== undefined &&
+      !Array.isArray(data.customTechniques)
+    ) {
       errors.push("import.error.invalidCustomTechniques");
     }
 
@@ -394,18 +426,24 @@ export function validateImportData(json: string): ImportValidationResult {
 
     return { success: true, errors: [], warnings };
   } catch (e) {
-    return { success: false, errors: ["import.error.invalidJson"], warnings: [] };
+    return {
+      success: false,
+      errors: ["import.error.invalidJson"],
+      warnings: [],
+    };
   }
 }
 
-
-export function importDataSmart(json: string, skipDuplicates: boolean = true): ImportValidationResult {
+export function importDataSmart(
+  json: string,
+  skipDuplicates: boolean = true,
+): ImportValidationResult {
   const validation = validateImportData(json);
   if (!validation.success) return validation;
 
-  const data = sanitizeObjectStrings(JSON.parse(json));
+  const data = sanitizeObjectStrings(JSON.parse(json, secureJsonReviver));
   const existingSessions = getSessions();
-  const existingIds = new Set(existingSessions.map(s => s.id));
+  const existingIds = new Set(existingSessions.map((s) => s.id));
 
   let duplicateCount = 0;
   let newCount = 0;
@@ -457,10 +495,19 @@ export function importDataSmart(json: string, skipDuplicates: boolean = true): I
   }
 
   // Restore additional keys
-  const extraKeys = ["breathe_xp", "breathe_mood_records", "breathe_challenge_history", "breathe_progression", "breathe_badges_seen"];
+  const extraKeys = [
+    "breathe_xp",
+    "breathe_mood_records",
+    "breathe_challenge_history",
+    "breathe_progression",
+    "breathe_badges_seen",
+  ];
   for (const key of extraKeys) {
     if (data[key] != null) {
-      localStorage.setItem(key, typeof data[key] === "string" ? data[key] : JSON.stringify(data[key]));
+      localStorage.setItem(
+        key,
+        typeof data[key] === "string" ? data[key] : JSON.stringify(data[key]),
+      );
     }
   }
 
@@ -477,12 +524,17 @@ export function importDataSmart(json: string, skipDuplicates: boolean = true): I
 }
 
 export function importData(json: string) {
-  const data = sanitizeObjectStrings(JSON.parse(json));
+  const data = sanitizeObjectStrings(JSON.parse(json, secureJsonReviver));
   // Validate sessions array
   if (data.sessions) {
     if (!Array.isArray(data.sessions)) throw new Error("Invalid sessions data");
     for (const s of data.sessions) {
-      if (typeof s.id !== "string" || typeof s.techniqueId !== "string" || typeof s.date !== "string" || typeof s.durationSeconds !== "number") {
+      if (
+        typeof s.id !== "string" ||
+        typeof s.techniqueId !== "string" ||
+        typeof s.date !== "string" ||
+        typeof s.durationSeconds !== "number"
+      ) {
         throw new Error("Invalid session record found");
       }
     }
@@ -492,18 +544,29 @@ export function importData(json: string) {
     setJSON(KEYS.settings, data.settings);
   }
   if (data.customTechniques) {
-    if (!Array.isArray(data.customTechniques)) throw new Error("Invalid custom techniques data");
+    if (!Array.isArray(data.customTechniques))
+      throw new Error("Invalid custom techniques data");
     setJSON(KEYS.customTechniques, data.customTechniques);
   }
   if (data.favorites) {
-    if (!Array.isArray(data.favorites)) throw new Error("Invalid favorites data");
+    if (!Array.isArray(data.favorites))
+      throw new Error("Invalid favorites data");
     setJSON(KEYS.favorites, data.favorites);
   }
   // Restore additional keys
-  const extraKeys = ["breathe_xp", "breathe_mood_records", "breathe_challenge_history", "breathe_progression", "breathe_badges_seen"];
+  const extraKeys = [
+    "breathe_xp",
+    "breathe_mood_records",
+    "breathe_challenge_history",
+    "breathe_progression",
+    "breathe_badges_seen",
+  ];
   for (const key of extraKeys) {
     if (data[key] != null) {
-      localStorage.setItem(key, typeof data[key] === "string" ? data[key] : JSON.stringify(data[key]));
+      localStorage.setItem(
+        key,
+        typeof data[key] === "string" ? data[key] : JSON.stringify(data[key]),
+      );
     }
   }
 }

@@ -1,5 +1,6 @@
 import { getCurrentStreak, getTodaySessions } from "./storage";
 import { BreathingTechnique } from "./techniques";
+import { secureJsonReviver } from "@/lib/utils";
 
 export interface XPBreakdown {
   base: number;
@@ -57,7 +58,7 @@ function getStore(): XPStore {
   try {
     const raw = localStorage.getItem(XP_KEY);
     if (!raw) return { totalXP: 0, history: [] };
-    const parsed = JSON.parse(raw);
+    const parsed = JSON.parse(raw, secureJsonReviver);
     // Migrate old format (no history)
     if (!parsed.history) parsed.history = [];
     return parsed;
@@ -75,7 +76,12 @@ function saveStore(store: XPStore) {
   localStorage.setItem(XP_KEY, JSON.stringify(store));
 }
 
-function getLevelInfo(xp: number): { level: number; title: string; progressToNext: number; xpToNext: number } {
+function getLevelInfo(xp: number): {
+  level: number;
+  title: string;
+  progressToNext: number;
+  xpToNext: number;
+} {
   let lvl = 1;
   for (let i = LEVELS.length - 1; i >= 0; i--) {
     if (xp >= LEVELS[i].threshold) {
@@ -85,9 +91,15 @@ function getLevelInfo(xp: number): { level: number; title: string; progressToNex
   }
 
   const currentThreshold = LEVELS[lvl - 1].threshold;
-  const nextThreshold = lvl < LEVELS.length ? LEVELS[lvl].threshold : LEVELS[LEVELS.length - 1].threshold;
+  const nextThreshold =
+    lvl < LEVELS.length
+      ? LEVELS[lvl].threshold
+      : LEVELS[LEVELS.length - 1].threshold;
   const range = nextThreshold - currentThreshold;
-  const progress = lvl >= LEVELS.length ? 100 : Math.min(100, Math.round(((xp - currentThreshold) / range) * 100));
+  const progress =
+    lvl >= LEVELS.length
+      ? 100
+      : Math.min(100, Math.round(((xp - currentThreshold) / range) * 100));
   const xpToNext = lvl >= LEVELS.length ? 0 : nextThreshold - xp;
 
   return {
@@ -125,7 +137,7 @@ export function calculateSessionXP(
   completedChallenges: number,
   streak?: number,
   moodBefore?: number,
-  moodAfter?: number
+  moodAfter?: number,
 ): XPBreakdown {
   const base = 10;
 
@@ -157,7 +169,15 @@ export function calculateSessionXP(
   // Challenge bonus
   const challengeBonus = completedChallenges * 15;
 
-  const rawTotal = base + duration + difficulty + calmBonus + moodBonus + streakBonus + firstOfDay + challengeBonus;
+  const rawTotal =
+    base +
+    duration +
+    difficulty +
+    calmBonus +
+    moodBonus +
+    streakBonus +
+    firstOfDay +
+    challengeBonus;
 
   // Apply daily cap
   const alreadyEarned = getTodayXPEarned();
@@ -177,7 +197,10 @@ export function calculateSessionXP(
   };
 }
 
-export function addXP(amount: number, source: string = "session"): { previousLevel: number; newLevel: number; totalXP: number } {
+export function addXP(
+  amount: number,
+  source: string = "session",
+): { previousLevel: number; newLevel: number; totalXP: number } {
   const store = getStore();
   const prevInfo = getLevelInfo(store.totalXP);
   store.totalXP += amount;
@@ -188,7 +211,11 @@ export function addXP(amount: number, source: string = "session"): { previousLev
   });
   saveStore(store);
   const newInfo = getLevelInfo(store.totalXP);
-  return { previousLevel: prevInfo.level, newLevel: newInfo.level, totalXP: store.totalXP };
+  return {
+    previousLevel: prevInfo.level,
+    newLevel: newInfo.level,
+    totalXP: store.totalXP,
+  };
 }
 
 export function getWeeklyXP(): number {

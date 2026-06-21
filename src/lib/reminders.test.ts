@@ -5,7 +5,7 @@ import {
   addReminder,
   updateReminder,
   deleteReminder,
-  Reminder
+  Reminder,
 } from "./reminders";
 
 const STORAGE_KEY = "breathe_reminders";
@@ -19,13 +19,22 @@ describe("reminders library", () => {
   describe("saveReminders", () => {
     it("should save reminders to localStorage", () => {
       const reminders: Reminder[] = [
-        { id: "1", time: "08:00", days: [1, 2, 3], enabled: true, message: "Morning breath" }
+        {
+          id: "1",
+          time: "08:00",
+          days: [1, 2, 3],
+          enabled: true,
+          message: "Morning breath",
+        },
       ];
 
       const setItemSpy = vi.spyOn(Storage.prototype, "setItem");
       saveReminders(reminders);
 
-      expect(setItemSpy).toHaveBeenCalledWith(STORAGE_KEY, JSON.stringify(reminders));
+      expect(setItemSpy).toHaveBeenCalledWith(
+        STORAGE_KEY,
+        JSON.stringify(reminders),
+      );
       expect(localStorage.getItem(STORAGE_KEY)).toBe(JSON.stringify(reminders));
     });
   });
@@ -37,7 +46,13 @@ describe("reminders library", () => {
 
     it("should return stored reminders", () => {
       const reminders: Reminder[] = [
-        { id: "1", time: "08:00", days: [1, 2, 3], enabled: true, message: "Morning breath" }
+        {
+          id: "1",
+          time: "08:00",
+          days: [1, 2, 3],
+          enabled: true,
+          message: "Morning breath",
+        },
       ];
       localStorage.setItem(STORAGE_KEY, JSON.stringify(reminders));
 
@@ -53,11 +68,17 @@ describe("reminders library", () => {
   describe("addReminder", () => {
     it("should add a reminder to the existing list", () => {
       const existing: Reminder[] = [
-        { id: "1", time: "08:00", days: [1], enabled: true, message: "One" }
+        { id: "1", time: "08:00", days: [1], enabled: true, message: "One" },
       ];
       localStorage.setItem(STORAGE_KEY, JSON.stringify(existing));
 
-      const newReminder: Reminder = { id: "2", time: "09:00", days: [2], enabled: false, message: "Two" };
+      const newReminder: Reminder = {
+        id: "2",
+        time: "09:00",
+        days: [2],
+        enabled: false,
+        message: "Two",
+      };
       addReminder(newReminder);
 
       const stored = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
@@ -69,7 +90,13 @@ describe("reminders library", () => {
   describe("updateReminder", () => {
     it("should update an existing reminder", () => {
       const reminders: Reminder[] = [
-        { id: "1", time: "08:00", days: [1], enabled: true, message: "Original" }
+        {
+          id: "1",
+          time: "08:00",
+          days: [1],
+          enabled: true,
+          message: "Original",
+        },
       ];
       localStorage.setItem(STORAGE_KEY, JSON.stringify(reminders));
 
@@ -83,7 +110,13 @@ describe("reminders library", () => {
 
     it("should do nothing if reminder ID is not found", () => {
       const reminders: Reminder[] = [
-        { id: "1", time: "08:00", days: [1], enabled: true, message: "Original" }
+        {
+          id: "1",
+          time: "08:00",
+          days: [1],
+          enabled: true,
+          message: "Original",
+        },
       ];
       localStorage.setItem(STORAGE_KEY, JSON.stringify(reminders));
 
@@ -98,7 +131,7 @@ describe("reminders library", () => {
     it("should remove a reminder by ID", () => {
       const reminders: Reminder[] = [
         { id: "1", time: "08:00", days: [1], enabled: true, message: "One" },
-        { id: "2", time: "09:00", days: [2], enabled: true, message: "Two" }
+        { id: "2", time: "09:00", days: [2], enabled: true, message: "Two" },
       ];
       localStorage.setItem(STORAGE_KEY, JSON.stringify(reminders));
 

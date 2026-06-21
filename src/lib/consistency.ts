@@ -3,7 +3,7 @@ import { getSessions, getCurrentStreak, getSettings } from "./storage";
 export interface ConsistencyBreakdown {
   regularity: number; // 0-100
   completion: number; // 0-100
-  streak: number;     // 0-100
+  streak: number; // 0-100
 }
 
 export interface ConsistencyResult {
@@ -56,7 +56,9 @@ export function getConsistencyScore(): ConsistencyResult {
   const currentStreak = getCurrentStreak();
   const streakScore = Math.min(Math.round((currentStreak / 7) * 100), 100);
 
-  const score = Math.round(regularity * 0.4 + completion * 0.3 + streakScore * 0.3);
+  const score = Math.round(
+    regularity * 0.4 + completion * 0.3 + streakScore * 0.3,
+  );
 
   return {
     score,

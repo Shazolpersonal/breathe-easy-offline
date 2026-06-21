@@ -29,7 +29,10 @@ export function getWeeklyInsights(locale: string = "en"): Insight[] {
     }
     const streak = getCurrentStreak();
     if (streak > 0) {
-      insights.push({ key: "insight.streakGoing", params: { days: String(streak) } });
+      insights.push({
+        key: "insight.streakGoing",
+        params: { days: String(streak) },
+      });
     }
     return insights;
   }
@@ -45,12 +48,15 @@ export function getWeeklyInsights(locale: string = "en"): Insight[] {
     }
   });
   const bestHourEntry = Object.entries(hourScores).sort(
-    (a, b) => b[1].total / b[1].count - a[1].total / a[1].count
+    (a, b) => b[1].total / b[1].count - a[1].total / a[1].count,
   )[0];
   if (bestHourEntry) {
     const hour = parseInt(bestHourEntry[0]);
     // Use locale-aware time formatting
-    const timeStr = new Date(2000, 0, 1, hour).toLocaleTimeString(locale, { hour: "numeric", hour12: true });
+    const timeStr = new Date(2000, 0, 1, hour).toLocaleTimeString(locale, {
+      hour: "numeric",
+      hour12: true,
+    });
     insights.push({ key: "insight.bestTime", params: { time: timeStr } });
   }
 
@@ -60,15 +66,22 @@ export function getWeeklyInsights(locale: string = "en"): Insight[] {
     const diff = (now.getTime() - new Date(r.date).getTime()) / 86400000;
     return diff < 7 && r.moodAfter !== null;
   });
-  
+
   if (weekMoodRecords.length >= 2) {
-    const techMood: Record<string, { total: number; count: number; name: string }> = {};
+    const techMood: Record<
+      string,
+      { total: number; count: number; name: string }
+    > = {};
     weekMoodRecords.forEach((r) => {
       if (!techMood[r.techniqueId]) {
         const session = thisWeek.find((s) => s.techniqueId === r.techniqueId);
-        techMood[r.techniqueId] = { total: 0, count: 0, name: session?.techniqueName || r.techniqueId };
+        techMood[r.techniqueId] = {
+          total: 0,
+          count: 0,
+          name: session?.techniqueName || r.techniqueId,
+        };
       }
-      techMood[r.techniqueId].total += (r.moodAfter! - r.moodBefore);
+      techMood[r.techniqueId].total += r.moodAfter! - r.moodBefore;
       techMood[r.techniqueId].count++;
     });
 
@@ -84,10 +97,20 @@ export function getWeeklyInsights(locale: string = "en"): Insight[] {
       if (secondAvg > 0) {
         const pctBetter = Math.round(((bestAvg - secondAvg) / secondAvg) * 100);
         if (pctBetter > 10) {
-          insights.push({ key: "insight.techniqueCompare", params: { best: best.name, pct: String(pctBetter), second: second.name } });
+          insights.push({
+            key: "insight.techniqueCompare",
+            params: {
+              best: best.name,
+              pct: String(pctBetter),
+              second: second.name,
+            },
+          });
         }
       } else if (bestAvg > 0) {
-        insights.push({ key: "insight.bestTechnique", params: { name: best.name } });
+        insights.push({
+          key: "insight.bestTechnique",
+          params: { name: best.name },
+        });
       }
     }
   }
@@ -95,8 +118,15 @@ export function getWeeklyInsights(locale: string = "en"): Insight[] {
   // Streak tracking
   const currentStreak = getCurrentStreak();
   const longestStreak = getLongestStreak();
-  if (currentStreak > 0 && currentStreak >= longestStreak - 2 && currentStreak < longestStreak) {
-    insights.push({ key: "insight.nearRecord", params: { days: String(longestStreak - currentStreak) } });
+  if (
+    currentStreak > 0 &&
+    currentStreak >= longestStreak - 2 &&
+    currentStreak < longestStreak
+  ) {
+    insights.push({
+      key: "insight.nearRecord",
+      params: { days: String(longestStreak - currentStreak) },
+    });
   } else if (currentStreak >= longestStreak && currentStreak > 1) {
     insights.push({ key: "insight.onRecord", params: {} });
   }
@@ -105,18 +135,35 @@ export function getWeeklyInsights(locale: string = "en"): Insight[] {
   if (lastWeek.length > 0) {
     const diff = thisWeek.length - lastWeek.length;
     if (diff > 0) {
-      insights.push({ key: "insight.moreSessionsUp", params: { count: String(diff) } });
+      insights.push({
+        key: "insight.moreSessionsUp",
+        params: { count: String(diff) },
+      });
     } else if (diff < 0) {
-      insights.push({ key: "insight.fewerSessions", params: { count: String(Math.abs(diff)) } });
+      insights.push({
+        key: "insight.fewerSessions",
+        params: { count: String(Math.abs(diff)) },
+      });
     }
   }
 
   // Duration trend
   if (lastWeek.length > 0) {
-    const thisAvg = Math.round(thisWeek.reduce((s, r) => s + r.durationSeconds, 0) / thisWeek.length / 60);
-    const lastAvg = Math.round(lastWeek.reduce((s, r) => s + r.durationSeconds, 0) / lastWeek.length / 60);
+    const thisAvg = Math.round(
+      thisWeek.reduce((s, r) => s + r.durationSeconds, 0) /
+        thisWeek.length /
+        60,
+    );
+    const lastAvg = Math.round(
+      lastWeek.reduce((s, r) => s + r.durationSeconds, 0) /
+        lastWeek.length /
+        60,
+    );
     if (thisAvg > lastAvg && lastAvg > 0) {
-      insights.push({ key: "insight.durationUp", params: { current: String(thisAvg), previous: String(lastAvg) } });
+      insights.push({
+        key: "insight.durationUp",
+        params: { current: String(thisAvg), previous: String(lastAvg) },
+      });
     }
   }
 

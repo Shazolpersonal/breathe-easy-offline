@@ -1,4 +1,5 @@
 import { BreathingTechnique, BreathingPhase } from "./techniques";
+import { secureJsonReviver } from "@/lib/utils";
 
 export interface UserProgression {
   techniqueId: string;
@@ -24,7 +25,7 @@ export function getAllProgressionsPublic(): UserProgression[] {
 function getAllProgressions(): UserProgression[] {
   try {
     const raw = localStorage.getItem(PROGRESSION_KEY);
-    return raw ? JSON.parse(raw) : [];
+    return raw ? JSON.parse(raw, secureJsonReviver) : [];
   } catch {
     return [];
   }
@@ -36,12 +37,14 @@ function saveAllProgressions(data: UserProgression[]) {
 
 export function getProgression(techniqueId: string): UserProgression {
   const all = getAllProgressions();
-  return all.find((p) => p.techniqueId === techniqueId) || {
-    techniqueId,
-    level: 1,
-    sessionsCompleted: 0,
-    totalCycles: 0,
-  };
+  return (
+    all.find((p) => p.techniqueId === techniqueId) || {
+      techniqueId,
+      level: 1,
+      sessionsCompleted: 0,
+      totalCycles: 0,
+    }
+  );
 }
 
 export function getLevelFromSessions(sessions: number): number {
@@ -64,13 +67,24 @@ export function getLevelProgress(progression: UserProgression): number {
   const nextThreshold = getNextLevelThreshold(progression.level);
   if (nextThreshold === Infinity) return 100;
   const range = nextThreshold - currentThreshold;
-  return Math.min(100, Math.round(((progression.sessionsCompleted - currentThreshold) / range) * 100));
+  return Math.min(
+    100,
+    Math.round(
+      ((progression.sessionsCompleted - currentThreshold) / range) * 100,
+    ),
+  );
 }
 
-export function updateProgression(techniqueId: string, cycles: number): { leveledUp: boolean; newLevel: number } {
+export function updateProgression(
+  techniqueId: string,
+  cycles: number,
+): { leveledUp: boolean; newLevel: number } {
   const all = getAllProgressions();
   const idx = all.findIndex((p) => p.techniqueId === techniqueId);
-  const current = idx >= 0 ? all[idx] : { techniqueId, level: 1, sessionsCompleted: 0, totalCycles: 0 };
+  const current =
+    idx >= 0
+      ? all[idx]
+      : { techniqueId, level: 1, sessionsCompleted: 0, totalCycles: 0 };
 
   current.sessionsCompleted += 1;
   current.totalCycles += cycles;
@@ -89,19 +103,30 @@ export function getTotalSessionCount(): number {
   return getAllProgressions().reduce((sum, p) => sum + p.sessionsCompleted, 0);
 }
 
-export function isUnlocked(technique: BreathingTechnique, totalSessions?: number): boolean {
+export function isUnlocked(
+  technique: BreathingTechnique,
+  totalSessions?: number,
+): boolean {
   const threshold = UNLOCK_THRESHOLDS[technique.difficulty] ?? 0;
-  const count = totalSessions !== undefined ? totalSessions : getTotalSessionCount();
+  const count =
+    totalSessions !== undefined ? totalSessions : getTotalSessionCount();
   return count >= threshold;
 }
 
-export function getUnlockRemaining(technique: BreathingTechnique, totalSessions?: number): number {
+export function getUnlockRemaining(
+  technique: BreathingTechnique,
+  totalSessions?: number,
+): number {
   const threshold = UNLOCK_THRESHOLDS[technique.difficulty] ?? 0;
-  const count = totalSessions !== undefined ? totalSessions : getTotalSessionCount();
+  const count =
+    totalSessions !== undefined ? totalSessions : getTotalSessionCount();
   return Math.max(0, threshold - count);
 }
 
-export function getScaledPhases(technique: BreathingTechnique, level: number): BreathingPhase[] {
+export function getScaledPhases(
+  technique: BreathingTechnique,
+  level: number,
+): BreathingPhase[] {
   const bonus = Math.max(0, level - 1); // +1s per level above 1
   return technique.phases.map((p) => ({
     ...p,
