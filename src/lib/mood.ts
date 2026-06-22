@@ -1,5 +1,5 @@
 import { PRESET_TECHNIQUES } from "./techniques";
-import { getCustomTechniques } from "./storage";
+import { getCustomTechniques, getJSON, setJSON } from "./storage";
 
 export interface MoodOption {
   value: number;
@@ -31,12 +31,7 @@ export interface MoodRecord {
 const MOOD_KEY = "breathe_mood_records";
 
 export function getMoodRecords(): MoodRecord[] {
-  try {
-    const raw = localStorage.getItem(MOOD_KEY);
-    return raw ? JSON.parse(raw) : [];
-  } catch {
-    return [];
-  }
+  return getJSON<MoodRecord[]>(MOOD_KEY, []);
 }
 
 export function saveMoodRecord(record: MoodRecord) {
@@ -44,7 +39,7 @@ export function saveMoodRecord(record: MoodRecord) {
   const idx = records.findIndex((r) => r.sessionId === record.sessionId);
   if (idx >= 0) records[idx] = record;
   else records.push(record);
-  localStorage.setItem(MOOD_KEY, JSON.stringify(records));
+  setJSON(MOOD_KEY, records);
 }
 
 export function getMoodLabel(value: number): string {
