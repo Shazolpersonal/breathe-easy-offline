@@ -1,3 +1,4 @@
+import { secureJsonReviver } from "@/lib/utils";
 import { PRESET_TECHNIQUES } from "./techniques";
 import { getCustomTechniques } from "./storage";
 
@@ -33,7 +34,7 @@ const MOOD_KEY = "breathe_mood_records";
 export function getMoodRecords(): MoodRecord[] {
   try {
     const raw = localStorage.getItem(MOOD_KEY);
-    return raw ? JSON.parse(raw) : [];
+    return raw ? JSON.parse(raw, secureJsonReviver) : [];
   } catch {
     return [];
   }
