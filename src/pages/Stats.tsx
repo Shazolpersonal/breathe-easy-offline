@@ -1,3 +1,4 @@
+import { secureJsonReviver } from "@/lib/utils";
 import { useMemo, useState } from "react";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, LineChart, Line } from "recharts";
 import { getSessions, getCurrentStreak, getLongestStreak, deleteSession } from "@/lib/storage";
@@ -331,7 +332,7 @@ export default function Stats() {
     try {
       const raw = localStorage.getItem("breathe_xp");
       if (!raw) return [];
-      const store = JSON.parse(raw);
+      const store = JSON.parse(raw, secureJsonReviver);
       if (!store.history || store.history.length === 0) return [];
       const dayMap: Record<string, number> = {};
       const today = new Date();

@@ -1,5 +1,5 @@
 import { BreathingTechnique } from "./techniques";
-import { sanitizeObjectStrings } from "@/lib/utils";
+import { sanitizeObjectStrings, secureJsonReviver } from "@/lib/utils";
 
 export interface SessionRecord {
   id: string;
@@ -96,7 +96,7 @@ function getJSON<T>(key: string, fallback: T): T {
       return cached.parsed !== undefined ? cached.parsed : fallback;
     }
 
-    const parsed = raw ? JSON.parse(raw) : fallback;
+    const parsed = raw ? JSON.parse(raw, secureJsonReviver) : fallback;
     jsonCache.set(key, { raw, parsed });
     return parsed;
   } catch {
@@ -264,9 +264,9 @@ export function getDataSummary(): { sessions: number; journals: number; moodReco
   const sessions = getSessions();
   const journals = sessions.filter(s => s.journal).length;
   const moodRaw = localStorage.getItem("breathe_mood_records");
-  const moodRecords = moodRaw ? JSON.parse(moodRaw).length : 0;
+  const moodRecords = moodRaw ? JSON.parse(moodRaw, secureJsonReviver).length : 0;
   const xpRaw = localStorage.getItem("breathe_xp");
-  const xpTotal = xpRaw ? JSON.parse(xpRaw).totalXP || 0 : 0;
+  const xpTotal = xpRaw ? JSON.parse(xpRaw, secureJsonReviver).totalXP || 0 : 0;
   return { sessions: sessions.length, journals, moodRecords, xpTotal };
 }
 
@@ -284,7 +284,7 @@ export function exportData(): string {
   for (const key of extraKeys) {
     const raw = localStorage.getItem(key);
     if (raw) {
-      try { data[key] = JSON.parse(raw); } catch { data[key] = raw; }
+      try { data[key] = JSON.parse(raw, secureJsonReviver); } catch { data[key] = raw; }
     }
   }
   data._backupDate = new Date().toISOString();
@@ -352,7 +352,7 @@ export function validateImportData(json: string): ImportValidationResult {
   const warnings: string[] = [];
 
   try {
-    const data = JSON.parse(json);
+    const data = JSON.parse(json, secureJsonReviver);
 
     // Validate sessions
     if (data.sessions !== undefined) {
@@ -403,7 +403,7 @@ export function importDataSmart(json: string, skipDuplicates: boolean = true): I
   const validation = validateImportData(json);
   if (!validation.success) return validation;
 
-  const data = sanitizeObjectStrings(JSON.parse(json));
+  const data = sanitizeObjectStrings(JSON.parse(json, secureJsonReviver));
   const existingSessions = getSessions();
   const existingIds = new Set(existingSessions.map(s => s.id));
 
@@ -477,7 +477,7 @@ export function importDataSmart(json: string, skipDuplicates: boolean = true): I
 }
 
 export function importData(json: string) {
-  const data = sanitizeObjectStrings(JSON.parse(json));
+  const data = sanitizeObjectStrings(JSON.parse(json, secureJsonReviver));
   // Validate sessions array
   if (data.sessions) {
     if (!Array.isArray(data.sessions)) throw new Error("Invalid sessions data");

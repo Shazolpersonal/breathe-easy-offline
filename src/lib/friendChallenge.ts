@@ -1,3 +1,4 @@
+import { secureJsonReviver } from "@/lib/utils";
 import { getTodaySessions } from "./storage";
 import { sanitizeString } from "./utils";
 
@@ -72,7 +73,7 @@ export function parseChallengeFromURL(): FriendChallengeParams | null {
     const encoded = hash.slice("#challenge=".length);
     // Unicode-safe base64 decoding
     const decoded = decodeURIComponent(escape(atob(encoded)));
-    const parsed = JSON.parse(decoded);
+    const parsed = JSON.parse(decoded, secureJsonReviver);
 
     if (!isValidChallenge(parsed)) return null;
 
@@ -106,7 +107,7 @@ export function saveFriendChallenge(params: FriendChallengeParams): FriendChalle
 export function getFriendChallenges(): FriendChallenge[] {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
-    return raw ? JSON.parse(raw) : [];
+    return raw ? JSON.parse(raw, secureJsonReviver) : [];
   } catch {
     return [];
   }
