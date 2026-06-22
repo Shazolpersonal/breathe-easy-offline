@@ -86,7 +86,7 @@ const DEFAULT_SETTINGS: AppSettings = {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const jsonCache = new Map<string, { raw: string | null; parsed: any }>();
 
-function getJSON<T>(key: string, fallback: T): T {
+export function getJSON<T>(key: string, fallback: T): T {
   try {
     const raw = localStorage.getItem(key);
 
@@ -104,7 +104,7 @@ function getJSON<T>(key: string, fallback: T): T {
   }
 }
 
-function setJSON(key: string, value: unknown) {
+export function setJSON(key: string, value: unknown) {
   const raw = JSON.stringify(value);
   localStorage.setItem(key, raw);
   jsonCache.set(key, { raw, parsed: value });
