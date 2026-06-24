@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { Plus, Play, Trash2, GripVertical } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -23,7 +23,7 @@ export default function Playlists() {
   const [steps, setSteps] = useState<PlaylistStep[]>([]);
   const [deleteTarget, setDeleteTarget] = useState<string | null>(null);
 
-  const allTechniques = [...PRESET_TECHNIQUES, ...getCustomTechniques()];
+  const allTechniques = useMemo(() => [...PRESET_TECHNIQUES, ...getCustomTechniques()], []);
 
   const getTechniqueName = (id: string) => {
     const key = `technique.${id}.name`;

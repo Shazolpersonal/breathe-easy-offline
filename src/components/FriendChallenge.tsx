@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -24,7 +24,7 @@ interface CreateChallengeDialogProps {
 
 export function CreateChallengeDialog({ open, onOpenChange }: CreateChallengeDialogProps) {
   const { t } = useLanguage();
-  const allTechniques = [...PRESET_TECHNIQUES, ...getCustomTechniques()];
+  const allTechniques = useMemo(() => [...PRESET_TECHNIQUES, ...getCustomTechniques()], []);
   const [techniqueId, setTechniqueId] = useState(allTechniques[0]?.id || "");
   const [targetMinutes, setTargetMinutes] = useState(5);
   const [targetCycles, setTargetCycles] = useState(0);
