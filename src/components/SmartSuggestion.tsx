@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { Sparkles, Brain } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { getSmartSuggestion, getSuggestionTechnique } from "@/lib/suggestions";
@@ -22,7 +22,7 @@ export default function SmartSuggestion() {
   const fallbackTechnique = getSuggestionTechnique(fallback);
 
   const techniqueId = adaptive ? adaptive.techniqueId : fallbackTechnique.id;
-  const allTechniques = [...PRESET_TECHNIQUES, ...getCustomTechniques()];
+  const allTechniques = useMemo(() => [...PRESET_TECHNIQUES, ...getCustomTechniques()], []);
   const technique = allTechniques.find((tech) => tech.id === techniqueId) || PRESET_TECHNIQUES[0];
 
   // Auto-adaptive technique (separate from mood-based)

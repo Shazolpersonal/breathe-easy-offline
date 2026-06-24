@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { CheckCircle2, Circle, Play, ChevronRight, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -13,6 +13,7 @@ export default function Programs() {
   const { t } = useLanguage();
   const [enrollments, setEnrollments] = useState(getEnrollments);
   const [selectedProgram, setSelectedProgram] = useState<string | null>(null);
+  const customTechniques = useMemo(() => getCustomTechniques(), []);
 
   const refresh = () => setEnrollments(getEnrollments());
 
@@ -52,7 +53,7 @@ export default function Programs() {
     const key = `technique.${id}.name`;
     const translated = t(key);
     if (translated !== key) return translated;
-    const tech = getTechniqueById(id, getCustomTechniques());
+    const tech = getTechniqueById(id, customTechniques);
     return tech?.name || id;
   };
 
