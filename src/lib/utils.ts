@@ -30,14 +30,27 @@ export function sanitizeObjectStrings<T>(obj: T): T {
   if (obj !== null && typeof obj === "object") {
     const newObj = {} as Record<string, unknown>;
     for (const key in obj) {
-      if (key === "__proto__" || key === "constructor" || key === "prototype") continue;
+      if (key === "__proto__" || key === "constructor" || key === "prototype")
+        continue;
       if (Object.prototype.hasOwnProperty.call(obj, key)) {
-        newObj[key] = sanitizeObjectStrings((obj as Record<string, unknown>)[key]);
+        newObj[key] = sanitizeObjectStrings(
+          (obj as Record<string, unknown>)[key],
+        );
       }
     }
     return newObj as T;
   }
   return sanitizeString(obj) as unknown as T;
+}
+
+/**
+ * Security: Reviver for JSON.parse to prevent prototype pollution.
+ */
+export function secureJsonReviver(key: string, value: unknown): unknown {
+  if (key === "__proto__" || key === "constructor" || key === "prototype") {
+    return undefined;
+  }
+  return value;
 }
 
 /**
@@ -47,7 +60,5 @@ export function sanitizeObjectStrings<T>(obj: T): T {
 export function sanitizeForLog(str: unknown): string {
   if (typeof str !== "string") return String(str);
   const sanitized = sanitizeString(str) as string;
-  return sanitized
-    .replace(/\r?\n|\r/g, " ")
-    .substring(0, 200);
+  return sanitized.replace(/\r?\n|\r/g, " ").substring(0, 200);
 }
