@@ -1,7 +1,37 @@
 import { useMemo, useState } from "react";
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, LineChart, Line } from "recharts";
-import { getSessions, getCurrentStreak, getLongestStreak, deleteSession } from "@/lib/storage";
-import { Flame, Clock, Target, Trophy, Brain, BookOpen, ChevronLeft, ChevronRight, Star, Calendar, Zap, TrendingUp, Share2, Search, Trash2 } from "lucide-react";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  Tooltip,
+  ResponsiveContainer,
+  LineChart,
+  Line,
+} from "recharts";
+import {
+  getSessions,
+  getCurrentStreak,
+  getLongestStreak,
+  deleteSession,
+} from "@/lib/storage";
+import {
+  Flame,
+  Clock,
+  Target,
+  Trophy,
+  Brain,
+  BookOpen,
+  ChevronLeft,
+  ChevronRight,
+  Star,
+  Calendar,
+  Zap,
+  TrendingUp,
+  Share2,
+  Search,
+  Trash2,
+} from "lucide-react";
 import { checkAllBadges } from "@/lib/achievements";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -27,22 +57,8 @@ export default function Stats() {
   const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
   const sessionsKey = sessions.length;
 
-
-
-
-
-
-
-
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const streak = useMemo(() => getCurrentStreak(), [sessionsKey]);
-
-
-
-
-
-
-
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const longestStreak = useMemo(() => getLongestStreak(), [sessionsKey]);
@@ -53,23 +69,6 @@ export default function Stats() {
 
   const locale = language === "bn" ? "bn" : "en";
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const xpState = useMemo(() => getXPState(), [sessionsKey]);
 
@@ -78,13 +77,23 @@ export default function Stats() {
     let scoredCount = 0;
 
     let totalSeconds = 0;
-    let firstSession: string | null = sessions.length > 0 ? sessions[0].date : null;
+    let firstSession: string | null =
+      sessions.length > 0 ? sessions[0].date : null;
     const daysSet = new Set<string>();
 
     const dailyMinutesMap: Record<string, number> = {};
 
-    const techniqueMap: Record<string, { name: string; sessions: number; totalCalm: number; calmCount: number }> = {};
-    const timeOfDayBuckets: Record<string, number> = { night: 0, morning: 0, midday: 0, afternoon: 0, evening: 0 };
+    const techniqueMap: Record<
+      string,
+      { name: string; sessions: number; totalCalm: number; calmCount: number }
+    > = {};
+    const timeOfDayBuckets: Record<string, number> = {
+      night: 0,
+      morning: 0,
+      midday: 0,
+      afternoon: 0,
+      evening: 0,
+    };
 
     const scoredSessions = [];
     const journalSess = [];
@@ -110,10 +119,17 @@ export default function Stats() {
       }
 
       // timeRangeData daily cache
-      dailyMinutesMap[day] = (dailyMinutesMap[day] || 0) + Math.round(s.durationSeconds / 60);
+      dailyMinutesMap[day] =
+        (dailyMinutesMap[day] || 0) + Math.round(s.durationSeconds / 60);
 
       // techniqueBreakdown
-      if (!techniqueMap[s.techniqueId]) techniqueMap[s.techniqueId] = { name: s.techniqueName, sessions: 0, totalCalm: 0, calmCount: 0 };
+      if (!techniqueMap[s.techniqueId])
+        techniqueMap[s.techniqueId] = {
+          name: s.techniqueName,
+          sessions: 0,
+          totalCalm: 0,
+          calmCount: 0,
+        };
       techniqueMap[s.techniqueId].sessions++;
       if (s.calmScore != null) {
         techniqueMap[s.techniqueId].totalCalm += s.calmScore;
@@ -137,7 +153,8 @@ export default function Stats() {
     }
 
     return {
-      avgCalmScore: scoredCount === 0 ? null : Math.round(totalScore / scoredCount),
+      avgCalmScore:
+        scoredCount === 0 ? null : Math.round(totalScore / scoredCount),
       totalMinutes: Math.round(totalSeconds / 60),
       lifetimeStats: {
         uniqueDays: daysSet.size,
@@ -149,7 +166,7 @@ export default function Stats() {
       timeOfDayBuckets,
       scoredSessions,
       journalSessions: journalSess.sort((a, b) => b.date.localeCompare(a.date)),
-      sessionsByMonth
+      sessionsByMonth,
     };
   }, [sessions]);
 
@@ -161,14 +178,20 @@ export default function Stats() {
     return { ...aggregates.lifetimeStats, totalXP: xpState.totalXP };
   }, [aggregates, xpState]);
 
-
-  const TIME_BUCKET_KEYS = useMemo(() => [
-    { labelKey: "stats.timeBucket.night", range: [21, 6], key: "night" },
-    { labelKey: "stats.timeBucket.morning", range: [6, 9], key: "morning" },
-    { labelKey: "stats.timeBucket.midday", range: [9, 12], key: "midday" },
-    { labelKey: "stats.timeBucket.afternoon", range: [12, 17], key: "afternoon" },
-    { labelKey: "stats.timeBucket.evening", range: [17, 21], key: "evening" },
-  ], []);
+  const TIME_BUCKET_KEYS = useMemo(
+    () => [
+      { labelKey: "stats.timeBucket.night", range: [21, 6], key: "night" },
+      { labelKey: "stats.timeBucket.morning", range: [6, 9], key: "morning" },
+      { labelKey: "stats.timeBucket.midday", range: [9, 12], key: "midday" },
+      {
+        labelKey: "stats.timeBucket.afternoon",
+        range: [12, 17],
+        key: "afternoon",
+      },
+      { labelKey: "stats.timeBucket.evening", range: [17, 21], key: "evening" },
+    ],
+    [],
+  );
   /* = [
     { labelKey: "stats.timeBucket.night", range: [21, 6], key: "night" },
     { labelKey: "stats.timeBucket.morning", range: [6, 9], key: "morning" },
@@ -185,22 +208,6 @@ export default function Stats() {
   }
 
   // Flexible time range chart data
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
   const timeRangeData = useMemo(() => {
     const rangeDays = timeRange === "7d" ? 7 : timeRange === "30d" ? 30 : 90;
@@ -257,7 +264,10 @@ export default function Stats() {
         }
       }
       return weeks.map((w) => ({
-        label: new Date(w.start).toLocaleDateString(locale, { month: "short", day: "numeric" }),
+        label: new Date(w.start).toLocaleDateString(locale, {
+          month: "short",
+          day: "numeric",
+        }),
         minutes: w.minutes,
       }));
     }
@@ -266,66 +276,54 @@ export default function Stats() {
   // Technique breakdown
   const techniqueBreakdown = useMemo(() => {
     return Object.values(aggregates.techniqueMap)
-      .map(t => ({ name: t.name, sessions: t.sessions, avgCalm: t.calmCount > 0 ? Math.round(t.totalCalm / t.calmCount) : null }))
+      .map((t) => ({
+        name: t.name,
+        sessions: t.sessions,
+        avgCalm: t.calmCount > 0 ? Math.round(t.totalCalm / t.calmCount) : null,
+      }))
       .sort((a, b) => b.sessions - a.sessions)
       .slice(0, 6);
   }, [aggregates]);
 
   // Mood trend (30-day rolling)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   const moodTrendData = useMemo(() => {
-    const records = getMoodRecords().filter(r => r.moodAfter != null);
+    const records = getMoodRecords().filter((r) => r.moodAfter != null);
     if (records.length < 2) return [];
     const dayMap: Record<string, { total: number; count: number }> = {};
-    records.forEach(r => {
+    records.forEach((r) => {
       const day = r.date.substring(0, 10);
       if (!dayMap[day]) dayMap[day] = { total: 0, count: 0 };
       dayMap[day].total += r.moodAfter!;
       dayMap[day].count++;
     });
     const days = Object.entries(dayMap)
-      .map(([date, { total, count }]) => ({ date, avg: Math.round((total / count) * 10) / 10 }))
+      .map(([date, { total, count }]) => ({
+        date,
+        avg: Math.round((total / count) * 10) / 10,
+      }))
       .sort((a, b) => a.date.localeCompare(b.date))
       .slice(-30);
-    
+
     // 7-day rolling average
     return days.map((d, i) => {
       const window = days.slice(Math.max(0, i - 6), i + 1);
-      const rolling = Math.round(window.reduce((s, w) => s + w.avg, 0) / window.length * 10) / 10;
-      return { day: new Date(d.date).toLocaleDateString(locale, { month: "short", day: "numeric" }), mood: d.avg, rolling };
+      const rolling =
+        Math.round(
+          (window.reduce((s, w) => s + w.avg, 0) / window.length) * 10,
+        ) / 10;
+      return {
+        day: new Date(d.date).toLocaleDateString(locale, {
+          month: "short",
+          day: "numeric",
+        }),
+        mood: d.avg,
+        rolling,
+      };
     });
   }, [locale]);
 
   // XP history chart
-
-
-
-
-
-
-
-
-
-
-
-
 
   const xpChartData = useMemo(() => {
     try {
@@ -347,102 +345,45 @@ export default function Stats() {
         day: new Date(date).toLocaleDateString(locale, { day: "numeric" }),
         xp,
       }));
-    } catch { return []; }
+    } catch {
+      return [];
+    }
   }, [locale]);
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   const calmTrendData = useMemo(() => {
-    return aggregates.scoredSessions.slice(-14).map((s, i) => ({ session: i + 1, score: s.calmScore! }));
+    return aggregates.scoredSessions
+      .slice(-14)
+      .map((s, i) => ({ session: i + 1, score: s.calmScore! }));
   }, [aggregates]);
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   const timeOfDayData = useMemo(() => {
-    return TIME_BUCKET_KEYS.map((b) => ({ name: t(b.labelKey), sessions: aggregates.timeOfDayBuckets[b.key] }));
+    return TIME_BUCKET_KEYS.map((b) => ({
+      name: t(b.labelKey),
+      sessions: aggregates.timeOfDayBuckets[b.key],
+    }));
   }, [aggregates, t, TIME_BUCKET_KEYS]);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
   const journalSessions = aggregates.journalSessions;
 
+  const sortedSessions = useMemo(() => {
+    return [...sessions].sort((a, b) => b.date.localeCompare(a.date));
+  }, [sessions]);
+
   const filteredHistory = useMemo(() => {
-    let result = sessions;
+    let result = sortedSessions;
     if (historySearch.trim()) {
       const q = historySearch.toLowerCase();
-      result = result.filter(s => s.techniqueName.toLowerCase().includes(q) || s.date.includes(q));
+      result = result.filter(
+        (s) => s.techniqueName.toLowerCase().includes(q) || s.date.includes(q),
+      );
     }
-    return [...result].sort((a, b) => b.date.localeCompare(a.date));
-  }, [sessions, historySearch]);
+    return result;
+  }, [sortedSessions, historySearch]);
 
   // Report data with daily chart
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   const reportData = useMemo(() => {
-    const reportMonthStr = `${reportYear}-${String(reportMonth + 1).padStart(2, '0')}`;
+    const reportMonthStr = `${reportYear}-${String(reportMonth + 1).padStart(2, "0")}`;
 
     let totalSeconds = 0;
     let monthSessionsCount = 0;
@@ -470,12 +411,18 @@ export default function Stats() {
 
       const dateStr = s.date.substring(0, 10);
       datesSet.add(dateStr);
-      dailyMinutesMap[dateStr] = (dailyMinutesMap[dateStr] || 0) + s.durationSeconds;
+      dailyMinutesMap[dateStr] =
+        (dailyMinutesMap[dateStr] || 0) + s.durationSeconds;
     }
 
     const totalMin = Math.round(totalSeconds / 60);
-    const topTechnique = Object.values(techniqueCount).sort((a, b) => b.count - a.count)[0] || null;
-    const avgCalm = scoredCalmCount > 0 ? Math.round(scoredCalmTotal / scoredCalmCount) : null;
+    const topTechnique =
+      Object.values(techniqueCount).sort((a, b) => b.count - a.count)[0] ||
+      null;
+    const avgCalm =
+      scoredCalmCount > 0
+        ? Math.round(scoredCalmTotal / scoredCalmCount)
+        : null;
 
     const dates = Array.from(datesSet).sort();
     let mStreak = dates.length > 0 ? 1 : 0;
@@ -485,7 +432,10 @@ export default function Stats() {
       for (let i = 1; i < dates.length; i++) {
         const currTime = Date.parse(dates[i]);
         const diff = (currTime - prevTime) / 86400000;
-        if (diff === 1) { cur++; mStreak = Math.max(mStreak, cur); } else if (diff > 1) cur = 1;
+        if (diff === 1) {
+          cur++;
+          mStreak = Math.max(mStreak, cur);
+        } else if (diff > 1) cur = 1;
         prevTime = currTime;
       }
     }
@@ -499,30 +449,38 @@ export default function Stats() {
       dailyMinutes.push({ day: String(d), minutes: dayMin });
     }
 
-    return { sessions: monthSessionsCount, totalMin, topTechnique, avgCalm, streak: mStreak, dailyMinutes };
+    return {
+      sessions: monthSessionsCount,
+      totalMin,
+      topTechnique,
+      avgCalm,
+      streak: mStreak,
+      dailyMinutes,
+    };
   }, [aggregates.sessionsByMonth, reportMonth, reportYear]);
 
 
+  const { unlocked, locked } = useMemo(
+    () => checkAllBadges(sessions),
+    [sessionsKey],
+  );
 
-
-
-
-
-
-
-
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const { unlocked, locked } = useMemo(() => checkAllBadges(sessions), [sessionsKey]);
-
-  const monthLabel = new Date(reportYear, reportMonth).toLocaleDateString(locale, { month: "long", year: "numeric" });
+  const monthLabel = new Date(reportYear, reportMonth).toLocaleDateString(
+    locale,
+    { month: "long", year: "numeric" },
+  );
 
   const prevMonth = () => {
-    if (reportMonth === 0) { setReportMonth(11); setReportYear(reportYear - 1); }
-    else setReportMonth(reportMonth - 1);
+    if (reportMonth === 0) {
+      setReportMonth(11);
+      setReportYear(reportYear - 1);
+    } else setReportMonth(reportMonth - 1);
   };
   const nextMonth = () => {
-    if (reportMonth === 11) { setReportMonth(0); setReportYear(reportYear + 1); }
-    else setReportMonth(reportMonth + 1);
+    if (reportMonth === 11) {
+      setReportMonth(0);
+      setReportYear(reportYear + 1);
+    } else setReportMonth(reportMonth + 1);
   };
 
   const tabLabels: Record<Tab, string> = {
@@ -534,21 +492,39 @@ export default function Stats() {
     reports: t("stats.reports"),
   };
 
-  const tooltipStyle = { background: "hsl(var(--card))", border: "1px solid hsl(var(--border))", borderRadius: 12, fontSize: 12 };
+  const tooltipStyle = {
+    background: "hsl(var(--card))",
+    border: "1px solid hsl(var(--border))",
+    borderRadius: 12,
+    fontSize: 12,
+  };
 
   return (
     <div className="min-h-screen px-4 pb-24 pt-12">
       <div className="mx-auto max-w-md">
-        <h1 className="mb-4 text-2xl font-bold text-foreground">{t("stats.title")}</h1>
+        <h1 className="mb-4 text-2xl font-bold text-foreground">
+          {t("stats.title")}
+        </h1>
 
         <div className="mb-6 flex gap-1 rounded-xl bg-secondary p-1">
-          {(["stats", "history", "insights", "badges", "journal", "reports"] as Tab[]).map((tabKey) => (
+          {(
+            [
+              "stats",
+              "history",
+              "insights",
+              "badges",
+              "journal",
+              "reports",
+            ] as Tab[]
+          ).map((tabKey) => (
             <button
               key={tabKey}
               onClick={() => setTab(tabKey)}
               className={cn(
                 "flex-1 rounded-lg py-2 text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-ring focus-visible:ring-offset-2",
-                tab === tabKey ? "bg-card text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"
+                tab === tabKey
+                  ? "bg-card text-foreground shadow-sm"
+                  : "text-muted-foreground hover:text-foreground",
               )}
             >
               {tabLabels[tabKey]}
@@ -563,196 +539,389 @@ export default function Stats() {
                 <div className="rounded-full bg-primary/10 p-4">
                   <Target className="h-10 w-10 text-primary" />
                 </div>
-                <h2 className="text-lg font-semibold text-foreground">{t("stats.emptyTitle")}</h2>
-                <p className="max-w-xs text-sm text-muted-foreground">{t("stats.emptyDesc")}</p>
+                <h2 className="text-lg font-semibold text-foreground">
+                  {t("stats.emptyTitle")}
+                </h2>
+                <p className="max-w-xs text-sm text-muted-foreground">
+                  {t("stats.emptyDesc")}
+                </p>
               </div>
             ) : (
-            <>
-            {/* Lifetime Summary Card */}
-            <div className="mb-6 rounded-2xl border border-primary/20 bg-primary/5 p-4">
-              <h2 className="mb-3 flex items-center gap-2 text-sm font-semibold text-foreground">
-                <Star className="h-4 w-4 text-primary" />
-                {t("stats.lifetime")}
-              </h2>
-              <div className="grid grid-cols-2 gap-3">
-                <div className="flex flex-col">
-                  <span className="text-lg font-bold text-foreground">{sessions.length}</span>
-                  <span className="text-sm text-muted-foreground">{t("stats.totalSessions")}</span>
-                </div>
-                <div className="flex flex-col">
-                  <span className="text-lg font-bold text-foreground">{lifetimeStats.totalHours}<span className="text-sm font-normal text-muted-foreground ml-0.5">h</span></span>
-                  <span className="text-sm text-muted-foreground">{t("stats.totalHours")}</span>
-                </div>
-                <div className="flex flex-col">
-                  <span className="text-lg font-bold text-foreground">{lifetimeStats.uniqueDays}</span>
-                  <span className="text-sm text-muted-foreground">{t("stats.uniqueDays")}</span>
-                </div>
-                <div className="flex flex-col">
-                  <span className="text-lg font-bold text-foreground">{lifetimeStats.totalXP}<span className="text-sm font-normal text-muted-foreground ml-0.5">XP</span></span>
-                  <span className="text-sm text-muted-foreground">{t("stats.totalXP")}</span>
-                </div>
-              </div>
-              {lifetimeStats.firstSession && (
-                <p className="mt-2 text-sm text-muted-foreground">
-                  {t("stats.memberSince", { date: new Date(lifetimeStats.firstSession).toLocaleDateString(locale, { month: "long", year: "numeric" }) })}
-                </p>
-              )}
-            </div>
-
-            <ConsistencyCard />
-
-            <div className="mb-6 grid grid-cols-2 gap-3">
-              {[
-                { icon: Flame, value: streak, label: t("stats.currentStreak"), suffix: streak === 1 ? t("stats.day") : t("stats.days"), span: false, shareable: streak >= 3 },
-                { icon: Trophy, value: longestStreak, label: t("stats.longestStreak"), suffix: longestStreak === 1 ? t("stats.day") : t("stats.days"), span: false, shareable: false },
-                { icon: Clock, value: totalMinutes, label: t("stats.totalTime"), suffix: t("stats.min"), span: false },
-                { icon: Target, value: sessions.length, label: t("stats.sessions"), suffix: "", span: false, shareable: false },
-                ...(avgCalmScore !== null
-                  ? [{ icon: Brain, value: avgCalmScore, label: t("stats.avgCalm"), suffix: "%", span: true, shareable: false }]
-                  : [sessions]),
-              ].map(({ icon: Icon, value, label, suffix, span, shareable }) => (
-                <div key={label} className={`relative flex flex-col items-center rounded-2xl border border-border bg-card p-4 ${span ? "col-span-2" : ""}`}>
-                  <Icon className="mb-1 h-5 w-5 text-primary" />
-                  <span className="text-xl font-bold text-foreground">
-                    {value}{suffix && <span className="ml-1 text-sm font-normal text-muted-foreground">{suffix}</span>}
-                  </span>
-                  <span className="text-sm text-muted-foreground">{label}</span>
-                  {shareable && (
-                    <button
-                      onClick={() => shareStreak(value as number, language)}
-                      className="absolute top-2 right-2 rounded-full p-1 text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-ring focus-visible:ring-offset-2"
-                      title={t("share.streak")}
-                      aria-label={t("share.streak")}
-                    >
-                      <Share2 className="h-3.5 w-3.5" />
-                    </button>
+              <>
+                {/* Lifetime Summary Card */}
+                <div className="mb-6 rounded-2xl border border-primary/20 bg-primary/5 p-4">
+                  <h2 className="mb-3 flex items-center gap-2 text-sm font-semibold text-foreground">
+                    <Star className="h-4 w-4 text-primary" />
+                    {t("stats.lifetime")}
+                  </h2>
+                  <div className="grid grid-cols-2 gap-3">
+                    <div className="flex flex-col">
+                      <span className="text-lg font-bold text-foreground">
+                        {sessions.length}
+                      </span>
+                      <span className="text-sm text-muted-foreground">
+                        {t("stats.totalSessions")}
+                      </span>
+                    </div>
+                    <div className="flex flex-col">
+                      <span className="text-lg font-bold text-foreground">
+                        {lifetimeStats.totalHours}
+                        <span className="text-sm font-normal text-muted-foreground ml-0.5">
+                          h
+                        </span>
+                      </span>
+                      <span className="text-sm text-muted-foreground">
+                        {t("stats.totalHours")}
+                      </span>
+                    </div>
+                    <div className="flex flex-col">
+                      <span className="text-lg font-bold text-foreground">
+                        {lifetimeStats.uniqueDays}
+                      </span>
+                      <span className="text-sm text-muted-foreground">
+                        {t("stats.uniqueDays")}
+                      </span>
+                    </div>
+                    <div className="flex flex-col">
+                      <span className="text-lg font-bold text-foreground">
+                        {lifetimeStats.totalXP}
+                        <span className="text-sm font-normal text-muted-foreground ml-0.5">
+                          XP
+                        </span>
+                      </span>
+                      <span className="text-sm text-muted-foreground">
+                        {t("stats.totalXP")}
+                      </span>
+                    </div>
+                  </div>
+                  {lifetimeStats.firstSession && (
+                    <p className="mt-2 text-sm text-muted-foreground">
+                      {t("stats.memberSince", {
+                        date: new Date(
+                          lifetimeStats.firstSession,
+                        ).toLocaleDateString(locale, {
+                          month: "long",
+                          year: "numeric",
+                        }),
+                      })}
+                    </p>
                   )}
                 </div>
-              ))}
-            </div>
 
-            {/* Time Range Chart */}
-            <div className="mb-6 rounded-2xl border border-border bg-card p-4">
-              <div className="mb-3 flex items-center justify-between">
-                <h2 className="text-sm font-semibold text-muted-foreground">{t("stats.activity")}</h2>
-                <div className="flex gap-1 rounded-lg bg-secondary p-0.5">
-                  {(["7d", "30d", "90d"] as TimeRange[]).map((r) => (
-                    <button
-                      key={r}
-                      onClick={() => setTimeRange(r)}
-                      className={cn(
-                        "rounded-md px-2 py-1 text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-ring focus-visible:ring-offset-2",
-                        timeRange === r ? "bg-card text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"
-                      )}
-                    >
-                      {t(`stats.range.${r}`)}
-                    </button>
-                  ))}
-                </div>
-              </div>
-              <ResponsiveContainer width="100%" height={160}>
-                <BarChart data={timeRangeData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                  <XAxis dataKey="label" tick={{ fontSize: 10, fill: "hsl(var(--muted-foreground))" }} axisLine={false} tickLine={false} />
-                  <YAxis hide />
-                  <Tooltip contentStyle={tooltipStyle} labelStyle={{ color: "hsl(var(--foreground))" }} />
-                  <Bar dataKey="minutes" fill="hsl(var(--primary))" radius={[6, 6, 0, 0]} />
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
+                <ConsistencyCard />
 
-            {/* Technique Breakdown */}
-            {techniqueBreakdown.length >= 2 && (
-              <div className="mb-6 rounded-2xl border border-border bg-card p-4">
-                <h2 className="mb-3 text-sm font-semibold text-muted-foreground">{t("stats.techniqueBreakdown")}</h2>
-                <div className="space-y-2.5">
-                  {techniqueBreakdown.map((tech) => {
-                    const maxSessions = techniqueBreakdown[0].sessions;
-                    const pct = Math.round((tech.sessions / maxSessions) * 100);
-                    return (
-                      <div key={tech.name}>
-                        <div className="mb-1 flex items-center justify-between">
-                          <span className="text-sm font-medium text-foreground truncate max-w-[60%]">{tech.name}</span>
-                          <span className="text-sm text-muted-foreground">
-                            {tech.sessions} {t("stats.sessions").toLowerCase()}
-                            {tech.avgCalm != null && ` · ${tech.avgCalm}%`}
-                          </span>
-                        </div>
-                        <div className="h-2 w-full rounded-full bg-secondary">
-                          <div className="h-full rounded-full bg-primary transition-all" style={{ width: `${pct}%` }} />
-                        </div>
+                <div className="mb-6 grid grid-cols-2 gap-3">
+                  {[
+                    {
+                      icon: Flame,
+                      value: streak,
+                      label: t("stats.currentStreak"),
+                      suffix: streak === 1 ? t("stats.day") : t("stats.days"),
+                      span: false,
+                      shareable: streak >= 3,
+                    },
+                    {
+                      icon: Trophy,
+                      value: longestStreak,
+                      label: t("stats.longestStreak"),
+                      suffix:
+                        longestStreak === 1 ? t("stats.day") : t("stats.days"),
+                      span: false,
+                      shareable: false,
+                    },
+                    {
+                      icon: Clock,
+                      value: totalMinutes,
+                      label: t("stats.totalTime"),
+                      suffix: t("stats.min"),
+                      span: false,
+                    },
+                    {
+                      icon: Target,
+                      value: sessions.length,
+                      label: t("stats.sessions"),
+                      suffix: "",
+                      span: false,
+                      shareable: false,
+                    },
+                    ...(avgCalmScore !== null
+                      ? [
+                          {
+                            icon: Brain,
+                            value: avgCalmScore,
+                            label: t("stats.avgCalm"),
+                            suffix: "%",
+                            span: true,
+                            shareable: false,
+                          },
+                        ]
+                      : [sessions]),
+                  ].map(
+                    ({ icon: Icon, value, label, suffix, span, shareable }) => (
+                      <div
+                        key={label}
+                        className={`relative flex flex-col items-center rounded-2xl border border-border bg-card p-4 ${span ? "col-span-2" : ""}`}
+                      >
+                        <Icon className="mb-1 h-5 w-5 text-primary" />
+                        <span className="text-xl font-bold text-foreground">
+                          {value}
+                          {suffix && (
+                            <span className="ml-1 text-sm font-normal text-muted-foreground">
+                              {suffix}
+                            </span>
+                          )}
+                        </span>
+                        <span className="text-sm text-muted-foreground">
+                          {label}
+                        </span>
+                        {shareable && (
+                          <button
+                            onClick={() =>
+                              shareStreak(value as number, language)
+                            }
+                            className="absolute top-2 right-2 rounded-full p-1 text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-ring focus-visible:ring-offset-2"
+                            title={t("share.streak")}
+                            aria-label={t("share.streak")}
+                          >
+                            <Share2 className="h-3.5 w-3.5" />
+                          </button>
+                        )}
                       </div>
-                    );
-                  })}
+                    ),
+                  )}
                 </div>
-              </div>
-            )}
 
-            <div className="mb-6 rounded-2xl border border-border bg-card p-4">
-              <h2 className="mb-3 text-sm font-semibold text-muted-foreground">{t("stats.timeOfDay")}</h2>
-              <ResponsiveContainer width="100%" height={140}>
-                <BarChart data={timeOfDayData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                  <XAxis dataKey="name" tick={{ fontSize: 10, fill: "hsl(var(--muted-foreground))" }} axisLine={false} tickLine={false} />
-                  <YAxis hide />
-                  <Tooltip contentStyle={tooltipStyle} />
-                  <Bar dataKey="sessions" fill="hsl(var(--primary) / 0.7)" radius={[6, 6, 0, 0]} />
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
+                {/* Time Range Chart */}
+                <div className="mb-6 rounded-2xl border border-border bg-card p-4">
+                  <div className="mb-3 flex items-center justify-between">
+                    <h2 className="text-sm font-semibold text-muted-foreground">
+                      {t("stats.activity")}
+                    </h2>
+                    <div className="flex gap-1 rounded-lg bg-secondary p-0.5">
+                      {(["7d", "30d", "90d"] as TimeRange[]).map((r) => (
+                        <button
+                          key={r}
+                          onClick={() => setTimeRange(r)}
+                          className={cn(
+                            "rounded-md px-2 py-1 text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-ring focus-visible:ring-offset-2",
+                            timeRange === r
+                              ? "bg-card text-foreground shadow-sm"
+                              : "text-muted-foreground hover:text-foreground",
+                          )}
+                        >
+                          {t(`stats.range.${r}`)}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                  <ResponsiveContainer width="100%" height={160}>
+                    <BarChart
+                      data={timeRangeData}
+                      margin={{ top: 10, right: 10, left: -20, bottom: 0 }}
+                    >
+                      <XAxis
+                        dataKey="label"
+                        tick={{
+                          fontSize: 10,
+                          fill: "hsl(var(--muted-foreground))",
+                        }}
+                        axisLine={false}
+                        tickLine={false}
+                      />
+                      <YAxis hide />
+                      <Tooltip
+                        contentStyle={tooltipStyle}
+                        labelStyle={{ color: "hsl(var(--foreground))" }}
+                      />
+                      <Bar
+                        dataKey="minutes"
+                        fill="hsl(var(--primary))"
+                        radius={[6, 6, 0, 0]}
+                      />
+                    </BarChart>
+                  </ResponsiveContainer>
+                </div>
 
-            {calmTrendData.length >= 2 && (
-              <div className="mb-6 rounded-2xl border border-border bg-card p-4">
-                <h2 className="mb-3 text-sm font-semibold text-muted-foreground">{t("stats.calmTrend")}</h2>
-                <ResponsiveContainer width="100%" height={120}>
-                  <LineChart data={calmTrendData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                    <XAxis dataKey="session" tick={{ fontSize: 10, fill: "hsl(var(--muted-foreground))" }} axisLine={false} tickLine={false} />
-                    <YAxis domain={[0, 100]} hide />
-                    <Tooltip contentStyle={tooltipStyle} />
-                    <Line type="monotone" dataKey="score" stroke="hsl(var(--primary))" strokeWidth={2} dot={{ r: 3, fill: "hsl(var(--primary))" }} />
-                  </LineChart>
-                </ResponsiveContainer>
-              </div>
-            )}
+                {/* Technique Breakdown */}
+                {techniqueBreakdown.length >= 2 && (
+                  <div className="mb-6 rounded-2xl border border-border bg-card p-4">
+                    <h2 className="mb-3 text-sm font-semibold text-muted-foreground">
+                      {t("stats.techniqueBreakdown")}
+                    </h2>
+                    <div className="space-y-2.5">
+                      {techniqueBreakdown.map((tech) => {
+                        const maxSessions = techniqueBreakdown[0].sessions;
+                        const pct = Math.round(
+                          (tech.sessions / maxSessions) * 100,
+                        );
+                        return (
+                          <div key={tech.name}>
+                            <div className="mb-1 flex items-center justify-between">
+                              <span className="text-sm font-medium text-foreground truncate max-w-[60%]">
+                                {tech.name}
+                              </span>
+                              <span className="text-sm text-muted-foreground">
+                                {tech.sessions}{" "}
+                                {t("stats.sessions").toLowerCase()}
+                                {tech.avgCalm != null && ` · ${tech.avgCalm}%`}
+                              </span>
+                            </div>
+                            <div className="h-2 w-full rounded-full bg-secondary">
+                              <div
+                                className="h-full rounded-full bg-primary transition-all"
+                                style={{ width: `${pct}%` }}
+                              />
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
 
-            {/* Mood Trend */}
-            {moodTrendData.length >= 3 && (
-              <div className="mb-6 rounded-2xl border border-border bg-card p-4">
-                <h2 className="mb-3 flex items-center gap-2 text-sm font-semibold text-muted-foreground">
-                  <TrendingUp className="h-3.5 w-3.5" />
-                  {t("stats.moodTrend")}
-                </h2>
-                <ResponsiveContainer width="100%" height={120}>
-                  <LineChart data={moodTrendData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                    <XAxis dataKey="day" tick={{ fontSize: 9, fill: "hsl(var(--muted-foreground))" }} axisLine={false} tickLine={false} />
-                    <YAxis domain={[1, 5]} hide />
-                    <Tooltip contentStyle={tooltipStyle} />
-                    <Line type="monotone" dataKey="mood" stroke="hsl(var(--primary) / 0.4)" strokeWidth={1} dot={false} />
-                    <Line type="monotone" dataKey="rolling" stroke="hsl(var(--primary))" strokeWidth={2} dot={false} />
-                  </LineChart>
-                </ResponsiveContainer>
-                <p className="mt-1 text-sm text-muted-foreground text-center">{t("stats.moodTrendDesc")}</p>
-              </div>
-            )}
+                <div className="mb-6 rounded-2xl border border-border bg-card p-4">
+                  <h2 className="mb-3 text-sm font-semibold text-muted-foreground">
+                    {t("stats.timeOfDay")}
+                  </h2>
+                  <ResponsiveContainer width="100%" height={140}>
+                    <BarChart
+                      data={timeOfDayData}
+                      margin={{ top: 10, right: 10, left: -20, bottom: 0 }}
+                    >
+                      <XAxis
+                        dataKey="name"
+                        tick={{
+                          fontSize: 10,
+                          fill: "hsl(var(--muted-foreground))",
+                        }}
+                        axisLine={false}
+                        tickLine={false}
+                      />
+                      <YAxis hide />
+                      <Tooltip contentStyle={tooltipStyle} />
+                      <Bar
+                        dataKey="sessions"
+                        fill="hsl(var(--primary) / 0.7)"
+                        radius={[6, 6, 0, 0]}
+                      />
+                    </BarChart>
+                  </ResponsiveContainer>
+                </div>
 
-            {/* XP Chart */}
-            {xpChartData.some(d => d.xp > 0) && (
-              <div className="mb-6 rounded-2xl border border-border bg-card p-4">
-                <h2 className="mb-3 flex items-center gap-2 text-sm font-semibold text-muted-foreground">
-                  <Zap className="h-3.5 w-3.5" />
-                  {t("stats.xpEarned")}
-                </h2>
-                <ResponsiveContainer width="100%" height={100}>
-                  <BarChart data={xpChartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                    <XAxis dataKey="day" tick={{ fontSize: 9, fill: "hsl(var(--muted-foreground))" }} axisLine={false} tickLine={false} interval={4} />
-                    <YAxis hide />
-                    <Tooltip contentStyle={tooltipStyle} />
-                    <Bar dataKey="xp" fill="hsl(var(--primary) / 0.6)" radius={[4, 4, 0, 0]} />
-                  </BarChart>
-                </ResponsiveContainer>
-              </div>
-            )}
+                {calmTrendData.length >= 2 && (
+                  <div className="mb-6 rounded-2xl border border-border bg-card p-4">
+                    <h2 className="mb-3 text-sm font-semibold text-muted-foreground">
+                      {t("stats.calmTrend")}
+                    </h2>
+                    <ResponsiveContainer width="100%" height={120}>
+                      <LineChart
+                        data={calmTrendData}
+                        margin={{ top: 10, right: 10, left: -20, bottom: 0 }}
+                      >
+                        <XAxis
+                          dataKey="session"
+                          tick={{
+                            fontSize: 10,
+                            fill: "hsl(var(--muted-foreground))",
+                          }}
+                          axisLine={false}
+                          tickLine={false}
+                        />
+                        <YAxis domain={[0, 100]} hide />
+                        <Tooltip contentStyle={tooltipStyle} />
+                        <Line
+                          type="monotone"
+                          dataKey="score"
+                          stroke="hsl(var(--primary))"
+                          strokeWidth={2}
+                          dot={{ r: 3, fill: "hsl(var(--primary))" }}
+                        />
+                      </LineChart>
+                    </ResponsiveContainer>
+                  </div>
+                )}
 
-            <MoodHeatmapCalendar />
-            </>
+                {/* Mood Trend */}
+                {moodTrendData.length >= 3 && (
+                  <div className="mb-6 rounded-2xl border border-border bg-card p-4">
+                    <h2 className="mb-3 flex items-center gap-2 text-sm font-semibold text-muted-foreground">
+                      <TrendingUp className="h-3.5 w-3.5" />
+                      {t("stats.moodTrend")}
+                    </h2>
+                    <ResponsiveContainer width="100%" height={120}>
+                      <LineChart
+                        data={moodTrendData}
+                        margin={{ top: 10, right: 10, left: -20, bottom: 0 }}
+                      >
+                        <XAxis
+                          dataKey="day"
+                          tick={{
+                            fontSize: 9,
+                            fill: "hsl(var(--muted-foreground))",
+                          }}
+                          axisLine={false}
+                          tickLine={false}
+                        />
+                        <YAxis domain={[1, 5]} hide />
+                        <Tooltip contentStyle={tooltipStyle} />
+                        <Line
+                          type="monotone"
+                          dataKey="mood"
+                          stroke="hsl(var(--primary) / 0.4)"
+                          strokeWidth={1}
+                          dot={false}
+                        />
+                        <Line
+                          type="monotone"
+                          dataKey="rolling"
+                          stroke="hsl(var(--primary))"
+                          strokeWidth={2}
+                          dot={false}
+                        />
+                      </LineChart>
+                    </ResponsiveContainer>
+                    <p className="mt-1 text-sm text-muted-foreground text-center">
+                      {t("stats.moodTrendDesc")}
+                    </p>
+                  </div>
+                )}
+
+                {/* XP Chart */}
+                {xpChartData.some((d) => d.xp > 0) && (
+                  <div className="mb-6 rounded-2xl border border-border bg-card p-4">
+                    <h2 className="mb-3 flex items-center gap-2 text-sm font-semibold text-muted-foreground">
+                      <Zap className="h-3.5 w-3.5" />
+                      {t("stats.xpEarned")}
+                    </h2>
+                    <ResponsiveContainer width="100%" height={100}>
+                      <BarChart
+                        data={xpChartData}
+                        margin={{ top: 10, right: 10, left: -20, bottom: 0 }}
+                      >
+                        <XAxis
+                          dataKey="day"
+                          tick={{
+                            fontSize: 9,
+                            fill: "hsl(var(--muted-foreground))",
+                          }}
+                          axisLine={false}
+                          tickLine={false}
+                          interval={4}
+                        />
+                        <YAxis hide />
+                        <Tooltip contentStyle={tooltipStyle} />
+                        <Bar
+                          dataKey="xp"
+                          fill="hsl(var(--primary) / 0.6)"
+                          radius={[4, 4, 0, 0]}
+                        />
+                      </BarChart>
+                    </ResponsiveContainer>
+                  </div>
+                )}
+
+                <MoodHeatmapCalendar />
+              </>
             )}
           </>
         )}
@@ -771,74 +940,94 @@ export default function Stats() {
             {sessions.length === 0 ? (
               <div className="flex flex-col items-center gap-3 py-12 text-center">
                 <Clock className="h-10 w-10 text-muted-foreground/40" />
-                <p className="text-sm text-muted-foreground">{t("stats.emptyDesc")}</p>
+                <p className="text-sm text-muted-foreground">
+                  {t("stats.emptyDesc")}
+                </p>
               </div>
             ) : (
               filteredHistory.map((s) => {
-                  const d = new Date(s.date);
-                  return (
-                    <div key={s.id} className="rounded-2xl border border-border bg-card p-3">
-                      <div className="flex items-center justify-between mb-1">
-                        <span className="text-sm font-medium text-foreground">
-                          {d.toLocaleDateString(locale, { month: "short", day: "numeric", year: "numeric" })}
+                const d = new Date(s.date);
+                return (
+                  <div
+                    key={s.id}
+                    className="rounded-2xl border border-border bg-card p-3"
+                  >
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="text-sm font-medium text-foreground">
+                        {d.toLocaleDateString(locale, {
+                          month: "short",
+                          day: "numeric",
+                          year: "numeric",
+                        })}
+                      </span>
+                      <div className="flex items-center gap-1">
+                        <span className="text-sm text-muted-foreground">
+                          {d.toLocaleTimeString(locale, {
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          })}
                         </span>
-                        <div className="flex items-center gap-1">
-                          <span className="text-sm text-muted-foreground">
-                            {d.toLocaleTimeString(locale, { hour: "2-digit", minute: "2-digit" })}
-                          </span>
-                          {deleteConfirm === s.id ? (
-                            <div className="flex gap-1">
-                              <Button
-                                size="sm"
-                                variant="destructive"
-                                className="h-6 text-sm px-2"
-                                onClick={() => {
-                                  deleteSession(s.id);
-                                  setSessions(getSessions());
-                                  setDeleteConfirm(null);
-                                }}
-                              >
-                                {t("techniques.delete")}
-                              </Button>
-                              <Button
-                                size="sm"
-                                variant="ghost"
-                                className="h-6 text-sm px-2"
-                                onClick={() => setDeleteConfirm(null)}
-                              >
-                                {t("common.cancel")}
-                              </Button>
-                            </div>
-                          ) : (
-                            <button
-                              onClick={() => setDeleteConfirm(s.id)}
-                              className="rounded-full p-1 text-muted-foreground/40 hover:text-destructive transition-colors focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-ring focus-visible:ring-offset-2"
-                              aria-label={t("common.delete")}
+                        {deleteConfirm === s.id ? (
+                          <div className="flex gap-1">
+                            <Button
+                              size="sm"
+                              variant="destructive"
+                              className="h-6 text-sm px-2"
+                              onClick={() => {
+                                deleteSession(s.id);
+                                setSessions(getSessions());
+                                setDeleteConfirm(null);
+                              }}
                             >
-                              <Trash2 className="h-3.5 w-3.5" />
-                            </button>
-                          )}
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-2 text-sm text-muted-foreground flex-wrap">
-                        <span className="font-medium text-foreground">{s.techniqueName}</span>
-                        <span>·</span>
-                        <span>{Math.round(s.durationSeconds / 60)} {t("common.min")}</span>
-                        <span>·</span>
-                        <span>{s.completedCycles} {t("common.cycles")}</span>
-                        {s.calmScore != null && (
-                          <>
-                            <span>·</span>
-                            <span className="text-primary">{s.calmScore}%</span>
-                          </>
+                              {t("techniques.delete")}
+                            </Button>
+                            <Button
+                              size="sm"
+                              variant="ghost"
+                              className="h-6 text-sm px-2"
+                              onClick={() => setDeleteConfirm(null)}
+                            >
+                              {t("common.cancel")}
+                            </Button>
+                          </div>
+                        ) : (
+                          <button
+                            onClick={() => setDeleteConfirm(s.id)}
+                            className="rounded-full p-1 text-muted-foreground/40 hover:text-destructive transition-colors focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-ring focus-visible:ring-offset-2"
+                            aria-label={t("common.delete")}
+                          >
+                            <Trash2 className="h-3.5 w-3.5" />
+                          </button>
                         )}
                       </div>
-                      {s.journal && (
-                        <p className="mt-1.5 text-sm text-foreground/80 line-clamp-2">{s.journal}</p>
+                    </div>
+                    <div className="flex items-center gap-2 text-sm text-muted-foreground flex-wrap">
+                      <span className="font-medium text-foreground">
+                        {s.techniqueName}
+                      </span>
+                      <span>·</span>
+                      <span>
+                        {Math.round(s.durationSeconds / 60)} {t("common.min")}
+                      </span>
+                      <span>·</span>
+                      <span>
+                        {s.completedCycles} {t("common.cycles")}
+                      </span>
+                      {s.calmScore != null && (
+                        <>
+                          <span>·</span>
+                          <span className="text-primary">{s.calmScore}%</span>
+                        </>
                       )}
                     </div>
-                  );
-                })
+                    {s.journal && (
+                      <p className="mt-1.5 text-sm text-foreground/80 line-clamp-2">
+                        {s.journal}
+                      </p>
+                    )}
+                  </div>
+                );
+              })
             )}
           </div>
         )}
@@ -857,9 +1046,20 @@ export default function Stats() {
                     const badgeName = t(`badge.${b.id}.name`);
                     const badgeDesc = t(`badge.${b.id}.description`);
                     return (
-                      <div key={b.id} className="relative flex flex-col items-center gap-1.5 rounded-2xl border border-primary/20 bg-primary/5 p-3">
+                      <div
+                        key={b.id}
+                        className="relative flex flex-col items-center gap-1.5 rounded-2xl border border-primary/20 bg-primary/5 p-3"
+                      >
                         <button
-                          onClick={() => shareBadge(badgeName !== `badge.${b.id}.name` ? badgeName : b.name, b.emoji, language)}
+                          onClick={() =>
+                            shareBadge(
+                              badgeName !== `badge.${b.id}.name`
+                                ? badgeName
+                                : b.name,
+                              b.emoji,
+                              language,
+                            )
+                          }
                           className="absolute top-1.5 right-1.5 rounded-full p-1 text-muted-foreground/60 hover:text-primary hover:bg-primary/10 transition-colors focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-ring focus-visible:ring-offset-2"
                           title={t("share.badge")}
                           aria-label={t("share.badge")}
@@ -867,8 +1067,16 @@ export default function Stats() {
                           <Share2 className="h-3 w-3" />
                         </button>
                         <span className="text-3xl">{b.emoji}</span>
-                        <span className="text-sm font-semibold text-foreground text-center leading-tight">{badgeName !== `badge.${b.id}.name` ? badgeName : b.name}</span>
-                        <span className="text-sm text-muted-foreground text-center leading-tight">{badgeDesc !== `badge.${b.id}.description` ? badgeDesc : b.description}</span>
+                        <span className="text-sm font-semibold text-foreground text-center leading-tight">
+                          {badgeName !== `badge.${b.id}.name`
+                            ? badgeName
+                            : b.name}
+                        </span>
+                        <span className="text-sm text-muted-foreground text-center leading-tight">
+                          {badgeDesc !== `badge.${b.id}.description`
+                            ? badgeDesc
+                            : b.description}
+                        </span>
                       </div>
                     );
                   })}
@@ -885,15 +1093,33 @@ export default function Stats() {
                     const badgeName = t(`badge.${b.id}.name`);
                     const badgeDesc = t(`badge.${b.id}.description`);
                     const prog = b.progress(sessions);
-                    const pct = prog.target > 0 ? Math.round((prog.current / prog.target) * 100) : 0;
+                    const pct =
+                      prog.target > 0
+                        ? Math.round((prog.current / prog.target) * 100)
+                        : 0;
                     return (
-                      <div key={b.id} className="flex flex-col items-center gap-1.5 rounded-2xl border border-border bg-card p-3">
-                        <span className="text-3xl grayscale opacity-50">{b.emoji}</span>
-                        <span className="text-sm font-semibold text-foreground text-center leading-tight opacity-60">{badgeName !== `badge.${b.id}.name` ? badgeName : b.name}</span>
-                        <span className="text-sm text-muted-foreground text-center leading-tight">{badgeDesc !== `badge.${b.id}.description` ? badgeDesc : b.description}</span>
+                      <div
+                        key={b.id}
+                        className="flex flex-col items-center gap-1.5 rounded-2xl border border-border bg-card p-3"
+                      >
+                        <span className="text-3xl grayscale opacity-50">
+                          {b.emoji}
+                        </span>
+                        <span className="text-sm font-semibold text-foreground text-center leading-tight opacity-60">
+                          {badgeName !== `badge.${b.id}.name`
+                            ? badgeName
+                            : b.name}
+                        </span>
+                        <span className="text-sm text-muted-foreground text-center leading-tight">
+                          {badgeDesc !== `badge.${b.id}.description`
+                            ? badgeDesc
+                            : b.description}
+                        </span>
                         <div className="w-full mt-1">
                           <Progress value={pct} className="h-1.5" />
-                          <span className="text-sm text-muted-foreground mt-0.5 block text-center">{prog.current}/{prog.target}</span>
+                          <span className="text-sm text-muted-foreground mt-0.5 block text-center">
+                            {prog.current}/{prog.target}
+                          </span>
                         </div>
                       </div>
                     );
@@ -909,33 +1135,51 @@ export default function Stats() {
             {journalSessions.length === 0 ? (
               <div className="flex flex-col items-center gap-3 py-12 text-center">
                 <BookOpen className="h-10 w-10 text-muted-foreground/40" />
-                <p className="text-sm text-muted-foreground">{t("stats.noJournal")}</p>
+                <p className="text-sm text-muted-foreground">
+                  {t("stats.noJournal")}
+                </p>
               </div>
             ) : (
               journalSessions.map((s) => {
                 const d = new Date(s.date);
                 return (
-                  <div key={s.id} className="rounded-2xl border border-border bg-card p-4">
+                  <div
+                    key={s.id}
+                    className="rounded-2xl border border-border bg-card p-4"
+                  >
                     <div className="mb-2 flex items-center justify-between">
                       <span className="text-sm font-medium text-foreground">
-                        {d.toLocaleDateString(locale, { month: "short", day: "numeric", year: "numeric" })}
+                        {d.toLocaleDateString(locale, {
+                          month: "short",
+                          day: "numeric",
+                          year: "numeric",
+                        })}
                       </span>
                       <span className="text-sm text-muted-foreground">
-                        {d.toLocaleTimeString(locale, { hour: "2-digit", minute: "2-digit" })}
+                        {d.toLocaleTimeString(locale, {
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        })}
                       </span>
                     </div>
                     <div className="mb-2 flex items-center gap-2 text-sm text-muted-foreground">
                       <span>{s.techniqueName}</span>
                       <span>·</span>
-                      <span>{Math.round(s.durationSeconds / 60)} {t("common.min")}</span>
+                      <span>
+                        {Math.round(s.durationSeconds / 60)} {t("common.min")}
+                      </span>
                       {s.calmScore != null && (
                         <>
                           <span>·</span>
-                          <span>{t("session.calmScore")} {s.calmScore}%</span>
+                          <span>
+                            {t("session.calmScore")} {s.calmScore}%
+                          </span>
                         </>
                       )}
                     </div>
-                    <p className="text-sm text-foreground leading-relaxed">{s.journal}</p>
+                    <p className="text-sm text-foreground leading-relaxed">
+                      {s.journal}
+                    </p>
                   </div>
                 );
               })
@@ -946,11 +1190,21 @@ export default function Stats() {
         {tab === "reports" && (
           <div className="space-y-4">
             <div className="flex items-center justify-between rounded-2xl border border-border bg-card px-4 py-3">
-              <button onClick={prevMonth} className="rounded-full p-1 text-muted-foreground hover:text-foreground focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-ring focus-visible:ring-offset-2" aria-label={t("stats.prevMonth")}>
+              <button
+                onClick={prevMonth}
+                className="rounded-full p-1 text-muted-foreground hover:text-foreground focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-ring focus-visible:ring-offset-2"
+                aria-label={t("stats.prevMonth")}
+              >
                 <ChevronLeft className="h-5 w-5" />
               </button>
-              <span className="text-sm font-semibold text-foreground">{monthLabel}</span>
-              <button onClick={nextMonth} className="rounded-full p-1 text-muted-foreground hover:text-foreground focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-ring focus-visible:ring-offset-2" aria-label={t("stats.nextMonth")}>
+              <span className="text-sm font-semibold text-foreground">
+                {monthLabel}
+              </span>
+              <button
+                onClick={nextMonth}
+                className="rounded-full p-1 text-muted-foreground hover:text-foreground focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-ring focus-visible:ring-offset-2"
+                aria-label={t("stats.nextMonth")}
+              >
                 <ChevronRight className="h-5 w-5" />
               </button>
             </div>
@@ -958,22 +1212,43 @@ export default function Stats() {
             {reportData.sessions === 0 ? (
               <div className="flex flex-col items-center gap-3 py-12 text-center">
                 <Target className="h-10 w-10 text-muted-foreground/40" />
-                <p className="text-sm text-muted-foreground">{t("stats.noSessions", { month: monthLabel })}</p>
+                <p className="text-sm text-muted-foreground">
+                  {t("stats.noSessions", { month: monthLabel })}
+                </p>
               </div>
             ) : (
               <div className="rounded-2xl border border-border bg-card p-5 space-y-4">
                 <p className="text-sm leading-relaxed text-foreground">
                   {(() => {
-                    const summary = t("stats.report.summary", { minutes: reportData.totalMin, sessions: reportData.sessions, month: monthLabel });
-                    const boldValues = [String(reportData.totalMin), String(reportData.sessions)];
-                    const regex = new RegExp(`(${boldValues.map(v => v.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|')})`, 'g');
+                    const summary = t("stats.report.summary", {
+                      minutes: reportData.totalMin,
+                      sessions: reportData.sessions,
+                      month: monthLabel,
+                    });
+                    const boldValues = [
+                      String(reportData.totalMin),
+                      String(reportData.sessions),
+                    ];
+                    const regex = new RegExp(
+                      `(${boldValues.map((v) => v.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join("|")})`,
+                      "g",
+                    );
                     const parts = summary.split(regex);
-                    return parts.map((part, i) => boldValues.includes(part) ? <strong key={i}>{part}</strong> : part);
+                    return parts.map((part, i) =>
+                      boldValues.includes(part) ? (
+                        <strong key={i}>{part}</strong>
+                      ) : (
+                        part
+                      ),
+                    );
                   })()}
                 </p>
                 {reportData.topTechnique && (
                   <p className="text-sm leading-relaxed text-foreground">
-                    {t("stats.report.topTechnique", { name: reportData.topTechnique.name, count: reportData.topTechnique.count })}
+                    {t("stats.report.topTechnique", {
+                      name: reportData.topTechnique.name,
+                      count: reportData.topTechnique.count,
+                    })}
                   </p>
                 )}
                 {reportData.streak > 0 && (
@@ -989,34 +1264,68 @@ export default function Stats() {
 
                 {/* Daily Minutes Chart */}
                 <div className="pt-2">
-                  <h3 className="mb-2 text-sm font-medium text-muted-foreground">{t("stats.report.dailyChart")}</h3>
+                  <h3 className="mb-2 text-sm font-medium text-muted-foreground">
+                    {t("stats.report.dailyChart")}
+                  </h3>
                   <ResponsiveContainer width="100%" height={80}>
-                    <BarChart data={reportData.dailyMinutes} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                      <XAxis dataKey="day" tick={{ fontSize: 8, fill: "hsl(var(--muted-foreground))" }} axisLine={false} tickLine={false} interval={4} />
+                    <BarChart
+                      data={reportData.dailyMinutes}
+                      margin={{ top: 10, right: 10, left: -20, bottom: 0 }}
+                    >
+                      <XAxis
+                        dataKey="day"
+                        tick={{
+                          fontSize: 8,
+                          fill: "hsl(var(--muted-foreground))",
+                        }}
+                        axisLine={false}
+                        tickLine={false}
+                        interval={4}
+                      />
                       <YAxis hide />
                       <Tooltip contentStyle={tooltipStyle} />
-                      <Bar dataKey="minutes" fill="hsl(var(--primary) / 0.6)" radius={[3, 3, 0, 0]} />
+                      <Bar
+                        dataKey="minutes"
+                        fill="hsl(var(--primary) / 0.6)"
+                        radius={[3, 3, 0, 0]}
+                      />
                     </BarChart>
                   </ResponsiveContainer>
                 </div>
 
                 <div className="grid grid-cols-2 gap-3 pt-2">
                   <div className="flex flex-col items-center rounded-xl bg-secondary/50 p-3">
-                    <span className="text-lg font-bold text-foreground">{reportData.sessions}</span>
-                    <span className="text-sm text-muted-foreground">{t("stats.report.sessions")}</span>
+                    <span className="text-lg font-bold text-foreground">
+                      {reportData.sessions}
+                    </span>
+                    <span className="text-sm text-muted-foreground">
+                      {t("stats.report.sessions")}
+                    </span>
                   </div>
                   <div className="flex flex-col items-center rounded-xl bg-secondary/50 p-3">
-                    <span className="text-lg font-bold text-foreground">{reportData.totalMin}</span>
-                    <span className="text-sm text-muted-foreground">{t("stats.report.minutes")}</span>
+                    <span className="text-lg font-bold text-foreground">
+                      {reportData.totalMin}
+                    </span>
+                    <span className="text-sm text-muted-foreground">
+                      {t("stats.report.minutes")}
+                    </span>
                   </div>
                   <div className="flex flex-col items-center rounded-xl bg-secondary/50 p-3">
-                    <span className="text-lg font-bold text-foreground">{reportData.streak}</span>
-                    <span className="text-sm text-muted-foreground">{t("stats.report.streakDays")}</span>
+                    <span className="text-lg font-bold text-foreground">
+                      {reportData.streak}
+                    </span>
+                    <span className="text-sm text-muted-foreground">
+                      {t("stats.report.streakDays")}
+                    </span>
                   </div>
                   {reportData.avgCalm !== null && (
                     <div className="flex flex-col items-center rounded-xl bg-secondary/50 p-3">
-                      <span className="text-lg font-bold text-foreground">{reportData.avgCalm}%</span>
-                      <span className="text-sm text-muted-foreground">{t("stats.report.calmPercent")}</span>
+                      <span className="text-lg font-bold text-foreground">
+                        {reportData.avgCalm}%
+                      </span>
+                      <span className="text-sm text-muted-foreground">
+                        {t("stats.report.calmPercent")}
+                      </span>
                     </div>
                   )}
                 </div>
