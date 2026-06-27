@@ -19,3 +19,8 @@
 **Vulnerability:** The `sanitizeObjectStrings` recursive function iterated over all keys of a parsed JSON object to sanitize strings. However, if a malicious JSON string contained `__proto__`, `constructor`, or `prototype` keys, these keys could bypass the `hasOwnProperty` check because they existed directly on the parsed JSON object itself (not inherited), leading to Prototype Pollution when the sanitized object was later merged or assigned.
 **Learning:** `Object.prototype.hasOwnProperty.call(obj, key)` only checks if the key exists directly on the object. When parsing JSON containing `{"__proto__": {"polluted": "yes"}}`, `JSON.parse` creates an object with a direct property named `__proto__`. Therefore, `hasOwnProperty` returns `true` for `__proto__`, allowing the malicious property to be copied into the target object and polluting the prototype.
 **Prevention:** Explicitly skip prototype-related keys (`__proto__`, `constructor`, `prototype`) during the `for...in` loop before performing any `hasOwnProperty` checks or processing the values.
+
+## 2024-06-27 - Implement secureJsonReviver for JSON.parse
+**Vulnerability:** Insecure JSON deserialization exposing applications to prototype pollution when parsing user-controlled input (like URL hashes or user-imported JSON backup files).
+**Learning:** `JSON.parse` will deserialize `__proto__`, `constructor`, and `prototype` keys verbatim if they exist in the input, which bypasses downstream checks (like `hasOwnProperty`) and can pollute the global Object prototype.
+**Prevention:** Always use a reviver function as the second argument to `JSON.parse` to explicitly drop dangerous keys before the object is fully constructed.
