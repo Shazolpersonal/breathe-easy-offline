@@ -181,6 +181,22 @@ function QuickNav({ onJump }: { onJump: (id: string) => void }) {
   );
 }
 
+const SECTION_KEYWORDS: Record<string, string[]> = {
+  "getting-started": ["start", "install", "pwa", "first", "শুরু", "ইনস্টল", "প্রথম"],
+  "techniques": ["technique", "breathing", "box", "478", "calm", "wim", "sigh", "resonant", "nostril", "diaphragm", "pursed", "sleep", "কৌশল", "শ্বাস", "বক্স"],
+  "sessions": ["session", "zen", "voice", "sound", "heart", "calm score", "visual", "সেশন", "জেন", "ভয়েস", "হার্ট"],
+  "custom": ["custom", "pyramid", "create", "কাস্টম", "পিরামিড", "তৈরি"],
+  "playlists": ["playlist", "chain", "প্লেলিস্ট"],
+  "programs": ["program", "stress", "sleep", "focus", "প্রোগ্রাম", "চাপ", "ঘুম", "ফোকাস"],
+  "smart-features": ["smart", "wake", "goal", "resume", "recovery", "finish", "streak freeze", "suggestion", "weekly", "স্মার্ট", "লক্ষ্য", "পুনরায়"],
+  "progress": ["xp", "level", "badge", "streak", "mood", "challenge", "insight", "অগ্রগতি", "স্তর", "ব্যাজ", "ধারা", "মুড"],
+  "shortcuts": ["keyboard", "shortcut", "key", "কীবোর্ড", "শর্টকাট"],
+  "data-backup": ["backup", "export", "import", "csv", "clipboard", "auto-backup", "ব্যাকআপ", "এক্সপোর্ট", "ইমপোর্ট"],
+  "privacy": ["privacy", "local", "offline", "data", "গোপনীয়তা", "লোকাল", "অফলাইন"],
+  "accessibility": ["accessibility", "contrast", "large text", "motion", "অ্যাক্সেসিবিলিটি", "কনট্রাস্ট"],
+  "faq": ["faq", "question", "free", "প্রশ্ন", "বিনামূল্যে"],
+};
+
 export default function Guide() {
   const { t } = useLanguage();
   const [searchQuery, setSearchQuery] = useState("");
@@ -196,24 +212,10 @@ export default function Guide() {
   const filteredSections = useMemo(() => {
     if (!searchQuery.trim()) return null; // null = show all, don't force open
     const q = searchQuery.toLowerCase();
-    // We match section IDs based on their content keywords
-    const sectionKeywords: Record<string, string[]> = {
-      "getting-started": ["start", "install", "pwa", "first", "শুরু", "ইনস্টল", "প্রথম"],
-      "techniques": ["technique", "breathing", "box", "478", "calm", "wim", "sigh", "resonant", "nostril", "diaphragm", "pursed", "sleep", "কৌশল", "শ্বাস", "বক্স"],
-      "sessions": ["session", "zen", "voice", "sound", "heart", "calm score", "visual", "সেশন", "জেন", "ভয়েস", "হার্ট"],
-      "custom": ["custom", "pyramid", "create", "কাস্টম", "পিরামিড", "তৈরি"],
-      "playlists": ["playlist", "chain", "প্লেলিস্ট"],
-      "programs": ["program", "stress", "sleep", "focus", "প্রোগ্রাম", "চাপ", "ঘুম", "ফোকাস"],
-      "smart-features": ["smart", "wake", "goal", "resume", "recovery", "finish", "streak freeze", "suggestion", "weekly", "স্মার্ট", "লক্ষ্য", "পুনরায়"],
-      "progress": ["xp", "level", "badge", "streak", "mood", "challenge", "insight", "অগ্রগতি", "স্তর", "ব্যাজ", "ধারা", "মুড"],
-      "shortcuts": ["keyboard", "shortcut", "key", "কীবোর্ড", "শর্টকাট"],
-      "data-backup": ["backup", "export", "import", "csv", "clipboard", "auto-backup", "ব্যাকআপ", "এক্সপোর্ট", "ইমপোর্ট"],
-      "privacy": ["privacy", "local", "offline", "data", "গোপনীয়তা", "লোকাল", "অফলাইন"],
-      "accessibility": ["accessibility", "contrast", "large text", "motion", "অ্যাক্সেসিবিলিটি", "কনট্রাস্ট"],
-      "faq": ["faq", "question", "free", "প্রশ্ন", "বিনামূল্যে"],
-    };
+
+    // ⚡ Bolt Optimization: Extracted sectionKeywords out of the component to prevent recreating the object on every render/keystroke
     return ALL_SECTIONS.filter((id) =>
-      sectionKeywords[id]?.some((kw) => kw.includes(q) || q.includes(kw))
+      SECTION_KEYWORDS[id]?.some((kw) => kw.includes(q) || q.includes(kw))
     );
   }, [searchQuery, ALL_SECTIONS]);
 
