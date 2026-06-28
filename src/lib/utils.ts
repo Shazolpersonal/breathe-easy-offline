@@ -51,3 +51,15 @@ export function sanitizeForLog(str: unknown): string {
     .replace(/\r?\n|\r/g, " ")
     .substring(0, 200);
 }
+
+
+/**
+ * Security: Safely parse JSON while preventing prototype pollution.
+ * Use as the reviver function in JSON.parse(str, secureJsonReviver).
+ */
+export function secureJsonReviver(key: string, value: unknown): unknown {
+  if (key === "__proto__" || key === "constructor" || key === "prototype") {
+    return undefined;
+  }
+  return value;
+}
