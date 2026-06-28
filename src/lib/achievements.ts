@@ -45,13 +45,18 @@ function getStreakFromSessions(sessions: SessionRecord[]): number {
     for (let i = 1; i < dates.length; i++) {
       const currTime = Date.parse(dates[i]);
       const diff = (currTime - prevTime) / 86400000;
-      if (diff === 1) { cur++; streak = Math.max(streak, cur); } else if (diff > 1) cur = 1;
+      if (diff === 1) {
+        cur++;
+        streak = Math.max(streak, cur);
+      } else if (diff > 1) cur = 1;
       prevTime = currTime;
     }
   }
   if (dates.length > 0) {
     const lastDate = new Date(dates[dates.length - 1]);
-    const today = new Date(); today.setHours(0,0,0,0); lastDate.setHours(0,0,0,0);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    lastDate.setHours(0, 0, 0, 0);
     const diffToday = (today.getTime() - lastDate.getTime()) / 86400000;
     if (diffToday > 1) streak = 0;
   }
@@ -71,7 +76,10 @@ function getLongestStreakFromSessions(sessions: SessionRecord[]): number {
     for (let i = 1; i < dates.length; i++) {
       const currTime = Date.parse(dates[i]);
       const diff = (currTime - prevTime) / 86400000;
-      if (diff === 1) { cur++; streak = Math.max(streak, cur); } else if (diff > 1) cur = 1;
+      if (diff === 1) {
+        cur++;
+        streak = Math.max(streak, cur);
+      } else if (diff > 1) cur = 1;
       prevTime = currTime;
     }
   }
@@ -85,7 +93,10 @@ export const BADGES: Badge[] = [
     emoji: "🌱",
     description: "Complete your first session",
     check: (s) => (s ?? getSessions()).length >= 1,
-    progress: (s) => ({ current: Math.min((s ?? getSessions()).length, 1), target: 1 }),
+    progress: (s) => ({
+      current: Math.min((s ?? getSessions()).length, 1),
+      target: 1,
+    }),
   },
   {
     id: "week-warrior",
@@ -93,31 +104,59 @@ export const BADGES: Badge[] = [
     emoji: "🔥",
     description: "Reach a 7-day streak",
     check: (s) => getStreakFromSessions(s ?? getSessions()) >= 7,
-    progress: (s) => ({ current: Math.min(getStreakFromSessions(s ?? getSessions()), 7), target: 7 }),
+    progress: (s) => ({
+      current: Math.min(getStreakFromSessions(s ?? getSessions()), 7),
+      target: 7,
+    }),
   },
   {
     id: "night-owl",
     name: "Night Owl",
     emoji: "🦉",
     description: "Complete a session after 11 PM",
-    check: (s) => (s ?? getSessions()).some((r) => new Date(r.date).getHours() >= 23),
-    progress: (s) => ({ current: (s ?? getSessions()).some((r) => new Date(r.date).getHours() >= 23) ? 1 : 0, target: 1 }),
+    check: (s) =>
+      (s ?? getSessions()).some((r) => new Date(r.date).getHours() >= 23),
+    progress: (s) => ({
+      current: (s ?? getSessions()).some(
+        (r) => new Date(r.date).getHours() >= 23,
+      )
+        ? 1
+        : 0,
+      target: 1,
+    }),
   },
   {
     id: "early-bird",
     name: "Early Bird",
     emoji: "🐦",
     description: "Complete a session before 7 AM",
-    check: (s) => (s ?? getSessions()).some((r) => new Date(r.date).getHours() < 7),
-    progress: (s) => ({ current: (s ?? getSessions()).some((r) => new Date(r.date).getHours() < 7) ? 1 : 0, target: 1 }),
+    check: (s) =>
+      (s ?? getSessions()).some((r) => new Date(r.date).getHours() < 7),
+    progress: (s) => ({
+      current: (s ?? getSessions()).some((r) => new Date(r.date).getHours() < 7)
+        ? 1
+        : 0,
+      target: 1,
+    }),
   },
   {
     id: "century",
     name: "Century",
     emoji: "💯",
     description: "Accumulate 100 total minutes",
-    check: (s) => (s ?? getSessions()).reduce((sum, r) => sum + r.durationSeconds, 0) >= 6000,
-    progress: (s) => ({ current: Math.min(Math.round((s ?? getSessions()).reduce((sum, r) => sum + r.durationSeconds, 0) / 60), 100), target: 100 }),
+    check: (s) =>
+      (s ?? getSessions()).reduce((sum, r) => sum + r.durationSeconds, 0) >=
+      6000,
+    progress: (s) => ({
+      current: Math.min(
+        Math.round(
+          (s ?? getSessions()).reduce((sum, r) => sum + r.durationSeconds, 0) /
+            60,
+        ),
+        100,
+      ),
+      target: 100,
+    }),
   },
   {
     id: "marathon",
@@ -126,7 +165,11 @@ export const BADGES: Badge[] = [
     description: "Single session ≥ 10 minutes",
     check: (s) => (s ?? getSessions()).some((r) => r.durationSeconds >= 600),
     progress: (s) => {
-      const best = Math.max(0, ...(s ?? getSessions()).map(r => r.durationSeconds));
+      // Optimization: Replaced Math.max(...array) with reduce to prevent call stack limits and intermediate allocations
+      const best = (s ?? getSessions()).reduce(
+        (max, r) => Math.max(max, r.durationSeconds),
+        0,
+      );
       return { current: Math.min(Math.round(best / 60), 10), target: 10 };
     },
   },
@@ -136,7 +179,10 @@ export const BADGES: Badge[] = [
     emoji: "🎨",
     description: "Create a custom technique",
     check: () => getCustomTechniques().length >= 1,
-    progress: () => ({ current: Math.min(getCustomTechniques().length, 1), target: 1 }),
+    progress: () => ({
+      current: Math.min(getCustomTechniques().length, 1),
+      target: 1,
+    }),
   },
   {
     id: "zen-master",
@@ -145,7 +191,11 @@ export const BADGES: Badge[] = [
     description: "Reach Level 5 on any technique",
     check: () => getAllProgressionsPublic().some((p) => p.level >= 5),
     progress: () => {
-      const maxLevel = Math.max(0, ...getAllProgressionsPublic().map(p => p.level));
+      // Optimization: Replaced Math.max(...array) with reduce to prevent call stack limits and intermediate allocations
+      const maxLevel = getAllProgressionsPublic().reduce(
+        (max, p) => Math.max(max, p.level),
+        0,
+      );
       return { current: Math.min(maxLevel, 5), target: 5 };
     },
   },
@@ -156,7 +206,11 @@ export const BADGES: Badge[] = [
     description: "Achieve a calm score ≥ 90",
     check: (s) => (s ?? getSessions()).some((r) => (r.calmScore ?? 0) >= 90),
     progress: (s) => {
-      const best = Math.max(0, ...(s ?? getSessions()).map(r => r.calmScore ?? 0));
+      // Optimization: Replaced Math.max(...array) with reduce to prevent call stack limits and intermediate allocations
+      const best = (s ?? getSessions()).reduce(
+        (max, r) => Math.max(max, r.calmScore ?? 0),
+        0,
+      );
       return { current: Math.min(best, 90), target: 90 };
     },
   },
@@ -165,8 +219,15 @@ export const BADGES: Badge[] = [
     name: "Explorer",
     emoji: "🧭",
     description: "Try 3 different techniques",
-    check: (s) => new Set((s ?? getSessions()).map((r) => r.techniqueId)).size >= 3,
-    progress: (s) => ({ current: Math.min(new Set((s ?? getSessions()).map((r) => r.techniqueId)).size, 3), target: 3 }),
+    check: (s) =>
+      new Set((s ?? getSessions()).map((r) => r.techniqueId)).size >= 3,
+    progress: (s) => ({
+      current: Math.min(
+        new Set((s ?? getSessions()).map((r) => r.techniqueId)).size,
+        3,
+      ),
+      target: 3,
+    }),
   },
   {
     id: "consistent",
@@ -174,7 +235,10 @@ export const BADGES: Badge[] = [
     emoji: "📅",
     description: "Reach a 30-day streak",
     check: (s) => getLongestStreakFromSessions(s ?? getSessions()) >= 30,
-    progress: (s) => ({ current: Math.min(getLongestStreakFromSessions(s ?? getSessions()), 30), target: 30 }),
+    progress: (s) => ({
+      current: Math.min(getLongestStreakFromSessions(s ?? getSessions()), 30),
+      target: 30,
+    }),
   },
   {
     id: "deep-diver",
@@ -182,16 +246,32 @@ export const BADGES: Badge[] = [
     emoji: "🌊",
     description: "Complete 50 total sessions",
     check: (s) => (s ?? getSessions()).length >= 50,
-    progress: (s) => ({ current: Math.min((s ?? getSessions()).length, 50), target: 50 }),
+    progress: (s) => ({
+      current: Math.min((s ?? getSessions()).length, 50),
+      target: 50,
+    }),
   },
   {
     id: "mood-lifter",
     name: "Mood Lifter",
     emoji: "🌈",
     description: "Improve mood by +3 in one session",
-    check: (s) => (s ?? getSessions()).some((r) => r.moodBefore != null && r.moodAfter != null && (r.moodAfter - r.moodBefore) >= 3),
+    check: (s) =>
+      (s ?? getSessions()).some(
+        (r) =>
+          r.moodBefore != null &&
+          r.moodAfter != null &&
+          r.moodAfter - r.moodBefore >= 3,
+      ),
     progress: (s) => {
-      const best = Math.max(0, ...(s ?? getSessions()).filter(r => r.moodBefore != null && r.moodAfter != null).map(r => r.moodAfter! - r.moodBefore!));
+      // Optimization: Replaced Math.max(...array) with reduce to prevent call stack limits and intermediate allocations
+      const best = (s ?? getSessions()).reduce(
+        (max, r) =>
+          r.moodBefore != null && r.moodAfter != null
+            ? Math.max(max, r.moodAfter - r.moodBefore)
+            : max,
+        0,
+      );
       return { current: Math.min(best, 3), target: 3 };
     },
   },
@@ -200,8 +280,19 @@ export const BADGES: Badge[] = [
     name: "Dedicated",
     emoji: "⭐",
     description: "Accumulate 500 total minutes",
-    check: (s) => (s ?? getSessions()).reduce((sum, r) => sum + r.durationSeconds, 0) >= 30000,
-    progress: (s) => ({ current: Math.min(Math.round((s ?? getSessions()).reduce((sum, r) => sum + r.durationSeconds, 0) / 60), 500), target: 500 }),
+    check: (s) =>
+      (s ?? getSessions()).reduce((sum, r) => sum + r.durationSeconds, 0) >=
+      30000,
+    progress: (s) => ({
+      current: Math.min(
+        Math.round(
+          (s ?? getSessions()).reduce((sum, r) => sum + r.durationSeconds, 0) /
+            60,
+        ),
+        500,
+      ),
+      target: 500,
+    }),
   },
   {
     id: "perfect-week",
@@ -260,7 +351,10 @@ export const BADGES: Badge[] = [
   },
 ];
 
-export function checkAllBadges(sessions?: SessionRecord[]): { unlocked: Badge[]; locked: Badge[] } {
+export function checkAllBadges(sessions?: SessionRecord[]): {
+  unlocked: Badge[];
+  locked: Badge[];
+} {
   const s = sessions ?? getSessions();
   const unlocked: Badge[] = [];
   const locked: Badge[] = [];
