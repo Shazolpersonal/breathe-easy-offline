@@ -253,6 +253,7 @@ export const bn: Record<string, string> = {
   "settings.voiceBn": "বাংলা ভয়েস",
   "settings.voiceAuto": "অটো (সেরা উপলব্ধ)",
   "settings.voiceBnUnavailable": "এই ডিভাইসে কোনো বাংলা ভয়েস পাওয়া যায়নি। অ্যাপটি সেরা উপলব্ধ ফলব্যাক ব্যবহার করবে।",
+  "settings.voicePreview": "ভয়েস প্রিভিউ শুনুন",
   "settings.voiceCues": "ভয়েস কিউ",
   "settings.cuePhaseNames": "ফেজের নাম",
   "settings.cuePhaseNamesDesc": "\"শ্বাস নিন\", \"ধরে রাখুন\", \"শ্বাস ছাড়ুন\"",
