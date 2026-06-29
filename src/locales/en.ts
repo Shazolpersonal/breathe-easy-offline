@@ -253,6 +253,7 @@ export const en: Record<string, string> = {
   "settings.voiceBn": "Bengali Voice",
   "settings.voiceAuto": "Auto (best available)",
   "settings.voiceBnUnavailable": "No Bengali voice found on this device. The app will use the best available fallback.",
+  "settings.voicePreview": "Preview voice",
   "settings.voiceCues": "Voice Cues",
   "settings.cuePhaseNames": "Phase Names",
   "settings.cuePhaseNamesDesc": "\"Breathe In\", \"Hold\", \"Breathe Out\"",
