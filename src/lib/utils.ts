@@ -6,6 +6,16 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 /**
+ * Security: Reviver function for JSON.parse to prevent prototype pollution.
+ */
+export function secureJsonReviver(key: string, value: unknown): unknown {
+  if (key === "__proto__" || key === "constructor" || key === "prototype") {
+    return undefined;
+  }
+  return value;
+}
+
+/**
  * Security: Sanitize a string by escaping HTML entities to prevent XSS.
  */
 export function sanitizeString(str: string): string;
