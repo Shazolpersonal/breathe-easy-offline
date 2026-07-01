@@ -40,6 +40,13 @@ export function sanitizeObjectStrings<T>(obj: T): T {
   return sanitizeString(obj) as unknown as T;
 }
 
+export function secureJsonReviver(key: string, value: unknown): unknown {
+  if (key === "__proto__" || key === "constructor" || key === "prototype") {
+    return undefined;
+  }
+  return value;
+}
+
 /**
  * Security: Sanitize strings for logging to prevent log injection and XSS in log viewers.
  * Truncates to 200 chars to prevent DoS.
