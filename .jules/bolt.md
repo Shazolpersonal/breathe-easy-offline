@@ -14,3 +14,7 @@
 ## 2025-05-18 - Avoid repeated O(N) filtering in inline React rendering
 **Learning:** Performing `[...array].filter().sort()` directly in JSX rendering creates severe performance bottlenecks on every keystroke when arrays are large (like historical session logs). Additionally, repeatedly iterating over the entire dataset in a `useMemo` hook (like `reportData`) when a sub-group is needed is an anti-pattern when we already have an existing single-pass loop (`aggregates`) that can build a grouped lookup map.
 **Action:** Extract inline array processing into a dedicated `useMemo` hook. For multi-view reporting, aggregate data into Maps or Record dictionaries (like `sessionsByMonth`) during an initial single O(N) pass, so subsequent views can perform O(1) lookups instead of redundant full-array passes.
+
+## 2026-07-02 - Memoization of sorting distinct from filtering
+**Learning:** Performing array sorting inside a `useMemo` that also handles filtering dependent on a user input (like a search query) leads to O(N log N) sorting executions on every keystroke, since any change in the search query triggers the entire `useMemo` again.
+**Action:** Separate the invariant dataset sorting (which only depends on the base dataset) into its own isolated `useMemo`. The UI-dependent `useMemo` (handling search filters) should consume this pre-sorted array and only execute the O(N) filter, avoiding repeated sorting and main-thread blocking during frequent state updates.
