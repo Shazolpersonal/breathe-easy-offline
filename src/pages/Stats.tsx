@@ -413,14 +413,19 @@ export default function Stats() {
 
   const journalSessions = aggregates.journalSessions;
 
+  // Optimization: Separate invariant sorting from UI-dependent filtering to avoid re-sorting on every keystroke
+  const sortedSessions = useMemo(() => {
+    return [...sessions].sort((a, b) => b.date.localeCompare(a.date));
+  }, [sessions]);
+
   const filteredHistory = useMemo(() => {
-    let result = sessions;
+    let result = sortedSessions;
     if (historySearch.trim()) {
       const q = historySearch.toLowerCase();
       result = result.filter(s => s.techniqueName.toLowerCase().includes(q) || s.date.includes(q));
     }
-    return [...result].sort((a, b) => b.date.localeCompare(a.date));
-  }, [sessions, historySearch]);
+    return result;
+  }, [sortedSessions, historySearch]);
 
   // Report data with daily chart
 
