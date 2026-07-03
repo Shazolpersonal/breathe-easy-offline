@@ -3,6 +3,8 @@ import { useSettings } from "@/contexts/SettingsContext";
 import { useLanguage, Language } from "@/contexts/LanguageContext";
 import { Switch } from "@/components/ui/switch";
 import { Slider } from "@/components/ui/slider";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -30,6 +32,7 @@ export default function Settings() {
   const [voices, setVoices] = useState(() => getAvailableVoices());
   const [bnAvailable, setBnAvailable] = useState(() => hasBengaliVoice());
   const [showDonateDialog, setShowDonateDialog] = useState(false);
+  const [deleteReminderTarget, setDeleteReminderTarget] = useState<string | null>(null);
 
   // Re-fetch voices when they load asynchronously
   useEffect(() => {
@@ -502,9 +505,14 @@ export default function Settings() {
                         checked={r.enabled}
                         onCheckedChange={v => handleUpdateReminder(r.id, { enabled: v })}
                       />
-                      <Button size="icon" variant="ghost" className="h-7 w-7" onClick={() => handleDeleteReminder(r.id)}>
-                        <Trash2 className="h-3.5 w-3.5 text-muted-foreground" />
-                      </Button>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Button size="icon" variant="ghost" className="h-7 w-7" onClick={() => setDeleteReminderTarget(r.id)} aria-label={t("common.delete")}>
+                            <Trash2 className="h-3.5 w-3.5 text-muted-foreground" />
+                          </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>{t("common.delete")}</TooltipContent>
+                      </Tooltip>
                     </div>
                   </div>
                   <div className="flex gap-1">
@@ -652,6 +660,21 @@ export default function Settings() {
       </div>
 
       <DonateDialog open={showDonateDialog} onOpenChange={setShowDonateDialog} />
+
+      <AlertDialog open={!!deleteReminderTarget} onOpenChange={(open) => !open && setDeleteReminderTarget(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>{t("settings.reminders.deleteConfirmTitle")}</AlertDialogTitle>
+            <AlertDialogDescription>{t("settings.reminders.deleteConfirmDesc")}</AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>{t("common.cancel")}</AlertDialogCancel>
+            <AlertDialogAction onClick={() => { if (deleteReminderTarget) handleDeleteReminder(deleteReminderTarget); setDeleteReminderTarget(null); }} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+              {t("common.delete")}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

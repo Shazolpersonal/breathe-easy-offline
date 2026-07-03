@@ -281,6 +281,8 @@ export const en: Record<string, string> = {
   "settings.reminders.messagePlaceholder": "Reminder message",
   "settings.reminders.warning": "⚠️ Reminders only fire while the app/tab is open. For best results, keep the PWA installed.",
   "settings.reminders.defaultMessage": "Time for your breathing break! 🌬️",
+  "settings.reminders.deleteConfirmTitle": "Delete reminder?",
+  "settings.reminders.deleteConfirmDesc": "This reminder will be permanently removed. This action cannot be undone.",
   "settings.data": "Data",
   "settings.export": "Export",
   "settings.import": "Import",
