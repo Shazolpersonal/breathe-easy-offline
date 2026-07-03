@@ -281,6 +281,8 @@ export const bn: Record<string, string> = {
   "settings.reminders.messagePlaceholder": "রিমাইন্ডার বার্তা",
   "settings.reminders.warning": "⚠️ রিমাইন্ডার শুধুমাত্র অ্যাপ/ট্যাব খোলা থাকলে কাজ করে। সেরা ফলাফলের জন্য PWA ইনস্টল রাখুন।",
   "settings.reminders.defaultMessage": "আপনার শ্বাস-প্রশ্বাসের বিরতির সময়! 🌬️",
+  "settings.reminders.deleteConfirmTitle": "রিমাইন্ডার মুছবেন?",
+  "settings.reminders.deleteConfirmDesc": "এই রিমাইন্ডারটি স্থায়ীভাবে মুছে ফেলা হবে। এই কাজ বাতিল করা যাবে না।",
   "settings.data": "ডেটা",
   "settings.export": "এক্সপোর্ট",
   "settings.import": "ইমপোর্ট",
