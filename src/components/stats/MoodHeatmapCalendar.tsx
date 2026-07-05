@@ -15,30 +15,51 @@ export default function MoodHeatmapCalendar() {
   const sessions = useMemo(() => getSessions(), []);
   const moodRecords = useMemo(() => getMoodRecords(), []);
 
-  const dayKeys = ["day.sun", "day.mon", "day.tue", "day.wed", "day.thu", "day.fri", "day.sat"];
+  const dayKeys = [
+    "day.sun",
+    "day.mon",
+    "day.tue",
+    "day.wed",
+    "day.thu",
+    "day.fri",
+    "day.sat",
+  ];
+
+  // Optimization: Extract map generation into isolated hooks.
+  // This prevents O(N) map-building loops over potentially large datasets
+  // from re-running whenever the user changes UI state (like month/year toggles).
+  const sessionMap = useMemo(() => {
+    const map: Record<string, typeof sessions> = {};
+    sessions.forEach((s) => {
+      const dateKey = s.date.substring(0, 10);
+      if (!map[dateKey]) map[dateKey] = [];
+      map[dateKey].push(s);
+    });
+    return map;
+  }, [sessions]);
+
+  const moodMap = useMemo(() => {
+    const map: Record<string, typeof moodRecords> = {};
+    moodRecords.forEach((r) => {
+      if (r.moodAfter === null) return;
+      const dateKey = r.date.substring(0, 10);
+      if (!map[dateKey]) map[dateKey] = [];
+      map[dateKey].push(r);
+    });
+    return map;
+  }, [moodRecords]);
 
   const calendarData = useMemo(() => {
     const firstDay = new Date(year, month, 1).getDay();
     const daysInMonth = new Date(year, month + 1, 0).getDate();
 
-    const cells: { day: number; dateKey: string; sessions: typeof sessions; avgMood: number | null; sessionCount: number }[] = [];
-
-    // Optimization: Pre-compute hash maps for sessions and moods by day to turn an O(N * M) filtering loop into O(N + M) lookups.
-    // .substring(0, 10) extracts the 'YYYY-MM-DD' part assuming ISO dates.
-    const sessionMap: Record<string, typeof sessions> = {};
-    sessions.forEach(s => {
-      const dateKey = s.date.substring(0, 10);
-      if (!sessionMap[dateKey]) sessionMap[dateKey] = [];
-      sessionMap[dateKey].push(s);
-    });
-
-    const moodMap: Record<string, typeof moodRecords> = {};
-    moodRecords.forEach(r => {
-      if (r.moodAfter === null) return;
-      const dateKey = r.date.substring(0, 10);
-      if (!moodMap[dateKey]) moodMap[dateKey] = [];
-      moodMap[dateKey].push(r);
-    });
+    const cells: {
+      day: number;
+      dateKey: string;
+      sessions: typeof sessions;
+      avgMood: number | null;
+      sessionCount: number;
+    }[] = [];
 
     for (let d = 1; d <= daysInMonth; d++) {
       const dateKey = `${year}-${String(month + 1).padStart(2, "0")}-${String(d).padStart(2, "0")}`;
@@ -48,23 +69,40 @@ export default function MoodHeatmapCalendar() {
 
       let avgMood: number | null = null;
       if (dayMoodRecords.length > 0) {
-        avgMood = dayMoodRecords.reduce((sum, r) => sum + r.moodAfter!, 0) / dayMoodRecords.length;
+        avgMood =
+          dayMoodRecords.reduce((sum, r) => sum + r.moodAfter!, 0) /
+          dayMoodRecords.length;
       }
 
-      cells.push({ day: d, dateKey, sessions: daySessions, avgMood, sessionCount: daySessions.length });
+      cells.push({
+        day: d,
+        dateKey,
+        sessions: daySessions,
+        avgMood,
+        sessionCount: daySessions.length,
+      });
     }
 
     return { firstDay, daysInMonth, cells };
-  }, [sessions, moodRecords, month, year]);
+  }, [sessionMap, moodMap, month, year]);
 
-  const monthLabel = new Date(year, month).toLocaleDateString(locale, { month: "long", year: "numeric" });
+  const monthLabel = new Date(year, month).toLocaleDateString(locale, {
+    month: "long",
+    year: "numeric",
+  });
 
   const prevMonth = () => {
-    if (month === 0) { setMonth(11); setYear(year - 1); } else setMonth(month - 1);
+    if (month === 0) {
+      setMonth(11);
+      setYear(year - 1);
+    } else setMonth(month - 1);
     setSelectedDay(null);
   };
   const nextMonth = () => {
-    if (month === 11) { setMonth(0); setYear(year + 1); } else setMonth(month + 1);
+    if (month === 11) {
+      setMonth(0);
+      setYear(year + 1);
+    } else setMonth(month + 1);
     setSelectedDay(null);
   };
 
@@ -78,16 +116,26 @@ export default function MoodHeatmapCalendar() {
     return "hsl(150 60% 40%)";
   }
 
-  const selectedData = selectedDay ? calendarData.cells.find((c) => c.dateKey === selectedDay) : null;
+  const selectedData = selectedDay
+    ? calendarData.cells.find((c) => c.dateKey === selectedDay)
+    : null;
 
   return (
     <div className="rounded-2xl border border-border bg-card p-4">
       <div className="mb-3 flex items-center justify-between">
-        <button onClick={prevMonth} className="rounded-full p-1 text-muted-foreground hover:text-foreground focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-ring focus-visible:ring-offset-2" aria-label={t("stats.prevMonth")}>
+        <button
+          onClick={prevMonth}
+          className="rounded-full p-1 text-muted-foreground hover:text-foreground focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-ring focus-visible:ring-offset-2"
+          aria-label={t("stats.prevMonth")}
+        >
           <ChevronLeft className="h-4 w-4" />
         </button>
         <h2 className="text-sm font-semibold text-foreground">{monthLabel}</h2>
-        <button onClick={nextMonth} className="rounded-full p-1 text-muted-foreground hover:text-foreground focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-ring focus-visible:ring-offset-2" aria-label={t("stats.nextMonth")}>
+        <button
+          onClick={nextMonth}
+          className="rounded-full p-1 text-muted-foreground hover:text-foreground focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-ring focus-visible:ring-offset-2"
+          aria-label={t("stats.nextMonth")}
+        >
           <ChevronRight className="h-4 w-4" />
         </button>
       </div>
@@ -95,7 +143,10 @@ export default function MoodHeatmapCalendar() {
       {/* Day headers */}
       <div className="grid grid-cols-7 gap-1 mb-1">
         {dayKeys.map((key) => (
-          <div key={key} className="text-center text-[10px] font-medium text-muted-foreground">
+          <div
+            key={key}
+            className="text-center text-[10px] font-medium text-muted-foreground"
+          >
             {t(key)}
           </div>
         ))}
@@ -115,20 +166,35 @@ export default function MoodHeatmapCalendar() {
           return (
             <button
               key={cell.day}
-              onClick={() => setSelectedDay(cell.dateKey === selectedDay ? null : cell.dateKey)}
+              onClick={() =>
+                setSelectedDay(
+                  cell.dateKey === selectedDay ? null : cell.dateKey,
+                )
+              }
               className={`relative flex h-9 w-full flex-col items-center justify-center rounded-lg text-xs transition-all ${
                 cell.dateKey === selectedDay ? "ring-2 ring-primary" : ""
               } ${isToday ? "font-bold" : ""}`}
-              style={{ background: getMoodColor(cell.avgMood, cell.sessionCount > 0) }}
+              style={{
+                background: getMoodColor(cell.avgMood, cell.sessionCount > 0),
+              }}
             >
-              <span className={cell.sessionCount > 0 ? "text-white" : "text-muted-foreground"}>
+              <span
+                className={
+                  cell.sessionCount > 0 ? "text-white" : "text-muted-foreground"
+                }
+              >
                 {cell.day}
               </span>
               {cell.sessionCount > 0 && (
                 <div className="absolute bottom-0.5 flex gap-0.5">
-                  {Array.from({ length: Math.min(cell.sessionCount, 3) }).map((_, i) => (
-                    <div key={i} className="h-1 w-1 rounded-full bg-white/70" />
-                  ))}
+                  {Array.from({ length: Math.min(cell.sessionCount, 3) }).map(
+                    (_, i) => (
+                      <div
+                        key={i}
+                        className="h-1 w-1 rounded-full bg-white/70"
+                      />
+                    ),
+                  )}
                 </div>
               )}
             </button>
@@ -140,20 +206,33 @@ export default function MoodHeatmapCalendar() {
       {selectedData && selectedData.sessionCount > 0 && (
         <div className="mt-3 rounded-xl border border-border bg-secondary/50 p-3 space-y-1.5">
           <div className="text-xs font-semibold text-foreground">
-            {new Date(selectedData.dateKey).toLocaleDateString(locale, { weekday: "long", month: "short", day: "numeric" })}
+            {new Date(selectedData.dateKey).toLocaleDateString(locale, {
+              weekday: "long",
+              month: "short",
+              day: "numeric",
+            })}
           </div>
           <div className="text-xs text-muted-foreground">
-            {selectedData.sessionCount} {t("common.sessions")} · {Math.round(selectedData.sessions.reduce((s, r) => s + r.durationSeconds, 0) / 60)} {t("common.min")}
+            {selectedData.sessionCount} {t("common.sessions")} ·{" "}
+            {Math.round(
+              selectedData.sessions.reduce((s, r) => s + r.durationSeconds, 0) /
+                60,
+            )}{" "}
+            {t("common.min")}
           </div>
           {selectedData.avgMood !== null && (
             <div className="text-xs text-muted-foreground">
-              {t("stats.heatmap.avgMood")}: {getMoodEmoji(Math.round(selectedData.avgMood))} {selectedData.avgMood.toFixed(1)}/5
+              {t("stats.heatmap.avgMood")}:{" "}
+              {getMoodEmoji(Math.round(selectedData.avgMood))}{" "}
+              {selectedData.avgMood.toFixed(1)}/5
             </div>
           )}
           {selectedData.sessions.map((s) => (
             <div key={s.id} className="text-[11px] text-muted-foreground">
-              {s.techniqueName} · {Math.round(s.durationSeconds / 60)} {t("common.min")}
-              {s.calmScore != null && ` · ${t("session.calmScore")} ${s.calmScore}%`}
+              {s.techniqueName} · {Math.round(s.durationSeconds / 60)}{" "}
+              {t("common.min")}
+              {s.calmScore != null &&
+                ` · ${t("session.calmScore")} ${s.calmScore}%`}
             </div>
           ))}
         </div>
