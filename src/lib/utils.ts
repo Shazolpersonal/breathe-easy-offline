@@ -21,6 +21,16 @@ export function sanitizeString(str: unknown): unknown {
 }
 
 /**
+ * Security: JSON reviver to drop dangerous keys to prevent prototype pollution during JSON.parse.
+ */
+export function secureJsonReviver(key: string, value: unknown): unknown {
+  if (key === "__proto__" || key === "constructor" || key === "prototype") {
+    return undefined; // Drop the dangerous key
+  }
+  return value;
+}
+
+/**
  * Security: Recursively sanitize all strings within an object or array.
  */
 export function sanitizeObjectStrings<T>(obj: T): T {
