@@ -37,9 +37,11 @@ export default function Home() {
 
   const progressionMap = useMemo(() => {
     const map: Record<string, ReturnType<typeof getProgression>> = {};
+    // Optimization: Replace O(N^2) nested loop with O(N) hash map lookup
+    const progMap = new Map(progressions.map(p => [p.techniqueId, p]));
     for (const tech of allTechniques) {
       if (favorites.includes(tech.id)) {
-        const found = progressions.find(p => p.techniqueId === tech.id);
+        const found = progMap.get(tech.id);
         map[tech.id] = found || { techniqueId: tech.id, level: 1, sessionsCompleted: 0, totalCycles: 0 };
       }
     }
