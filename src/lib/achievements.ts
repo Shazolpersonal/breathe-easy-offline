@@ -120,13 +120,14 @@ export const BADGES: Badge[] = [
     progress: (s) => ({ current: Math.min(Math.round((s ?? getSessions()).reduce((sum, r) => sum + r.durationSeconds, 0) / 60), 100), target: 100 }),
   },
   {
+    // Optimization: Avoid intermediate array allocations and prevent RangeError for large arrays
     id: "marathon",
     name: "Marathon",
     emoji: "🏃",
     description: "Single session ≥ 10 minutes",
     check: (s) => (s ?? getSessions()).some((r) => r.durationSeconds >= 600),
     progress: (s) => {
-      const best = Math.max(0, ...(s ?? getSessions()).map(r => r.durationSeconds));
+      const best = (s ?? getSessions()).reduce((max, r) => Math.max(max, r.durationSeconds), 0);
       return { current: Math.min(Math.round(best / 60), 10), target: 10 };
     },
   },
@@ -145,7 +146,7 @@ export const BADGES: Badge[] = [
     description: "Reach Level 5 on any technique",
     check: () => getAllProgressionsPublic().some((p) => p.level >= 5),
     progress: () => {
-      const maxLevel = Math.max(0, ...getAllProgressionsPublic().map(p => p.level));
+      const maxLevel = getAllProgressionsPublic().reduce((max, p) => Math.max(max, p.level), 0);
       return { current: Math.min(maxLevel, 5), target: 5 };
     },
   },
@@ -156,7 +157,7 @@ export const BADGES: Badge[] = [
     description: "Achieve a calm score ≥ 90",
     check: (s) => (s ?? getSessions()).some((r) => (r.calmScore ?? 0) >= 90),
     progress: (s) => {
-      const best = Math.max(0, ...(s ?? getSessions()).map(r => r.calmScore ?? 0));
+      const best = (s ?? getSessions()).reduce((max, r) => Math.max(max, r.calmScore ?? 0), 0);
       return { current: Math.min(best, 90), target: 90 };
     },
   },
@@ -165,8 +166,22 @@ export const BADGES: Badge[] = [
     name: "Explorer",
     emoji: "🧭",
     description: "Try 3 different techniques",
-    check: (s) => new Set((s ?? getSessions()).map((r) => r.techniqueId)).size >= 3,
-    progress: (s) => ({ current: Math.min(new Set((s ?? getSessions()).map((r) => r.techniqueId)).size, 3), target: 3 }),
+    check: (s) => {
+      const unique = new Set();
+      for (const r of s ?? getSessions()) {
+        unique.add(r.techniqueId);
+        if (unique.size >= 3) return true;
+      }
+      return false;
+    },
+    progress: (s) => {
+      const unique = new Set();
+      for (const r of s ?? getSessions()) {
+        unique.add(r.techniqueId);
+        if (unique.size >= 3) break;
+      }
+      return { current: unique.size, target: 3 };
+    },
   },
   {
     id: "consistent",
@@ -191,7 +206,7 @@ export const BADGES: Badge[] = [
     description: "Improve mood by +3 in one session",
     check: (s) => (s ?? getSessions()).some((r) => r.moodBefore != null && r.moodAfter != null && (r.moodAfter - r.moodBefore) >= 3),
     progress: (s) => {
-      const best = Math.max(0, ...(s ?? getSessions()).filter(r => r.moodBefore != null && r.moodAfter != null).map(r => r.moodAfter! - r.moodBefore!));
+      const best = (s ?? getSessions()).reduce((max, r) => (r.moodBefore != null && r.moodAfter != null) ? Math.max(max, r.moodAfter - r.moodBefore) : max, 0);
       return { current: Math.min(best, 3), target: 3 };
     },
   },
