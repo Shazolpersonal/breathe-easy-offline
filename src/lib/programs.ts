@@ -1,3 +1,4 @@
+import { secureJsonReviver } from "@/lib/utils";
 export interface ProgramDay {
   day: number;
   techniqueId: string;
@@ -82,7 +83,7 @@ export const PROGRAMS: Program[] = [
 export function getEnrollments(): ProgramEnrollment[] {
   try {
     const raw = localStorage.getItem(ENROLLMENT_KEY);
-    return raw ? JSON.parse(raw) : [];
+    return raw ? JSON.parse(raw, secureJsonReviver) : [];
   } catch { return []; }
 }
 
