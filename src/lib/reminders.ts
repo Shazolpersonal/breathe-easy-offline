@@ -1,3 +1,4 @@
+import { secureJsonReviver } from "@/lib/utils";
 export interface Reminder {
   id: string;
   time: string; // HH:MM
@@ -11,7 +12,7 @@ const STORAGE_KEY = "breathe_reminders";
 export function getReminders(): Reminder[] {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
-    return raw ? JSON.parse(raw) : [];
+    return raw ? JSON.parse(raw, secureJsonReviver) : [];
   } catch { return []; }
 }
 
