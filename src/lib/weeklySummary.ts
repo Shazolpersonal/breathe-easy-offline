@@ -43,8 +43,9 @@ export function getWeeklySummary(): WeeklySummaryData {
   } catch { /* empty */ }
 
   // Best calm score
+  // Optimization: use reduce instead of spread operator to avoid call stack size errors on large arrays
   const calmScores = weekSessions.filter(s => s.calmScore != null).map(s => s.calmScore!);
-  const bestCalmScore = calmScores.length > 0 ? Math.max(...calmScores) : null;
+  const bestCalmScore = calmScores.length > 0 ? calmScores.reduce((a, b) => Math.max(a, b), 0) : null;
 
   // Most used technique
   const techCount: Record<string, { name: string; count: number }> = { /* empty */ };

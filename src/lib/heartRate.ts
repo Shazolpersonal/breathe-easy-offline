@@ -269,8 +269,9 @@ export class HeartRateMonitor {
       ? 1 - Math.abs(signChanges - 6) / 6
       : 0.2;
 
+    // Optimization: use reduce instead of spread operator to avoid call stack size errors on large arrays
     // Amplitude of oscillation (should be moderate, not flat)
-    const maxDev = Math.max(...deviations.map(Math.abs));
+    const maxDev = deviations.reduce((max, v) => Math.max(max, Math.abs(v)), 0);
     const amplitudeScore = maxDev > 1 && maxDev < 15 ? 1 - Math.abs(maxDev - 5) / 15 : 0.2;
 
     return Math.round(Math.max(0, Math.min(100, oscillationScore * amplitudeScore * 100)));
