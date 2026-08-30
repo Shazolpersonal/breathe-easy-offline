@@ -437,7 +437,7 @@ export default function Home() {
         <div className="mb-6">
           <button
             onClick={() => setShowChallengeDialog(true)}
-            className="flex w-full items-center gap-3 rounded-2xl border border-border bg-card p-4 transition-colors hover:bg-secondary/50"
+            className="flex w-full items-center gap-3 rounded-2xl border border-border bg-card p-4 transition-colors hover:bg-secondary/50 focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-ring focus-visible:ring-offset-2"
           >
             <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary/15">
               <Swords className="h-5 w-5 text-primary" />
@@ -468,7 +468,7 @@ export default function Home() {
                   `/session?technique=${lastSession.techniqueId}&duration=${lastSession.durationMinutes}`,
                 )
               }
-              className="flex w-full items-center gap-3 rounded-2xl border border-primary/20 bg-primary/5 p-4 transition-colors hover:bg-primary/10"
+              className="flex w-full items-center gap-3 rounded-2xl border border-primary/20 bg-primary/5 p-4 transition-colors hover:bg-primary/10 focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-ring focus-visible:ring-offset-2"
             >
               <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary/15">
                 <Play className="h-5 w-5 text-primary" />
@@ -510,7 +510,8 @@ export default function Home() {
         {/* Big Breathe button */}
         <button
           onClick={() => navigate("/session")}
-          className="group relative mx-auto flex h-20 w-20 items-center justify-center rounded-full transition-transform hover:scale-105"
+          className="group relative mx-auto flex h-20 w-20 items-center justify-center rounded-full transition-transform hover:scale-105 focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-ring focus-visible:ring-offset-2"
+          aria-label={t("home.tapToBreathe")}
           style={{
             background: `radial-gradient(circle at 35% 35%, hsl(var(--breathe-glow)), hsl(var(--breathe-glow-secondary)))`,
             boxShadow: `0 0 30px 8px hsl(var(--breathe-glow) / 0.3)`,
