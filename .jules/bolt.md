@@ -17,3 +17,7 @@
 ## 2025-06-25 - Avoid array spread operations for max/min calculations and Set short-circuiting
 **Learning:** Using `Math.max(0, ...array.map(...))` or `new Set(array.map(...))` creates intermediate array allocations and causes a `RangeError: Maximum call stack size exceeded` for large datasets due to argument spreading limitations in JavaScript engines.
 **Action:** Use `.reduce((max, item) => Math.max(max, item), 0)` to calculate maximums without intermediate arrays or spread operations. For finding a specific number of unique items, use a `for...of` loop with a `Set` and an early return (e.g. `if (set.size >= 3) break;`) to avoid unnecessary iterations over the rest of the array.
+## 2025-08-31 - O(N) array slicing inside loop
+
+**Learning:** Slicing an array and calculating its sum (e.g. `slice(i - windowSize, i).reduce(...)`) inside a `for` loop creates an O(N * W) operation, where N is the array size and W is the window size. In a real-time hot path like `calculateBPM` called in a `requestAnimationFrame` loop, this causes hundreds of unnecessary array allocations per frame, leading to heavy garbage collection overhead and potential UI stuttering.
+**Action:** Replace slice+reduce moving averages with a running sum approach. Calculate the initial sum, then in the loop, add the new element and subtract the old element. This reduces the complexity to O(N) and prevents excessive garbage collection overhead.
