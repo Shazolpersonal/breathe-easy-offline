@@ -36,7 +36,7 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/co
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Textarea } from "@/components/ui/textarea";
-import { cn } from "@/lib/utils";
+import { cn , secureJsonReviver} from "@/lib/utils";
 import { toast } from "sonner";
 import { requestWakeLock, releaseWakeLock } from "@/lib/wakeLock";
 import { shouldSuggestIncrease, dismissSuggestion } from "@/lib/adaptive";
@@ -261,7 +261,7 @@ export default function Session() {
     try {
       const savedSession = sessionStorage.getItem(SESSION_STORAGE_KEY);
       if (savedSession) {
-        const parsed = JSON.parse(savedSession) as RecoverableSession;
+        const parsed = JSON.parse(savedSession, secureJsonReviver) as RecoverableSession;
         // Only show recovery if session is recent (within 30 minutes)
         if (Date.now() - parsed.timestamp < 30 * 60 * 1000 && parsed.elapsed > 30) {
           setRecoverableSession(parsed);
