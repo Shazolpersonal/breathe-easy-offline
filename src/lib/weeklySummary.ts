@@ -1,3 +1,4 @@
+import { secureJsonReviver } from "./utils";
 import { getSessions, getCurrentStreak } from "./storage";
 import { getXPState } from "./xp";
 
@@ -32,7 +33,7 @@ export function getWeeklySummary(): WeeklySummaryData {
   try {
     const raw = localStorage.getItem("breathe_xp");
     if (raw) {
-      const store = JSON.parse(raw);
+      const store = JSON.parse(raw, secureJsonReviver);
       if (store.history) {
         const weekAgoDate = weekAgo.toISOString().substring(0, 10);
         xpEarned = store.history

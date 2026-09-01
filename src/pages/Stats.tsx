@@ -3,7 +3,7 @@ import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, LineChart, L
 import { getSessions, getCurrentStreak, getLongestStreak, deleteSession } from "@/lib/storage";
 import { Flame, Clock, Target, Trophy, Brain, BookOpen, ChevronLeft, ChevronRight, Star, Calendar, Zap, TrendingUp, Share2, Search, Trash2 } from "lucide-react";
 import { checkAllBadges } from "@/lib/achievements";
-import { cn } from "@/lib/utils";
+import { cn , secureJsonReviver} from "@/lib/utils";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -331,7 +331,7 @@ export default function Stats() {
     try {
       const raw = localStorage.getItem("breathe_xp");
       if (!raw) return [];
-      const store = JSON.parse(raw);
+      const store = JSON.parse(raw, secureJsonReviver);
       if (!store.history || store.history.length === 0) return [];
       const dayMap: Record<string, number> = {};
       const today = new Date();
