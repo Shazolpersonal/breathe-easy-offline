@@ -17,3 +17,7 @@
 ## 2025-06-25 - Avoid array spread operations for max/min calculations and Set short-circuiting
 **Learning:** Using `Math.max(0, ...array.map(...))` or `new Set(array.map(...))` creates intermediate array allocations and causes a `RangeError: Maximum call stack size exceeded` for large datasets due to argument spreading limitations in JavaScript engines.
 **Action:** Use `.reduce((max, item) => Math.max(max, item), 0)` to calculate maximums without intermediate arrays or spread operations. For finding a specific number of unique items, use a `for...of` loop with a `Set` and an early return (e.g. `if (set.size >= 3) break;`) to avoid unnecessary iterations over the rest of the array.
+
+## 2023-10-27 - Reduce instead of map and spread operator limits
+**Learning:** Using `Math.max(...array.map())` or chained `.map().filter()` causes intermediate array creation and hits maximum call stack size limits when arrays are large (such as with session history tracking or high frequency health data).
+**Action:** Use `.reduce((max, item) => Math.max(max, item), 0)` to perform these calculations in a single pass without large object allocation or exceeding the spread operator constraints.
