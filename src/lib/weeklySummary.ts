@@ -43,8 +43,13 @@ export function getWeeklySummary(): WeeklySummaryData {
   } catch { /* empty */ }
 
   // Best calm score
-  const calmScores = weekSessions.filter(s => s.calmScore != null).map(s => s.calmScore!);
-  const bestCalmScore = calmScores.length > 0 ? Math.max(...calmScores) : null;
+  // Optimization: Single reduce pass avoiding filter/map and spread operator limits
+  const bestCalmScore = weekSessions.reduce((max, s) => {
+    if (s.calmScore != null) {
+      return max === null ? s.calmScore : Math.max(max, s.calmScore);
+    }
+    return max;
+  }, null as number | null);
 
   // Most used technique
   const techCount: Record<string, { name: string; count: number }> = { /* empty */ };

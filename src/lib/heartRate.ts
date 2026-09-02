@@ -270,7 +270,8 @@ export class HeartRateMonitor {
       : 0.2;
 
     // Amplitude of oscillation (should be moderate, not flat)
-    const maxDev = Math.max(...deviations.map(Math.abs));
+    // Optimization: Avoid spread operator in max calculation and map which creates intermediate arrays
+    const maxDev = deviations.reduce((max, val) => Math.max(max, Math.abs(val)), 0);
     const amplitudeScore = maxDev > 1 && maxDev < 15 ? 1 - Math.abs(maxDev - 5) / 15 : 0.2;
 
     return Math.round(Math.max(0, Math.min(100, oscillationScore * amplitudeScore * 100)));
