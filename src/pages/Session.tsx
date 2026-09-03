@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useCallback, useMemo } from "react";
+import { secureJsonReviver } from "@/lib/utils";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { Pause, Play, Square, Volume2, VolumeX, TrendingUp, Sparkles, Circle, Waves, BarChart3, Flower2, Share2, SkipForward, Mic, MicOff, Heart, Maximize2, Minimize2, ArrowUp, Settings2 } from "lucide-react";
 import BreathingVisualizer, { VisualizationType } from "@/components/BreathingVisualizer";
@@ -261,7 +262,7 @@ export default function Session() {
     try {
       const savedSession = sessionStorage.getItem(SESSION_STORAGE_KEY);
       if (savedSession) {
-        const parsed = JSON.parse(savedSession) as RecoverableSession;
+        const parsed = JSON.parse(savedSession, secureJsonReviver) as RecoverableSession;
         // Only show recovery if session is recent (within 30 minutes)
         if (Date.now() - parsed.timestamp < 30 * 60 * 1000 && parsed.elapsed > 30) {
           setRecoverableSession(parsed);

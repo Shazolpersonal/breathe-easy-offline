@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { secureJsonReviver } from "@/lib/utils";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, LineChart, Line } from "recharts";
 import { getSessions, getCurrentStreak, getLongestStreak, deleteSession } from "@/lib/storage";
 import { Flame, Clock, Target, Trophy, Brain, BookOpen, ChevronLeft, ChevronRight, Star, Calendar, Zap, TrendingUp, Share2, Search, Trash2 } from "lucide-react";
@@ -331,7 +332,7 @@ export default function Stats() {
     try {
       const raw = localStorage.getItem("breathe_xp");
       if (!raw) return [];
-      const store = JSON.parse(raw);
+      const store = JSON.parse(raw, secureJsonReviver);
       if (!store.history || store.history.length === 0) return [];
       const dayMap: Record<string, number> = {};
       const today = new Date();
