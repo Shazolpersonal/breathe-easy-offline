@@ -19,6 +19,9 @@ import { VisualizationType } from "@/components/BreathingVisualizer";
 import { getReminders, addReminder, updateReminder, deleteReminder, requestNotificationPermission, getNotificationPermission, Reminder } from "@/lib/reminders";
 import { getAvailableVoices, hasBengaliVoice, previewVoice, type VoiceInfo } from "@/lib/voice";
 import DonateDialog from "@/components/DonateDialog";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+
 
 export default function Settings() {
   const { theme, setTheme, themeMode, setThemeMode } = useTheme();
@@ -30,6 +33,7 @@ export default function Settings() {
   const [voices, setVoices] = useState(() => getAvailableVoices());
   const [bnAvailable, setBnAvailable] = useState(() => hasBengaliVoice());
   const [showDonateDialog, setShowDonateDialog] = useState(false);
+  const [deleteTarget, setDeleteTarget] = useState<string | null>(null);
 
   // Re-fetch voices when they load asynchronously
   useEffect(() => {
@@ -502,9 +506,16 @@ export default function Settings() {
                         checked={r.enabled}
                         onCheckedChange={v => handleUpdateReminder(r.id, { enabled: v })}
                       />
-                      <Button size="icon" variant="ghost" className="h-7 w-7" onClick={() => handleDeleteReminder(r.id)}>
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Button size="icon" variant="ghost" className="h-7 w-7" onClick={() => setDeleteTarget(r.id)} aria-label={t("common.delete")}>
                         <Trash2 className="h-3.5 w-3.5 text-muted-foreground" />
-                      </Button>
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent>{t("common.delete")}</TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
                     </div>
                   </div>
                   <div className="flex gap-1">
@@ -652,6 +663,21 @@ export default function Settings() {
       </div>
 
       <DonateDialog open={showDonateDialog} onOpenChange={setShowDonateDialog} />
+
+      <AlertDialog open={!!deleteTarget} onOpenChange={(open) => !open && setDeleteTarget(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>{t("common.delete")}</AlertDialogTitle>
+            <AlertDialogDescription>{t("settings.reminders.deleteConfirmDesc") || t("common.deleteConfirmDesc", { fallback: "Are you sure?"})}</AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>{t("common.cancel")}</AlertDialogCancel>
+            <AlertDialogAction onClick={() => { if (deleteTarget) { handleDeleteReminder(deleteTarget); setDeleteTarget(null); } }} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+              {t("common.delete")}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
