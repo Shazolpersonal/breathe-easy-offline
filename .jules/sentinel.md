@@ -23,3 +23,8 @@
 **Vulnerability:** Calls to `JSON.parse` with untrusted data (like `localStorage` reads from imported data, or base64-decoded URLs in `friendChallenge.ts`) were executed without a reviver function. If a malicious JSON string contained `__proto__`, `constructor`, or `prototype` keys, it could lead to prototype pollution when the parsed object is used.
 **Learning:** `JSON.parse` is vulnerable to prototype pollution when parsing malicious JSON strings. A custom reviver function is needed to safely drop these keys during the deserialization phase.
 **Prevention:** Always pass a secure reviver function, like `secureJsonReviver` which explicitly checks and drops `__proto__`, `constructor`, and `prototype` keys, as the second argument to `JSON.parse` when parsing untrusted data.
+## 2025-02-28 - Secure JSON Parsing
+
+**Vulnerability:** Found multiple instances where `JSON.parse` was called directly on data retrieved from `localStorage` or `sessionStorage` without a reviver function. This is insecure when dealing with user-controlled or external data, as it can be vulnerable to prototype pollution.
+**Learning:** Even when reading from local storage (which is theoretically controlled by the application), it's crucial to treat all data as potentially untrusted to prevent injection attacks if another part of the application writes malicious data there.
+**Prevention:** Always use `secureJsonReviver` as the second argument to `JSON.parse` to drop dangerous keys like `__proto__`, `constructor`, and `prototype`.

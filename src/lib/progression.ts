@@ -1,4 +1,5 @@
 import { BreathingTechnique, BreathingPhase } from "./techniques";
+import { secureJsonReviver } from "./utils";
 
 export interface UserProgression {
   techniqueId: string;
@@ -24,7 +25,7 @@ export function getAllProgressionsPublic(): UserProgression[] {
 function getAllProgressions(): UserProgression[] {
   try {
     const raw = localStorage.getItem(PROGRESSION_KEY);
-    return raw ? JSON.parse(raw) : [];
+    return raw ? JSON.parse(raw, secureJsonReviver) : [];
   } catch {
     return [];
   }
