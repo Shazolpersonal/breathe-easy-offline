@@ -780,7 +780,7 @@ export default function Session() {
 
   // ─── Mini-Player Sync ───
   // On mount, restore from mini session if running
-    useEffect(() => {
+  useEffect(() => {
 
     if (miniSession?.isActive && miniSession.techniqueId === techniqueId) {
       setTotalElapsed(miniSession.elapsed);
@@ -805,6 +805,7 @@ export default function Session() {
       stopMiniSession();
     }
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Sync state to mini-player context when navigating away

@@ -17,3 +17,7 @@
 ## 2025-06-25 - Avoid array spread operations for max/min calculations and Set short-circuiting
 **Learning:** Using `Math.max(0, ...array.map(...))` or `new Set(array.map(...))` creates intermediate array allocations and causes a `RangeError: Maximum call stack size exceeded` for large datasets due to argument spreading limitations in JavaScript engines.
 **Action:** Use `.reduce((max, item) => Math.max(max, item), 0)` to calculate maximums without intermediate arrays or spread operations. For finding a specific number of unique items, use a `for...of` loop with a `Set` and an early return (e.g. `if (set.size >= 3) break;`) to avoid unnecessary iterations over the rest of the array.
+
+## 2024-10-18 - Avoid O(N^2) lookups with `Array.find` in loops
+**Learning:** React component rendering hot paths can easily suffer from O(N^2) performance when using `Array.find()` or `Array.includes()` inside loops (like `useMemo` filtering an array).
+**Action:** Extract the inner array into a `Set` (for `includes`) or a `Map` (for `find`) outside the loop to transform the O(N) lookup into an O(1) lookup, dramatically reducing main thread blocking on large datasets.
