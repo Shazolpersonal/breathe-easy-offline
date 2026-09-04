@@ -246,6 +246,7 @@ export const en: Record<string, string> = {
   "settings.voice": "Voice Guidance",
   "settings.voiceEnable": "Enable Voice",
   "settings.voiceSpeed": "Speed: {{speed}}x",
+  "settings.previewVoice": "Preview Voice",
   "settings.voicePitch": "Pitch: {{pitch}}x",
   "settings.voicePitchDesc": "Lower = deep & calm, Higher = bright & energetic",
   "settings.voiceVolume": "Voice Volume: {{vol}}%",
