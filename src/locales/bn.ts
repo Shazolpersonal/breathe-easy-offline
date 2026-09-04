@@ -246,6 +246,7 @@ export const bn: Record<string, string> = {
   "settings.voice": "ভয়েস গাইডেন্স",
   "settings.voiceEnable": "ভয়েস সক্রিয়",
   "settings.voiceSpeed": "গতি: {{speed}}x",
+  "settings.previewVoice": "কণ্ঠস্বর প্রিভিউ",
   "settings.voicePitch": "পিচ: {{pitch}}x",
   "settings.voicePitchDesc": "কম = গভীর ও শান্ত, বেশি = উজ্জ্বল ও শক্তিদায়ক",
   "settings.voiceVolume": "ভয়েস ভলিউম: {{vol}}%",

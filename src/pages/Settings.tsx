@@ -2,6 +2,7 @@ import { useTheme, THEMES, ThemeId, ThemeMode } from "@/contexts/ThemeContext";
 import { useSettings } from "@/contexts/SettingsContext";
 import { useLanguage, Language } from "@/contexts/LanguageContext";
 import { Switch } from "@/components/ui/switch";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Slider } from "@/components/ui/slider";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
@@ -291,14 +292,22 @@ export default function Settings() {
                       ))}
                     </SelectContent>
                   </Select>
-                  <Button
-                    size="icon"
-                    variant="outline"
-                    className="h-9 w-9 shrink-0"
-                    onClick={() => previewVoice(settings.voiceNameEn || "", "en", settings.voicePitch, settings.voiceSpeed, settings.voiceVolume)}
-                  >
-                    <Volume2 className="h-3.5 w-3.5" />
-                  </Button>
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button
+                          size="icon"
+                          variant="outline"
+                          className="h-9 w-9 shrink-0"
+                          onClick={() => previewVoice(settings.voiceNameEn || "", "en", settings.voicePitch, settings.voiceSpeed, settings.voiceVolume)}
+                          aria-label={t("settings.previewVoice")}
+                        >
+                          <Volume2 className="h-3.5 w-3.5" />
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent>{t("settings.previewVoice")}</TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
                 </div>
               </div>
 
@@ -328,14 +337,22 @@ export default function Settings() {
                       ))}
                     </SelectContent>
                   </Select>
-                  <Button
-                    size="icon"
-                    variant="outline"
-                    className="h-9 w-9 shrink-0"
-                    onClick={() => previewVoice(settings.voiceNameBn || "", "bn", settings.voicePitch, settings.voiceSpeed, settings.voiceVolume)}
-                  >
-                    <Volume2 className="h-3.5 w-3.5" />
-                  </Button>
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button
+                          size="icon"
+                          variant="outline"
+                          className="h-9 w-9 shrink-0"
+                          onClick={() => previewVoice(settings.voiceNameBn || "", "bn", settings.voicePitch, settings.voiceSpeed, settings.voiceVolume)}
+                          aria-label={t("settings.previewVoice")}
+                        >
+                          <Volume2 className="h-3.5 w-3.5" />
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent>{t("settings.previewVoice")}</TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
                 </div>
               </div>
 
