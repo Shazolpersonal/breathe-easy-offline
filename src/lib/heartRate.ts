@@ -1,7 +1,7 @@
 export interface HeartRateData {
   bpm: number | null;
   signalQuality: number; // 0-100
-  coherence: number;     // 0-100, coherence with breathing
+  coherence: number; // 0-100, coherence with breathing
   isReady: boolean;
 }
 
@@ -40,8 +40,14 @@ export class HeartRateMonitor {
   private bpmHistory: number[] = [];
   private currentBreathingPhase: string = "idle";
 
-  get bpm() { return this.smoothedBpm; }
-  get isReady() { return Date.now() - this.startTime > this.WARMUP_MS && this.smoothedBpm !== null; }
+  get bpm() {
+    return this.smoothedBpm;
+  }
+  get isReady() {
+    return (
+      Date.now() - this.startTime > this.WARMUP_MS && this.smoothedBpm !== null
+    );
+  }
 
   onUpdate(callback: HeartRateCallback) {
     this.callback = callback;
@@ -51,7 +57,10 @@ export class HeartRateMonitor {
     this.currentBreathingPhase = phase;
   }
 
-  async start(videoElement: HTMLVideoElement, canvasElement: HTMLCanvasElement): Promise<boolean> {
+  async start(
+    videoElement: HTMLVideoElement,
+    canvasElement: HTMLCanvasElement,
+  ): Promise<boolean> {
     try {
       this.video = videoElement;
       this.canvas = canvasElement;
@@ -103,9 +112,17 @@ export class HeartRateMonitor {
       const track = this.stream.getVideoTracks()[0];
       // Turn off torch
       try {
-        track.applyConstraints({ advanced: [{ torch: false } as unknown as MediaTrackConstraintSet] }).catch(() => { /* empty */ });
-      } catch { /* empty */ }
-      this.stream.getTracks().forEach(t => t.stop());
+        track
+          .applyConstraints({
+            advanced: [{ torch: false } as unknown as MediaTrackConstraintSet],
+          })
+          .catch(() => {
+            /* empty */
+          });
+      } catch {
+        /* empty */
+      }
+      this.stream.getTracks().forEach((t) => t.stop());
       this.stream = null;
     }
 
@@ -124,7 +141,12 @@ export class HeartRateMonitor {
     if (!this.video || !this.ctx || !this.canvas) return;
 
     this.ctx.drawImage(this.video, 0, 0, this.canvas.width, this.canvas.height);
-    const imageData = this.ctx.getImageData(0, 0, this.canvas.width, this.canvas.height);
+    const imageData = this.ctx.getImageData(
+      0,
+      0,
+      this.canvas.width,
+      this.canvas.height,
+    );
     const data = imageData.data;
 
     // Calculate average red channel
@@ -147,7 +169,10 @@ export class HeartRateMonitor {
     }
 
     // Calculate BPM after warmup
-    if (now - this.startTime > this.WARMUP_MS && this.redValues.length > this.SAMPLE_RATE * 3) {
+    if (
+      now - this.startTime > this.WARMUP_MS &&
+      this.redValues.length > this.SAMPLE_RATE * 3
+    ) {
       this.calculateBPM();
     }
 
@@ -173,9 +198,19 @@ export class HeartRateMonitor {
     // Apply simple bandpass: subtract moving average (high-pass)
     const windowSize = 15;
     const filtered: number[] = [];
+
+    // Optimization: Use a sliding window sum instead of slicing and reducing inside the loop
+    // to eliminate intermediate array allocations and reduce time complexity from O(N*W) to O(N).
+    let runningSum = 0;
+    for (let i = 0; i < windowSize; i++) {
+      runningSum += this.redValues[i];
+    }
+
     for (let i = windowSize; i < this.redValues.length; i++) {
-      const avg = this.redValues.slice(i - windowSize, i).reduce((a, b) => a + b, 0) / windowSize;
+      const avg = runningSum / windowSize;
       filtered.push(this.redValues[i] - avg);
+      runningSum += this.redValues[i];
+      runningSum -= this.redValues[i - windowSize];
     }
 
     // Peak detection using zero-crossings of derivative
@@ -189,7 +224,7 @@ export class HeartRateMonitor {
         filtered[i] > 0
       ) {
         // Check minimum distance between peaks (> 300ms = < 200 BPM)
-        if (peaks.length === 0 || (i - peaks[peaks.length - 1]) > 9) {
+        if (peaks.length === 0 || i - peaks[peaks.length - 1] > 9) {
           peaks.push(i);
         }
       }
@@ -201,8 +236,11 @@ export class HeartRateMonitor {
     const intervals: number[] = [];
     const adjustedTimestamps = this.timestamps.slice(windowSize);
     for (let i = 1; i < peaks.length; i++) {
-      const dt = (adjustedTimestamps[peaks[i]] - adjustedTimestamps[peaks[i - 1]]) / 1000;
-      if (dt > 0.3 && dt < 2.0) { // 30-200 BPM range
+      const dt =
+        (adjustedTimestamps[peaks[i]] - adjustedTimestamps[peaks[i - 1]]) /
+        1000;
+      if (dt > 0.3 && dt < 2.0) {
+        // 30-200 BPM range
         intervals.push(dt);
       }
     }
@@ -222,7 +260,8 @@ export class HeartRateMonitor {
       this.smoothedBpm = rawBpm;
     } else {
       this.smoothedBpm = Math.round(
-        this.smoothedBpm * (1 - this.BPM_SMOOTHING) + rawBpm * this.BPM_SMOOTHING
+        this.smoothedBpm * (1 - this.BPM_SMOOTHING) +
+          rawBpm * this.BPM_SMOOTHING,
       );
     }
 
@@ -236,12 +275,13 @@ export class HeartRateMonitor {
 
     const recent = this.redValues.slice(-30);
     const mean = recent.reduce((a, b) => a + b, 0) / recent.length;
-    const variance = recent.reduce((sum, v) => sum + (v - mean) ** 2, 0) / recent.length;
+    const variance =
+      recent.reduce((sum, v) => sum + (v - mean) ** 2, 0) / recent.length;
     const std = Math.sqrt(variance);
 
     // Good signal: mean red channel > 100 (finger covering), some variance (pulsation)
     const coverageScore = Math.min(1, mean / 150); // Is finger over camera?
-    const pulsationScore = Math.min(1, std / 3);     // Is there pulsation?
+    const pulsationScore = Math.min(1, std / 3); // Is there pulsation?
 
     // Too much variance = noise
     const noiseScore = std > 20 ? Math.max(0, 1 - (std - 20) / 30) : 1;
@@ -256,7 +296,7 @@ export class HeartRateMonitor {
     // High coherence = sinusoidal pattern in HR aligned with breathing
     const recent = this.bpmHistory.slice(-20);
     const mean = recent.reduce((a, b) => a + b, 0) / recent.length;
-    const deviations = recent.map(v => v - mean);
+    const deviations = recent.map((v) => v - mean);
 
     // Check for regularity: count sign changes (oscillation)
     let signChanges = 0;
@@ -265,14 +305,18 @@ export class HeartRateMonitor {
     }
 
     // Ideal: ~4-6 sign changes in 20 samples (respiratory sinus arrhythmia)
-    const oscillationScore = signChanges >= 3 && signChanges <= 10
-      ? 1 - Math.abs(signChanges - 6) / 6
-      : 0.2;
+    const oscillationScore =
+      signChanges >= 3 && signChanges <= 10
+        ? 1 - Math.abs(signChanges - 6) / 6
+        : 0.2;
 
     // Amplitude of oscillation (should be moderate, not flat)
     const maxDev = Math.max(...deviations.map(Math.abs));
-    const amplitudeScore = maxDev > 1 && maxDev < 15 ? 1 - Math.abs(maxDev - 5) / 15 : 0.2;
+    const amplitudeScore =
+      maxDev > 1 && maxDev < 15 ? 1 - Math.abs(maxDev - 5) / 15 : 0.2;
 
-    return Math.round(Math.max(0, Math.min(100, oscillationScore * amplitudeScore * 100)));
+    return Math.round(
+      Math.max(0, Math.min(100, oscillationScore * amplitudeScore * 100)),
+    );
   }
 }
