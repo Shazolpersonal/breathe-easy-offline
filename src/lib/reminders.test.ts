@@ -1,4 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
+import { secureJsonReviver } from "./utils";
 import {
   getReminders,
   saveReminders,
@@ -60,7 +61,7 @@ describe("reminders library", () => {
       const newReminder: Reminder = { id: "2", time: "09:00", days: [2], enabled: false, message: "Two" };
       addReminder(newReminder);
 
-      const stored = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+      const stored = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]", secureJsonReviver);
       expect(stored).toHaveLength(2);
       expect(stored[1]).toEqual(newReminder);
     });
@@ -75,7 +76,7 @@ describe("reminders library", () => {
 
       updateReminder("1", { message: "Updated", enabled: false });
 
-      const stored = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+      const stored = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]", secureJsonReviver);
       expect(stored[0].message).toBe("Updated");
       expect(stored[0].enabled).toBe(false);
       expect(stored[0].time).toBe("08:00"); // preserved
@@ -89,7 +90,7 @@ describe("reminders library", () => {
 
       updateReminder("non-existent", { message: "Updated" });
 
-      const stored = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+      const stored = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]", secureJsonReviver);
       expect(stored).toEqual(reminders);
     });
   });
@@ -104,7 +105,7 @@ describe("reminders library", () => {
 
       deleteReminder("1");
 
-      const stored = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+      const stored = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]", secureJsonReviver);
       expect(stored).toHaveLength(1);
       expect(stored[0].id).toBe("2");
     });

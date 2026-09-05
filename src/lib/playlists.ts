@@ -1,4 +1,6 @@
+import { secureJsonReviver } from "./utils";
 export interface PlaylistStep {
+
   techniqueId: string;
   durationMinutes: number;
 }
@@ -14,7 +16,7 @@ const STORAGE_KEY = "breathe_playlists";
 export function getPlaylists(): Playlist[] {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
-    return raw ? JSON.parse(raw) : [];
+    return raw ? JSON.parse(raw, secureJsonReviver) : [];
   } catch { return []; }
 }
 

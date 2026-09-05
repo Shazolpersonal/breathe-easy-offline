@@ -9,6 +9,8 @@ import BreathingFeedback from "@/components/BreathingFeedback";
 import HeartRateMonitorOverlay from "@/components/HeartRateMonitor";
 import { PRESET_TECHNIQUES, getTechniqueById, BreathingPhase, getPyramidPhasesForRound } from "@/lib/techniques";
 import { getCustomTechniques, addSession, getSessions, saveLastSessionConfig } from "@/lib/storage";
+import { secureJsonReviver } from "@/lib/utils";
+
 import { useSettings } from "@/contexts/SettingsContext";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useSessionContext } from "@/contexts/SessionContext";
@@ -261,7 +263,7 @@ export default function Session() {
     try {
       const savedSession = sessionStorage.getItem(SESSION_STORAGE_KEY);
       if (savedSession) {
-        const parsed = JSON.parse(savedSession) as RecoverableSession;
+        const parsed = JSON.parse(savedSession, secureJsonReviver) as RecoverableSession;
         // Only show recovery if session is recent (within 30 minutes)
         if (Date.now() - parsed.timestamp < 30 * 60 * 1000 && parsed.elapsed > 30) {
           setRecoverableSession(parsed);

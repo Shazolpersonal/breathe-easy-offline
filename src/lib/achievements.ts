@@ -1,6 +1,8 @@
 import { getSessions, getCustomTechniques, SessionRecord } from "./storage";
 import { getAllProgressionsPublic } from "./progression";
 import { getCurrentStreak } from "./storage";
+import { secureJsonReviver } from "./utils";
+
 
 export interface BadgeProgress {
   current: number;
@@ -21,7 +23,7 @@ const SEEN_KEY = "breathe_badges_seen";
 function getSeenBadges(): string[] {
   try {
     const raw = localStorage.getItem(SEEN_KEY);
-    return raw ? JSON.parse(raw) : [];
+    return raw ? JSON.parse(raw, secureJsonReviver) : [];
   } catch {
     return [];
   }

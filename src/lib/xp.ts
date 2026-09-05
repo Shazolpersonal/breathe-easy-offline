@@ -1,4 +1,6 @@
 import { getCurrentStreak, getTodaySessions } from "./storage";
+import { secureJsonReviver } from "./utils";
+
 import { BreathingTechnique } from "./techniques";
 
 export interface XPBreakdown {
@@ -57,7 +59,7 @@ function getStore(): XPStore {
   try {
     const raw = localStorage.getItem(XP_KEY);
     if (!raw) return { totalXP: 0, history: [] };
-    const parsed = JSON.parse(raw);
+    const parsed = JSON.parse(raw, secureJsonReviver);
     // Migrate old format (no history)
     if (!parsed.history) parsed.history = [];
     return parsed;
