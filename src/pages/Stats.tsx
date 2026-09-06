@@ -14,6 +14,7 @@ import InsightsTab from "@/components/stats/InsightsTab";
 import { getXPState } from "@/lib/xp";
 import { getMoodRecords } from "@/lib/mood";
 import { shareStreak, shareBadge } from "@/lib/shareApp";
+import { secureJsonReviver } from "@/lib/utils";
 
 type Tab = "stats" | "history" | "insights" | "badges" | "journal" | "reports";
 type TimeRange = "7d" | "30d" | "90d";
@@ -331,7 +332,7 @@ export default function Stats() {
     try {
       const raw = localStorage.getItem("breathe_xp");
       if (!raw) return [];
-      const store = JSON.parse(raw);
+      const store = JSON.parse(raw, secureJsonReviver);
       if (!store.history || store.history.length === 0) return [];
       const dayMap: Record<string, number> = {};
       const today = new Date();

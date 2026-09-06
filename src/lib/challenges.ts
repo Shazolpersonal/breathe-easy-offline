@@ -1,5 +1,6 @@
 import { getTodaySessions, getTodayMinutes, getSessions } from "./storage";
 import { getXPState } from "./xp";
+import { secureJsonReviver } from "@/lib/utils";
 
 export type ChallengeTier = "easy" | "medium" | "hard";
 export type ChallengeCategory = "duration" | "sessions" | "quality" | "timing" | "exploration" | "endurance";
@@ -402,7 +403,7 @@ export function areAllChallengesComplete(): boolean {
 function getHistory(): ChallengeHistoryEntry[] {
   try {
     const raw = localStorage.getItem(HISTORY_KEY);
-    return raw ? JSON.parse(raw) : [];
+    return raw ? JSON.parse(raw, secureJsonReviver) : [];
   } catch {
     return [];
   }
