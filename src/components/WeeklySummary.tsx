@@ -3,6 +3,7 @@ import { X, Flame, Clock, Zap, Brain, Star, Share2 } from "lucide-react";
 import { getWeeklySummary, hasSeenWeeklySummary, markWeeklySummarySeen } from "@/lib/weeklySummary";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Button } from "@/components/ui/button";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 export default function WeeklySummary() {
   const { t, language } = useLanguage();
@@ -32,9 +33,16 @@ export default function WeeklySummary() {
           <Star className="h-5 w-5 text-primary" />
           <h2 className="text-sm font-semibold text-foreground">{t("weekly.title")}</h2>
         </div>
-        <button onClick={dismiss} className="rounded-full p-1 text-muted-foreground hover:text-foreground" aria-label={t("common.close")}>
-          <X className="h-4 w-4" />
-        </button>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <button onClick={dismiss} className="rounded-full p-1 text-muted-foreground hover:text-foreground" aria-label={t("common.close")}>
+              <X className="h-4 w-4" />
+            </button>
+          </TooltipTrigger>
+          <TooltipContent>
+            {t("common.close")}
+          </TooltipContent>
+        </Tooltip>
       </div>
 
       <div className="grid grid-cols-2 gap-3 mb-3">
