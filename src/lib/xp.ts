@@ -1,4 +1,4 @@
-import { getCurrentStreak, getTodaySessions } from "./storage";
+import { getCurrentStreak, getTodaySessions, getJSON, setJSON } from "./storage";
 import { BreathingTechnique } from "./techniques";
 
 export interface XPBreakdown {
@@ -53,17 +53,12 @@ const LEVELS = [
   { threshold: 14000, title: "Ascended" },
 ];
 
-function getStore(): XPStore {
-  try {
-    const raw = localStorage.getItem(XP_KEY);
-    if (!raw) return { totalXP: 0, history: [] };
-    const parsed = JSON.parse(raw);
-    // Migrate old format (no history)
-    if (!parsed.history) parsed.history = [];
-    return parsed;
-  } catch {
-    return { totalXP: 0, history: [] };
-  }
+export function getStore(): XPStore {
+  // Optimization: use getJSON to avoid redundant JSON.parse on every lookup
+  const parsed = getJSON<XPStore>(XP_KEY, { totalXP: 0, history: [] });
+  // Migrate old format (no history)
+  if (!parsed.history) parsed.history = [];
+  return parsed;
 }
 
 function saveStore(store: XPStore) {
@@ -72,7 +67,7 @@ function saveStore(store: XPStore) {
   cutoff.setDate(cutoff.getDate() - 90);
   const cutoffStr = cutoff.toISOString().substring(0, 10);
   store.history = store.history.filter((e) => e.date >= cutoffStr);
-  localStorage.setItem(XP_KEY, JSON.stringify(store));
+  setJSON(XP_KEY, store);
 }
 
 function getLevelInfo(xp: number): { level: number; title: string; progressToNext: number; xpToNext: number } {

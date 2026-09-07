@@ -11,7 +11,7 @@ import { Progress } from "@/components/ui/progress";
 import ConsistencyCard from "@/components/stats/ConsistencyCard";
 import MoodHeatmapCalendar from "@/components/stats/MoodHeatmapCalendar";
 import InsightsTab from "@/components/stats/InsightsTab";
-import { getXPState } from "@/lib/xp";
+import { getXPState, getStore } from "@/lib/xp";
 import { getMoodRecords } from "@/lib/mood";
 import { shareStreak, shareBadge } from "@/lib/shareApp";
 
@@ -329,9 +329,9 @@ export default function Stats() {
 
   const xpChartData = useMemo(() => {
     try {
-      const raw = localStorage.getItem("breathe_xp");
-      if (!raw) return [];
-      const store = JSON.parse(raw);
+      // Optimization: Using getStore() rather than raw localStorage and JSON.parse
+      // to rely on existing safe abstraction and avoid redundant parsing logic.
+      const store = getStore();
       if (!store.history || store.history.length === 0) return [];
       const dayMap: Record<string, number> = {};
       const today = new Date();

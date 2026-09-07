@@ -17,3 +17,7 @@
 ## 2025-06-25 - Avoid array spread operations for max/min calculations and Set short-circuiting
 **Learning:** Using `Math.max(0, ...array.map(...))` or `new Set(array.map(...))` creates intermediate array allocations and causes a `RangeError: Maximum call stack size exceeded` for large datasets due to argument spreading limitations in JavaScript engines.
 **Action:** Use `.reduce((max, item) => Math.max(max, item), 0)` to calculate maximums without intermediate arrays or spread operations. For finding a specific number of unique items, use a `for...of` loop with a `Set` and an early return (e.g. `if (set.size >= 3) break;`) to avoid unnecessary iterations over the rest of the array.
+
+## 2025-09-07 - Avoid redundant JSON.parse for localStorage usage
+**Learning:** If there's an existing cached wrapper for `localStorage` like `getJSON` and `setJSON` in `src/lib/storage.ts`, directly calling `localStorage.getItem` and `JSON.parse` will bypass this cache and cause redundant parsing. This is especially true for data that is used heavily on every render or across different components (e.g., `breathe_xp` data which could contain a large array of history).
+**Action:** Use `getJSON` instead of raw `localStorage.getItem` with `JSON.parse` to leverage built-in caching mechanisms, avoiding redundant JSON parsing on the main thread and keeping performance smooth across renders.
