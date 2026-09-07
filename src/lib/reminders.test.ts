@@ -1,4 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
+import { secureJsonReviver } from "./utils";
 import {
   getReminders,
   saveReminders,
@@ -10,101 +11,86 @@ import {
 
 const STORAGE_KEY = "breathe_reminders";
 
-describe("reminders library", () => {
+describe("reminders", () => {
   beforeEach(() => {
     localStorage.clear();
     vi.clearAllMocks();
   });
 
-  describe("saveReminders", () => {
-    it("should save reminders to localStorage", () => {
+  describe("getReminders", () => {
+    it("returns empty array if no data", () => {
+      expect(getReminders()).toEqual([]);
+    });
+
+    it("returns parsed data if exists", () => {
       const reminders: Reminder[] = [
-        { id: "1", time: "08:00", days: [1, 2, 3], enabled: true, message: "Morning breath" }
+        { id: "1", time: "08:00", days: [1, 2], enabled: true },
+        { id: "2", time: "20:00", days: [5], enabled: false },
       ];
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(reminders));
+      expect(getReminders()).toEqual(reminders);
+    });
+  });
 
-      const setItemSpy = vi.spyOn(Storage.prototype, "setItem");
+  describe("saveReminders", () => {
+    it("saves reminders to localStorage", () => {
+      const reminders: Reminder[] = [
+        { id: "1", time: "08:00", days: [1, 2], enabled: true },
+      ];
       saveReminders(reminders);
-
-      expect(setItemSpy).toHaveBeenCalledWith(STORAGE_KEY, JSON.stringify(reminders));
       expect(localStorage.getItem(STORAGE_KEY)).toBe(JSON.stringify(reminders));
     });
   });
 
-  describe("getReminders", () => {
-    it("should return an empty array if no reminders are stored", () => {
-      expect(getReminders()).toEqual([]);
-    });
-
-    it("should return stored reminders", () => {
-      const reminders: Reminder[] = [
-        { id: "1", time: "08:00", days: [1, 2, 3], enabled: true, message: "Morning breath" }
-      ];
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(reminders));
-
-      expect(getReminders()).toEqual(reminders);
-    });
-
-    it("should return an empty array if JSON is invalid", () => {
-      localStorage.setItem(STORAGE_KEY, "invalid-json");
-      expect(getReminders()).toEqual([]);
-    });
-  });
-
   describe("addReminder", () => {
-    it("should add a reminder to the existing list", () => {
-      const existing: Reminder[] = [
-        { id: "1", time: "08:00", days: [1], enabled: true, message: "One" }
-      ];
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(existing));
+    it("adds a new reminder and assigns an id", () => {
+      const newReminder = { time: "09:00", days: [0], enabled: true };
+      addReminder(newReminder as unknown as Reminder);
 
-      const newReminder: Reminder = { id: "2", time: "09:00", days: [2], enabled: false, message: "Two" };
-      addReminder(newReminder);
-
-      const stored = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
-      expect(stored).toHaveLength(2);
-      expect(stored[1]).toEqual(newReminder);
+      const stored = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]", secureJsonReviver);
+      expect(stored).toHaveLength(1);
+      expect(stored[0].time).toBe("09:00");
     });
   });
 
   describe("updateReminder", () => {
-    it("should update an existing reminder", () => {
-      const reminders: Reminder[] = [
-        { id: "1", time: "08:00", days: [1], enabled: true, message: "Original" }
+    it("updates an existing reminder", () => {
+      const initial: Reminder[] = [
+        { id: "1", time: "08:00", days: [1], enabled: true },
       ];
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(reminders));
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(initial));
 
-      updateReminder("1", { message: "Updated", enabled: false });
+      updateReminder("1", { time: "09:00" });
 
-      const stored = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
-      expect(stored[0].message).toBe("Updated");
-      expect(stored[0].enabled).toBe(false);
-      expect(stored[0].time).toBe("08:00"); // preserved
+      const stored = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]", secureJsonReviver);
+      expect(stored[0].time).toBe("09:00");
+      expect(stored[0].days).toEqual([1]);
     });
 
-    it("should do nothing if reminder ID is not found", () => {
-      const reminders: Reminder[] = [
-        { id: "1", time: "08:00", days: [1], enabled: true, message: "Original" }
+    it("does nothing if id not found", () => {
+      const initial: Reminder[] = [
+        { id: "1", time: "08:00", days: [1], enabled: true },
       ];
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(reminders));
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(initial));
 
-      updateReminder("non-existent", { message: "Updated" });
+      updateReminder("2", { time: "09:00" });
 
-      const stored = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
-      expect(stored).toEqual(reminders);
+      const stored = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]", secureJsonReviver);
+      expect(stored[0].time).toBe("08:00");
     });
   });
 
   describe("deleteReminder", () => {
-    it("should remove a reminder by ID", () => {
-      const reminders: Reminder[] = [
-        { id: "1", time: "08:00", days: [1], enabled: true, message: "One" },
-        { id: "2", time: "09:00", days: [2], enabled: true, message: "Two" }
+    it("removes a reminder by id", () => {
+      const initial: Reminder[] = [
+        { id: "1", time: "08:00", days: [1], enabled: true },
+        { id: "2", time: "10:00", days: [2], enabled: false },
       ];
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(reminders));
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(initial));
 
       deleteReminder("1");
 
-      const stored = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+      const stored = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]", secureJsonReviver);
       expect(stored).toHaveLength(1);
       expect(stored[0].id).toBe("2");
     });

@@ -1,5 +1,6 @@
 import { PRESET_TECHNIQUES } from "./techniques";
 import { getCustomTechniques } from "./storage";
+import { secureJsonReviver } from "./utils";
 
 export interface MoodOption {
   value: number;
@@ -33,7 +34,7 @@ const MOOD_KEY = "breathe_mood_records";
 export function getMoodRecords(): MoodRecord[] {
   try {
     const raw = localStorage.getItem(MOOD_KEY);
-    return raw ? JSON.parse(raw) : [];
+    return raw ? JSON.parse(raw, secureJsonReviver) : [];
   } catch {
     return [];
   }
