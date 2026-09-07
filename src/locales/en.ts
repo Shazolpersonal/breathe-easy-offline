@@ -245,6 +245,7 @@ export const en: Record<string, string> = {
   "settings.theme": "Theme",
   "settings.voice": "Voice Guidance",
   "settings.voiceEnable": "Enable Voice",
+  "settings.voicePreview": "Preview voice",
   "settings.voiceSpeed": "Speed: {{speed}}x",
   "settings.voicePitch": "Pitch: {{pitch}}x",
   "settings.voicePitchDesc": "Lower = deep & calm, Higher = bright & energetic",
