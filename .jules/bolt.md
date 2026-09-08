@@ -17,3 +17,6 @@
 ## 2025-06-25 - Avoid array spread operations for max/min calculations and Set short-circuiting
 **Learning:** Using `Math.max(0, ...array.map(...))` or `new Set(array.map(...))` creates intermediate array allocations and causes a `RangeError: Maximum call stack size exceeded` for large datasets due to argument spreading limitations in JavaScript engines.
 **Action:** Use `.reduce((max, item) => Math.max(max, item), 0)` to calculate maximums without intermediate arrays or spread operations. For finding a specific number of unique items, use a `for...of` loop with a `Set` and an early return (e.g. `if (set.size >= 3) break;`) to avoid unnecessary iterations over the rest of the array.
+## 2025-10-25 - Avoid O(N*W) Moving Averages in requestAnimationFrame loops
+**Learning:** Calculating a moving average filter inside a high-frequency loop (like `requestAnimationFrame` for PPG processing) using array `.slice()` and `.reduce()` is an anti-pattern. It creates an O(N*W) time complexity where N is the array size and W is the window size, and worst of all, it allocates hundreds of new arrays per second, putting immense pressure on the JavaScript garbage collector.
+**Action:** Replace `.slice().reduce()` inside high-frequency loops with a sliding window running sum algorithm to achieve O(N) time complexity and completely eliminate intermediate array allocations.
