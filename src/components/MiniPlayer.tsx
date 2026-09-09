@@ -2,6 +2,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { Play, Pause, X, Wind } from "lucide-react";
 import { useSessionContext } from "@/contexts/SessionContext";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { addSession } from "@/lib/storage";
 import { updateProgression } from "@/lib/progression";
 import { toast } from "sonner";
@@ -57,24 +58,34 @@ export default function MiniPlayer() {
             </p>
           </div>
 
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              updateMiniSession({ isPaused: !miniSession.isPaused });
-            }}
-            className="rounded-full p-1.5 text-foreground hover:bg-secondary transition-colors focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-ring focus-visible:ring-offset-2"
-            aria-label={miniSession.isPaused ? t("session.resume") : t("session.pause")}
-          >
-            {miniSession.isPaused ? <Play className="h-4 w-4" /> : <Pause className="h-4 w-4" />}
-          </button>
+                    <Tooltip>
+            <TooltipTrigger asChild>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  updateMiniSession({ isPaused: !miniSession.isPaused });
+                }}
+                className="rounded-full p-1.5 text-foreground hover:bg-secondary transition-colors focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-ring focus-visible:ring-offset-2"
+                aria-label={miniSession.isPaused ? t("session.resume") : t("session.pause")}
+              >
+                {miniSession.isPaused ? <Play className="h-4 w-4" /> : <Pause className="h-4 w-4" />}
+              </button>
+            </TooltipTrigger>
+            <TooltipContent>{miniSession.isPaused ? t("session.resume") : t("session.pause")}</TooltipContent>
+          </Tooltip>
 
-          <button
-            onClick={handleStop}
-            className="rounded-full p-1.5 text-muted-foreground hover:text-destructive transition-colors focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-ring focus-visible:ring-offset-2"
-            aria-label={t("session.stopAndSave")}
-          >
-            <X className="h-4 w-4" />
-          </button>
+                    <Tooltip>
+            <TooltipTrigger asChild>
+              <button
+                onClick={handleStop}
+                className="rounded-full p-1.5 text-muted-foreground hover:text-destructive transition-colors focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-ring focus-visible:ring-offset-2"
+                aria-label={t("session.stopAndSave")}
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </TooltipTrigger>
+            <TooltipContent>{t("session.stopAndSave")}</TooltipContent>
+          </Tooltip>
         </div>
       </div>
     </div>
