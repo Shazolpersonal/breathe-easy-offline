@@ -63,73 +63,85 @@ export const bn: Record<string, string> = {
 
   // Techniques
   "technique.box-breathing.name": "বক্স ব্রিদিং",
-  "technique.box-breathing.description": "চারটি ধাপে সমান সময়। চাপের মধ্যে শান্ত থাকতে নেভি সিলরা ব্যবহার করে।",
+  "technique.box-breathing.description":
+    "চারটি ধাপে সমান সময়। চাপের মধ্যে শান্ত থাকতে নেভি সিলরা ব্যবহার করে।",
   "technique.box-breathing.benefits.0": "চাপ কমায়",
   "technique.box-breathing.benefits.1": "মনোযোগ বাড়ায়",
   "technique.box-breathing.benefits.2": "স্নায়ুতন্ত্র শান্ত করে",
 
   "technique.4-7-8.name": "৪-৭-৮ রিল্যাক্সেশন",
-  "technique.4-7-8.description": "ডক্টর অ্যান্ড্রু ওয়েইলের কৌশল। স্নায়ুতন্ত্রের জন্য প্রাকৃতিক প্রশান্তি।",
+  "technique.4-7-8.description":
+    "ডক্টর অ্যান্ড্রু ওয়েইলের কৌশল। স্নায়ুতন্ত্রের জন্য প্রাকৃতিক প্রশান্তি।",
   "technique.4-7-8.benefits.0": "ঘুম বাড়ায়",
   "technique.4-7-8.benefits.1": "উদ্বেগ কমায়",
   "technique.4-7-8.benefits.2": "হৃদস্পন্দন কমায়",
 
   "technique.calm-breath.name": "শান্ত শ্বাস",
-  "technique.calm-breath.description": "সহজ ৪-৬ শ্বাস-প্রশ্বাস। দীর্ঘ নিঃশ্বাস প্যারাসিম্প্যাথেটিক সিস্টেম সক্রিয় করে।",
+  "technique.calm-breath.description":
+    "সহজ ৪-৬ শ্বাস-প্রশ্বাস। দীর্ঘ নিঃশ্বাস প্যারাসিম্প্যাথেটিক সিস্টেম সক্রিয় করে।",
   "technique.calm-breath.benefits.0": "দ্রুত শান্ত করে",
   "technique.calm-breath.benefits.1": "সহজে শেখা যায়",
   "technique.calm-breath.benefits.2": "উত্তেজনা কমায়",
 
   "technique.equal-breathing.name": "সম শ্বাস",
-  "technique.equal-breathing.description": "সম বৃত্তি — ভারসাম্য ও উপস্থিতির জন্য সমান শ্বাস-প্রশ্বাস।",
+  "technique.equal-breathing.description":
+    "সম বৃত্তি — ভারসাম্য ও উপস্থিতির জন্য সমান শ্বাস-প্রশ্বাস।",
   "technique.equal-breathing.benefits.0": "মন ভারসাম্য করে",
   "technique.equal-breathing.benefits.1": "একাগ্রতা বাড়ায়",
   "technique.equal-breathing.benefits.2": "শক্তি স্থির করে",
 
   "technique.wim-hof.name": "উইম হফ মেথড",
-  "technique.wim-hof.description": "শক্তিশালী শ্বাস-প্রশ্বাসের পর দীর্ঘ ধারণ। শক্তিদায়ক ও উদ্দীপক।",
+  "technique.wim-hof.description":
+    "শক্তিশালী শ্বাস-প্রশ্বাসের পর দীর্ঘ ধারণ। শক্তিদায়ক ও উদ্দীপক।",
   "technique.wim-hof.benefits.0": "শক্তি বাড়ায়",
   "technique.wim-hof.benefits.1": "রোগ প্রতিরোধ ক্ষমতা শক্তিশালী করে",
   "technique.wim-hof.benefits.2": "ইচ্ছাশক্তি বাড়ায়",
 
   "technique.physiological-sigh.name": "ফিজিওলজিক্যাল সাই",
-  "technique.physiological-sigh.description": "স্ট্যানফোর্ড গবেষিত ডাবল শ্বাস নেওয়ার পর দীর্ঘ নিঃশ্বাস। তাৎক্ষণিক শান্ত হওয়ার দ্রুততম উপায়।",
+  "technique.physiological-sigh.description":
+    "স্ট্যানফোর্ড গবেষিত ডাবল শ্বাস নেওয়ার পর দীর্ঘ নিঃশ্বাস। তাৎক্ষণিক শান্ত হওয়ার দ্রুততম উপায়।",
   "technique.physiological-sigh.benefits.0": "তাৎক্ষণিক শান্তি",
   "technique.physiological-sigh.benefits.1": "CO₂ কমায়",
   "technique.physiological-sigh.benefits.2": "বিজ্ঞান-ভিত্তিক",
 
   "technique.resonant-breathing.name": "রেজোন্যান্ট ব্রিদিং",
-  "technique.resonant-breathing.description": "প্রতি মিনিটে ৫.৫ শ্বাস — হার্ট রেট ভেরিয়েবিলিটি ও স্নায়ুতন্ত্রের ভারসাম্যের জন্য আদর্শ হার।",
+  "technique.resonant-breathing.description":
+    "প্রতি মিনিটে ৫.৫ শ্বাস — হার্ট রেট ভেরিয়েবিলিটি ও স্নায়ুতন্ত্রের ভারসাম্যের জন্য আদর্শ হার।",
   "technique.resonant-breathing.benefits.0": "HRV সর্বোচ্চ করে",
   "technique.resonant-breathing.benefits.1": "গভীর শিথিলতা",
   "technique.resonant-breathing.benefits.2": "আবেগের ভারসাম্য",
 
   "technique.alternate-nostril.name": "অল্টারনেট নস্ট্রিল (নাড়ী শোধন)",
-  "technique.alternate-nostril.description": "প্রাচীন যোগ কৌশল। মানসিক স্বচ্ছতার জন্য বাম ও ডান মস্তিষ্কের ভারসাম্য করে।",
+  "technique.alternate-nostril.description":
+    "প্রাচীন যোগ কৌশল। মানসিক স্বচ্ছতার জন্য বাম ও ডান মস্তিষ্কের ভারসাম্য করে।",
   "technique.alternate-nostril.benefits.0": "মস্তিষ্কের ভারসাম্য",
   "technique.alternate-nostril.benefits.1": "উদ্বেগ কমায়",
   "technique.alternate-nostril.benefits.2": "মনোযোগ বাড়ায়",
 
   "technique.diaphragmatic.name": "ডায়াফ্রাম্যাটিক ব্রিদিং",
-  "technique.diaphragmatic.description": "গভীর পেটের শ্বাস যা ডায়াফ্রাম শক্তিশালী করে। সব শ্বাস অনুশীলনের ভিত্তি।",
+  "technique.diaphragmatic.description":
+    "গভীর পেটের শ্বাস যা ডায়াফ্রাম শক্তিশালী করে। সব শ্বাস অনুশীলনের ভিত্তি।",
   "technique.diaphragmatic.benefits.0": "ডায়াফ্রাম শক্তিশালী করে",
   "technique.diaphragmatic.benefits.1": "রক্তচাপ কমায়",
   "technique.diaphragmatic.benefits.2": "কোর স্থিতিশীলতা বাড়ায়",
 
   "technique.pursed-lip.name": "পার্সড লিপ ব্রিদিং",
-  "technique.pursed-lip.description": "COPD ও হাঁপানি রোগীদের জন্য চিকিৎসা-মানের কৌশল। শ্বাসের হার কমায় ও বায়ুচলাচল উন্নত করে।",
+  "technique.pursed-lip.description":
+    "COPD ও হাঁপানি রোগীদের জন্য চিকিৎসা-মানের কৌশল। শ্বাসের হার কমায় ও বায়ুচলাচল উন্নত করে।",
   "technique.pursed-lip.benefits.0": "শ্বাসনালী খোলে",
   "technique.pursed-lip.benefits.1": "শ্বাসকষ্ট কমায়",
   "technique.pursed-lip.benefits.2": "চিকিৎসা-মানের",
 
   "technique.energizing-breath.name": "এনার্জাইজিং ব্রিদ (২-১-৪-১)",
-  "technique.energizing-breath.description": "দ্রুত শ্বাস, সংক্ষিপ্ত ধারণ, দীর্ঘ নিঃশ্বাস। সজাগতার জন্য সিম্প্যাথেটিক সিস্টেম সক্রিয় করে।",
+  "technique.energizing-breath.description":
+    "দ্রুত শ্বাস, সংক্ষিপ্ত ধারণ, দীর্ঘ নিঃশ্বাস। সজাগতার জন্য সিম্প্যাথেটিক সিস্টেম সক্রিয় করে।",
   "technique.energizing-breath.benefits.0": "সজাগতা বাড়ায়",
   "technique.energizing-breath.benefits.1": "সকালের শক্তিদায়ক",
   "technique.energizing-breath.benefits.2": "মন তীক্ষ্ণ করে",
 
   "technique.4-4-6-2.name": "স্লিপ ব্রিদ (৪-৪-৬-২)",
-  "technique.4-4-6-2.description": "ঘুমানোর জন্য অপ্টিমাইজড। দীর্ঘ নিঃশ্বাস ও সংক্ষিপ্ত বিরতি একটি মৃদু ছন্দ তৈরি করে।",
+  "technique.4-4-6-2.description":
+    "ঘুমানোর জন্য অপ্টিমাইজড। দীর্ঘ নিঃশ্বাস ও সংক্ষিপ্ত বিরতি একটি মৃদু ছন্দ তৈরি করে।",
   "technique.4-4-6-2.benefits.0": "গভীর ঘুম বাড়ায়",
   "technique.4-4-6-2.benefits.1": "দৌড়ানো চিন্তা কমায়",
   "technique.4-4-6-2.benefits.2": "মৃদু ছন্দ",
@@ -166,7 +178,8 @@ export const bn: Record<string, string> = {
   "techniques.customDefault": "কাস্টম কৌশল",
   "techniques.delete": "মুছুন",
   "techniques.deleteConfirmTitle": "কৌশল মুছে ফেলবেন?",
-  "techniques.deleteConfirmDesc": "এই কাস্টম কৌশলটি স্থায়ীভাবে মুছে ফেলা হবে। এটি পূর্বাবস্থায় ফেরানো যাবে না।",
+  "techniques.deleteConfirmDesc":
+    "এই কাস্টম কৌশলটি স্থায়ীভাবে মুছে ফেলা হবে। এটি পূর্বাবস্থায় ফেরানো যাবে না।",
   "techniques.searchPlaceholder": "কৌশল খুঁজুন...",
   "techniques.filterAll": "সব",
   "techniques.filterFavorites": "প্রিয়",
@@ -204,10 +217,12 @@ export const bn: Record<string, string> = {
   "stats.last30": "গত ৩০ দিন",
   "stats.unlocked": "আনলক ({{count}})",
   "stats.locked": "লক ({{count}})",
-  "stats.noJournal": "এখনও কোনও জার্নাল এন্ট্রি নেই। সেশনের পরে লিখুন কেমন লাগলো!",
+  "stats.noJournal":
+    "এখনও কোনও জার্নাল এন্ট্রি নেই। সেশনের পরে লিখুন কেমন লাগলো!",
   "stats.noSessions": "{{month}}-এ কোনও সেশন নেই।",
   "stats.emptyTitle": "আপনার যাত্রা এখানে শুরু",
-  "stats.emptyDesc": "আপনার পরিসংখ্যান, ধারা এবং অগ্রগতি দেখতে প্রথম শ্বাস সেশন সম্পন্ন করুন।",
+  "stats.emptyDesc":
+    "আপনার পরিসংখ্যান, ধারা এবং অগ্রগতি দেখতে প্রথম শ্বাস সেশন সম্পন্ন করুন।",
   "stats.lifetime": "সামগ্রিক সারসংক্ষেপ",
   "stats.totalSessions": "মোট সেশন",
   "stats.totalHours": "অনুশীলনের ঘণ্টা",
@@ -225,8 +240,10 @@ export const bn: Record<string, string> = {
   "stats.moodTrendDesc": "দৈনিক মুড (হালকা) সাথে ৭-দিনের রোলিং গড় (গাঢ়)",
   "stats.xpEarned": "অর্জিত XP (৩০ দিন)",
   "stats.report.dailyChart": "দৈনিক মিনিট",
-  "stats.report.summary": "আপনি {{month}}-এ {{sessions}}টি সেশনে {{minutes}} মিনিট শ্বাস নিয়েছেন।",
-  "stats.report.topTechnique": "আপনার সবচেয়ে বেশি ব্যবহৃত কৌশল ছিল {{name}} ({{count}}টি সেশন)।",
+  "stats.report.summary":
+    "আপনি {{month}}-এ {{sessions}}টি সেশনে {{minutes}} মিনিট শ্বাস নিয়েছেন।",
+  "stats.report.topTechnique":
+    "আপনার সবচেয়ে বেশি ব্যবহৃত কৌশল ছিল {{name}} ({{count}}টি সেশন)।",
   "stats.report.streak": "আপনার দীর্ঘতম ধারা ছিল {{days}} দিন।",
   "stats.report.avgCalm": "গড় প্রশান্তি স্কোর: {{score}}%।",
   "stats.report.sessions": "সেশন",
@@ -252,16 +269,18 @@ export const bn: Record<string, string> = {
   "settings.voiceEn": "ইংরেজি ভয়েস",
   "settings.voiceBn": "বাংলা ভয়েস",
   "settings.voiceAuto": "অটো (সেরা উপলব্ধ)",
-  "settings.voiceBnUnavailable": "এই ডিভাইসে কোনো বাংলা ভয়েস পাওয়া যায়নি। অ্যাপটি সেরা উপলব্ধ ফলব্যাক ব্যবহার করবে।",
+  "settings.voiceBnUnavailable":
+    "এই ডিভাইসে কোনো বাংলা ভয়েস পাওয়া যায়নি। অ্যাপটি সেরা উপলব্ধ ফলব্যাক ব্যবহার করবে।",
   "settings.voiceCues": "ভয়েস কিউ",
   "settings.cuePhaseNames": "ফেজের নাম",
-  "settings.cuePhaseNamesDesc": "\"শ্বাস নিন\", \"ধরে রাখুন\", \"শ্বাস ছাড়ুন\"",
+  "settings.cuePhaseNamesDesc": '"শ্বাস নিন", "ধরে রাখুন", "শ্বাস ছাড়ুন"',
   "settings.cueCountdown": "শ্বাস কাউন্টডাউন",
-  "settings.cueCountdownDesc": "প্রতিটি ফেজ শেষ হওয়ার আগে ৩... ২... ১... গণনা করুন",
+  "settings.cueCountdownDesc":
+    "প্রতিটি ফেজ শেষ হওয়ার আগে ৩... ২... ১... গণনা করুন",
   "settings.cueSessionStart": "সেশন শুরু",
-  "settings.cueSessionStartDesc": "\"শুরু করা যাক। আরামদায়ক অবস্থানে বসুন।\"",
+  "settings.cueSessionStartDesc": '"শুরু করা যাক। আরামদায়ক অবস্থানে বসুন।"',
   "settings.cueSessionEnd": "সেশন সম্পন্ন",
-  "settings.cueSessionEndDesc": "\"সাবাশ! আপনি X মিনিট সম্পন্ন করেছেন।\"",
+  "settings.cueSessionEndDesc": '"সাবাশ! আপনি X মিনিট সম্পন্ন করেছেন।"',
   "settings.cueCycleMilestone": "চক্র মাইলস্টোন",
   "settings.cueCycleMilestoneDesc": "প্রতি ৫ চক্র সম্পন্ন হলে ঘোষণা করুন",
   "settings.cueEncouragement": "উৎসাহ",
@@ -274,12 +293,15 @@ export const bn: Record<string, string> = {
   "settings.reminders": "শ্বাস রিমাইন্ডার",
   "settings.reminders.add": "যোগ করুন",
   "settings.reminders.unsupported": "এই ব্রাউজারে নোটিফিকেশন সমর্থিত নয়।",
-  "settings.reminders.denied": "নোটিফিকেশন ব্লক করা আছে। ব্রাউজার সেটিংসে সক্রিয় করুন।",
+  "settings.reminders.denied":
+    "নোটিফিকেশন ব্লক করা আছে। ব্রাউজার সেটিংসে সক্রিয় করুন।",
   "settings.reminders.default": "রিমাইন্ডারের জন্য নোটিফিকেশন সক্রিয় করুন।",
   "settings.reminders.enableButton": "নোটিফিকেশন সক্রিয়",
-  "settings.reminders.empty": "এখনও কোনও রিমাইন্ডার নেই। ধারাবাহিক থাকতে একটি যোগ করুন!",
+  "settings.reminders.empty":
+    "এখনও কোনও রিমাইন্ডার নেই। ধারাবাহিক থাকতে একটি যোগ করুন!",
   "settings.reminders.messagePlaceholder": "রিমাইন্ডার বার্তা",
-  "settings.reminders.warning": "⚠️ রিমাইন্ডার শুধুমাত্র অ্যাপ/ট্যাব খোলা থাকলে কাজ করে। সেরা ফলাফলের জন্য PWA ইনস্টল রাখুন।",
+  "settings.reminders.warning":
+    "⚠️ রিমাইন্ডার শুধুমাত্র অ্যাপ/ট্যাব খোলা থাকলে কাজ করে। সেরা ফলাফলের জন্য PWA ইনস্টল রাখুন।",
   "settings.reminders.defaultMessage": "আপনার শ্বাস-প্রশ্বাসের বিরতির সময়! 🌬️",
   "settings.data": "ডেটা",
   "settings.export": "এক্সপোর্ট",
@@ -296,8 +318,9 @@ export const bn: Record<string, string> = {
   "settings.neverBacked": "কখনও ব্যাকআপ নেওয়া হয়নি",
   "settings.backupWarning": "⚠️ অগ্রগতি হারানো এড়াতে আপনার ডেটা ব্যাকআপ করুন!",
   "settings.install": "অ্যাপ ইনস্টল",
-  "settings.installDesc": "আপনার ফোনে Chrome বা Safari-তে এই অ্যাপ খুলুন, শেয়ার/মেনু বোতামে ট্যাপ করুন এবং বেছে নিন",
-  "settings.installAction": "\"হোম স্ক্রিনে যোগ করুন\"",
+  "settings.installDesc":
+    "আপনার ফোনে Chrome বা Safari-তে এই অ্যাপ খুলুন, শেয়ার/মেনু বোতামে ট্যাপ করুন এবং বেছে নিন",
+  "settings.installAction": '"হোম স্ক্রিনে যোগ করুন"',
   "settings.installOffline": "। ইনস্টল হলে অ্যাপটি সম্পূর্ণ অফলাইনে কাজ করে।",
   "settings.notifDenied": "নোটিফিকেশন অনুমতি প্রত্যাখ্যান হয়েছে",
   "settings.accessibility": "অ্যাক্সেসিবিলিটি",
@@ -332,7 +355,8 @@ export const bn: Record<string, string> = {
   "playlists.play": "শুরু করুন",
   "playlists.delete": "মুছে ফেলুন",
   "playlists.deleteConfirmTitle": "প্লেলিস্ট মুছবেন?",
-  "playlists.deleteConfirmDesc": "এই প্লেলিস্টটি স্থায়ীভাবে মুছে ফেলা হবে। এই কাজ বাতিল করা যাবে না।",
+  "playlists.deleteConfirmDesc":
+    "এই প্লেলিস্টটি স্থায়ীভাবে মুছে ফেলা হবে। এই কাজ বাতিল করা যাবে না।",
 
   // Programs
   "programs.title": "গাইডেড প্রোগ্রাম",
@@ -347,46 +371,79 @@ export const bn: Record<string, string> = {
   "programs.daysCount": "{{count}} দিন",
 
   "program.stress-relief-7.name": "৭-দিনের চাপ মুক্তি",
-  "program.stress-relief-7.description": "ধাপে ধাপে শিথিলতা কৌশল, প্রতিদিন একটু করে চাপ দূর করুন।",
+  "program.stress-relief-7.description":
+    "ধাপে ধাপে শিথিলতা কৌশল, প্রতিদিন একটু করে চাপ দূর করুন।",
   "program.sleep-better-14.name": "১৪ দিনে ভালো ঘুম",
-  "program.sleep-better-14.description": "ঘুমানোর আগে মনকে শান্ত করার সন্ধ্যাকালীন শ্বাস-প্রশ্বাস।",
+  "program.sleep-better-14.description":
+    "ঘুমানোর আগে মনকে শান্ত করার সন্ধ্যাকালীন শ্বাস-প্রশ্বাস।",
   "program.focus-training-10.name": "ফোকাস ট্রেনিং",
-  "program.focus-training-10.description": "মনোযোগ ও মানসিক স্বচ্ছতা বাড়াতে ১০ দিনের শক্তিদায়ক শ্বাস-প্রশ্বাস।",
+  "program.focus-training-10.description":
+    "মনোযোগ ও মানসিক স্বচ্ছতা বাড়াতে ১০ দিনের শক্তিদায়ক শ্বাস-প্রশ্বাস।",
 
   // Program day tips
-  "program.stress-relief-7.day1.tip": "মৃদু শুরু করুন। শুধু লম্বা নিঃশ্বাসে মনোযোগ দিন।",
-  "program.stress-relief-7.day2.tip": "আজ সময় বাড়াই। প্রতিটি শ্বাসে উত্তেজনা ত্যাগ করুন।",
-  "program.stress-relief-7.day3.tip": "বক্স ব্রিদিং-এ বিরতি যোগ হয় — এগুলো মনকে শান্ত করে।",
-  "program.stress-relief-7.day4.tip": "লক্ষ্য করুন কয়েক চক্রের পরে শরীর কেমন ভিন্ন অনুভব করে।",
-  "program.stress-relief-7.day5.tip": "৪-৭-৮ প্যাটার্ন একটি প্রাকৃতিক প্রশান্তিদায়ক। একে কাজ করতে দিন।",
-  "program.stress-relief-7.day6.tip": "আপনি একটি দক্ষতা তৈরি করছেন। প্রতিটি সেশন পরেরটি সহজ করে।",
-  "program.stress-relief-7.day7.tip": "শেষ দিন! আপনি একটি চাপ মুক্তির অভ্যাস তৈরি করেছেন। চালিয়ে যান।",
+  "program.stress-relief-7.day1.tip":
+    "মৃদু শুরু করুন। শুধু লম্বা নিঃশ্বাসে মনোযোগ দিন।",
+  "program.stress-relief-7.day2.tip":
+    "আজ সময় বাড়াই। প্রতিটি শ্বাসে উত্তেজনা ত্যাগ করুন।",
+  "program.stress-relief-7.day3.tip":
+    "বক্স ব্রিদিং-এ বিরতি যোগ হয় — এগুলো মনকে শান্ত করে।",
+  "program.stress-relief-7.day4.tip":
+    "লক্ষ্য করুন কয়েক চক্রের পরে শরীর কেমন ভিন্ন অনুভব করে।",
+  "program.stress-relief-7.day5.tip":
+    "৪-৭-৮ প্যাটার্ন একটি প্রাকৃতিক প্রশান্তিদায়ক। একে কাজ করতে দিন।",
+  "program.stress-relief-7.day6.tip":
+    "আপনি একটি দক্ষতা তৈরি করছেন। প্রতিটি সেশন পরেরটি সহজ করে।",
+  "program.stress-relief-7.day7.tip":
+    "শেষ দিন! আপনি একটি চাপ মুক্তির অভ্যাস তৈরি করেছেন। চালিয়ে যান।",
 
-  "program.sleep-better-14.day1.tip": "বিছানায় আলো বন্ধ করে এটি করুন। নাক দিয়ে শ্বাস নিন।",
-  "program.sleep-better-14.day2.tip": "প্রতিটি নিঃশ্বাস যেন দিনের ভার নামাচ্ছে।",
-  "program.sleep-better-14.day3.tip": "৪-৭-৮ বিশেষভাবে ঘুমের জন্য তৈরি। প্যাটার্নে বিশ্বাস রাখুন।",
-  "program.sleep-better-14.day4.tip": "চোখ বন্ধ করুন। গণনাকে আপনার চিন্তার জায়গা নিতে দিন।",
-  "program.sleep-better-14.day5.tip": "আপনার শরীর শিখছে এই সংকেতের মানে 'বিশ্রামের সময়'।",
-  "program.sleep-better-14.day6.tip": "ঘুমানোর আগে বক্স ব্রিদিং মানসিক বিশৃঙ্খলা দূর করে।",
-  "program.sleep-better-14.day7.tip": "এক সপ্তাহ হলো! কত দ্রুত ঘুম আসছে তাতে কোনো পরিবর্তন লক্ষ্য করেছেন?",
-  "program.sleep-better-14.day8.tip": "ধারাবাহিকতা সময়কালের চেয়ে বেশি গুরুত্বপূর্ণ। প্রতি রাতে আসুন।",
-  "program.sleep-better-14.day9.tip": "সম শ্বাস গভীর বিশ্রামের জন্য স্নায়ুতন্ত্র ভারসাম্য করে।",
-  "program.sleep-better-14.day10.tip": "আপনি ঘুমানোর রুটিন পুনর্গঠন করছেন। চালিয়ে যান।",
+  "program.sleep-better-14.day1.tip":
+    "বিছানায় আলো বন্ধ করে এটি করুন। নাক দিয়ে শ্বাস নিন।",
+  "program.sleep-better-14.day2.tip":
+    "প্রতিটি নিঃশ্বাস যেন দিনের ভার নামাচ্ছে।",
+  "program.sleep-better-14.day3.tip":
+    "৪-৭-৮ বিশেষভাবে ঘুমের জন্য তৈরি। প্যাটার্নে বিশ্বাস রাখুন।",
+  "program.sleep-better-14.day4.tip":
+    "চোখ বন্ধ করুন। গণনাকে আপনার চিন্তার জায়গা নিতে দিন।",
+  "program.sleep-better-14.day5.tip":
+    "আপনার শরীর শিখছে এই সংকেতের মানে 'বিশ্রামের সময়'।",
+  "program.sleep-better-14.day6.tip":
+    "ঘুমানোর আগে বক্স ব্রিদিং মানসিক বিশৃঙ্খলা দূর করে।",
+  "program.sleep-better-14.day7.tip":
+    "এক সপ্তাহ হলো! কত দ্রুত ঘুম আসছে তাতে কোনো পরিবর্তন লক্ষ্য করেছেন?",
+  "program.sleep-better-14.day8.tip":
+    "ধারাবাহিকতা সময়কালের চেয়ে বেশি গুরুত্বপূর্ণ। প্রতি রাতে আসুন।",
+  "program.sleep-better-14.day9.tip":
+    "সম শ্বাস গভীর বিশ্রামের জন্য স্নায়ুতন্ত্র ভারসাম্য করে।",
+  "program.sleep-better-14.day10.tip":
+    "আপনি ঘুমানোর রুটিন পুনর্গঠন করছেন। চালিয়ে যান।",
   "program.sleep-better-14.day11.tip": "দীর্ঘ ধারণেই যাদু। একে গ্রহণ করুন।",
-  "program.sleep-better-14.day12.tip": "এতক্ষণে আপনার ঘুমের মান লক্ষণীয়ভাবে উন্নত হওয়া উচিত।",
-  "program.sleep-better-14.day13.tip": "প্রায় শেষ। এটি এখন স্বাভাবিক হয়ে উঠছে।",
-  "program.sleep-better-14.day14.tip": "অভিনন্দন! আপনি একটি শক্তিশালী ঘুমের অভ্যাস তৈরি করেছেন। 🎉",
+  "program.sleep-better-14.day12.tip":
+    "এতক্ষণে আপনার ঘুমের মান লক্ষণীয়ভাবে উন্নত হওয়া উচিত।",
+  "program.sleep-better-14.day13.tip":
+    "প্রায় শেষ। এটি এখন স্বাভাবিক হয়ে উঠছে।",
+  "program.sleep-better-14.day14.tip":
+    "অভিনন্দন! আপনি একটি শক্তিশালী ঘুমের অভ্যাস তৈরি করেছেন। 🎉",
 
-  "program.focus-training-10.day1.tip": "বক্স ব্রিদিং আপনার মনোযোগ প্রশিক্ষণ দেয়। সঠিকভাবে গণনা করুন।",
-  "program.focus-training-10.day2.tip": "মন ঘুরে গেলে আলতো করে গণনায় ফিরে আসুন।",
-  "program.focus-training-10.day3.tip": "সম শ্বাস = সম মন। আপনার ভারসাম্য বিন্দু খুঁজুন।",
-  "program.focus-training-10.day4.tip": "গভীর কাজ বা পড়ার আগে এটি চেষ্টা করুন।",
-  "program.focus-training-10.day5.tip": "অর্ধেক হয়েছে! আপনার মনোযোগের পেশী শক্তিশালী হচ্ছে।",
-  "program.focus-training-10.day6.tip": "বিরতিগুলো মনোযোগের নোঙর। এগুলো পুরোপুরি ব্যবহার করুন।",
-  "program.focus-training-10.day7.tip": "পাওয়ার ব্রিদিং মস্তিষ্কে অক্সিজেন পাঠায়। সতর্ক থাকুন!",
-  "program.focus-training-10.day8.tip": "সুনির্দিষ্ট গণনার সাথে শরীরের অনুভূতির সচেতনতা মেশান।",
-  "program.focus-training-10.day9.tip": "দীর্ঘ সেশন টেকসই মনোযোগ ক্ষমতা তৈরি করে।",
-  "program.focus-training-10.day10.tip": "শেষ দিন! আপনি একটি তীক্ষ্ণ ফোকাস টুল প্রশিক্ষণ নিয়েছেন। প্রতিদিন ব্যবহার করুন। 🎯",
+  "program.focus-training-10.day1.tip":
+    "বক্স ব্রিদিং আপনার মনোযোগ প্রশিক্ষণ দেয়। সঠিকভাবে গণনা করুন।",
+  "program.focus-training-10.day2.tip":
+    "মন ঘুরে গেলে আলতো করে গণনায় ফিরে আসুন।",
+  "program.focus-training-10.day3.tip":
+    "সম শ্বাস = সম মন। আপনার ভারসাম্য বিন্দু খুঁজুন।",
+  "program.focus-training-10.day4.tip":
+    "গভীর কাজ বা পড়ার আগে এটি চেষ্টা করুন।",
+  "program.focus-training-10.day5.tip":
+    "অর্ধেক হয়েছে! আপনার মনোযোগের পেশী শক্তিশালী হচ্ছে।",
+  "program.focus-training-10.day6.tip":
+    "বিরতিগুলো মনোযোগের নোঙর। এগুলো পুরোপুরি ব্যবহার করুন।",
+  "program.focus-training-10.day7.tip":
+    "পাওয়ার ব্রিদিং মস্তিষ্কে অক্সিজেন পাঠায়। সতর্ক থাকুন!",
+  "program.focus-training-10.day8.tip":
+    "সুনির্দিষ্ট গণনার সাথে শরীরের অনুভূতির সচেতনতা মেশান।",
+  "program.focus-training-10.day9.tip":
+    "দীর্ঘ সেশন টেকসই মনোযোগ ক্ষমতা তৈরি করে।",
+  "program.focus-training-10.day10.tip":
+    "শেষ দিন! আপনি একটি তীক্ষ্ণ ফোকাস টুল প্রশিক্ষণ নিয়েছেন। প্রতিদিন ব্যবহার করুন। 🎯",
 
   // Moods
   "mood.1": "চাপে",
@@ -490,7 +547,8 @@ export const bn: Record<string, string> = {
   "challenge.Session longer than 2 min": "২ মিনিটের বেশি সেশন",
   "challenge.Session longer than 5 min": "৫ মিনিটের বেশি সেশন",
   "challenge.Try 2 different techniques": "২টি ভিন্ন কৌশল চেষ্টা করুন",
-  "challenge.Try a never-used technique": "কখনও ব্যবহার না করা কৌশল চেষ্টা করুন",
+  "challenge.Try a never-used technique":
+    "কখনও ব্যবহার না করা কৌশল চেষ্টা করুন",
   "challenge.Improve mood in a session": "একটি সেশনে মুড উন্নত করুন",
   "challenge.Mood boost of +2 or more": "+২ বা তার বেশি মুড বৃদ্ধি",
   "challenge.15+ cycles in one session": "একটি সেশনে ১৫+ চক্র",
@@ -509,13 +567,17 @@ export const bn: Record<string, string> = {
   "challenge.adaptiveNote": "লক্ষ্য: {{target}} {{unit}} (আপনার জন্য অভিযোজিত)",
 
   // Smart suggestions
-  "suggestion.morning.noSession": "সুপ্রভাত! শক্তিদায়ক শ্বাস-প্রশ্বাস দিয়ে দিন শুরু করুন।",
+  "suggestion.morning.noSession":
+    "সুপ্রভাত! শক্তিদায়ক শ্বাস-প্রশ্বাস দিয়ে দিন শুরু করুন।",
   "suggestion.morning.hasSession": "দারুণ শুরু! গতি ধরে রাখুন।",
-  "suggestion.afternoon.noSession": "বিকালের রিসেট — একটি দ্রুত সেশন মনোযোগ বাড়ায়।",
-  "suggestion.afternoon.hasSession": "আজ {{min}} মিনিট! পরবর্তীতে শান্তিদায়ক কৌশল চেষ্টা করুন।",
+  "suggestion.afternoon.noSession":
+    "বিকালের রিসেট — একটি দ্রুত সেশন মনোযোগ বাড়ায়।",
+  "suggestion.afternoon.hasSession":
+    "আজ {{min}} মিনিট! পরবর্তীতে শান্তিদায়ক কৌশল চেষ্টা করুন।",
   "suggestion.evening": "সন্ধ্যায় শিথিল শ্বাস-প্রশ্বাসে বিশ্রাম নিন।",
   "suggestion.night": "ঘুম আসছে না? ৪-৭-৮ কৌশল প্রাকৃতিক ঘুমের সহায়ক।",
-  "suggestion.adaptive": "আপনি {{mood}} থাকলে {{technique}} সবচেয়ে বেশি সাহায্য করেছে।",
+  "suggestion.adaptive":
+    "আপনি {{mood}} থাকলে {{technique}} সবচেয়ে বেশি সাহায্য করেছে।",
   "suggestion.start": "শুরু করুন {{technique}}",
 
   // Share card
@@ -556,17 +618,21 @@ export const bn: Record<string, string> = {
   // Adaptive Intelligence
   "adaptive.smartSession": "স্মার্ট সেশন",
   "adaptive.startSmart": "স্মার্ট শুরু",
-  "adaptive.moodBased": "আপনার মুডের ইতিহাসের উপর ভিত্তি করে, এই কৌশলটি আপনার জন্য সবচেয়ে ভালো কাজ করে।",
+  "adaptive.moodBased":
+    "আপনার মুডের ইতিহাসের উপর ভিত্তি করে, এই কৌশলটি আপনার জন্য সবচেয়ে ভালো কাজ করে।",
   "adaptive.timeBased": "{{bucket}} সময়ের জন্য আপনার সেরা কৌশল।",
   "adaptive.overall": "আগের সেশনের উপর ভিত্তি করে আপনার সবচেয়ে কার্যকর কৌশল।",
 
   // Breath Detection
   "settings.intelligence": "বুদ্ধিমত্তা ও সেন্সর",
   "settings.breathDetection": "শ্বাস সনাক্তকরণ",
-  "settings.breathDetectionDesc": "শ্বাসের ছন্দ সনাক্ত করতে মাইক্রোফোন ব্যবহার করুন। সব ডেটা ডিভাইসে থাকে।",
+  "settings.breathDetectionDesc":
+    "শ্বাসের ছন্দ সনাক্ত করতে মাইক্রোফোন ব্যবহার করুন। সব ডেটা ডিভাইসে থাকে।",
   "settings.heartRate": "হৃদস্পন্দন মনিটর",
-  "settings.heartRateDesc": "আঙুলের ডগা দিয়ে হৃদস্পন্দন অনুমান করতে ক্যামেরা ব্যবহার করুন। সব ডেটা ডিভাইসে থাকে।",
-  "breath.micError": "মাইক্রোফোন অ্যাক্সেস করা যায়নি। অনুগ্রহ করে অনুমতি পরীক্ষা করুন।",
+  "settings.heartRateDesc":
+    "আঙুলের ডগা দিয়ে হৃদস্পন্দন অনুমান করতে ক্যামেরা ব্যবহার করুন। সব ডেটা ডিভাইসে থাকে।",
+  "breath.micError":
+    "মাইক্রোফোন অ্যাক্সেস করা যায়নি। অনুগ্রহ করে অনুমতি পরীক্ষা করুন।",
   "breath.micOn": "মাইক শুনছে",
   "breath.micOff": "মাইক সক্রিয় করুন",
   "breath.rhythmAccuracy": "ছন্দ নির্ভুলতা",
@@ -578,13 +644,15 @@ export const bn: Record<string, string> = {
   "heart.monitor": "হৃদস্পন্দন",
   "heart.warmingUp": "প্রস্তুত হচ্ছে...",
   "heart.placeFingerTip": "পিছনের ক্যামেরায় আপনার আঙুলের ডগা রাখুন",
-  "heart.instructions": "ক্যামেরা লেন্স সম্পূর্ণভাবে আঙুলের ডগা দিয়ে ঢাকুন। সেরা ফলাফলের জন্য স্থির থাকুন।",
+  "heart.instructions":
+    "ক্যামেরা লেন্স সম্পূর্ণভাবে আঙুলের ডগা দিয়ে ঢাকুন। সেরা ফলাফলের জন্য স্থির থাকুন।",
   "heart.signalQuality": "সংকেত মান",
   "heart.coherence": "শ্বাস সমন্বয়",
   "heart.highCoherence": "হৃদস্পন্দন শ্বাসের সাথে সিঙ্ক",
   "heart.moderateCoherence": "শ্বাসের সাথে আংশিক সিঙ্ক",
   "heart.lowCoherence": "সমন্বয় তৈরি হচ্ছে...",
-  "heart.cameraError": "ক্যামেরা অ্যাক্সেস করা যায়নি। অনুগ্রহ করে অনুমতি পরীক্ষা করুন।",
+  "heart.cameraError":
+    "ক্যামেরা অ্যাক্সেস করা যায়নি। অনুগ্রহ করে অনুমতি পরীক্ষা করুন।",
   "heart.retry": "আবার চেষ্টা",
   "heart.avgBPM": "গড় হৃদস্পন্দন",
   "common.close": "বন্ধ",
@@ -623,25 +691,35 @@ export const bn: Record<string, string> = {
 
   // Insights
   "stats.insights": "অন্তর্দৃষ্টি",
-  "stats.insights.empty": "ব্যক্তিগতকৃত অন্তর্দৃষ্টি আনলক করতে এই সপ্তাহে কয়েকটি সেশন সম্পন্ন করুন।",
+  "stats.insights.empty":
+    "ব্যক্তিগতকৃত অন্তর্দৃষ্টি আনলক করতে এই সপ্তাহে কয়েকটি সেশন সম্পন্ন করুন।",
   "stats.insights.subtitle": "আপনার গত ৭ দিনের ব্যক্তিগতকৃত অন্তর্দৃষ্টি",
-  "insight.noSessions": "এই সপ্তাহে এখনও কোনো সেশন নেই। অন্তর্দৃষ্টি তৈরি করতে একটি শুরু করুন!",
-  "insight.goodStart": "এই সপ্তাহে ভালো শুরু! আরও কয়েকটি সেশন গভীর অন্তর্দৃষ্টি আনলক করবে।",
+  "insight.noSessions":
+    "এই সপ্তাহে এখনও কোনো সেশন নেই। অন্তর্দৃষ্টি তৈরি করতে একটি শুরু করুন!",
+  "insight.goodStart":
+    "এই সপ্তাহে ভালো শুরু! আরও কয়েকটি সেশন গভীর অন্তর্দৃষ্টি আনলক করবে।",
   "insight.streakGoing": "আপনি {{days}}-দিনের ধারায় আছেন! চালিয়ে যান 🔥",
-  "insight.bestTime": "আপনি {{time}}-এ সবচেয়ে ভালো শ্বাস নেন — এটি আপনার সেরা সময়।",
-  "insight.techniqueCompare": "{{best}} এই সপ্তাহে {{second}}-এর চেয়ে {{pct}}% বেশি মুড উন্নত করেছে।",
-  "insight.bestTechnique": "{{name}} মুড উন্নতির জন্য আপনার সবচেয়ে কার্যকর কৌশল ছিল।",
+  "insight.bestTime":
+    "আপনি {{time}}-এ সবচেয়ে ভালো শ্বাস নেন — এটি আপনার সেরা সময়।",
+  "insight.techniqueCompare":
+    "{{best}} এই সপ্তাহে {{second}}-এর চেয়ে {{pct}}% বেশি মুড উন্নত করেছে।",
+  "insight.bestTechnique":
+    "{{name}} মুড উন্নতির জন্য আপনার সবচেয়ে কার্যকর কৌশল ছিল।",
   "insight.nearRecord": "আপনার দীর্ঘতম ধারা ভাঙতে আর মাত্র {{days}} দিন!",
   "insight.onRecord": "আপনি আপনার দীর্ঘতম ধারায় আছেন! 🏆",
-  "insight.moreSessionsUp": "গত সপ্তাহের চেয়ে {{count}}টি বেশি সেশন — দারুণ গতি!",
-  "insight.fewerSessions": "গত সপ্তাহের চেয়ে {{count}}টি কম সেশন। আবার ট্র্যাকে ফিরে আসুন!",
-  "insight.durationUp": "আপনি গড়ে {{current}} মিনিট/সেশন নিয়েছেন, গত সপ্তাহে {{previous}} মিনিট থেকে বেড়েছে।",
+  "insight.moreSessionsUp":
+    "গত সপ্তাহের চেয়ে {{count}}টি বেশি সেশন — দারুণ গতি!",
+  "insight.fewerSessions":
+    "গত সপ্তাহের চেয়ে {{count}}টি কম সেশন। আবার ট্র্যাকে ফিরে আসুন!",
+  "insight.durationUp":
+    "আপনি গড়ে {{current}} মিনিট/সেশন নিয়েছেন, গত সপ্তাহে {{previous}} মিনিট থেকে বেড়েছে।",
 
   // Friend Challenge
   "challenge.friend.title": "বন্ধুকে চ্যালেঞ্জ করুন",
   "challenge.friend.subtitle": "একটি শ্বাস চ্যালেঞ্জ তৈরি করে শেয়ার করুন",
   "challenge.friend.createTitle": "চ্যালেঞ্জ তৈরি",
-  "challenge.friend.createDesc": "একটি লক্ষ্য নির্ধারণ করুন এবং বন্ধুর সাথে লিংক শেয়ার করুন",
+  "challenge.friend.createDesc":
+    "একটি লক্ষ্য নির্ধারণ করুন এবং বন্ধুর সাথে লিংক শেয়ার করুন",
   "challenge.friend.yourName": "আপনার নাম",
   "challenge.friend.namePlaceholder": "আপনার নাম লিখুন",
   "challenge.friend.technique": "কৌশল",
@@ -652,12 +730,15 @@ export const bn: Record<string, string> = {
   "challenge.friend.share": "শেয়ার",
   "challenge.friend.copied": "চ্যালেঞ্জ লিংক কপি হয়েছে!",
   "challenge.friend.shareTitle": "শ্বাস চ্যালেঞ্জ",
-  "challenge.friend.shareText": "{{name}} আপনাকে একটি শ্বাস সেশনে চ্যালেঞ্জ করেছে!",
+  "challenge.friend.shareText":
+    "{{name}} আপনাকে একটি শ্বাস সেশনে চ্যালেঞ্জ করেছে!",
   "challenge.friend.incomingTitle": "আপনাকে চ্যালেঞ্জ করা হয়েছে!",
-  "challenge.friend.incomingDesc": "{{name}} আপনাকে একটি শ্বাস সেশনে চ্যালেঞ্জ করেছে",
+  "challenge.friend.incomingDesc":
+    "{{name}} আপনাকে একটি শ্বাস সেশনে চ্যালেঞ্জ করেছে",
   "challenge.friend.acceptButton": "চ্যালেঞ্জ গ্রহণ করুন",
   "challenge.friend.accepted": "চ্যালেঞ্জ গৃহীত!",
-  "challenge.friend.acceptedMessage": "চ্যালেঞ্জ গৃহীত! এখন আপনার সেশন শুরু করুন।",
+  "challenge.friend.acceptedMessage":
+    "চ্যালেঞ্জ গৃহীত! এখন আপনার সেশন শুরু করুন।",
   "challenge.friend.active": "বন্ধু চ্যালেঞ্জ",
   "challenge.friend.from": "{{name}} থেকে",
 
@@ -667,11 +748,14 @@ export const bn: Record<string, string> = {
 
   // PWA Install
   "install.title": "মুহূর্ত ব্রেথ ইনস্টল করুন",
-  "install.desc": "অফলাইন ব্যবহার, দ্রুত লোডিং এবং হোম স্ক্রিন শর্টকাটের জন্য ইনস্টল করুন।",
+  "install.desc":
+    "অফলাইন ব্যবহার, দ্রুত লোডিং এবং হোম স্ক্রিন শর্টকাটের জন্য ইনস্টল করুন।",
   "install.button": "ইনস্টল",
   "install.manual.title": "ফ্রি অ্যাপ ইনস্টল করুন",
-  "install.manual.ios": "Share বাটনে ট্যাপ করুন, তারপর 'Add to Home Screen' নির্বাচন করুন",
-  "install.manual.android": "ব্রাউজার মেনুতে (⋮) ট্যাপ করুন, তারপর 'Add to Home Screen' নির্বাচন করুন",
+  "install.manual.ios":
+    "Share বাটনে ট্যাপ করুন, তারপর 'Add to Home Screen' নির্বাচন করুন",
+  "install.manual.android":
+    "ব্রাউজার মেনুতে (⋮) ট্যাপ করুন, তারপর 'Add to Home Screen' নির্বাচন করুন",
   "install.manual.desktop": "আপনার ব্রাউজার মেনু থেকে এই অ্যাপটি ইনস্টল করুন",
   "install.manual.free": "ফ্রি · অফলাইন · অ্যাপ স্টোর লাগবে না",
 
@@ -703,18 +787,22 @@ export const bn: Record<string, string> = {
   "onboarding.skip": "এড়িয়ে যান",
   "onboarding.start": "শ্বাস শুরু করুন",
   "onboarding.feature1.title": "গাইডেড কৌশল",
-  "onboarding.feature1.desc": "শান্তি, মনোযোগ এবং ভালো ঘুমের জন্য বিজ্ঞানসম্মত শ্বাস-প্রশ্বাসের ধরন।",
+  "onboarding.feature1.desc":
+    "শান্তি, মনোযোগ এবং ভালো ঘুমের জন্য বিজ্ঞানসম্মত শ্বাস-প্রশ্বাসের ধরন।",
   "onboarding.feature2.title": "অগ্রগতি ট্র্যাক করুন",
-  "onboarding.feature2.desc": "মুড ট্র্যাকিং, ধারা, ব্যাজ এবং আপনার অনুশীলনের বিস্তারিত বিশ্লেষণ।",
+  "onboarding.feature2.desc":
+    "মুড ট্র্যাকিং, ধারা, ব্যাজ এবং আপনার অনুশীলনের বিস্তারিত বিশ্লেষণ।",
   "onboarding.feature3.title": "অফলাইনে কাজ করে",
-  "onboarding.feature3.desc": "আপনার ডেটা আপনার ডিভাইসে থাকে। কোনো অ্যাকাউন্ট লাগবে না — সম্পূর্ণ ব্যক্তিগত।",
+  "onboarding.feature3.desc":
+    "আপনার ডেটা আপনার ডিভাইসে থাকে। কোনো অ্যাকাউন্ট লাগবে না — সম্পূর্ণ ব্যক্তিগত।",
   "onboarding.featuresTitle": "আপনি যা করতে পারেন",
   "onboarding.personalizeTitle": "নিজের মতো করুন",
   "onboarding.chooseTheme": "একটি থিম বেছে নিন",
   "onboarding.voiceGuidance": "সেশনের সময় ভয়েস গাইডেন্স",
   "onboarding.hapticFeedback": "ফেজ পরিবর্তনে কম্পন ফিডব্যাক",
   "onboarding.installTitle": "সেরা অভিজ্ঞতার জন্য ইনস্টল করুন",
-  "onboarding.installDesc": "তাৎক্ষণিক অ্যাক্সেস, অফলাইন ব্যবহার এবং ফুলস্ক্রিন অভিজ্ঞতার জন্য হোম স্ক্রিনে যোগ করুন।",
+  "onboarding.installDesc":
+    "তাৎক্ষণিক অ্যাক্সেস, অফলাইন ব্যবহার এবং ফুলস্ক্রিন অভিজ্ঞতার জন্য হোম স্ক্রিনে যোগ করুন।",
   "onboarding.installButton": "এখনই ইনস্টল করুন",
   "onboarding.maybeLater": "পরে হবে",
   "onboarding.step": "ধাপ {{current}} / {{total}}",
@@ -732,40 +820,51 @@ export const bn: Record<string, string> = {
 
   // Donate
   "donate.title": "মুহূর্ত সমর্থন করুন",
-  "donate.subtitle": "বিনামূল্যে শ্বাস-প্রশ্বাসের সরঞ্জাম লক্ষ লক্ষ মানুষের কাছে পৌঁছাতে সাহায্য করুন। প্রতিটি দান আমাদের মিশনকে এগিয়ে নেয়।",
+  "donate.subtitle":
+    "বিনামূল্যে শ্বাস-প্রশ্বাসের সরঞ্জাম লক্ষ লক্ষ মানুষের কাছে পৌঁছাতে সাহায্য করুন। প্রতিটি দান আমাদের মিশনকে এগিয়ে নেয়।",
   "donate.button": "দান করুন",
   "donate.custom": "কাস্টম পরিমাণ",
-  "donate.thanks": "আপনার উদার সহায়তার জন্য ধন্যবাদ! আপনি লক্ষ লক্ষ মানুষকে ভালো শ্বাস নিতে সাহায্য করছেন।",
+  "donate.thanks":
+    "আপনার উদার সহায়তার জন্য ধন্যবাদ! আপনি লক্ষ লক্ষ মানুষকে ভালো শ্বাস নিতে সাহায্য করছেন।",
   "donate.thanksTitle": "ধন্যবাদ! 💚",
-  "donate.secure": "পেমেন্ট 2Checkout (Verifone) দ্বারা নিরাপদে প্রক্রিয়া করা হয়। আমরা কখনো আপনার কার্ডের তথ্য দেখি না।",
+  "donate.secure":
+    "পেমেন্ট 2Checkout (Verifone) দ্বারা নিরাপদে প্রক্রিয়া করা হয়। আমরা কখনো আপনার কার্ডের তথ্য দেখি না।",
   "donate.invalidAmount": "দয়া করে একটি পরিমাণ নির্বাচন করুন বা লিখুন",
-  "donate.unavailable": "পেমেন্ট সিস্টেম লোড হচ্ছে। কিছুক্ষণ পর আবার চেষ্টা করুন।",
+  "donate.unavailable":
+    "পেমেন্ট সিস্টেম লোড হচ্ছে। কিছুক্ষণ পর আবার চেষ্টা করুন।",
   "donate.supportUs": "আমাদের সমর্থন করুন",
   "donate.supportSubtitle": "মুহূর্তকে সবার জন্য বিনামূল্যে রাখতে সাহায্য করুন",
   "donate.sessionSupport": "সমর্থন করুন ❤️",
 
   // Guide Page
   "guide.title": "গাইড",
-  "guide.subtitle": "মুহূর্ত ব্রেথ সম্পর্কে আপনার যা জানা দরকার — আপনার মননশীল শ্বাস-প্রশ্বাসের সঙ্গী।",
+  "guide.subtitle":
+    "মুহূর্ত ব্রেথ সম্পর্কে আপনার যা জানা দরকার — আপনার মননশীল শ্বাস-প্রশ্বাসের সঙ্গী।",
   "guide.version": "v2.0",
   "guide.searchPlaceholder": "গাইড খুঁজুন...",
 
   // Getting Started
   "guide.gettingStarted": "শুরু করুন",
   "guide.whatIs": "মুহূর্ত ব্রেথ কী?",
-  "guide.whatIsDesc": "মুহূর্ত ব্রেথ একটি বিনামূল্যে, গোপনীয়তা-প্রথম শ্বাস-প্রশ্বাস অনুশীলন অ্যাপ। এটি বিজ্ঞানসম্মত শ্বাস-প্রশ্বাস কৌশলের মাধ্যমে ভিজ্যুয়াল, অডিও এবং হ্যাপটিক সংকেত দিয়ে গাইড করে। আপনার সব ডেটা আপনার ডিভাইসে থাকে — কোনো অ্যাকাউন্ট লাগবে না।",
+  "guide.whatIsDesc":
+    "মুহূর্ত ব্রেথ একটি বিনামূল্যে, গোপনীয়তা-প্রথম শ্বাস-প্রশ্বাস অনুশীলন অ্যাপ। এটি বিজ্ঞানসম্মত শ্বাস-প্রশ্বাস কৌশলের মাধ্যমে ভিজ্যুয়াল, অডিও এবং হ্যাপটিক সংকেত দিয়ে গাইড করে। আপনার সব ডেটা আপনার ডিভাইসে থাকে — কোনো অ্যাকাউন্ট লাগবে না।",
   "guide.firstSession": "আপনার প্রথম সেশন",
-  "guide.firstStep1": "নিচের নেভিবারে \"শ্বাস\" ট্যাপ করুন",
-  "guide.firstStep2": "একটি কৌশল বেছে নিন (বক্স ব্রিদিং বা শান্ত শ্বাস দিয়ে শুরু করুন)",
-  "guide.firstStep3": "সময়কাল সেট করুন এবং \"শুরু\" ট্যাপ করুন",
-  "guide.firstStep4": "শ্বাসের বৃত্ত অনুসরণ করুন — শ্বাস নিন, ধরে রাখুন, শ্বাস ছাড়ুন",
-  "guide.firstStep5": "শেষ হলে, আপনার মুড রেট করুন এবং ঐচ্ছিকভাবে কেমন লাগলো লিখুন",
+  "guide.firstStep1": 'নিচের নেভিবারে "শ্বাস" ট্যাপ করুন',
+  "guide.firstStep2":
+    "একটি কৌশল বেছে নিন (বক্স ব্রিদিং বা শান্ত শ্বাস দিয়ে শুরু করুন)",
+  "guide.firstStep3": 'সময়কাল সেট করুন এবং "শুরু" ট্যাপ করুন',
+  "guide.firstStep4":
+    "শ্বাসের বৃত্ত অনুসরণ করুন — শ্বাস নিন, ধরে রাখুন, শ্বাস ছাড়ুন",
+  "guide.firstStep5":
+    "শেষ হলে, আপনার মুড রেট করুন এবং ঐচ্ছিকভাবে কেমন লাগলো লিখুন",
   "guide.installPWA": "অ্যাপ হিসেবে ইনস্টল (PWA)",
-  "guide.installPWADesc": "সেরা অভিজ্ঞতার জন্য, আপনার ডিভাইসে মুহূর্ত ব্রেথ ইনস্টল করুন। Chrome বা Safari-তে অ্যাপ খুলুন, শেয়ার/মেনু বোতামে ট্যাপ করুন এবং \"হোম স্ক্রিনে যোগ করুন\" নির্বাচন করুন। ইনস্টল হলে অ্যাপটি সম্পূর্ণ অফলাইনে কাজ করে।",
+  "guide.installPWADesc":
+    'সেরা অভিজ্ঞতার জন্য, আপনার ডিভাইসে মুহূর্ত ব্রেথ ইনস্টল করুন। Chrome বা Safari-তে অ্যাপ খুলুন, শেয়ার/মেনু বোতামে ট্যাপ করুন এবং "হোম স্ক্রিনে যোগ করুন" নির্বাচন করুন। ইনস্টল হলে অ্যাপটি সম্পূর্ণ অফলাইনে কাজ করে।',
 
   // Techniques (12 total)
   "guide.techniques": "শ্বাস-প্রশ্বাস কৌশল",
-  "guide.techniquesIntro": "মুহূর্ত ব্রেথে ১২টি বিজ্ঞানসম্মত শ্বাস-প্রশ্বাস কৌশল আছে — নতুনদের জন্য সহজ থেকে উন্নত পর্যন্ত। প্রতিটির একটি অনন্য ছন্দ নির্দিষ্ট ফলাফলের জন্য ডিজাইন করা।",
+  "guide.techniquesIntro":
+    "মুহূর্ত ব্রেথে ১২টি বিজ্ঞানসম্মত শ্বাস-প্রশ্বাস কৌশল আছে — নতুনদের জন্য সহজ থেকে উন্নত পর্যন্ত। প্রতিটির একটি অনন্য ছন্দ নির্দিষ্ট ফলাফলের জন্য ডিজাইন করা।",
   "guide.table.technique": "কৌশল",
   "guide.table.pattern": "প্যাটার্ন",
   "guide.table.level": "স্তর",
@@ -819,108 +918,151 @@ export const bn: Record<string, string> = {
   "guide.tech.wim.diff": "উন্নত",
   "guide.tech.wim.best": "শক্তি, রোগ প্রতিরোধ",
   "guide.phases": "ফেজ বোঝা",
-  "guide.phasesDesc": "প্রতিটি কৌশল ফেজের একটি চক্র: শ্বাস নেওয়া, ধরে রাখা, শ্বাস ছাড়া এবং কখনও কখনও শ্বাস ছাড়ার পর ধরে রাখা। প্রতিটি ফেজের সময়কাল সেকেন্ডে পরিমাপ করা হয়। সব ফেজের একটি সম্পূর্ণ পাস = একটি চক্র।",
+  "guide.phasesDesc":
+    "প্রতিটি কৌশল ফেজের একটি চক্র: শ্বাস নেওয়া, ধরে রাখা, শ্বাস ছাড়া এবং কখনও কখনও শ্বাস ছাড়ার পর ধরে রাখা। প্রতিটি ফেজের সময়কাল সেকেন্ডে পরিমাপ করা হয়। সব ফেজের একটি সম্পূর্ণ পাস = একটি চক্র।",
   "guide.difficultyTitle": "কঠিনতার স্তর ও আনলকিং",
   "guide.difficultyDesc1": "কৌশলগুলো চিহ্নিত করা হয়",
   "guide.diffBeginner": "সহজ",
   "guide.diffIntermediate": "মাঝারি",
   "guide.diffOr": "বা",
   "guide.diffAdvanced": "উন্নত",
-  "guide.difficultyDesc2": "মাঝারি কৌশল ১০টি সেশনের পরে আনলক হয় এবং উন্নত ২৫টি সেশনের পরে।",
+  "guide.difficultyDesc2":
+    "মাঝারি কৌশল ১০টি সেশনের পরে আনলক হয় এবং উন্নত ২৫টি সেশনের পরে।",
   "guide.choosingTechnique": "কৌশল কীভাবে বেছে নেবেন",
-  "guide.choosingTechniqueDesc": "চাপের জন্য → বক্স ব্রিদিং বা ফিজিওলজিক্যাল সাই। ঘুমের জন্য → ৪-৭-৮ বা স্লিপ ব্রেথ। মনোযোগের জন্য → এনার্জাইজিং ব্রেথ বা বক্স ব্রিদিং। উদ্বেগের জন্য → শান্ত শ্বাস বা রেজোন্যান্ট ব্রিদিং। চিকিৎসা প্রয়োজনে → পার্সড লিপ বা ডায়াফ্রাম্যাটিক। ছোট সেশন (৩-৫ মিনিট) দিয়ে শুরু করুন এবং ধীরে ধীরে বাড়ান।",
+  "guide.choosingTechniqueDesc":
+    "চাপের জন্য → বক্স ব্রিদিং বা ফিজিওলজিক্যাল সাই। ঘুমের জন্য → ৪-৭-৮ বা স্লিপ ব্রেথ। মনোযোগের জন্য → এনার্জাইজিং ব্রেথ বা বক্স ব্রিদিং। উদ্বেগের জন্য → শান্ত শ্বাস বা রেজোন্যান্ট ব্রিদিং। চিকিৎসা প্রয়োজনে → পার্সড লিপ বা ডায়াফ্রাম্যাটিক। ছোট সেশন (৩-৫ মিনিট) দিয়ে শুরু করুন এবং ধীরে ধীরে বাড়ান।",
 
   // Sessions
   "guide.sessions": "সেশন ও ফিচার",
   "guide.sessionFlow": "সেশন ফ্লো",
-  "guide.sessionFlowDesc": "কৌশল নির্বাচন → সময়কাল সেট → শুরু → ভিজ্যুয়াল শ্বাস গাইড অনুসরণ → সেশন সম্পন্ন → প্রশান্তি স্কোর, অর্জিত XP এবং মুডের পরিবর্তন দেখুন।",
+  "guide.sessionFlowDesc":
+    "কৌশল নির্বাচন → সময়কাল সেট → শুরু → ভিজ্যুয়াল শ্বাস গাইড অনুসরণ → সেশন সম্পন্ন → প্রশান্তি স্কোর, অর্জিত XP এবং মুডের পরিবর্তন দেখুন।",
   "guide.zenMode": "জেন মোড",
-  "guide.zenModeDesc": "F চাপুন বা জেন বোতাম ট্যাপ করুন সব UI লুকিয়ে শুধু শ্বাসের ভিজ্যুয়ালাইজেশনে মনোযোগ দিতে। Esc চেপে বের হন।",
+  "guide.zenModeDesc":
+    "F চাপুন বা জেন বোতাম ট্যাপ করুন সব UI লুকিয়ে শুধু শ্বাসের ভিজ্যুয়ালাইজেশনে মনোযোগ দিতে। Esc চেপে বের হন।",
   "guide.voiceGuidance": "ভয়েস গাইডেন্স",
-  "guide.voiceGuidanceDesc": "সেটিংসে স্পোকেন কিউ সক্রিয় করুন। ভয়েস ফেজের নাম, কাউন্টডাউন, মাইলস্টোন এবং উৎসাহ ঘোষণা করে। গতি, পিচ এবং ভলিউম কাস্টমাইজযোগ্য।",
+  "guide.voiceGuidanceDesc":
+    "সেটিংসে স্পোকেন কিউ সক্রিয় করুন। ভয়েস ফেজের নাম, কাউন্টডাউন, মাইলস্টোন এবং উৎসাহ ঘোষণা করে। গতি, পিচ এবং ভলিউম কাস্টমাইজযোগ্য।",
   "guide.ambientSounds": "পরিবেশের সাউন্ডস্কেপ",
-  "guide.ambientSoundsDesc": "সেশনের সময় প্রক্রিয়াগতভাবে তৈরি বৃষ্টি, সমুদ্র বা বাতাসের শব্দ থেকে বেছে নিন। ভলিউম ভয়েস থেকে স্বাধীনভাবে সামঞ্জস্যযোগ্য।",
+  "guide.ambientSoundsDesc":
+    "সেশনের সময় প্রক্রিয়াগতভাবে তৈরি বৃষ্টি, সমুদ্র বা বাতাসের শব্দ থেকে বেছে নিন। ভলিউম ভয়েস থেকে স্বাধীনভাবে সামঞ্জস্যযোগ্য।",
   "guide.breathDetection": "শ্বাস সনাক্তকরণ",
-  "guide.breathDetectionDesc": "আপনার ছন্দের নির্ভুলতা পরিমাপ করতে মাইক্রোফোন-ভিত্তিক শ্বাস সনাক্তকরণ সক্রিয় করুন। সব প্রসেসিং ডিভাইসে হয় — কোনো অডিও কখনও রেকর্ড বা পাঠানো হয় না।",
+  "guide.breathDetectionDesc":
+    "আপনার ছন্দের নির্ভুলতা পরিমাপ করতে মাইক্রোফোন-ভিত্তিক শ্বাস সনাক্তকরণ সক্রিয় করুন। সব প্রসেসিং ডিভাইসে হয় — কোনো অডিও কখনও রেকর্ড বা পাঠানো হয় না।",
   "guide.heartRate": "হৃদস্পন্দন মনিটর",
-  "guide.heartRateDesc": "আপনার হৃদস্পন্দন অনুমান করতে পেছনের ক্যামেরায় আঙুলের ডগা রাখুন। অ্যাপটি শ্বাসের সমন্বয় পরিমাপ করে — আপনার হৃদস্পন্দন কতটা শ্বাসের ছন্দের সাথে সিঙ্ক হয়।",
+  "guide.heartRateDesc":
+    "আপনার হৃদস্পন্দন অনুমান করতে পেছনের ক্যামেরায় আঙুলের ডগা রাখুন। অ্যাপটি শ্বাসের সমন্বয় পরিমাপ করে — আপনার হৃদস্পন্দন কতটা শ্বাসের ছন্দের সাথে সিঙ্ক হয়।",
   "guide.calmScore": "প্রশান্তি স্কোর",
-  "guide.calmScoreDesc": "প্রতিটি সেশনের পরে, আপনি শ্বাসের ধারাবাহিকতা, সময়কাল এবং ছন্দের নির্ভুলতার উপর ভিত্তি করে একটি প্রশান্তি স্কোর (০-১০০%) পান। উচ্চতর স্কোর গভীরতর শিথিলতা নির্দেশ করে।",
+  "guide.calmScoreDesc":
+    "প্রতিটি সেশনের পরে, আপনি শ্বাসের ধারাবাহিকতা, সময়কাল এবং ছন্দের নির্ভুলতার উপর ভিত্তি করে একটি প্রশান্তি স্কোর (০-১০০%) পান। উচ্চতর স্কোর গভীরতর শিথিলতা নির্দেশ করে।",
   "guide.estimatedFinish": "আনুমানিক সমাপ্তি সময়",
-  "guide.estimatedFinishDesc": "সক্রিয় সেশনের সময়, অ্যাপ দেখায় আপনার সেশন কখন শেষ হবে (যেমন \"রাত ১০:৩৫ এ শেষ\") যাতে ঘড়ির দিকে না তাকিয়ে সময় পরিকল্পনা করতে পারেন।",
+  "guide.estimatedFinishDesc":
+    'সক্রিয় সেশনের সময়, অ্যাপ দেখায় আপনার সেশন কখন শেষ হবে (যেমন "রাত ১০:৩৫ এ শেষ") যাতে ঘড়ির দিকে না তাকিয়ে সময় পরিকল্পনা করতে পারেন।',
   "guide.breathingRate": "শ্বাস-প্রশ্বাসের হার",
-  "guide.breathingRateDesc": "সেশনের সময় আপনার প্রতি মিনিটে শ্বাসের সংখ্যা দেখানো একটি রিয়েল-টাইম মেট্রিক। আপনি যত গভীরভাবে শিথিল হন, শ্বাসের হার কত কমে তা ট্র্যাক করুন।",
+  "guide.breathingRateDesc":
+    "সেশনের সময় আপনার প্রতি মিনিটে শ্বাসের সংখ্যা দেখানো একটি রিয়েল-টাইম মেট্রিক। আপনি যত গভীরভাবে শিথিল হন, শ্বাসের হার কত কমে তা ট্র্যাক করুন।",
   "guide.visualizations": "ভিজ্যুয়ালাইজেশন",
-  "guide.visualizationsDesc": "সেটিংসে ৪টি শ্বাস ভিজ্যুয়ালাইজেশন থেকে বেছে নিন: বৃত্ত (ডিফল্ট), তরঙ্গ, বার এবং মণ্ডল। প্রতিটি অনুসরণ করার জন্য একটি অনন্য ভিজ্যুয়াল ছন্দ প্রদান করে।",
+  "guide.visualizationsDesc":
+    "সেটিংসে ৪টি শ্বাস ভিজ্যুয়ালাইজেশন থেকে বেছে নিন: বৃত্ত (ডিফল্ট), তরঙ্গ, বার এবং মণ্ডল। প্রতিটি অনুসরণ করার জন্য একটি অনন্য ভিজ্যুয়াল ছন্দ প্রদান করে।",
   "guide.postSession": "সেশন-পরবর্তী অন্তর্দৃষ্টি",
-  "guide.postSessionDesc": "প্রতিটি সেশনের পরে, আপনি প্রশান্তি স্কোর, অর্জিত XP, মুডের পরিবর্তন, শ্বাসের হার এবং আপনার পারফরম্যান্সের উপর ভিত্তি করে পরবর্তী সেশনের জন্য একটি ব্যক্তিগতকৃত কৌশল সুপারিশ সহ একটি সারসংক্ষেপ দেখতে পান।",
+  "guide.postSessionDesc":
+    "প্রতিটি সেশনের পরে, আপনি প্রশান্তি স্কোর, অর্জিত XP, মুডের পরিবর্তন, শ্বাসের হার এবং আপনার পারফরম্যান্সের উপর ভিত্তি করে পরবর্তী সেশনের জন্য একটি ব্যক্তিগতকৃত কৌশল সুপারিশ সহ একটি সারসংক্ষেপ দেখতে পান।",
 
   // Custom Techniques
   "guide.customTech": "কাস্টম কৌশল",
-  "guide.customTechIntro": "লাইব্রেরি ট্যাব → কাস্টম বিভাগ থেকে আপনার নিজের শ্বাস-প্রশ্বাসের ধরন তৈরি করুন।",
-  "guide.customStep1": "আপনার কৌশলের নাম দিন এবং ঐচ্ছিকভাবে বিবরণ ও সুবিধা যোগ করুন",
-  "guide.customStep2": "শ্বাস নেওয়া, ধরে রাখা, শ্বাস ছাড়া এবং শ্বাস ছাড়ার পর ধরে রাখার সময়কাল সেট করুন (প্রতিটি ১-৩০ সেকেন্ড)",
-  "guide.customStep3": "ঐচ্ছিকভাবে পিরামিড মোড সক্রিয় করুন — প্রতি চক্রে সময়কাল বাড়ে তারপর কমে",
-  "guide.customStep4": "\"কৌশল তৈরি করুন\" ট্যাপ করুন",
+  "guide.customTechIntro":
+    "লাইব্রেরি ট্যাব → কাস্টম বিভাগ থেকে আপনার নিজের শ্বাস-প্রশ্বাসের ধরন তৈরি করুন।",
+  "guide.customStep1":
+    "আপনার কৌশলের নাম দিন এবং ঐচ্ছিকভাবে বিবরণ ও সুবিধা যোগ করুন",
+  "guide.customStep2":
+    "শ্বাস নেওয়া, ধরে রাখা, শ্বাস ছাড়া এবং শ্বাস ছাড়ার পর ধরে রাখার সময়কাল সেট করুন (প্রতিটি ১-৩০ সেকেন্ড)",
+  "guide.customStep3":
+    "ঐচ্ছিকভাবে পিরামিড মোড সক্রিয় করুন — প্রতি চক্রে সময়কাল বাড়ে তারপর কমে",
+  "guide.customStep4": '"কৌশল তৈরি করুন" ট্যাপ করুন',
   "guide.pyramidMode": "পিরামিড মোড",
-  "guide.pyramidModeDesc": "পিরামিড মোডে, ফেজের সময়কাল ধীরে ধীরে একটি শুরু গুণক থেকে শীর্ষ গুণক পর্যন্ত নির্দিষ্ট সংখ্যক ধাপে বাড়ে, তারপর আবার কমে। এটি প্রতিটি সেশনের মধ্যে একটি ক্রমবর্ধমান চ্যালেঞ্জ তৈরি করে।",
+  "guide.pyramidModeDesc":
+    "পিরামিড মোডে, ফেজের সময়কাল ধীরে ধীরে একটি শুরু গুণক থেকে শীর্ষ গুণক পর্যন্ত নির্দিষ্ট সংখ্যক ধাপে বাড়ে, তারপর আবার কমে। এটি প্রতিটি সেশনের মধ্যে একটি ক্রমবর্ধমান চ্যালেঞ্জ তৈরি করে।",
 
   // Playlists
   "guide.playlists": "প্লেলিস্ট",
-  "guide.playlistsIntro": "একাধিক কৌশলকে একটি একক ধারাবাহিক সেশনে চেইন করুন। প্লেলিস্টের প্রতিটি ধাপে নিজস্ব কৌশল ও সময়কাল আছে।",
+  "guide.playlistsIntro":
+    "একাধিক কৌশলকে একটি একক ধারাবাহিক সেশনে চেইন করুন। প্লেলিস্টের প্রতিটি ধাপে নিজস্ব কৌশল ও সময়কাল আছে।",
   "guide.playlistStep1": "আরও → প্লেলিস্টে যান",
-  "guide.playlistStep2": "\"নতুন\" ট্যাপ করুন",
-  "guide.playlistStep3": "আপনার প্লেলিস্টের নাম দিন এবং ধাপ যোগ করুন (প্রতিটির জন্য কৌশল + সময়কাল)",
-  "guide.playlistStep4": "প্লেলিস্ট শুরু করুন — অ্যাপ কৌশলের মধ্যে নিরবচ্ছিন্নভাবে পরিবর্তন করে",
-  "guide.playlistExample": "উদাহরণ: ওয়ার্ম আপের জন্য ৩ মিনিট শান্ত শ্বাস দিয়ে শুরু করুন, তারপর মনোযোগের জন্য ৫ মিনিট বক্স ব্রিদিং, তারপর শিথিল হতে ২ মিনিট ৪-৭-৮।",
+  "guide.playlistStep2": '"নতুন" ট্যাপ করুন',
+  "guide.playlistStep3":
+    "আপনার প্লেলিস্টের নাম দিন এবং ধাপ যোগ করুন (প্রতিটির জন্য কৌশল + সময়কাল)",
+  "guide.playlistStep4":
+    "প্লেলিস্ট শুরু করুন — অ্যাপ কৌশলের মধ্যে নিরবচ্ছিন্নভাবে পরিবর্তন করে",
+  "guide.playlistExample":
+    "উদাহরণ: ওয়ার্ম আপের জন্য ৩ মিনিট শান্ত শ্বাস দিয়ে শুরু করুন, তারপর মনোযোগের জন্য ৫ মিনিট বক্স ব্রিদিং, তারপর শিথিল হতে ২ মিনিট ৪-৭-৮।",
 
   // Programs
   "guide.programs": "গাইডেড প্রোগ্রাম",
-  "guide.programsIntro": "কাঠামোবদ্ধ বহু-দিনের প্রোগ্রাম যা দৈনিক টিপস সহ ক্রমবর্ধমান শ্বাস-প্রশ্বাস অনুশীলনের মাধ্যমে গাইড করে।",
+  "guide.programsIntro":
+    "কাঠামোবদ্ধ বহু-দিনের প্রোগ্রাম যা দৈনিক টিপস সহ ক্রমবর্ধমান শ্বাস-প্রশ্বাস অনুশীলনের মাধ্যমে গাইড করে।",
   "guide.programStress": "৭-দিনের চাপ মুক্তি",
-  "guide.programStressDesc": "সহজ প্যাটার্ন দিয়ে শুরু করে ৪-৭-৮ পর্যন্ত ক্রমবর্ধমান শিথিলতা কৌশল। এক সপ্তাহে দীর্ঘস্থায়ী চাপ-মুক্তির অভ্যাস তৈরির জন্য ডিজাইন করা।",
+  "guide.programStressDesc":
+    "সহজ প্যাটার্ন দিয়ে শুরু করে ৪-৭-৮ পর্যন্ত ক্রমবর্ধমান শিথিলতা কৌশল। এক সপ্তাহে দীর্ঘস্থায়ী চাপ-মুক্তির অভ্যাস তৈরির জন্য ডিজাইন করা।",
   "guide.programSleep": "১৪ দিনে ভালো ঘুম",
-  "guide.programSleepDesc": "ঘুমানোর সময়ের জন্য ডিজাইন করা সন্ধ্যাকালীন শ্বাস-প্রশ্বাস। মৃদু প্যাটার্ন দিয়ে শুরু করে দুই সপ্তাহে দীর্ঘ, আরও শান্তিদায়ক সেশনে যায়।",
+  "guide.programSleepDesc":
+    "ঘুমানোর সময়ের জন্য ডিজাইন করা সন্ধ্যাকালীন শ্বাস-প্রশ্বাস। মৃদু প্যাটার্ন দিয়ে শুরু করে দুই সপ্তাহে দীর্ঘ, আরও শান্তিদায়ক সেশনে যায়।",
   "guide.programFocus": "ফোকাস ট্রেনিং (১০ দিন)",
-  "guide.programFocusDesc": "মনোযোগ তীক্ষ্ণ করার জন্য শক্তিদায়ক শ্বাস প্যাটার্ন। মানসিক স্বচ্ছতার জন্য সুনির্দিষ্ট গণনা অনুশীলন এবং পাওয়ার ব্রিদিং অন্তর্ভুক্ত।",
-  "guide.programsEnroll": "আরও → প্রোগ্রাম থেকে একটি প্রোগ্রামে নাম লেখান। একদিনে একটি দিন সম্পন্ন করুন — প্রতিটি দিনে একটি নির্দিষ্ট কৌশল, সময়কাল এবং অনুপ্রেরণামূলক টিপ থাকে।",
+  "guide.programFocusDesc":
+    "মনোযোগ তীক্ষ্ণ করার জন্য শক্তিদায়ক শ্বাস প্যাটার্ন। মানসিক স্বচ্ছতার জন্য সুনির্দিষ্ট গণনা অনুশীলন এবং পাওয়ার ব্রিদিং অন্তর্ভুক্ত।",
+  "guide.programsEnroll":
+    "আরও → প্রোগ্রাম থেকে একটি প্রোগ্রামে নাম লেখান। একদিনে একটি দিন সম্পন্ন করুন — প্রতিটি দিনে একটি নির্দিষ্ট কৌশল, সময়কাল এবং অনুপ্রেরণামূলক টিপ থাকে।",
 
   // Smart Features (NEW)
   "guide.smartFeatures": "স্মার্ট ফিচার",
-  "guide.smartFeaturesIntro": "মুহূর্ত ব্রেথে বুদ্ধিমান ফিচার আছে যা আপনার অনুশীলনের সাথে মানিয়ে নেয় এবং প্রতিটি সেশনকে মসৃণ করে।",
+  "guide.smartFeaturesIntro":
+    "মুহূর্ত ব্রেথে বুদ্ধিমান ফিচার আছে যা আপনার অনুশীলনের সাথে মানিয়ে নেয় এবং প্রতিটি সেশনকে মসৃণ করে।",
   "guide.wakeLock": "স্ক্রিন ওয়েক লক",
-  "guide.wakeLockDesc": "সক্রিয় সেশনের সময়, আপনার ফোনের স্ক্রিন ওয়েব ওয়েক লক API ব্যবহার করে স্বয়ংক্রিয়ভাবে চালু থাকে। স্ক্রিন টাইমআউট থেকে আর কোনো বাধা নেই।",
+  "guide.wakeLockDesc":
+    "সক্রিয় সেশনের সময়, আপনার ফোনের স্ক্রিন ওয়েব ওয়েক লক API ব্যবহার করে স্বয়ংক্রিয়ভাবে চালু থাকে। স্ক্রিন টাইমআউট থেকে আর কোনো বাধা নেই।",
   "guide.dailyGoal": "দৈনিক লক্ষ্য",
-  "guide.dailyGoalDesc": "সেটিংস থেকে একটি দৈনিক শ্বাসের লক্ষ্য (মিনিটে) সেট করুন। হোম স্ক্রিনে একটি প্রগ্রেস রিং আপনার দৈনিক অগ্রগতি দেখায়। লক্ষ্যে পৌঁছালে বোনাস XP পাবেন।",
+  "guide.dailyGoalDesc":
+    "সেটিংস থেকে একটি দৈনিক শ্বাসের লক্ষ্য (মিনিটে) সেট করুন। হোম স্ক্রিনে একটি প্রগ্রেস রিং আপনার দৈনিক অগ্রগতি দেখায়। লক্ষ্যে পৌঁছালে বোনাস XP পাবেন।",
   "guide.quickResume": "দ্রুত পুনরায় শুরু",
-  "guide.quickResumeDesc": "সম্প্রতি সেশন সম্পন্ন করলে হোম স্ক্রিনে \"শেষ সেশন পুনরায় শুরু\" বোতাম দেখায়। একই কৌশল ও সময়কাল আবার শুরু করতে এক ট্যাপ।",
+  "guide.quickResumeDesc":
+    'সম্প্রতি সেশন সম্পন্ন করলে হোম স্ক্রিনে "শেষ সেশন পুনরায় শুরু" বোতাম দেখায়। একই কৌশল ও সময়কাল আবার শুরু করতে এক ট্যাপ।',
   "guide.sessionRecovery": "সেশন রিকভারি",
-  "guide.sessionRecoveryDesc": "সেশনের সময় অ্যাপ অপ্রত্যাশিতভাবে বন্ধ হলে, এটি স্বয়ংক্রিয়ভাবে আপনার অগ্রগতি সংরক্ষণ করে। পুনরায় খুললে, যেখানে ছেড়েছিলেন সেখান থেকে পুনরায় শুরু করার জন্য একটি ডায়ালগ দেখায়।",
+  "guide.sessionRecoveryDesc":
+    "সেশনের সময় অ্যাপ অপ্রত্যাশিতভাবে বন্ধ হলে, এটি স্বয়ংক্রিয়ভাবে আপনার অগ্রগতি সংরক্ষণ করে। পুনরায় খুললে, যেখানে ছেড়েছিলেন সেখান থেকে পুনরায় শুরু করার জন্য একটি ডায়ালগ দেখায়।",
   "guide.streakFreeze": "স্ট্রিক ফ্রিজ",
-  "guide.streakFreezeDesc": "দীর্ঘ ধারা বজায় রেখে স্ট্রিক ফ্রিজ অর্জন করুন (প্রতি ৭ ধারাবাহিক দিনে ১ ফ্রিজ, সর্বোচ্চ ৩)। একদিন বাদ গেলে, আপনার ধারা রক্ষা করতে স্বয়ংক্রিয়ভাবে একটি ফ্রিজ ব্যবহৃত হয়।",
+  "guide.streakFreezeDesc":
+    "দীর্ঘ ধারা বজায় রেখে স্ট্রিক ফ্রিজ অর্জন করুন (প্রতি ৭ ধারাবাহিক দিনে ১ ফ্রিজ, সর্বোচ্চ ৩)। একদিন বাদ গেলে, আপনার ধারা রক্ষা করতে স্বয়ংক্রিয়ভাবে একটি ফ্রিজ ব্যবহৃত হয়।",
   "guide.weeklySummary": "সাপ্তাহিক সারসংক্ষেপ",
-  "guide.weeklySummaryDesc": "প্রতি সোমবার, একটি সারসংক্ষেপ কার্ড দেখায় গত সপ্তাহের পরিসংখ্যান: মোট সেশন, অনুশীলনের মিনিট, অর্জিত XP, সেরা প্রশান্তি স্কোর এবং সবচেয়ে ব্যবহৃত কৌশল।",
+  "guide.weeklySummaryDesc":
+    "প্রতি সোমবার, একটি সারসংক্ষেপ কার্ড দেখায় গত সপ্তাহের পরিসংখ্যান: মোট সেশন, অনুশীলনের মিনিট, অর্জিত XP, সেরা প্রশান্তি স্কোর এবং সবচেয়ে ব্যবহৃত কৌশল।",
   "guide.smartSuggestions": "স্মার্ট সাজেশন",
-  "guide.smartSuggestionsDesc": "অ্যাপটি আপনার সেশন ইতিহাস বিশ্লেষণ করে এবং আপনার প্যাটার্ন ও মুড প্রবণতার উপর ভিত্তি করে সর্বোত্তম কৌশল, সময়কাল এবং দিনের সময় সুপারিশ করে।",
+  "guide.smartSuggestionsDesc":
+    "অ্যাপটি আপনার সেশন ইতিহাস বিশ্লেষণ করে এবং আপনার প্যাটার্ন ও মুড প্রবণতার উপর ভিত্তি করে সর্বোত্তম কৌশল, সময়কাল এবং দিনের সময় সুপারিশ করে।",
   "guide.journalInspiration": "জার্নাল প্রম্পট",
-  "guide.journalInspirationDesc": "প্রতিটি সেশনের পরে, জার্নালে আপনার অনুশীলন সম্পর্কে চিন্তা করতে সাহায্যকারী একটি ঘূর্ণায়মান অনুপ্রেরণা প্রম্পট দেখায়। প্রম্পট প্রতিদিন পরিবর্তন হয়।",
+  "guide.journalInspirationDesc":
+    "প্রতিটি সেশনের পরে, জার্নালে আপনার অনুশীলন সম্পর্কে চিন্তা করতে সাহায্যকারী একটি ঘূর্ণায়মান অনুপ্রেরণা প্রম্পট দেখায়। প্রম্পট প্রতিদিন পরিবর্তন হয়।",
 
   // Data & Backup (NEW)
   "guide.dataBackup": "ডেটা ও ব্যাকআপ",
-  "guide.dataBackupIntro": "আপনার ডেটা মূল্যবান। মুহূর্ত ব্রেথ আপনার শ্বাস-প্রশ্বাস অনুশীলনের ইতিহাস সুরক্ষিত ও স্থানান্তর করার একাধিক উপায় প্রদান করে।",
+  "guide.dataBackupIntro":
+    "আপনার ডেটা মূল্যবান। মুহূর্ত ব্রেথ আপনার শ্বাস-প্রশ্বাস অনুশীলনের ইতিহাস সুরক্ষিত ও স্থানান্তর করার একাধিক উপায় প্রদান করে।",
   "guide.clipboardBackup": "ক্লিপবোর্ড ব্যাকআপ",
-  "guide.clipboardBackupDesc": "এক ট্যাপে আপনার সম্পূর্ণ ব্যাকআপ ক্লিপবোর্ডে কপি করুন এবং এক ট্যাপে ক্লিপবোর্ড থেকে পুনরুদ্ধার করুন। ডিভাইসের মধ্যে ডেটা স্থানান্তরের দ্রুততম উপায়।",
+  "guide.clipboardBackupDesc":
+    "এক ট্যাপে আপনার সম্পূর্ণ ব্যাকআপ ক্লিপবোর্ডে কপি করুন এবং এক ট্যাপে ক্লিপবোর্ড থেকে পুনরুদ্ধার করুন। ডিভাইসের মধ্যে ডেটা স্থানান্তরের দ্রুততম উপায়।",
   "guide.backupReminder": "ব্যাকআপ রিমাইন্ডার",
-  "guide.backupReminderDesc": "৭+ দিন ব্যাকআপ না নিলে, হোম স্ক্রিনে একটি মৃদু ব্যানার আপনার ডেটা এক্সপোর্ট করার কথা মনে করিয়ে দেয়।",
+  "guide.backupReminderDesc":
+    "৭+ দিন ব্যাকআপ না নিলে, হোম স্ক্রিনে একটি মৃদু ব্যানার আপনার ডেটা এক্সপোর্ট করার কথা মনে করিয়ে দেয়।",
   "guide.importValidation": "স্মার্ট ইমপোর্ট ভ্যালিডেশন",
-  "guide.importValidationDesc": "ডেটা ইমপোর্ট করার সময়, অ্যাপ প্রতিটি ফিল্ড (ID, তারিখ, সময়কাল) যাচাই করে এবং নির্দিষ্ট ত্রুটি রিপোর্ট করে। নষ্ট এন্ট্রি বাদ দেওয়া হয় যখন বৈধগুলো ইমপোর্ট হয়।",
+  "guide.importValidationDesc":
+    "ডেটা ইমপোর্ট করার সময়, অ্যাপ প্রতিটি ফিল্ড (ID, তারিখ, সময়কাল) যাচাই করে এবং নির্দিষ্ট ত্রুটি রিপোর্ট করে। নষ্ট এন্ট্রি বাদ দেওয়া হয় যখন বৈধগুলো ইমপোর্ট হয়।",
   "guide.duplicateDetection": "ডুপ্লিকেট সনাক্তকরণ",
-  "guide.duplicateDetectionDesc": "ইমপোর্টের সময়, অ্যাপ ইতিমধ্যে বিদ্যমান সেশন সনাক্ত করে এবং ডুপ্লিকেট এড়িয়ে যেতে বা ওভাররাইট করতে দেয়। কোনো দুর্ঘটনাজনিত দ্বিগুণ গণনা নেই।",
+  "guide.duplicateDetectionDesc":
+    "ইমপোর্টের সময়, অ্যাপ ইতিমধ্যে বিদ্যমান সেশন সনাক্ত করে এবং ডুপ্লিকেট এড়িয়ে যেতে বা ওভাররাইট করতে দেয়। কোনো দুর্ঘটনাজনিত দ্বিগুণ গণনা নেই।",
 
   // Progress & Stats
   "guide.progress": "অগ্রগতি ও পরিসংখ্যান",
   "guide.xpSystem": "XP সিস্টেম",
-  "guide.xpSystemDesc": "প্রতিটি সেশনের পরে XP অর্জন করুন। XP একাধিক বিষয় থেকে গণনা করা হয়:",
+  "guide.xpSystemDesc":
+    "প্রতিটি সেশনের পরে XP অর্জন করুন। XP একাধিক বিষয় থেকে গণনা করা হয়:",
   "guide.xp.base": "বেস",
   "guide.xp.baseVal": "১০ XP",
   "guide.xp.duration": "সময়কাল",
@@ -937,21 +1079,27 @@ export const bn: Record<string, string> = {
   "guide.xp.firstTodayVal": "+৫",
   "guide.xp.challenges": "চ্যালেঞ্জ",
   "guide.xp.challengesVal": "+১৫ প্রতিটি",
-  "guide.xpCap": "দৈনিক XP সীমা: ১৫০ XP। এটি ম্যারাথন সেশনের পরিবর্তে ধারাবাহিক দৈনিক অনুশীলনকে উৎসাহিত করে।",
+  "guide.xpCap":
+    "দৈনিক XP সীমা: ১৫০ XP। এটি ম্যারাথন সেশনের পরিবর্তে ধারাবাহিক দৈনিক অনুশীলনকে উৎসাহিত করে।",
   "guide.levelsTitle": "স্তর ও উপাধি",
   "guide.xp.levelCol": "স্তর",
   "guide.xp.xpCol": "প্রয়োজনীয় XP",
   "guide.xp.titleCol": "উপাধি",
   "guide.streaks": "ধারা",
-  "guide.streaksDesc": "আপনার ধারা তৈরি করতে প্রতিদিন অন্তত একটি সেশন সম্পন্ন করুন। আপনার বর্তমান এবং দীর্ঘতম ধারা পরিসংখ্যান পৃষ্ঠায় প্রদর্শিত হয়। একদিন বাদ দিলে ধারা রিসেট হয় (যদি না স্ট্রিক ফ্রিজ থাকে)।",
+  "guide.streaksDesc":
+    "আপনার ধারা তৈরি করতে প্রতিদিন অন্তত একটি সেশন সম্পন্ন করুন। আপনার বর্তমান এবং দীর্ঘতম ধারা পরিসংখ্যান পৃষ্ঠায় প্রদর্শিত হয়। একদিন বাদ দিলে ধারা রিসেট হয় (যদি না স্ট্রিক ফ্রিজ থাকে)।",
   "guide.moodTracking": "মুড ট্র্যাকিং",
-  "guide.moodTrackingDesc": "প্রতিটি সেশনের আগে ও পরে, আপনার মুড ১ (চাপে) থেকে ৫ (শান্ত) পর্যন্ত রেট করুন। অ্যাপটি সময়ের সাথে আপনার মুড প্রবণতা ট্র্যাক করে এবং প্রতি সেশনে মুড উন্নতি গণনা করে।",
+  "guide.moodTrackingDesc":
+    "প্রতিটি সেশনের আগে ও পরে, আপনার মুড ১ (চাপে) থেকে ৫ (শান্ত) পর্যন্ত রেট করুন। অ্যাপটি সময়ের সাথে আপনার মুড প্রবণতা ট্র্যাক করে এবং প্রতি সেশনে মুড উন্নতি গণনা করে।",
   "guide.dailyChallenges": "দৈনিক চ্যালেঞ্জ",
-  "guide.dailyChallengesDesc": "হোম স্ক্রিনে তিনটি দৈনিক চ্যালেঞ্জ দেখা যায় (সহজ, মাঝারি, কঠিন)। তিনটি সম্পন্ন করলে +২৫ XP বোনাস। চ্যালেঞ্জ মধ্যরাতে রিফ্রেশ হয় এবং সেশন সংখ্যা, শ্বাসের সময়কাল, প্রশান্তি স্কোর লক্ষ্য বা নতুন কৌশল চেষ্টা করার মতো লক্ষ্য অন্তর্ভুক্ত।",
+  "guide.dailyChallengesDesc":
+    "হোম স্ক্রিনে তিনটি দৈনিক চ্যালেঞ্জ দেখা যায় (সহজ, মাঝারি, কঠিন)। তিনটি সম্পন্ন করলে +২৫ XP বোনাস। চ্যালেঞ্জ মধ্যরাতে রিফ্রেশ হয় এবং সেশন সংখ্যা, শ্বাসের সময়কাল, প্রশান্তি স্কোর লক্ষ্য বা নতুন কৌশল চেষ্টা করার মতো লক্ষ্য অন্তর্ভুক্ত।",
   "guide.weeklyConsistency": "সাপ্তাহিক ধারাবাহিকতা",
-  "guide.weeklyConsistencyDesc": "পরিসংখ্যান পৃষ্ঠায় নিয়মিততা, সেশন সম্পন্নতা এবং ধারা রক্ষণাবেক্ষণের উপর ভিত্তি করে একটি সাপ্তাহিক ধারাবাহিকতা স্কোর দেখায়।",
+  "guide.weeklyConsistencyDesc":
+    "পরিসংখ্যান পৃষ্ঠায় নিয়মিততা, সেশন সম্পন্নতা এবং ধারা রক্ষণাবেক্ষণের উপর ভিত্তি করে একটি সাপ্তাহিক ধারাবাহিকতা স্কোর দেখায়।",
   "guide.insights": "ব্যক্তিগতকৃত অন্তর্দৃষ্টি",
-  "guide.insightsDesc": "কয়েকটি সেশনের পরে, অন্তর্দৃষ্টি ট্যাব ব্যক্তিগতকৃত পর্যবেক্ষণ প্রদান করে: আপনার সেরা সময়, সবচেয়ে কার্যকর কৌশল, ধারার অগ্রগতি এবং সপ্তাহ-পরবর্তী-সপ্তাহ তুলনা।",
+  "guide.insightsDesc":
+    "কয়েকটি সেশনের পরে, অন্তর্দৃষ্টি ট্যাব ব্যক্তিগতকৃত পর্যবেক্ষণ প্রদান করে: আপনার সেরা সময়, সবচেয়ে কার্যকর কৌশল, ধারার অগ্রগতি এবং সপ্তাহ-পরবর্তী-সপ্তাহ তুলনা।",
   "guide.allBadges": "সব ১৫টি ব্যাজ",
 
   // Keyboard Shortcuts
@@ -972,52 +1120,73 @@ export const bn: Record<string, string> = {
   // Data & Privacy
   "guide.privacy": "ডেটা ও গোপনীয়তা",
   "guide.localStorage": "১০০% লোকাল স্টোরেজ",
-  "guide.localStorageDesc": "আপনার সব সেশন, মুড, সেটিংস এবং অগ্রগতি আপনার ব্রাউজারের লোকাল স্টোরেজে সংরক্ষিত। কিছুই কখনও সার্ভারে পাঠানো হয় না।",
+  "guide.localStorageDesc":
+    "আপনার সব সেশন, মুড, সেটিংস এবং অগ্রগতি আপনার ব্রাউজারের লোকাল স্টোরেজে সংরক্ষিত। কিছুই কখনও সার্ভারে পাঠানো হয় না।",
   "guide.exportImport": "এক্সপোর্ট ও ইমপোর্ট",
-  "guide.exportImportDesc": "সেটিংস → ডেটা → এক্সপোর্ট থেকে যেকোনো সময় আপনার ডেটা ব্যাকআপ করুন। এটি আপনার সব ডেটা সহ একটি JSON ফাইল ডাউনলোড করে। পুনরুদ্ধার করতে ইমপোর্ট ব্যবহার করুন।",
+  "guide.exportImportDesc":
+    "সেটিংস → ডেটা → এক্সপোর্ট থেকে যেকোনো সময় আপনার ডেটা ব্যাকআপ করুন। এটি আপনার সব ডেটা সহ একটি JSON ফাইল ডাউনলোড করে। পুনরুদ্ধার করতে ইমপোর্ট ব্যবহার করুন।",
   "guide.csvExport": "CSV এক্সপোর্ট",
-  "guide.csvExportDesc": "স্প্রেডশিট বা অন্যান্য সরঞ্জামে বিশ্লেষণের জন্য আপনার সেশন ইতিহাস CSV ফাইল হিসেবে এক্সপোর্ট করুন।",
+  "guide.csvExportDesc":
+    "স্প্রেডশিট বা অন্যান্য সরঞ্জামে বিশ্লেষণের জন্য আপনার সেশন ইতিহাস CSV ফাইল হিসেবে এক্সপোর্ট করুন।",
   "guide.offline": "অফলাইনে কাজ করে",
-  "guide.offlineDesc": "মুহূর্ত ব্রেথ একটি প্রগ্রেসিভ ওয়েব অ্যাপ। একবার লোড হলে (বা ইনস্টল হলে), কোনো ইন্টারনেট সংযোগ ছাড়াই সম্পূর্ণ অফলাইনে কাজ করে।",
-  "guide.privacyFooter": "কোনো অ্যাকাউন্ট লাগবে না। কোনো ট্র্যাকিং নেই। কোনো অ্যানালিটিক্স নেই। কোনো বিজ্ঞাপন নেই। আপনার শ্বাস-প্রশ্বাস অনুশীলন সম্পূর্ণ ব্যক্তিগত।",
+  "guide.offlineDesc":
+    "মুহূর্ত ব্রেথ একটি প্রগ্রেসিভ ওয়েব অ্যাপ। একবার লোড হলে (বা ইনস্টল হলে), কোনো ইন্টারনেট সংযোগ ছাড়াই সম্পূর্ণ অফলাইনে কাজ করে।",
+  "guide.privacyFooter":
+    "কোনো অ্যাকাউন্ট লাগবে না। কোনো ট্র্যাকিং নেই। কোনো অ্যানালিটিক্স নেই। কোনো বিজ্ঞাপন নেই। আপনার শ্বাস-প্রশ্বাস অনুশীলন সম্পূর্ণ ব্যক্তিগত।",
 
   // Accessibility
   "guide.accessibility": "অ্যাক্সেসিবিলিটি",
-  "guide.accessibilityIntro": "মুহূর্ত ব্রেথ সবার জন্য অ্যাক্সেসিবল হতে ডিজাইন করা হয়েছে। সেটিংস → অ্যাক্সেসিবিলিটিতে এই অপশনগুলো পাবেন:",
+  "guide.accessibilityIntro":
+    "মুহূর্ত ব্রেথ সবার জন্য অ্যাক্সেসিবল হতে ডিজাইন করা হয়েছে। সেটিংস → অ্যাক্সেসিবিলিটিতে এই অপশনগুলো পাবেন:",
   "guide.a11y.highContrast": "উচ্চ কনট্রাস্ট",
-  "guide.a11y.highContrastDesc": "ভালো দৃশ্যমানতার জন্য টেক্সট ও বর্ডারের কনট্রাস্ট বাড়ায়",
+  "guide.a11y.highContrastDesc":
+    "ভালো দৃশ্যমানতার জন্য টেক্সট ও বর্ডারের কনট্রাস্ট বাড়ায়",
   "guide.a11y.largeText": "বড় টেক্সট",
   "guide.a11y.largeTextDesc": "উন্নত পঠনযোগ্যতার জন্য বেস ফন্ট সাইজ বাড়ায়",
   "guide.a11y.reducedMotion": "কম মোশন",
-  "guide.a11y.reducedMotionDesc": "মোশনে সংবেদনশীল ব্যবহারকারীদের জন্য সব অ্যানিমেশন ও ট্রানজিশন বন্ধ করে",
-  "guide.accessibilityFooter": "অ্যাপটি একাধিক ভাষা (ইংরেজি ও বাংলা) এবং সম্পূর্ণ কীবোর্ড নেভিগেশনও সমর্থন করে।",
+  "guide.a11y.reducedMotionDesc":
+    "মোশনে সংবেদনশীল ব্যবহারকারীদের জন্য সব অ্যানিমেশন ও ট্রানজিশন বন্ধ করে",
+  "guide.accessibilityFooter":
+    "অ্যাপটি একাধিক ভাষা (ইংরেজি ও বাংলা) এবং সম্পূর্ণ কীবোর্ড নেভিগেশনও সমর্থন করে।",
 
   // FAQ (expanded to 12)
   "guide.faq": "সচরাচর জিজ্ঞাসিত প্রশ্নাবলী",
   "guide.faq1.q": "মুহূর্ত ব্রেথ কি বিনামূল্যে?",
-  "guide.faq1.a": "হ্যাঁ, সম্পূর্ণ বিনামূল্যে। কোনো সাবস্ক্রিপশন নেই, কোনো লুকানো ফি নেই, কোনো বিজ্ঞাপন নেই। আমরা উন্নয়ন সমর্থনের জন্য ঐচ্ছিক দান গ্রহণ করি।",
+  "guide.faq1.a":
+    "হ্যাঁ, সম্পূর্ণ বিনামূল্যে। কোনো সাবস্ক্রিপশন নেই, কোনো লুকানো ফি নেই, কোনো বিজ্ঞাপন নেই। আমরা উন্নয়ন সমর্থনের জন্য ঐচ্ছিক দান গ্রহণ করি।",
   "guide.faq2.q": "এটি কি অফলাইনে কাজ করে?",
-  "guide.faq2.a": "হ্যাঁ। একবার অ্যাপ লোড হলে (বা PWA হিসেবে ইনস্টল হলে), এটি সম্পূর্ণ অফলাইনে কাজ করে। সব ডেটা আপনার ডিভাইসে স্থানীয়ভাবে সংরক্ষিত।",
+  "guide.faq2.a":
+    "হ্যাঁ। একবার অ্যাপ লোড হলে (বা PWA হিসেবে ইনস্টল হলে), এটি সম্পূর্ণ অফলাইনে কাজ করে। সব ডেটা আপনার ডিভাইসে স্থানীয়ভাবে সংরক্ষিত।",
   "guide.faq3.q": "প্রশান্তি স্কোর কীভাবে গণনা করা হয়?",
-  "guide.faq3.a": "প্রশান্তি স্কোর আপনার শ্বাসের ধারাবাহিকতা (কতটা ঘনিষ্ঠভাবে ছন্দ অনুসরণ করেন), সেশনের সময়কাল এবং শ্বাস সনাক্তকরণ সক্রিয় থাকলে মাইক্রোফোন বিশ্লেষণের মাধ্যমে আপনার ছন্দের নির্ভুলতার উপর ভিত্তি করে।",
+  "guide.faq3.a":
+    "প্রশান্তি স্কোর আপনার শ্বাসের ধারাবাহিকতা (কতটা ঘনিষ্ঠভাবে ছন্দ অনুসরণ করেন), সেশনের সময়কাল এবং শ্বাস সনাক্তকরণ সক্রিয় থাকলে মাইক্রোফোন বিশ্লেষণের মাধ্যমে আপনার ছন্দের নির্ভুলতার উপর ভিত্তি করে।",
   "guide.faq4.q": "ব্রাউজার ক্লিয়ার করলে কি আমার ডেটা হারিয়ে যাবে?",
-  "guide.faq4.a": "হ্যাঁ — যেহেতু সব ডেটা লোকাল স্টোরেজে সংরক্ষিত, ব্রাউজার ডেটা ক্লিয়ার করলে আপনার অগ্রগতি মুছে যাবে। নিয়মিত সেটিংস → এক্সপোর্ট ব্যবহার করে ডেটা ব্যাকআপ করুন।",
+  "guide.faq4.a":
+    "হ্যাঁ — যেহেতু সব ডেটা লোকাল স্টোরেজে সংরক্ষিত, ব্রাউজার ডেটা ক্লিয়ার করলে আপনার অগ্রগতি মুছে যাবে। নিয়মিত সেটিংস → এক্সপোর্ট ব্যবহার করে ডেটা ব্যাকআপ করুন।",
   "guide.faq5.q": "আমি কি বন্ধুকে চ্যালেঞ্জ করতে পারি?",
-  "guide.faq5.a": "হ্যাঁ! হোম পেজ থেকে 'বন্ধুকে চ্যালেঞ্জ করুন' ট্যাপ করুন একটি নির্দিষ্ট কৌশল ও লক্ষ্য দিয়ে শ্বাস চ্যালেঞ্জ তৈরি করতে। তৈরি লিংক শেয়ার করুন — আপনার বন্ধু খুললে তারা আপনার চ্যালেঞ্জ দেখতে ও গ্রহণ করতে পারবে।",
+  "guide.faq5.a":
+    "হ্যাঁ! হোম পেজ থেকে 'বন্ধুকে চ্যালেঞ্জ করুন' ট্যাপ করুন একটি নির্দিষ্ট কৌশল ও লক্ষ্য দিয়ে শ্বাস চ্যালেঞ্জ তৈরি করতে। তৈরি লিংক শেয়ার করুন — আপনার বন্ধু খুললে তারা আপনার চ্যালেঞ্জ দেখতে ও গ্রহণ করতে পারবে।",
   "guide.faq6.q": "দৈনিক XP সীমা কত?",
-  "guide.faq6.a": "প্রতিদিন সর্বোচ্চ ১৫০ XP অর্জন করা যায়। এটি দীর্ঘ একক সেশনের পরিবর্তে ধারাবাহিক দৈনিক অনুশীলনকে উৎসাহিত করার জন্য ডিজাইন করা হয়েছে।",
+  "guide.faq6.a":
+    "প্রতিদিন সর্বোচ্চ ১৫০ XP অর্জন করা যায়। এটি দীর্ঘ একক সেশনের পরিবর্তে ধারাবাহিক দৈনিক অনুশীলনকে উৎসাহিত করার জন্য ডিজাইন করা হয়েছে।",
   "guide.faq7.q": "রিমাইন্ডার কীভাবে কাজ করে?",
-  "guide.faq7.a": "সেটিংসে শ্বাসের রিমাইন্ডার সেট করুন। দ্রষ্টব্য: রিমাইন্ডার শুধুমাত্র অ্যাপ/ট্যাব খোলা থাকলে কাজ করে। নির্ভরযোগ্য রিমাইন্ডারের জন্য PWA ইনস্টল করুন।",
+  "guide.faq7.a":
+    "সেটিংসে শ্বাসের রিমাইন্ডার সেট করুন। দ্রষ্টব্য: রিমাইন্ডার শুধুমাত্র অ্যাপ/ট্যাব খোলা থাকলে কাজ করে। নির্ভরযোগ্য রিমাইন্ডারের জন্য PWA ইনস্টল করুন।",
   "guide.faq8.q": "আমার মাইক্রোফোন/ক্যামেরা ডেটা কি কোথাও পাঠানো হয়?",
-  "guide.faq8.a": "একদমই না। শ্বাস সনাক্তকরণ (মাইক্রোফোন) এবং হৃদস্পন্দন মনিটরিং (ক্যামেরা) সম্পূর্ণরূপে আপনার ডিভাইসে প্রসেস করা হয়। কোনো অডিও বা ভিডিও ডেটা কখনও রেকর্ড, সংরক্ষণ বা প্রেরণ করা হয় না।",
+  "guide.faq8.a":
+    "একদমই না। শ্বাস সনাক্তকরণ (মাইক্রোফোন) এবং হৃদস্পন্দন মনিটরিং (ক্যামেরা) সম্পূর্ণরূপে আপনার ডিভাইসে প্রসেস করা হয়। কোনো অডিও বা ভিডিও ডেটা কখনও রেকর্ড, সংরক্ষণ বা প্রেরণ করা হয় না।",
   "guide.faq9.q": "একদিন বাদ গেলে কি আমার ধারা হারিয়ে যাবে?",
-  "guide.faq9.a": "যদি আপনার কাছে স্ট্রিক ফ্রিজ থাকে, এটি আপনার ধারা রক্ষা করতে স্বয়ংক্রিয়ভাবে ব্যবহৃত হবে। প্রতি ৭ ধারাবাহিক দিনের অনুশীলনে ১ ফ্রিজ অর্জন করেন (সর্বোচ্চ ৩ ফ্রিজ সংরক্ষিত)।",
+  "guide.faq9.a":
+    "যদি আপনার কাছে স্ট্রিক ফ্রিজ থাকে, এটি আপনার ধারা রক্ষা করতে স্বয়ংক্রিয়ভাবে ব্যবহৃত হবে। প্রতি ৭ ধারাবাহিক দিনের অনুশীলনে ১ ফ্রিজ অর্জন করেন (সর্বোচ্চ ৩ ফ্রিজ সংরক্ষিত)।",
   "guide.faq10.q": "নতুন ফোনে আমার ডেটা কীভাবে স্থানান্তর করব?",
-  "guide.faq10.a": "সেটিংসে যান, 'কপি ব্যাকআপ' ট্যাপ করুন আপনার ডেটা ক্লিপবোর্ডে কপি করতে। নতুন ফোনে অ্যাপ খুলুন, সেটিংসে যান এবং 'পেস্ট রিস্টোর' ট্যাপ করুন। আপনি JSON ফাইল দিয়ে এক্সপোর্ট/ইমপোর্টও ব্যবহার করতে পারেন।",
+  "guide.faq10.a":
+    "সেটিংসে যান, 'কপি ব্যাকআপ' ট্যাপ করুন আপনার ডেটা ক্লিপবোর্ডে কপি করতে। নতুন ফোনে অ্যাপ খুলুন, সেটিংসে যান এবং 'পেস্ট রিস্টোর' ট্যাপ করুন। আপনি JSON ফাইল দিয়ে এক্সপোর্ট/ইমপোর্টও ব্যবহার করতে পারেন।",
   "guide.faq11.q": "কোন কৌশল দিয়ে শুরু করব?",
-  "guide.faq11.a": "শ্বাস-প্রশ্বাসে নতুন হলে, শান্ত শ্বাস (সহজ ৪-৬ প্যাটার্ন) বা বক্স ব্রিদিং (৪-৪-৪-৪) দিয়ে শুরু করুন। দুটোই নতুনদের জন্য সহজ এবং কার্যকর। ঘুমের জন্য ৪-৭-৮ কৌশল চেষ্টা করুন।",
+  "guide.faq11.a":
+    "শ্বাস-প্রশ্বাসে নতুন হলে, শান্ত শ্বাস (সহজ ৪-৬ প্যাটার্ন) বা বক্স ব্রিদিং (৪-৪-৪-৪) দিয়ে শুরু করুন। দুটোই নতুনদের জন্য সহজ এবং কার্যকর। ঘুমের জন্য ৪-৭-৮ কৌশল চেষ্টা করুন।",
   "guide.faq12.q": "আমি কি নিজের শ্বাসের প্যাটার্ন তৈরি করতে পারি?",
-  "guide.faq12.a": "হ্যাঁ! লাইব্রেরি ট্যাবে যান, কাস্টম বিভাগে স্ক্রোল করুন এবং কাস্টম শ্বাস নেওয়া, ধরে রাখা ও শ্বাস ছাড়ার সময়কাল দিয়ে নিজের কৌশল তৈরি করুন। এমনকি ক্রমবর্ধমান কঠিনতার জন্য পিরামিড মোডও সক্রিয় করতে পারেন।",
+  "guide.faq12.a":
+    "হ্যাঁ! লাইব্রেরি ট্যাবে যান, কাস্টম বিভাগে স্ক্রোল করুন এবং কাস্টম শ্বাস নেওয়া, ধরে রাখা ও শ্বাস ছাড়ার সময়কাল দিয়ে নিজের কৌশল তৈরি করুন। এমনকি ক্রমবর্ধমান কঠিনতার জন্য পিরামিড মোডও সক্রিয় করতে পারেন।",
 
   // Footer
   "guide.footer1": "মুহূর্ত ব্রেথ — একটু সময় নিয়ে শ্বাস নিন। 🌬️",
@@ -1025,7 +1194,8 @@ export const bn: Record<string, string> = {
 
   // Daily Goal
   "settings.dailyGoal": "দৈনিক লক্ষ্য: {{min}} মিনিট",
-  "settings.dailyGoalDesc": "ট্র্যাকে থাকতে একটি দৈনিক শ্বাস-প্রশ্বাসের লক্ষ্য সেট করুন",
+  "settings.dailyGoalDesc":
+    "ট্র্যাকে থাকতে একটি দৈনিক শ্বাস-প্রশ্বাসের লক্ষ্য সেট করুন",
 
   // Quick Resume
   "home.quickResume": "শেষ সেশন পুনরায় শুরু",
@@ -1036,7 +1206,8 @@ export const bn: Record<string, string> = {
   "settings.clipboardCopied": "ব্যাকআপ ক্লিপবোর্ডে কপি হয়েছে!",
   "settings.clipboardError": "ক্লিপবোর্ডে কপি করা যায়নি",
   "settings.clipboardEmpty": "ক্লিপবোর্ড খালি",
-  "settings.clipboardReadError": "ক্লিপবোর্ড পড়া যায়নি। অনুগ্রহ করে ক্লিপবোর্ড অ্যাক্সেস অনুমতি দিন।",
+  "settings.clipboardReadError":
+    "ক্লিপবোর্ড পড়া যায়নি। অনুগ্রহ করে ক্লিপবোর্ড অ্যাক্সেস অনুমতি দিন।",
 
   // Session History
   "stats.history": "ইতিহাস",
@@ -1055,7 +1226,8 @@ export const bn: Record<string, string> = {
 
   // Auto-Difficulty
   "adaptive.readyToLevelUp": "স্তর বাড়াতে প্রস্তুত? 🚀",
-  "adaptive.suggestIncrease": "আপনার প্রশান্তি স্কোর ধারাবাহিকভাবে উচ্চ! পরের বার {{minutes}} মিনিট চেষ্টা করুন।",
+  "adaptive.suggestIncrease":
+    "আপনার প্রশান্তি স্কোর ধারাবাহিকভাবে উচ্চ! পরের বার {{minutes}} মিনিট চেষ্টা করুন।",
   "adaptive.acceptIncrease": "{{minutes}} মিনিট সেট করুন",
   "adaptive.durationUpdated": "ডিফল্ট সময়কাল {{minutes}} মিনিটে আপডেট হয়েছে!",
 
@@ -1068,11 +1240,13 @@ export const bn: Record<string, string> = {
   "common.offline": "আপনি অফলাইনে আছেন — ডেটা স্থানীয়ভাবে সংরক্ষিত",
 
   // Update 3: Journal Confirm
-  "session.unsavedJournal": "আপনার একটি অসংরক্ষিত জার্নাল এন্ট্রি আছে। আপনি কি নিশ্চিত যে চলে যেতে চান?",
+  "session.unsavedJournal":
+    "আপনার একটি অসংরক্ষিত জার্নাল এন্ট্রি আছে। আপনি কি নিশ্চিত যে চলে যেতে চান?",
 
   // Update 4: Session Recovery
   "recovery.title": "সেশন পুনরায় শুরু করবেন?",
-  "recovery.desc": "আপনার একটি অসম্পূর্ণ {{technique}} সেশন আছে ({{elapsed}} অতিবাহিত)।",
+  "recovery.desc":
+    "আপনার একটি অসম্পূর্ণ {{technique}} সেশন আছে ({{elapsed}} অতিবাহিত)।",
   "recovery.technique": "কৌশল",
   "recovery.progress": "অগ্রগতি",
   "recovery.cycles": "চক্র",
@@ -1091,18 +1265,23 @@ export const bn: Record<string, string> = {
   "import.error.invalidFavorites": "প্রিয় ডেটা অবৈধ",
   "import.error.invalidJson": "অবৈধ JSON ফরম্যাট",
   "import.warning.duplicatesSkipped": "{{count}}টি ডুপ্লিকেট সেশন এড়িয়ে গেছে",
-  "import.success": "{{new}}টি নতুন সেশন ইমপোর্ট হয়েছে ({{duplicates}}টি ডুপ্লিকেট এড়িয়ে গেছে)",
+  "import.success":
+    "{{new}}টি নতুন সেশন ইমপোর্ট হয়েছে ({{duplicates}}টি ডুপ্লিকেট এড়িয়ে গেছে)",
 
   // Update 7: Accessibility
   "a11y.skipToMain": "মূল বিষয়বস্তুতে যান",
 
   // Update 8: Duplicate Detection
   "import.duplicateTitle": "ডুপ্লিকেট পাওয়া গেছে",
-  "import.duplicateDesc": "{{count}}টি সেশন ইতিমধ্যে বিদ্যমান। আপনি কী করতে চান?",
+  "import.duplicateDesc":
+    "{{count}}টি সেশন ইতিমধ্যে বিদ্যমান। আপনি কী করতে চান?",
   "import.skipDuplicates": "ডুপ্লিকেট এড়িয়ে যান",
   "import.overwriteDuplicates": "নতুন ডেটা দিয়ে ওভাররাইট করুন",
 
   // Favorite toggle
   "techniques.favorite": "প্রিয়তে যোগ করুন",
   "techniques.unfavorite": "প্রিয় থেকে সরান",
+  "settings.reminders.deleteConfirmTitle": "রিমাইন্ডার মুছে ফেলবেন?",
+  "settings.reminders.deleteConfirmDesc":
+    "এই রিমাইন্ডারটি স্থায়ীভাবে মুছে ফেলা হবে।",
 };
