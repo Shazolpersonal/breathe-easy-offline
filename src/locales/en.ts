@@ -63,73 +63,85 @@ export const en: Record<string, string> = {
 
   // Techniques
   "technique.box-breathing.name": "Box Breathing",
-  "technique.box-breathing.description": "Equal timing for all four phases. Used by Navy SEALs to stay calm under pressure.",
+  "technique.box-breathing.description":
+    "Equal timing for all four phases. Used by Navy SEALs to stay calm under pressure.",
   "technique.box-breathing.benefits.0": "Reduces stress",
   "technique.box-breathing.benefits.1": "Improves focus",
   "technique.box-breathing.benefits.2": "Calms nervous system",
 
   "technique.4-7-8.name": "4-7-8 Relaxation",
-  "technique.4-7-8.description": "Dr. Andrew Weil's technique. A natural tranquilizer for the nervous system.",
+  "technique.4-7-8.description":
+    "Dr. Andrew Weil's technique. A natural tranquilizer for the nervous system.",
   "technique.4-7-8.benefits.0": "Promotes sleep",
   "technique.4-7-8.benefits.1": "Reduces anxiety",
   "technique.4-7-8.benefits.2": "Lowers heart rate",
 
   "technique.calm-breath.name": "Calm Breath",
-  "technique.calm-breath.description": "Simple 4-6 breathing pattern. Longer exhale activates the parasympathetic system.",
+  "technique.calm-breath.description":
+    "Simple 4-6 breathing pattern. Longer exhale activates the parasympathetic system.",
   "technique.calm-breath.benefits.0": "Quick calm down",
   "technique.calm-breath.benefits.1": "Easy to learn",
   "technique.calm-breath.benefits.2": "Reduces tension",
 
   "technique.equal-breathing.name": "Equal Breathing",
-  "technique.equal-breathing.description": "Sama Vritti — balance inhale and exhale for equilibrium and presence.",
+  "technique.equal-breathing.description":
+    "Sama Vritti — balance inhale and exhale for equilibrium and presence.",
   "technique.equal-breathing.benefits.0": "Balances mind",
   "technique.equal-breathing.benefits.1": "Improves concentration",
   "technique.equal-breathing.benefits.2": "Grounds energy",
 
   "technique.wim-hof.name": "Wim Hof Method",
-  "technique.wim-hof.description": "Power breathing followed by a long retention. Energizing and invigorating.",
+  "technique.wim-hof.description":
+    "Power breathing followed by a long retention. Energizing and invigorating.",
   "technique.wim-hof.benefits.0": "Boosts energy",
   "technique.wim-hof.benefits.1": "Strengthens immunity",
   "technique.wim-hof.benefits.2": "Increases willpower",
 
   "technique.physiological-sigh.name": "Physiological Sigh",
-  "technique.physiological-sigh.description": "Stanford-researched double inhale followed by a long exhale. The fastest way to calm down in real-time.",
+  "technique.physiological-sigh.description":
+    "Stanford-researched double inhale followed by a long exhale. The fastest way to calm down in real-time.",
   "technique.physiological-sigh.benefits.0": "Instant calm",
   "technique.physiological-sigh.benefits.1": "Reduces CO₂",
   "technique.physiological-sigh.benefits.2": "Science-backed",
 
   "technique.resonant-breathing.name": "Resonant Breathing",
-  "technique.resonant-breathing.description": "5.5 breaths per minute — the ideal rate for heart rate variability and nervous system balance.",
+  "technique.resonant-breathing.description":
+    "5.5 breaths per minute — the ideal rate for heart rate variability and nervous system balance.",
   "technique.resonant-breathing.benefits.0": "Maximizes HRV",
   "technique.resonant-breathing.benefits.1": "Deep relaxation",
   "technique.resonant-breathing.benefits.2": "Emotional balance",
 
   "technique.alternate-nostril.name": "Alternate Nostril (Nadi Shodhana)",
-  "technique.alternate-nostril.description": "Ancient yogic technique. Balances left and right brain hemispheres for mental clarity.",
+  "technique.alternate-nostril.description":
+    "Ancient yogic technique. Balances left and right brain hemispheres for mental clarity.",
   "technique.alternate-nostril.benefits.0": "Balances hemispheres",
   "technique.alternate-nostril.benefits.1": "Reduces anxiety",
   "technique.alternate-nostril.benefits.2": "Enhances focus",
 
   "technique.diaphragmatic.name": "Diaphragmatic Breathing",
-  "technique.diaphragmatic.description": "Deep belly breathing that strengthens the diaphragm. Foundation of all breathing practices.",
+  "technique.diaphragmatic.description":
+    "Deep belly breathing that strengthens the diaphragm. Foundation of all breathing practices.",
   "technique.diaphragmatic.benefits.0": "Strengthens diaphragm",
   "technique.diaphragmatic.benefits.1": "Lowers blood pressure",
   "technique.diaphragmatic.benefits.2": "Improves core stability",
 
   "technique.pursed-lip.name": "Pursed Lip Breathing",
-  "technique.pursed-lip.description": "Medical-grade technique for COPD and asthma patients. Slows breathing rate and improves ventilation.",
+  "technique.pursed-lip.description":
+    "Medical-grade technique for COPD and asthma patients. Slows breathing rate and improves ventilation.",
   "technique.pursed-lip.benefits.0": "Opens airways",
   "technique.pursed-lip.benefits.1": "Reduces breathlessness",
   "technique.pursed-lip.benefits.2": "Medical-grade",
 
   "technique.energizing-breath.name": "Energizing Breath (2-1-4-1)",
-  "technique.energizing-breath.description": "Quick inhale, short hold, longer exhale pattern. Activates the sympathetic system for alertness.",
+  "technique.energizing-breath.description":
+    "Quick inhale, short hold, longer exhale pattern. Activates the sympathetic system for alertness.",
   "technique.energizing-breath.benefits.0": "Increases alertness",
   "technique.energizing-breath.benefits.1": "Morning energizer",
   "technique.energizing-breath.benefits.2": "Sharpens mind",
 
   "technique.4-4-6-2.name": "Sleep Breath (4-4-6-2)",
-  "technique.4-4-6-2.description": "Optimized for falling asleep. Extended exhale with brief pause creates a gentle lulling rhythm.",
+  "technique.4-4-6-2.description":
+    "Optimized for falling asleep. Extended exhale with brief pause creates a gentle lulling rhythm.",
   "technique.4-4-6-2.benefits.0": "Promotes deep sleep",
   "technique.4-4-6-2.benefits.1": "Reduces racing thoughts",
   "technique.4-4-6-2.benefits.2": "Gentle rhythm",
@@ -166,7 +178,8 @@ export const en: Record<string, string> = {
   "techniques.customDefault": "Custom Technique",
   "techniques.delete": "Delete",
   "techniques.deleteConfirmTitle": "Delete technique?",
-  "techniques.deleteConfirmDesc": "This custom technique will be permanently removed. This action cannot be undone.",
+  "techniques.deleteConfirmDesc":
+    "This custom technique will be permanently removed. This action cannot be undone.",
   "techniques.searchPlaceholder": "Search techniques...",
   "techniques.filterAll": "All",
   "techniques.filterFavorites": "Favorites",
@@ -182,7 +195,8 @@ export const en: Record<string, string> = {
   "techniques.validation.holdRange": "Hold must be 0-30 seconds.",
   "techniques.validation.multiplierRange": "Multiplier must be 0.5-3.",
   "techniques.validation.stepsRange": "Steps must be 2-10.",
-  "techniques.validation.descTooLong": "Description must be under 200 characters.",
+  "techniques.validation.descTooLong":
+    "Description must be under 200 characters.",
 
   // Stats
   "stats.title": "Statistics",
@@ -204,10 +218,12 @@ export const en: Record<string, string> = {
   "stats.last30": "Last 30 Days",
   "stats.unlocked": "Unlocked ({{count}})",
   "stats.locked": "Locked ({{count}})",
-  "stats.noJournal": "No journal entries yet. After a session, write how you felt!",
+  "stats.noJournal":
+    "No journal entries yet. After a session, write how you felt!",
   "stats.noSessions": "No sessions in {{month}}.",
   "stats.emptyTitle": "Your journey starts here",
-  "stats.emptyDesc": "Complete your first breathing session to see your stats, streaks, and progress.",
+  "stats.emptyDesc":
+    "Complete your first breathing session to see your stats, streaks, and progress.",
   "stats.lifetime": "Lifetime Summary",
   "stats.totalSessions": "Total Sessions",
   "stats.totalHours": "Hours Practiced",
@@ -222,11 +238,14 @@ export const en: Record<string, string> = {
   "stats.nextMonth": "Next month",
   "stats.techniqueBreakdown": "Technique Breakdown",
   "stats.moodTrend": "Mood Trend",
-  "stats.moodTrendDesc": "Daily mood (faded) with 7-day rolling average (solid)",
+  "stats.moodTrendDesc":
+    "Daily mood (faded) with 7-day rolling average (solid)",
   "stats.xpEarned": "XP Earned (30 Days)",
   "stats.report.dailyChart": "Daily Minutes",
-  "stats.report.summary": "You breathed {{minutes}} minutes across {{sessions}} sessions in {{month}}.",
-  "stats.report.topTechnique": "Your most-used technique was {{name}} ({{count}} sessions).",
+  "stats.report.summary":
+    "You breathed {{minutes}} minutes across {{sessions}} sessions in {{month}}.",
+  "stats.report.topTechnique":
+    "Your most-used technique was {{name}} ({{count}} sessions).",
   "stats.report.streak": "Your longest streak was {{days}} days.",
   "stats.report.avgCalm": "Average calm score: {{score}}%.",
   "stats.report.sessions": "Sessions",
@@ -252,16 +271,19 @@ export const en: Record<string, string> = {
   "settings.voiceEn": "English Voice",
   "settings.voiceBn": "Bengali Voice",
   "settings.voiceAuto": "Auto (best available)",
-  "settings.voiceBnUnavailable": "No Bengali voice found on this device. The app will use the best available fallback.",
+  "settings.voiceBnUnavailable":
+    "No Bengali voice found on this device. The app will use the best available fallback.",
   "settings.voiceCues": "Voice Cues",
   "settings.cuePhaseNames": "Phase Names",
-  "settings.cuePhaseNamesDesc": "\"Breathe In\", \"Hold\", \"Breathe Out\"",
+  "settings.cuePhaseNamesDesc": '"Breathe In", "Hold", "Breathe Out"',
   "settings.cueCountdown": "Breathing Countdown",
-  "settings.cueCountdownDesc": "Count down 3... 2... 1... before each phase ends",
+  "settings.cueCountdownDesc":
+    "Count down 3... 2... 1... before each phase ends",
   "settings.cueSessionStart": "Session Start",
-  "settings.cueSessionStartDesc": "\"Let's begin. Find a comfortable position.\"",
+  "settings.cueSessionStartDesc":
+    '"Let\'s begin. Find a comfortable position."',
   "settings.cueSessionEnd": "Session Complete",
-  "settings.cueSessionEndDesc": "\"Well done. You completed X minutes.\"",
+  "settings.cueSessionEndDesc": '"Well done. You completed X minutes."',
   "settings.cueCycleMilestone": "Cycle Milestones",
   "settings.cueCycleMilestoneDesc": "Announce every 5 cycles completed",
   "settings.cueEncouragement": "Encouragement",
@@ -273,13 +295,16 @@ export const en: Record<string, string> = {
   "settings.visualization": "Breathing Visualization",
   "settings.reminders": "Breathing Reminders",
   "settings.reminders.add": "Add",
-  "settings.reminders.unsupported": "Notifications not supported in this browser.",
-  "settings.reminders.denied": "Notifications blocked. Enable them in browser settings.",
+  "settings.reminders.unsupported":
+    "Notifications not supported in this browser.",
+  "settings.reminders.denied":
+    "Notifications blocked. Enable them in browser settings.",
   "settings.reminders.default": "Enable notifications for reminders.",
   "settings.reminders.enableButton": "Enable Notifications",
   "settings.reminders.empty": "No reminders yet. Add one to stay consistent!",
   "settings.reminders.messagePlaceholder": "Reminder message",
-  "settings.reminders.warning": "⚠️ Reminders only fire while the app/tab is open. For best results, keep the PWA installed.",
+  "settings.reminders.warning":
+    "⚠️ Reminders only fire while the app/tab is open. For best results, keep the PWA installed.",
   "settings.reminders.defaultMessage": "Time for your breathing break! 🌬️",
   "settings.data": "Data",
   "settings.export": "Export",
@@ -296,8 +321,9 @@ export const en: Record<string, string> = {
   "settings.neverBacked": "Never backed up",
   "settings.backupWarning": "⚠️ Back up your data to avoid losing progress!",
   "settings.install": "Install App",
-  "settings.installDesc": "On your phone, open this app in Chrome or Safari, tap the share/menu button, and choose",
-  "settings.installAction": "\"Add to Home Screen\"",
+  "settings.installDesc":
+    "On your phone, open this app in Chrome or Safari, tap the share/menu button, and choose",
+  "settings.installAction": '"Add to Home Screen"',
   "settings.installOffline": ". The app works fully offline once installed.",
   "settings.notifDenied": "Notification permission denied",
   "settings.accessibility": "Accessibility",
@@ -332,7 +358,8 @@ export const en: Record<string, string> = {
   "playlists.play": "Play",
   "playlists.delete": "Delete",
   "playlists.deleteConfirmTitle": "Delete playlist?",
-  "playlists.deleteConfirmDesc": "This playlist will be permanently removed. This action cannot be undone.",
+  "playlists.deleteConfirmDesc":
+    "This playlist will be permanently removed. This action cannot be undone.",
 
   // Programs
   "programs.title": "Guided Programs",
@@ -347,46 +374,80 @@ export const en: Record<string, string> = {
   "programs.daysCount": "{{count}} days",
 
   "program.stress-relief-7.name": "7-Day Stress Relief",
-  "program.stress-relief-7.description": "Progressive relaxation techniques to melt away stress, one day at a time.",
+  "program.stress-relief-7.description":
+    "Progressive relaxation techniques to melt away stress, one day at a time.",
   "program.sleep-better-14.name": "Sleep Better in 14 Days",
-  "program.sleep-better-14.description": "Evening breathing routines designed to quiet your mind before bed.",
+  "program.sleep-better-14.description":
+    "Evening breathing routines designed to quiet your mind before bed.",
   "program.focus-training-10.name": "Focus Training",
-  "program.focus-training-10.description": "10 days of energizing breath patterns to sharpen concentration and mental clarity.",
+  "program.focus-training-10.description":
+    "10 days of energizing breath patterns to sharpen concentration and mental clarity.",
 
   // Program day tips
-  "program.stress-relief-7.day1.tip": "Start gentle. Focus only on the exhale being longer than the inhale.",
-  "program.stress-relief-7.day2.tip": "Today we extend the duration. Let tension leave with each breath.",
-  "program.stress-relief-7.day3.tip": "Box breathing adds holds — these pauses quiet the mind.",
-  "program.stress-relief-7.day4.tip": "Notice how your body feels different after just a few cycles.",
-  "program.stress-relief-7.day5.tip": "The 4-7-8 pattern is a natural tranquilizer. Let it work.",
-  "program.stress-relief-7.day6.tip": "You're building a skill. Each session makes the next one easier.",
-  "program.stress-relief-7.day7.tip": "Final day! You've built a real stress-relief habit. Keep going.",
+  "program.stress-relief-7.day1.tip":
+    "Start gentle. Focus only on the exhale being longer than the inhale.",
+  "program.stress-relief-7.day2.tip":
+    "Today we extend the duration. Let tension leave with each breath.",
+  "program.stress-relief-7.day3.tip":
+    "Box breathing adds holds — these pauses quiet the mind.",
+  "program.stress-relief-7.day4.tip":
+    "Notice how your body feels different after just a few cycles.",
+  "program.stress-relief-7.day5.tip":
+    "The 4-7-8 pattern is a natural tranquilizer. Let it work.",
+  "program.stress-relief-7.day6.tip":
+    "You're building a skill. Each session makes the next one easier.",
+  "program.stress-relief-7.day7.tip":
+    "Final day! You've built a real stress-relief habit. Keep going.",
 
-  "program.sleep-better-14.day1.tip": "Do this in bed with lights off. Breathe through your nose.",
-  "program.sleep-better-14.day2.tip": "Let each exhale be like releasing the day's weight.",
-  "program.sleep-better-14.day3.tip": "The 4-7-8 was designed specifically for sleep. Trust the pattern.",
-  "program.sleep-better-14.day4.tip": "Close your eyes. Let the counting replace your thoughts.",
-  "program.sleep-better-14.day5.tip": "Your body is learning this cue means 'time to rest'.",
-  "program.sleep-better-14.day6.tip": "Box breathing before bed clears mental clutter.",
-  "program.sleep-better-14.day7.tip": "One week done! Notice any changes in how quickly you fall asleep?",
-  "program.sleep-better-14.day8.tip": "Consistency matters more than duration. Show up each night.",
-  "program.sleep-better-14.day9.tip": "Equal breathing balances your nervous system for deep rest.",
-  "program.sleep-better-14.day10.tip": "You're rewiring your bedtime routine. Keep at it.",
-  "program.sleep-better-14.day11.tip": "The long hold is where the magic happens. Embrace it.",
-  "program.sleep-better-14.day12.tip": "Your sleep quality should be noticeably improving by now.",
-  "program.sleep-better-14.day13.tip": "Almost there. This is becoming second nature.",
-  "program.sleep-better-14.day14.tip": "Congratulations! You've built a powerful sleep ritual. 🎉",
+  "program.sleep-better-14.day1.tip":
+    "Do this in bed with lights off. Breathe through your nose.",
+  "program.sleep-better-14.day2.tip":
+    "Let each exhale be like releasing the day's weight.",
+  "program.sleep-better-14.day3.tip":
+    "The 4-7-8 was designed specifically for sleep. Trust the pattern.",
+  "program.sleep-better-14.day4.tip":
+    "Close your eyes. Let the counting replace your thoughts.",
+  "program.sleep-better-14.day5.tip":
+    "Your body is learning this cue means 'time to rest'.",
+  "program.sleep-better-14.day6.tip":
+    "Box breathing before bed clears mental clutter.",
+  "program.sleep-better-14.day7.tip":
+    "One week done! Notice any changes in how quickly you fall asleep?",
+  "program.sleep-better-14.day8.tip":
+    "Consistency matters more than duration. Show up each night.",
+  "program.sleep-better-14.day9.tip":
+    "Equal breathing balances your nervous system for deep rest.",
+  "program.sleep-better-14.day10.tip":
+    "You're rewiring your bedtime routine. Keep at it.",
+  "program.sleep-better-14.day11.tip":
+    "The long hold is where the magic happens. Embrace it.",
+  "program.sleep-better-14.day12.tip":
+    "Your sleep quality should be noticeably improving by now.",
+  "program.sleep-better-14.day13.tip":
+    "Almost there. This is becoming second nature.",
+  "program.sleep-better-14.day14.tip":
+    "Congratulations! You've built a powerful sleep ritual. 🎉",
 
-  "program.focus-training-10.day1.tip": "Box breathing trains your attention. Count precisely.",
-  "program.focus-training-10.day2.tip": "If your mind wanders, gently bring it back to counting.",
-  "program.focus-training-10.day3.tip": "Equal breath = equal mind. Find your balance point.",
-  "program.focus-training-10.day4.tip": "Try this before deep work or study for best results.",
-  "program.focus-training-10.day5.tip": "Halfway! Your focus muscle is getting stronger.",
-  "program.focus-training-10.day6.tip": "The holds are attention anchors. Use them fully.",
-  "program.focus-training-10.day7.tip": "Power breathing floods your brain with oxygen. Stay alert!",
-  "program.focus-training-10.day8.tip": "Mix precision counting with awareness of body sensations.",
-  "program.focus-training-10.day9.tip": "Long sessions build sustained attention capacity.",
-  "program.focus-training-10.day10.tip": "Final day! You've trained a laser-sharp focus tool. Use it daily. 🎯",
+  "program.focus-training-10.day1.tip":
+    "Box breathing trains your attention. Count precisely.",
+  "program.focus-training-10.day2.tip":
+    "If your mind wanders, gently bring it back to counting.",
+  "program.focus-training-10.day3.tip":
+    "Equal breath = equal mind. Find your balance point.",
+  "program.focus-training-10.day4.tip":
+    "Try this before deep work or study for best results.",
+  "program.focus-training-10.day5.tip":
+    "Halfway! Your focus muscle is getting stronger.",
+  "program.focus-training-10.day6.tip":
+    "The holds are attention anchors. Use them fully.",
+  "program.focus-training-10.day7.tip":
+    "Power breathing floods your brain with oxygen. Stay alert!",
+  "program.focus-training-10.day8.tip":
+    "Mix precision counting with awareness of body sensations.",
+  "program.focus-training-10.day9.tip":
+    "Long sessions build sustained attention capacity.",
+  "program.focus-training-10.day10.tip":
+    "Final day! You've trained a laser-sharp focus tool. Use it daily. 🎯",
 
   // Moods
   "mood.1": "Stressed",
@@ -509,12 +570,16 @@ export const en: Record<string, string> = {
   "challenge.adaptiveNote": "Target: {{target}} {{unit}} (adapted to you)",
 
   // Smart suggestions
-  "suggestion.morning.noSession": "Good morning! Start your day with energizing breath work.",
+  "suggestion.morning.noSession":
+    "Good morning! Start your day with energizing breath work.",
   "suggestion.morning.hasSession": "Great start! Keep the momentum going.",
-  "suggestion.afternoon.noSession": "Afternoon reset — a quick session boosts focus.",
-  "suggestion.afternoon.hasSession": "{{min}} min today! Try a calming technique next.",
+  "suggestion.afternoon.noSession":
+    "Afternoon reset — a quick session boosts focus.",
+  "suggestion.afternoon.hasSession":
+    "{{min}} min today! Try a calming technique next.",
   "suggestion.evening": "Wind down for the evening with relaxing breath work.",
-  "suggestion.night": "Can't sleep? The 4-7-8 technique is a natural sleep aid.",
+  "suggestion.night":
+    "Can't sleep? The 4-7-8 technique is a natural sleep aid.",
   "suggestion.adaptive": "When you're {{mood}}, {{technique}} helped you most.",
   "suggestion.start": "Start {{technique}}",
 
@@ -556,16 +621,19 @@ export const en: Record<string, string> = {
   // Adaptive Intelligence
   "adaptive.smartSession": "Smart Session",
   "adaptive.startSmart": "Start Smart",
-  "adaptive.moodBased": "Based on your mood history, this technique works best for you.",
+  "adaptive.moodBased":
+    "Based on your mood history, this technique works best for you.",
   "adaptive.timeBased": "Your best technique for the {{bucket}}.",
   "adaptive.overall": "Your most effective technique based on past sessions.",
 
   // Breath Detection
   "settings.intelligence": "Intelligence & Sensors",
   "settings.breathDetection": "Breathing Detection",
-  "settings.breathDetectionDesc": "Use microphone to detect breathing rhythm. All data stays on-device.",
+  "settings.breathDetectionDesc":
+    "Use microphone to detect breathing rhythm. All data stays on-device.",
   "settings.heartRate": "Heart Rate Monitor",
-  "settings.heartRateDesc": "Use camera to estimate heart rate via fingertip. All data stays on-device.",
+  "settings.heartRateDesc":
+    "Use camera to estimate heart rate via fingertip. All data stays on-device.",
   "breath.micError": "Could not access microphone. Please check permissions.",
   "breath.micOn": "Mic listening",
   "breath.micOff": "Enable mic",
@@ -578,7 +646,8 @@ export const en: Record<string, string> = {
   "heart.monitor": "Heart Rate",
   "heart.warmingUp": "Warming up...",
   "heart.placeFingerTip": "Place your fingertip over the rear camera",
-  "heart.instructions": "Cover the camera lens completely with your fingertip. Keep still for best results.",
+  "heart.instructions":
+    "Cover the camera lens completely with your fingertip. Keep still for best results.",
   "heart.signalQuality": "Signal Quality",
   "heart.coherence": "Breathing Coherence",
   "heart.highCoherence": "Heart rate synced with breathing",
@@ -623,19 +692,28 @@ export const en: Record<string, string> = {
 
   // Insights
   "stats.insights": "Insights",
-  "stats.insights.empty": "Complete a few sessions this week to unlock personalized insights.",
+  "stats.insights.empty":
+    "Complete a few sessions this week to unlock personalized insights.",
   "stats.insights.subtitle": "Personalized insights from your last 7 days",
-  "insight.noSessions": "No sessions this week yet. Start one to build your insights!",
-  "insight.goodStart": "Good start this week! A few more sessions will unlock deeper insights.",
+  "insight.noSessions":
+    "No sessions this week yet. Start one to build your insights!",
+  "insight.goodStart":
+    "Good start this week! A few more sessions will unlock deeper insights.",
   "insight.streakGoing": "You're on a {{days}}-day streak! Keep it going 🔥",
   "insight.bestTime": "You breathe best at {{time}} — that's your sweet spot.",
-  "insight.techniqueCompare": "{{best}} improved your mood {{pct}}% more than {{second}} this week.",
-  "insight.bestTechnique": "{{name}} was your most effective technique for mood improvement.",
-  "insight.nearRecord": "Just {{days}} more days to beat your longest streak ever!",
+  "insight.techniqueCompare":
+    "{{best}} improved your mood {{pct}}% more than {{second}} this week.",
+  "insight.bestTechnique":
+    "{{name}} was your most effective technique for mood improvement.",
+  "insight.nearRecord":
+    "Just {{days}} more days to beat your longest streak ever!",
   "insight.onRecord": "You're on your longest streak ever! 🏆",
-  "insight.moreSessionsUp": "{{count}} more sessions than last week — great momentum!",
-  "insight.fewerSessions": "{{count}} fewer sessions than last week. Let's get back on track!",
-  "insight.durationUp": "You averaged {{current}} min/session, up from {{previous}} min last week.",
+  "insight.moreSessionsUp":
+    "{{count}} more sessions than last week — great momentum!",
+  "insight.fewerSessions":
+    "{{count}} fewer sessions than last week. Let's get back on track!",
+  "insight.durationUp":
+    "You averaged {{current}} min/session, up from {{previous}} min last week.",
 
   // Friend Challenge
   "challenge.friend.title": "Challenge a Friend",
@@ -652,12 +730,15 @@ export const en: Record<string, string> = {
   "challenge.friend.share": "Share",
   "challenge.friend.copied": "Challenge link copied!",
   "challenge.friend.shareTitle": "Breathing Challenge",
-  "challenge.friend.shareText": "{{name}} challenged you to a breathing session!",
+  "challenge.friend.shareText":
+    "{{name}} challenged you to a breathing session!",
   "challenge.friend.incomingTitle": "You've Been Challenged!",
-  "challenge.friend.incomingDesc": "{{name}} has challenged you to a breathing session",
+  "challenge.friend.incomingDesc":
+    "{{name}} has challenged you to a breathing session",
   "challenge.friend.acceptButton": "Accept Challenge",
   "challenge.friend.accepted": "Challenge accepted!",
-  "challenge.friend.acceptedMessage": "Challenge accepted! Start your session now.",
+  "challenge.friend.acceptedMessage":
+    "Challenge accepted! Start your session now.",
   "challenge.friend.active": "Friend Challenges",
   "challenge.friend.from": "from {{name}}",
 
@@ -667,11 +748,13 @@ export const en: Record<string, string> = {
 
   // PWA Install
   "install.title": "Install Muhurto Breath",
-  "install.desc": "Install for offline use, faster loading, and home screen shortcuts.",
+  "install.desc":
+    "Install for offline use, faster loading, and home screen shortcuts.",
   "install.button": "Install",
   "install.manual.title": "Get the Free App",
   "install.manual.ios": "Tap the Share button, then 'Add to Home Screen'",
-  "install.manual.android": "Tap the browser menu (⋮), then 'Add to Home Screen'",
+  "install.manual.android":
+    "Tap the browser menu (⋮), then 'Add to Home Screen'",
   "install.manual.desktop": "Use your browser menu to install this app",
   "install.manual.free": "Free · Offline · No app store needed",
 
@@ -703,18 +786,22 @@ export const en: Record<string, string> = {
   "onboarding.skip": "Skip",
   "onboarding.start": "Start Breathing",
   "onboarding.feature1.title": "Guided Techniques",
-  "onboarding.feature1.desc": "Science-backed breathing patterns for calm, focus, and better sleep.",
+  "onboarding.feature1.desc":
+    "Science-backed breathing patterns for calm, focus, and better sleep.",
   "onboarding.feature2.title": "Track Your Progress",
-  "onboarding.feature2.desc": "Mood tracking, streaks, badges, and detailed insights into your practice.",
+  "onboarding.feature2.desc":
+    "Mood tracking, streaks, badges, and detailed insights into your practice.",
   "onboarding.feature3.title": "Works Offline",
-  "onboarding.feature3.desc": "Your data stays on your device. No account needed — completely private.",
+  "onboarding.feature3.desc":
+    "Your data stays on your device. No account needed — completely private.",
   "onboarding.featuresTitle": "What you can do",
   "onboarding.personalizeTitle": "Make it yours",
   "onboarding.chooseTheme": "Choose a theme",
   "onboarding.voiceGuidance": "Voice guidance during sessions",
   "onboarding.hapticFeedback": "Vibration feedback on phase changes",
   "onboarding.installTitle": "Install for the best experience",
-  "onboarding.installDesc": "Add to your home screen for instant access, offline use, and a full-screen experience.",
+  "onboarding.installDesc":
+    "Add to your home screen for instant access, offline use, and a full-screen experience.",
   "onboarding.installButton": "Install Now",
   "onboarding.maybeLater": "Maybe Later",
   "onboarding.step": "Step {{current}} of {{total}}",
@@ -732,40 +819,50 @@ export const en: Record<string, string> = {
 
   // Donate
   "donate.title": "Support Muhurto",
-  "donate.subtitle": "Help us reach millions with free breathing tools. Every donation fuels our mission.",
+  "donate.subtitle":
+    "Help us reach millions with free breathing tools. Every donation fuels our mission.",
   "donate.button": "Donate",
   "donate.custom": "Custom amount",
-  "donate.thanks": "Thank you for your generous support! You're helping millions breathe better.",
+  "donate.thanks":
+    "Thank you for your generous support! You're helping millions breathe better.",
   "donate.thanksTitle": "Thank You! 💚",
-  "donate.secure": "Payments are processed securely by 2Checkout (Verifone). We never see your card details.",
+  "donate.secure":
+    "Payments are processed securely by 2Checkout (Verifone). We never see your card details.",
   "donate.invalidAmount": "Please choose or enter an amount",
-  "donate.unavailable": "Payment system is loading. Please try again in a moment.",
+  "donate.unavailable":
+    "Payment system is loading. Please try again in a moment.",
   "donate.supportUs": "Support Us",
   "donate.supportSubtitle": "Help us keep Muhurto free for everyone",
   "donate.sessionSupport": "Support Us ❤️",
 
   // Guide Page
   "guide.title": "Guide",
-  "guide.subtitle": "Everything you need to know about Muhurto Breath — your mindful breathing companion.",
+  "guide.subtitle":
+    "Everything you need to know about Muhurto Breath — your mindful breathing companion.",
   "guide.version": "v2.0",
   "guide.searchPlaceholder": "Search guide...",
 
   // Getting Started
   "guide.gettingStarted": "Getting Started",
   "guide.whatIs": "What is Muhurto Breath?",
-  "guide.whatIsDesc": "Muhurto Breath is a free, privacy-first breathing exercise app. It guides you through science-backed breathing techniques with visual, audio, and haptic cues. All your data stays on your device — no account needed.",
+  "guide.whatIsDesc":
+    "Muhurto Breath is a free, privacy-first breathing exercise app. It guides you through science-backed breathing techniques with visual, audio, and haptic cues. All your data stays on your device — no account needed.",
   "guide.firstSession": "Your First Session",
-  "guide.firstStep1": "Tap \"Breathe\" in the bottom nav",
-  "guide.firstStep2": "Choose a technique (start with Box Breathing or Calm Breath)",
-  "guide.firstStep3": "Set your duration and tap \"Start\"",
+  "guide.firstStep1": 'Tap "Breathe" in the bottom nav',
+  "guide.firstStep2":
+    "Choose a technique (start with Box Breathing or Calm Breath)",
+  "guide.firstStep3": 'Set your duration and tap "Start"',
   "guide.firstStep4": "Follow the breathing circle — inhale, hold, exhale",
-  "guide.firstStep5": "When done, rate your mood and optionally journal how you feel",
+  "guide.firstStep5":
+    "When done, rate your mood and optionally journal how you feel",
   "guide.installPWA": "Install as App (PWA)",
-  "guide.installPWADesc": "For the best experience, install Muhurto Breath on your device. On your phone, open the app in Chrome or Safari, tap the Share/Menu button, and select \"Add to Home Screen\". The app works fully offline once installed.",
+  "guide.installPWADesc":
+    'For the best experience, install Muhurto Breath on your device. On your phone, open the app in Chrome or Safari, tap the Share/Menu button, and select "Add to Home Screen". The app works fully offline once installed.',
 
   // Techniques (12 total)
   "guide.techniques": "Breathing Techniques",
-  "guide.techniquesIntro": "Muhurto Breath includes 12 scientifically-backed breathing techniques — from beginner-friendly to advanced. Each has a unique rhythm designed for specific outcomes.",
+  "guide.techniquesIntro":
+    "Muhurto Breath includes 12 scientifically-backed breathing techniques — from beginner-friendly to advanced. Each has a unique rhythm designed for specific outcomes.",
   "guide.table.technique": "Technique",
   "guide.table.pattern": "Pattern",
   "guide.table.level": "Level",
@@ -819,108 +916,151 @@ export const en: Record<string, string> = {
   "guide.tech.wim.diff": "Advanced",
   "guide.tech.wim.best": "Energy, immunity",
   "guide.phases": "Understanding Phases",
-  "guide.phasesDesc": "Each technique is a cycle of phases: Inhale, Hold, Exhale, and sometimes Hold-After-Exhale. The duration of each phase is measured in seconds. One complete pass through all phases = one cycle.",
+  "guide.phasesDesc":
+    "Each technique is a cycle of phases: Inhale, Hold, Exhale, and sometimes Hold-After-Exhale. The duration of each phase is measured in seconds. One complete pass through all phases = one cycle.",
   "guide.difficultyTitle": "Difficulty Levels & Unlocking",
   "guide.difficultyDesc1": "Techniques are tagged as",
   "guide.diffBeginner": "Beginner",
   "guide.diffIntermediate": "Intermediate",
   "guide.diffOr": "or",
   "guide.diffAdvanced": "Advanced",
-  "guide.difficultyDesc2": "Intermediate techniques unlock after 10 total sessions, and advanced after 25 sessions.",
+  "guide.difficultyDesc2":
+    "Intermediate techniques unlock after 10 total sessions, and advanced after 25 sessions.",
   "guide.choosingTechnique": "How to Choose a Technique",
-  "guide.choosingTechniqueDesc": "For stress → Box Breathing or Physiological Sigh. For sleep → 4-7-8 or Sleep Breath. For focus → Energizing Breath or Box Breathing. For anxiety → Calm Breath or Resonant Breathing. For medical needs → Pursed Lip or Diaphragmatic. Start with shorter sessions (3-5 min) and gradually increase.",
+  "guide.choosingTechniqueDesc":
+    "For stress → Box Breathing or Physiological Sigh. For sleep → 4-7-8 or Sleep Breath. For focus → Energizing Breath or Box Breathing. For anxiety → Calm Breath or Resonant Breathing. For medical needs → Pursed Lip or Diaphragmatic. Start with shorter sessions (3-5 min) and gradually increase.",
 
   // Sessions
   "guide.sessions": "Sessions & Features",
   "guide.sessionFlow": "Session Flow",
-  "guide.sessionFlowDesc": "Select a technique → set duration → Start → follow the visual breathing guide → session completes → see your calm score, XP earned, and mood change.",
+  "guide.sessionFlowDesc":
+    "Select a technique → set duration → Start → follow the visual breathing guide → session completes → see your calm score, XP earned, and mood change.",
   "guide.zenMode": "Zen Mode",
-  "guide.zenModeDesc": "Press F or tap the Zen button to hide all UI and focus purely on the breathing visualization. Press Esc to exit.",
+  "guide.zenModeDesc":
+    "Press F or tap the Zen button to hide all UI and focus purely on the breathing visualization. Press Esc to exit.",
   "guide.voiceGuidance": "Voice Guidance",
-  "guide.voiceGuidanceDesc": "Enable spoken cues in Settings. The voice announces phase names, countdowns, milestones, and encouragement. Speed, pitch, and volume are customizable.",
+  "guide.voiceGuidanceDesc":
+    "Enable spoken cues in Settings. The voice announces phase names, countdowns, milestones, and encouragement. Speed, pitch, and volume are customizable.",
   "guide.ambientSounds": "Ambient Soundscapes",
-  "guide.ambientSoundsDesc": "Choose from procedurally-generated Rain, Ocean, or Wind sounds during sessions. Volume is adjustable independently from voice.",
+  "guide.ambientSoundsDesc":
+    "Choose from procedurally-generated Rain, Ocean, or Wind sounds during sessions. Volume is adjustable independently from voice.",
   "guide.breathDetection": "Breathing Detection",
-  "guide.breathDetectionDesc": "Enable microphone-based breathing detection to measure your rhythm accuracy. All processing happens on-device — no audio is ever recorded or sent anywhere.",
+  "guide.breathDetectionDesc":
+    "Enable microphone-based breathing detection to measure your rhythm accuracy. All processing happens on-device — no audio is ever recorded or sent anywhere.",
   "guide.heartRate": "Heart Rate Monitor",
-  "guide.heartRateDesc": "Place your fingertip over the rear camera to estimate your heart rate. The app measures breathing coherence — how well your heart rate syncs with your breathing rhythm.",
+  "guide.heartRateDesc":
+    "Place your fingertip over the rear camera to estimate your heart rate. The app measures breathing coherence — how well your heart rate syncs with your breathing rhythm.",
   "guide.calmScore": "Calm Score",
-  "guide.calmScoreDesc": "After each session, you receive a calm score (0-100%) based on your breathing consistency, duration, and rhythm accuracy. Higher scores indicate deeper relaxation.",
+  "guide.calmScoreDesc":
+    "After each session, you receive a calm score (0-100%) based on your breathing consistency, duration, and rhythm accuracy. Higher scores indicate deeper relaxation.",
   "guide.estimatedFinish": "Estimated Finish Time",
-  "guide.estimatedFinishDesc": "During an active session, the app shows when your session will end (e.g. \"Ends at 10:35 PM\") so you can plan your time without watching the clock.",
+  "guide.estimatedFinishDesc":
+    'During an active session, the app shows when your session will end (e.g. "Ends at 10:35 PM") so you can plan your time without watching the clock.',
   "guide.breathingRate": "Breathing Rate",
-  "guide.breathingRateDesc": "A real-time metric showing your breaths per minute during the session. Track how your breathing rate slows as you relax deeper.",
+  "guide.breathingRateDesc":
+    "A real-time metric showing your breaths per minute during the session. Track how your breathing rate slows as you relax deeper.",
   "guide.visualizations": "Visualizations",
-  "guide.visualizationsDesc": "Choose between 4 breathing visualizations in Settings: Circle (default), Wave, Bars, and Mandala. Each provides a unique visual rhythm to follow.",
+  "guide.visualizationsDesc":
+    "Choose between 4 breathing visualizations in Settings: Circle (default), Wave, Bars, and Mandala. Each provides a unique visual rhythm to follow.",
   "guide.postSession": "Post-Session Insights",
-  "guide.postSessionDesc": "After each session, you see a summary with calm score, XP earned, mood change, breathing rate, and a personalized technique recommendation for your next session based on your performance.",
+  "guide.postSessionDesc":
+    "After each session, you see a summary with calm score, XP earned, mood change, breathing rate, and a personalized technique recommendation for your next session based on your performance.",
 
   // Custom Techniques
   "guide.customTech": "Custom Techniques",
-  "guide.customTechIntro": "Create your own breathing patterns from the Library tab → Custom section.",
-  "guide.customStep1": "Name your technique and optionally add a description and benefits",
-  "guide.customStep2": "Set durations for Inhale, Hold, Exhale, and Hold-After-Exhale (1-30 seconds each)",
-  "guide.customStep3": "Optionally enable Pyramid Mode — durations scale up then back down each cycle",
-  "guide.customStep4": "Tap \"Create Technique\"",
+  "guide.customTechIntro":
+    "Create your own breathing patterns from the Library tab → Custom section.",
+  "guide.customStep1":
+    "Name your technique and optionally add a description and benefits",
+  "guide.customStep2":
+    "Set durations for Inhale, Hold, Exhale, and Hold-After-Exhale (1-30 seconds each)",
+  "guide.customStep3":
+    "Optionally enable Pyramid Mode — durations scale up then back down each cycle",
+  "guide.customStep4": 'Tap "Create Technique"',
   "guide.pyramidMode": "Pyramid Mode",
-  "guide.pyramidModeDesc": "In pyramid mode, phase durations gradually increase from a start multiplier to a peak multiplier over a set number of steps, then decrease back. This creates a progressive challenge within each session.",
+  "guide.pyramidModeDesc":
+    "In pyramid mode, phase durations gradually increase from a start multiplier to a peak multiplier over a set number of steps, then decrease back. This creates a progressive challenge within each session.",
 
   // Playlists
   "guide.playlists": "Playlists",
-  "guide.playlistsIntro": "Chain multiple techniques into a single continuous session. Each step in a playlist has its own technique and duration.",
+  "guide.playlistsIntro":
+    "Chain multiple techniques into a single continuous session. Each step in a playlist has its own technique and duration.",
   "guide.playlistStep1": "Go to More → Playlists",
-  "guide.playlistStep2": "Tap \"New\"",
-  "guide.playlistStep3": "Name your playlist and add steps (technique + duration for each)",
-  "guide.playlistStep4": "Start the playlist — the app transitions seamlessly between techniques",
-  "guide.playlistExample": "Example: Start with 3 min of Calm Breath to warm up, then 5 min of Box Breathing for focus, then 2 min of 4-7-8 to wind down.",
+  "guide.playlistStep2": 'Tap "New"',
+  "guide.playlistStep3":
+    "Name your playlist and add steps (technique + duration for each)",
+  "guide.playlistStep4":
+    "Start the playlist — the app transitions seamlessly between techniques",
+  "guide.playlistExample":
+    "Example: Start with 3 min of Calm Breath to warm up, then 5 min of Box Breathing for focus, then 2 min of 4-7-8 to wind down.",
 
   // Programs
   "guide.programs": "Guided Programs",
-  "guide.programsIntro": "Structured multi-day programs that guide you through progressive breathing practices with daily tips.",
+  "guide.programsIntro":
+    "Structured multi-day programs that guide you through progressive breathing practices with daily tips.",
   "guide.programStress": "7-Day Stress Relief",
-  "guide.programStressDesc": "Progressive relaxation techniques starting with simple patterns and building to the 4-7-8. Designed to build a lasting stress-relief habit in one week.",
+  "guide.programStressDesc":
+    "Progressive relaxation techniques starting with simple patterns and building to the 4-7-8. Designed to build a lasting stress-relief habit in one week.",
   "guide.programSleep": "Sleep Better in 14 Days",
-  "guide.programSleepDesc": "Evening breathing routines designed for bedtime. Starts with gentle patterns and builds to longer, more calming sessions over two weeks.",
+  "guide.programSleepDesc":
+    "Evening breathing routines designed for bedtime. Starts with gentle patterns and builds to longer, more calming sessions over two weeks.",
   "guide.programFocus": "Focus Training (10 Days)",
-  "guide.programFocusDesc": "Energizing breath patterns to sharpen concentration. Includes precision counting exercises and power breathing for mental clarity.",
-  "guide.programsEnroll": "Enroll in a program from More → Programs. Complete one day at a time — each day includes a specific technique, duration, and a motivational tip.",
+  "guide.programFocusDesc":
+    "Energizing breath patterns to sharpen concentration. Includes precision counting exercises and power breathing for mental clarity.",
+  "guide.programsEnroll":
+    "Enroll in a program from More → Programs. Complete one day at a time — each day includes a specific technique, duration, and a motivational tip.",
 
   // Smart Features (NEW section)
   "guide.smartFeatures": "Smart Features",
-  "guide.smartFeaturesIntro": "Muhurto Breath includes intelligent features that adapt to your practice and make every session smoother.",
+  "guide.smartFeaturesIntro":
+    "Muhurto Breath includes intelligent features that adapt to your practice and make every session smoother.",
   "guide.wakeLock": "Screen Wake Lock",
-  "guide.wakeLockDesc": "During active sessions, your phone screen stays on automatically using the Web Wake Lock API. No more interruptions from screen timeout.",
+  "guide.wakeLockDesc":
+    "During active sessions, your phone screen stays on automatically using the Web Wake Lock API. No more interruptions from screen timeout.",
   "guide.dailyGoal": "Daily Goal",
-  "guide.dailyGoalDesc": "Set a daily breathing target (in minutes) from Settings. A progress ring on the Home screen shows your daily progress. Reaching your goal earns bonus XP.",
+  "guide.dailyGoalDesc":
+    "Set a daily breathing target (in minutes) from Settings. A progress ring on the Home screen shows your daily progress. Reaching your goal earns bonus XP.",
   "guide.quickResume": "Quick Resume",
-  "guide.quickResumeDesc": "The Home screen shows a \"Resume Last Session\" button if you completed a session recently. One tap to start the same technique and duration again.",
+  "guide.quickResumeDesc":
+    'The Home screen shows a "Resume Last Session" button if you completed a session recently. One tap to start the same technique and duration again.',
   "guide.sessionRecovery": "Session Recovery",
-  "guide.sessionRecoveryDesc": "If the app closes unexpectedly during a session, it automatically saves your progress. When you reopen, a dialog offers to resume where you left off.",
+  "guide.sessionRecoveryDesc":
+    "If the app closes unexpectedly during a session, it automatically saves your progress. When you reopen, a dialog offers to resume where you left off.",
   "guide.streakFreeze": "Streak Freeze",
-  "guide.streakFreezeDesc": "Earn streak freezes by maintaining long streaks (1 freeze per 7 consecutive days, max 3). If you miss a day, a freeze is used automatically to protect your streak.",
+  "guide.streakFreezeDesc":
+    "Earn streak freezes by maintaining long streaks (1 freeze per 7 consecutive days, max 3). If you miss a day, a freeze is used automatically to protect your streak.",
   "guide.weeklySummary": "Weekly Summary",
-  "guide.weeklySummaryDesc": "Every Monday, a summary card appears showing your past week's stats: total sessions, minutes practiced, XP earned, best calm score, and most-used technique.",
+  "guide.weeklySummaryDesc":
+    "Every Monday, a summary card appears showing your past week's stats: total sessions, minutes practiced, XP earned, best calm score, and most-used technique.",
   "guide.smartSuggestions": "Smart Suggestions",
-  "guide.smartSuggestionsDesc": "The app analyzes your session history and suggests optimal techniques, durations, and times of day based on your patterns and mood trends.",
+  "guide.smartSuggestionsDesc":
+    "The app analyzes your session history and suggests optimal techniques, durations, and times of day based on your patterns and mood trends.",
   "guide.journalInspiration": "Journal Prompts",
-  "guide.journalInspirationDesc": "After each session, the journal shows a rotating inspiration prompt to help you reflect on your practice. Prompts change daily to keep reflection fresh.",
+  "guide.journalInspirationDesc":
+    "After each session, the journal shows a rotating inspiration prompt to help you reflect on your practice. Prompts change daily to keep reflection fresh.",
 
   // Data & Backup (NEW section)
   "guide.dataBackup": "Data & Backup",
-  "guide.dataBackupIntro": "Your data is precious. Muhurto Breath offers multiple ways to protect and transfer your breathing practice history.",
+  "guide.dataBackupIntro":
+    "Your data is precious. Muhurto Breath offers multiple ways to protect and transfer your breathing practice history.",
   "guide.clipboardBackup": "Clipboard Backup",
-  "guide.clipboardBackupDesc": "One tap to copy your entire backup to clipboard, and one tap to restore from clipboard. The fastest way to transfer data between devices.",
+  "guide.clipboardBackupDesc":
+    "One tap to copy your entire backup to clipboard, and one tap to restore from clipboard. The fastest way to transfer data between devices.",
   "guide.backupReminder": "Backup Reminder",
-  "guide.backupReminderDesc": "If you haven't backed up in 7+ days, a gentle banner appears on the Home screen reminding you to export your data.",
+  "guide.backupReminderDesc":
+    "If you haven't backed up in 7+ days, a gentle banner appears on the Home screen reminding you to export your data.",
   "guide.importValidation": "Smart Import Validation",
-  "guide.importValidationDesc": "When importing data, the app validates every field (IDs, dates, durations) and reports specific errors. Corrupted entries are skipped while valid ones are imported.",
+  "guide.importValidationDesc":
+    "When importing data, the app validates every field (IDs, dates, durations) and reports specific errors. Corrupted entries are skipped while valid ones are imported.",
   "guide.duplicateDetection": "Duplicate Detection",
-  "guide.duplicateDetectionDesc": "During import, the app detects sessions that already exist and lets you choose to skip or overwrite duplicates. No accidental double-counting.",
+  "guide.duplicateDetectionDesc":
+    "During import, the app detects sessions that already exist and lets you choose to skip or overwrite duplicates. No accidental double-counting.",
 
   // Progress & Stats
   "guide.progress": "Progress & Stats",
   "guide.xpSystem": "XP System",
-  "guide.xpSystemDesc": "Earn XP after every session. XP is calculated from multiple factors:",
+  "guide.xpSystemDesc":
+    "Earn XP after every session. XP is calculated from multiple factors:",
   "guide.xp.base": "Base",
   "guide.xp.baseVal": "10 XP",
   "guide.xp.duration": "Duration",
@@ -937,21 +1077,27 @@ export const en: Record<string, string> = {
   "guide.xp.firstTodayVal": "+5",
   "guide.xp.challenges": "Challenges",
   "guide.xp.challengesVal": "+15 each",
-  "guide.xpCap": "Daily XP cap: 150 XP. This encourages consistent daily practice over marathon sessions.",
+  "guide.xpCap":
+    "Daily XP cap: 150 XP. This encourages consistent daily practice over marathon sessions.",
   "guide.levelsTitle": "Levels & Titles",
   "guide.xp.levelCol": "Level",
   "guide.xp.xpCol": "XP Required",
   "guide.xp.titleCol": "Title",
   "guide.streaks": "Streaks",
-  "guide.streaksDesc": "Complete at least one session per day to build your streak. Your current and longest streaks are displayed on the Stats page. Streaks reset if you miss a day (unless you have a streak freeze).",
+  "guide.streaksDesc":
+    "Complete at least one session per day to build your streak. Your current and longest streaks are displayed on the Stats page. Streaks reset if you miss a day (unless you have a streak freeze).",
   "guide.moodTracking": "Mood Tracking",
-  "guide.moodTrackingDesc": "Before and after each session, rate your mood from 1 (Stressed) to 5 (Calm). The app tracks your mood trends over time and calculates mood improvement per session.",
+  "guide.moodTrackingDesc":
+    "Before and after each session, rate your mood from 1 (Stressed) to 5 (Calm). The app tracks your mood trends over time and calculates mood improvement per session.",
   "guide.dailyChallenges": "Daily Challenges",
-  "guide.dailyChallengesDesc": "Three daily challenges appear on the Home screen (Easy, Medium, Hard). Complete all three for a +25 XP bonus. Challenges refresh daily at midnight and include goals like session count, breathing duration, calm score targets, or trying new techniques.",
+  "guide.dailyChallengesDesc":
+    "Three daily challenges appear on the Home screen (Easy, Medium, Hard). Complete all three for a +25 XP bonus. Challenges refresh daily at midnight and include goals like session count, breathing duration, calm score targets, or trying new techniques.",
   "guide.weeklyConsistency": "Weekly Consistency",
-  "guide.weeklyConsistencyDesc": "The Stats page shows a weekly consistency score based on regularity, session completion, and streak maintenance.",
+  "guide.weeklyConsistencyDesc":
+    "The Stats page shows a weekly consistency score based on regularity, session completion, and streak maintenance.",
   "guide.insights": "Personalized Insights",
-  "guide.insightsDesc": "After a few sessions, the Insights tab provides personalized observations: your best time of day, most effective technique, streak progress, and week-over-week comparisons.",
+  "guide.insightsDesc":
+    "After a few sessions, the Insights tab provides personalized observations: your best time of day, most effective technique, streak progress, and week-over-week comparisons.",
   "guide.allBadges": "All 15 Badges",
 
   // Keyboard Shortcuts
@@ -972,52 +1118,74 @@ export const en: Record<string, string> = {
   // Data & Privacy
   "guide.privacy": "Data & Privacy",
   "guide.localStorage": "100% Local Storage",
-  "guide.localStorageDesc": "All your sessions, moods, settings, and progress are stored in your browser's local storage. Nothing is ever sent to a server.",
+  "guide.localStorageDesc":
+    "All your sessions, moods, settings, and progress are stored in your browser's local storage. Nothing is ever sent to a server.",
   "guide.exportImport": "Export & Import",
-  "guide.exportImportDesc": "Back up your data anytime from Settings → Data → Export. This downloads a JSON file with all your data. To restore, use Import.",
+  "guide.exportImportDesc":
+    "Back up your data anytime from Settings → Data → Export. This downloads a JSON file with all your data. To restore, use Import.",
   "guide.csvExport": "CSV Export",
-  "guide.csvExportDesc": "Export your session history as a CSV file for analysis in spreadsheets or other tools.",
+  "guide.csvExportDesc":
+    "Export your session history as a CSV file for analysis in spreadsheets or other tools.",
   "guide.offline": "Works Offline",
-  "guide.offlineDesc": "Muhurto Breath is a Progressive Web App. Once loaded (or installed), it works completely offline with no internet connection required.",
-  "guide.privacyFooter": "No account required. No tracking. No analytics. No ads. Your breathing practice is entirely private.",
+  "guide.offlineDesc":
+    "Muhurto Breath is a Progressive Web App. Once loaded (or installed), it works completely offline with no internet connection required.",
+  "guide.privacyFooter":
+    "No account required. No tracking. No analytics. No ads. Your breathing practice is entirely private.",
 
   // Accessibility
   "guide.accessibility": "Accessibility",
-  "guide.accessibilityIntro": "Muhurto Breath is designed to be accessible to everyone. Find these options in Settings → Accessibility:",
+  "guide.accessibilityIntro":
+    "Muhurto Breath is designed to be accessible to everyone. Find these options in Settings → Accessibility:",
   "guide.a11y.highContrast": "High Contrast",
-  "guide.a11y.highContrastDesc": "Increases text and border contrast for better visibility",
+  "guide.a11y.highContrastDesc":
+    "Increases text and border contrast for better visibility",
   "guide.a11y.largeText": "Large Text",
-  "guide.a11y.largeTextDesc": "Increases the base font size for improved readability",
+  "guide.a11y.largeTextDesc":
+    "Increases the base font size for improved readability",
   "guide.a11y.reducedMotion": "Reduced Motion",
-  "guide.a11y.reducedMotionDesc": "Disables all animations and transitions for users sensitive to motion",
-  "guide.accessibilityFooter": "The app also supports multiple languages (English & Bengali) and full keyboard navigation.",
+  "guide.a11y.reducedMotionDesc":
+    "Disables all animations and transitions for users sensitive to motion",
+  "guide.accessibilityFooter":
+    "The app also supports multiple languages (English & Bengali) and full keyboard navigation.",
 
   // FAQ (expanded to 12)
   "guide.faq": "Frequently Asked Questions",
   "guide.faq1.q": "Is Muhurto Breath free?",
-  "guide.faq1.a": "Yes, completely free. No subscriptions, no hidden fees, no ads. We accept optional donations to support development.",
+  "guide.faq1.a":
+    "Yes, completely free. No subscriptions, no hidden fees, no ads. We accept optional donations to support development.",
   "guide.faq2.q": "Does it work offline?",
-  "guide.faq2.a": "Yes. Once you've loaded the app (or installed it as a PWA), it works fully offline. All data is stored locally on your device.",
+  "guide.faq2.a":
+    "Yes. Once you've loaded the app (or installed it as a PWA), it works fully offline. All data is stored locally on your device.",
   "guide.faq3.q": "How is the Calm Score calculated?",
-  "guide.faq3.a": "The calm score is based on your breathing consistency (how closely you follow the rhythm), session duration, and if breathing detection is enabled, your rhythm accuracy via microphone analysis.",
+  "guide.faq3.a":
+    "The calm score is based on your breathing consistency (how closely you follow the rhythm), session duration, and if breathing detection is enabled, your rhythm accuracy via microphone analysis.",
   "guide.faq4.q": "Will I lose my data if I clear my browser?",
-  "guide.faq4.a": "Yes — since all data is stored in local storage, clearing browser data will erase your progress. Use Settings → Export regularly to back up your data.",
+  "guide.faq4.a":
+    "Yes — since all data is stored in local storage, clearing browser data will erase your progress. Use Settings → Export regularly to back up your data.",
   "guide.faq5.q": "Can I challenge a friend?",
-  "guide.faq5.a": "Yes! From the Home page, tap 'Challenge a Friend' to create a breathing challenge with a specific technique and target. Share the generated link — when your friend opens it, they'll see your challenge and can accept it.",
+  "guide.faq5.a":
+    "Yes! From the Home page, tap 'Challenge a Friend' to create a breathing challenge with a specific technique and target. Share the generated link — when your friend opens it, they'll see your challenge and can accept it.",
   "guide.faq6.q": "What's the daily XP cap?",
-  "guide.faq6.a": "You can earn up to 150 XP per day. This is designed to encourage consistent daily practice rather than long single sessions.",
+  "guide.faq6.a":
+    "You can earn up to 150 XP per day. This is designed to encourage consistent daily practice rather than long single sessions.",
   "guide.faq7.q": "How do reminders work?",
-  "guide.faq7.a": "Set breathing reminders in Settings. Note: reminders only fire while the app/tab is open. For reliable reminders, install the PWA and keep it accessible.",
+  "guide.faq7.a":
+    "Set breathing reminders in Settings. Note: reminders only fire while the app/tab is open. For reliable reminders, install the PWA and keep it accessible.",
   "guide.faq8.q": "Is my microphone/camera data sent anywhere?",
-  "guide.faq8.a": "Absolutely not. Breathing detection (microphone) and heart rate monitoring (camera) are processed entirely on your device. No audio or video data is ever recorded, stored, or transmitted.",
+  "guide.faq8.a":
+    "Absolutely not. Breathing detection (microphone) and heart rate monitoring (camera) are processed entirely on your device. No audio or video data is ever recorded, stored, or transmitted.",
   "guide.faq9.q": "What happens if I miss a day? Will I lose my streak?",
-  "guide.faq9.a": "If you have a streak freeze available, it will be used automatically to protect your streak. You earn 1 freeze for every 7 consecutive days of practice (max 3 freezes stored).",
+  "guide.faq9.a":
+    "If you have a streak freeze available, it will be used automatically to protect your streak. You earn 1 freeze for every 7 consecutive days of practice (max 3 freezes stored).",
   "guide.faq10.q": "How do I transfer my data to a new phone?",
-  "guide.faq10.a": "Go to Settings, tap 'Copy Backup' to copy your data to clipboard. On your new phone, open the app, go to Settings, and tap 'Paste Restore'. You can also use Export/Import with a JSON file.",
+  "guide.faq10.a":
+    "Go to Settings, tap 'Copy Backup' to copy your data to clipboard. On your new phone, open the app, go to Settings, and tap 'Paste Restore'. You can also use Export/Import with a JSON file.",
   "guide.faq11.q": "Which technique should I start with?",
-  "guide.faq11.a": "If you're new to breathwork, start with Calm Breath (simple 4-6 pattern) or Box Breathing (4-4-4-4). Both are beginner-friendly and effective. For sleep, try the 4-7-8 technique.",
+  "guide.faq11.a":
+    "If you're new to breathwork, start with Calm Breath (simple 4-6 pattern) or Box Breathing (4-4-4-4). Both are beginner-friendly and effective. For sleep, try the 4-7-8 technique.",
   "guide.faq12.q": "Can I create my own breathing pattern?",
-  "guide.faq12.a": "Yes! Go to the Library tab, scroll to the Custom section, and create your own technique with custom inhale, hold, and exhale durations. You can even enable Pyramid Mode for progressive difficulty.",
+  "guide.faq12.a":
+    "Yes! Go to the Library tab, scroll to the Custom section, and create your own technique with custom inhale, hold, and exhale durations. You can even enable Pyramid Mode for progressive difficulty.",
 
   // Footer
   "guide.footer1": "Muhurto Breath — Take a moment to breathe. 🌬️",
@@ -1036,7 +1204,8 @@ export const en: Record<string, string> = {
   "settings.clipboardCopied": "Backup copied to clipboard!",
   "settings.clipboardError": "Could not copy to clipboard",
   "settings.clipboardEmpty": "Clipboard is empty",
-  "settings.clipboardReadError": "Could not read clipboard. Please allow clipboard access.",
+  "settings.clipboardReadError":
+    "Could not read clipboard. Please allow clipboard access.",
 
   // Session History
   "stats.history": "History",
@@ -1055,7 +1224,8 @@ export const en: Record<string, string> = {
 
   // Auto-Difficulty
   "adaptive.readyToLevelUp": "Ready to level up? 🚀",
-  "adaptive.suggestIncrease": "Your calm scores are consistently high! Try {{minutes}} minutes next time.",
+  "adaptive.suggestIncrease":
+    "Your calm scores are consistently high! Try {{minutes}} minutes next time.",
   "adaptive.acceptIncrease": "Set to {{minutes}} min",
   "adaptive.durationUpdated": "Default duration updated to {{minutes}} min!",
 
@@ -1068,11 +1238,13 @@ export const en: Record<string, string> = {
   "common.offline": "You're offline — data is saved locally",
 
   // Update 3: Journal Confirm
-  "session.unsavedJournal": "You have an unsaved journal entry. Are you sure you want to leave?",
+  "session.unsavedJournal":
+    "You have an unsaved journal entry. Are you sure you want to leave?",
 
   // Update 4: Session Recovery
   "recovery.title": "Resume Session?",
-  "recovery.desc": "You have an incomplete {{technique}} session ({{elapsed}} elapsed).",
+  "recovery.desc":
+    "You have an incomplete {{technique}} session ({{elapsed}} elapsed).",
   "recovery.technique": "Technique",
   "recovery.progress": "Progress",
   "recovery.cycles": "Cycles",
@@ -1090,19 +1262,25 @@ export const en: Record<string, string> = {
   "import.error.invalidCustomTechniques": "Custom techniques data is invalid",
   "import.error.invalidFavorites": "Favorites data is invalid",
   "import.error.invalidJson": "Invalid JSON format",
-  "import.warning.duplicatesSkipped": "{{count}} duplicate sessions were skipped",
-  "import.success": "Imported {{new}} new sessions ({{duplicates}} duplicates skipped)",
+  "import.warning.duplicatesSkipped":
+    "{{count}} duplicate sessions were skipped",
+  "import.success":
+    "Imported {{new}} new sessions ({{duplicates}} duplicates skipped)",
 
   // Update 7: Accessibility
   "a11y.skipToMain": "Skip to main content",
 
   // Update 8: Duplicate Detection
   "import.duplicateTitle": "Duplicates Found",
-  "import.duplicateDesc": "{{count}} sessions already exist. What would you like to do?",
+  "import.duplicateDesc":
+    "{{count}} sessions already exist. What would you like to do?",
   "import.skipDuplicates": "Skip duplicates",
   "import.overwriteDuplicates": "Overwrite with new data",
 
   // Favorite toggle
   "techniques.favorite": "Add to favorites",
   "techniques.unfavorite": "Remove from favorites",
+  "settings.reminders.deleteConfirmTitle": "Delete reminder?",
+  "settings.reminders.deleteConfirmDesc":
+    "This reminder will be permanently removed.",
 };
