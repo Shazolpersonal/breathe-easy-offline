@@ -170,12 +170,22 @@ export class HeartRateMonitor {
   private calculateBPM() {
     if (this.redValues.length < 60) return;
 
-    // Apply simple bandpass: subtract moving average (high-pass)
+    // Optimization: Apply simple bandpass using a sliding window sum
+    // to prevent O(N*W) intermediate array allocations in requestAnimationFrame
     const windowSize = 15;
     const filtered: number[] = [];
+    let currentSum = 0;
+
+    // Initialize first window
+    for (let i = 0; i < windowSize; i++) {
+      currentSum += this.redValues[i];
+    }
+
     for (let i = windowSize; i < this.redValues.length; i++) {
-      const avg = this.redValues.slice(i - windowSize, i).reduce((a, b) => a + b, 0) / windowSize;
+      const avg = currentSum / windowSize;
       filtered.push(this.redValues[i] - avg);
+      // Slide the window forward
+      currentSum += this.redValues[i] - this.redValues[i - windowSize];
     }
 
     // Peak detection using zero-crossings of derivative
@@ -269,8 +279,9 @@ export class HeartRateMonitor {
       ? 1 - Math.abs(signChanges - 6) / 6
       : 0.2;
 
-    // Amplitude of oscillation (should be moderate, not flat)
-    const maxDev = Math.max(...deviations.map(Math.abs));
+    // Optimization: Amplitude of oscillation (should be moderate, not flat)
+    // Avoid intermediate array allocations and spread operator stack risks
+    const maxDev = deviations.reduce((max, v) => Math.max(max, Math.abs(v)), 0);
     const amplitudeScore = maxDev > 1 && maxDev < 15 ? 1 - Math.abs(maxDev - 5) / 15 : 0.2;
 
     return Math.round(Math.max(0, Math.min(100, oscillationScore * amplitudeScore * 100)));
