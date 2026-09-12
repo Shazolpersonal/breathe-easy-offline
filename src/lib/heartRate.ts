@@ -170,12 +170,24 @@ export class HeartRateMonitor {
   private calculateBPM() {
     if (this.redValues.length < 60) return;
 
+    // Optimization: Use a sliding window to calculate moving average in O(N) time with no intermediate array allocations
     // Apply simple bandpass: subtract moving average (high-pass)
     const windowSize = 15;
     const filtered: number[] = [];
+    let windowSum = 0;
+
+    // Initialize first window
+    for (let i = 0; i < windowSize; i++) {
+      windowSum += this.redValues[i];
+    }
+
     for (let i = windowSize; i < this.redValues.length; i++) {
-      const avg = this.redValues.slice(i - windowSize, i).reduce((a, b) => a + b, 0) / windowSize;
+      const avg = windowSum / windowSize;
       filtered.push(this.redValues[i] - avg);
+
+      // Slide window: remove oldest, add next
+      windowSum += this.redValues[i];
+      windowSum -= this.redValues[i - windowSize];
     }
 
     // Peak detection using zero-crossings of derivative
@@ -197,11 +209,13 @@ export class HeartRateMonitor {
 
     if (peaks.length < 3) return;
 
+    // Optimization: Access timestamps directly with window offset instead of allocating a new array slice
     // Calculate BPM from inter-peak intervals
     const intervals: number[] = [];
-    const adjustedTimestamps = this.timestamps.slice(windowSize);
     for (let i = 1; i < peaks.length; i++) {
-      const dt = (adjustedTimestamps[peaks[i]] - adjustedTimestamps[peaks[i - 1]]) / 1000;
+      const t1 = this.timestamps[peaks[i - 1] + windowSize];
+      const t2 = this.timestamps[peaks[i] + windowSize];
+      const dt = (t2 - t1) / 1000;
       if (dt > 0.3 && dt < 2.0) { // 30-200 BPM range
         intervals.push(dt);
       }
@@ -269,8 +283,9 @@ export class HeartRateMonitor {
       ? 1 - Math.abs(signChanges - 6) / 6
       : 0.2;
 
+    // Optimization: Avoid spread operator and .map() allocation to prevent Call Stack size exceeded errors and reduce GC overhead
     // Amplitude of oscillation (should be moderate, not flat)
-    const maxDev = Math.max(...deviations.map(Math.abs));
+    const maxDev = deviations.reduce((max, v) => Math.max(max, Math.abs(v)), 0);
     const amplitudeScore = maxDev > 1 && maxDev < 15 ? 1 - Math.abs(maxDev - 5) / 15 : 0.2;
 
     return Math.round(Math.max(0, Math.min(100, oscillationScore * amplitudeScore * 100)));
