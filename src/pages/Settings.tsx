@@ -502,7 +502,7 @@ export default function Settings() {
                         checked={r.enabled}
                         onCheckedChange={v => handleUpdateReminder(r.id, { enabled: v })}
                       />
-                      <Button size="icon" variant="ghost" className="h-7 w-7" onClick={() => handleDeleteReminder(r.id)}>
+                      <Button size="icon" variant="ghost" className="h-7 w-7" onClick={() => handleDeleteReminder(r.id)} aria-label={t("common.delete")}>
                         <Trash2 className="h-3.5 w-3.5 text-muted-foreground" />
                       </Button>
                     </div>
