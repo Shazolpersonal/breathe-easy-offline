@@ -171,11 +171,22 @@ export class HeartRateMonitor {
     if (this.redValues.length < 60) return;
 
     // Apply simple bandpass: subtract moving average (high-pass)
+    // Optimization: used a running sum (sliding window) instead of slice and reduce inside the loop to avoid O(N*W) complexity and intermediate array allocations.
     const windowSize = 15;
     const filtered: number[] = [];
+    let currentSum = 0;
+
+    // Initialize the sum for the first window
+    for (let j = 0; j < windowSize; j++) {
+      currentSum += this.redValues[j];
+    }
+
     for (let i = windowSize; i < this.redValues.length; i++) {
-      const avg = this.redValues.slice(i - windowSize, i).reduce((a, b) => a + b, 0) / windowSize;
+      const avg = currentSum / windowSize;
       filtered.push(this.redValues[i] - avg);
+
+      // Update running sum for the next iteration
+      currentSum = currentSum - this.redValues[i - windowSize] + this.redValues[i];
     }
 
     // Peak detection using zero-crossings of derivative
