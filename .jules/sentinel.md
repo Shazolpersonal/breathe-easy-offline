@@ -23,3 +23,7 @@
 **Vulnerability:** Calls to `JSON.parse` with untrusted data (like `localStorage` reads from imported data, or base64-decoded URLs in `friendChallenge.ts`) were executed without a reviver function. If a malicious JSON string contained `__proto__`, `constructor`, or `prototype` keys, it could lead to prototype pollution when the parsed object is used.
 **Learning:** `JSON.parse` is vulnerable to prototype pollution when parsing malicious JSON strings. A custom reviver function is needed to safely drop these keys during the deserialization phase.
 **Prevention:** Always pass a secure reviver function, like `secureJsonReviver` which explicitly checks and drops `__proto__`, `constructor`, and `prototype` keys, as the second argument to `JSON.parse` when parsing untrusted data.
+## 2025-03-08 - [Prevent CSV DDE Injection Bypass via Whitespace]
+**Vulnerability:** The CSV export sanitization checked if the first character of a string was a formula character (e.g. `=`) to prevent DDE injection. However, an attacker could bypass this by prepending spaces or tabs before the formula character, since applications like Excel strip leading whitespace before evaluating formulas.
+**Learning:** Checking the exact first character of a string for malicious content is often insufficient if the target application processing the data (like a spreadsheet app) normalizes or trims the data first.
+**Prevention:** Always normalize the data (e.g. via `trimStart()`) before applying security checks like formula character detection.
