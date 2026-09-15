@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { Pause, Play, Square, Volume2, VolumeX, TrendingUp, Sparkles, Circle, Waves, BarChart3, Flower2, Share2, SkipForward, Mic, MicOff, Heart, Maximize2, Minimize2, ArrowUp, Settings2 } from "lucide-react";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import BreathingVisualizer, { VisualizationType } from "@/components/BreathingVisualizer";
 import ParticleBackground from "@/components/ParticleBackground";
 import ScreenColorBreathing from "@/components/ScreenColorBreathing";
@@ -1043,6 +1044,7 @@ export default function Session() {
             <button
               onClick={() => setShowDonateDialog(true)}
               className="text-xs text-muted-foreground hover:text-primary transition-colors"
+              aria-label={t("donate.sessionSupport")}
             >
               {t("donate.sessionSupport")}
             </button>
@@ -1289,45 +1291,69 @@ export default function Session() {
               </>
             )}
 
-            <button
-              onClick={() => { setVoiceOn(!voiceOn); if (voiceOn) stopSpeaking(); }}
-              className="rounded-full p-2 text-muted-foreground hover:text-foreground focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-ring focus-visible:ring-offset-2"
-              aria-label={voiceOn ? t("session.voiceMute") : t("session.voiceUnmute")}
-            >
-              {voiceOn ? <Volume2 className="h-5 w-5" /> : <VolumeX className="h-5 w-5" />}
-            </button>
+            <TooltipProvider>
+              <div className="flex items-center gap-1">
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <button
+                      onClick={() => { setVoiceOn(!voiceOn); if (voiceOn) stopSpeaking(); }}
+                      className="rounded-full p-2 text-muted-foreground hover:text-foreground focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-ring focus-visible:ring-offset-2"
+                      aria-label={voiceOn ? t("session.voiceMute") : t("session.voiceUnmute")}
+                    >
+                      {voiceOn ? <Volume2 className="h-5 w-5" /> : <VolumeX className="h-5 w-5" />}
+                    </button>
+                  </TooltipTrigger>
+                  <TooltipContent>{voiceOn ? t("session.voiceMute") : t("session.voiceUnmute")}</TooltipContent>
+                </Tooltip>
 
-            {/* Mic toggle */}
-            <button
-              onClick={toggleMic}
-              className={cn(
-                "rounded-full p-2 transition-colors focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-ring focus-visible:ring-offset-2",
-                micActive ? "text-primary bg-primary/15" : "text-muted-foreground hover:text-foreground"
-              )}
-              aria-label={micActive ? t("breath.micOn") : t("breath.micOff")}
-            >
-              {micActive ? <Mic className="h-5 w-5" /> : <MicOff className="h-5 w-5" />}
-            </button>
+                {/* Mic toggle */}
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <button
+                      onClick={toggleMic}
+                      className={cn(
+                        "rounded-full p-2 transition-colors focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-ring focus-visible:ring-offset-2",
+                        micActive ? "text-primary bg-primary/15" : "text-muted-foreground hover:text-foreground"
+                      )}
+                      aria-label={micActive ? t("breath.micOn") : t("breath.micOff")}
+                    >
+                      {micActive ? <Mic className="h-5 w-5" /> : <MicOff className="h-5 w-5" />}
+                    </button>
+                  </TooltipTrigger>
+                  <TooltipContent>{micActive ? t("breath.micOn") : t("breath.micOff")}</TooltipContent>
+                </Tooltip>
 
-            {/* Heart rate toggle */}
-            <button
-              onClick={() => setHrOpen(true)}
-              className="rounded-full p-2 text-muted-foreground hover:text-foreground focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-ring focus-visible:ring-offset-2"
-              aria-label={t("heart.monitor")}
-            >
-              <Heart className="h-5 w-5" />
-            </button>
+                {/* Heart rate toggle */}
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <button
+                      onClick={() => setHrOpen(true)}
+                      className="rounded-full p-2 text-muted-foreground hover:text-foreground focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-ring focus-visible:ring-offset-2"
+                      aria-label={t("heart.monitor")}
+                    >
+                      <Heart className="h-5 w-5" />
+                    </button>
+                  </TooltipTrigger>
+                  <TooltipContent>{t("heart.monitor")}</TooltipContent>
+                </Tooltip>
 
-            {/* Zen mode toggle */}
-            {state !== "idle" && (
-              <button
-                onClick={toggleZenMode}
-                className="rounded-full p-2 text-muted-foreground hover:text-foreground focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-ring focus-visible:ring-offset-2"
-                aria-label={t("session.zenMode")}
-              >
-                <Maximize2 className="h-5 w-5" />
-              </button>
-            )}
+                {/* Zen mode toggle */}
+                {state !== "idle" && (
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <button
+                        onClick={toggleZenMode}
+                        className="rounded-full p-2 text-muted-foreground hover:text-foreground focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-ring focus-visible:ring-offset-2"
+                        aria-label={t("session.zenMode")}
+                      >
+                        <Maximize2 className="h-5 w-5" />
+                      </button>
+                    </TooltipTrigger>
+                    <TooltipContent>{t("session.zenMode")}</TooltipContent>
+                  </Tooltip>
+                )}
+              </div>
+            </TooltipProvider>
           </div>
         )}
       </div>
