@@ -8,7 +8,7 @@ function escapeCSV(value: string): string {
   // Security: Prepend a single quote to prevent spreadsheet/CSV injection (DDE)
   // while preserving the original user data
   let sanitized = value;
-  if (sanitized.length > 0 && FORMULA_CHARS.includes(sanitized[0])) {
+  if (sanitized.trimStart().length > 0 && FORMULA_CHARS.includes(sanitized.trimStart()[0])) {
     sanitized = "'" + sanitized;
   }
   if (sanitized.includes(",") || sanitized.includes('"') || sanitized.includes("\n")) {
